@@ -185,8 +185,9 @@ const Cradle = ({
     }
 
     // cradle state
-    const [cradleState, setCradleState] = useState('setup')
-    const cradleStateRef = useRef(null) // access by closures
+    const 
+        [cradleState, setCradleState] = useState('setup'),
+        cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
@@ -221,24 +222,25 @@ const Cradle = ({
 
         if (isCachedRef.current) return 0
 
-        const viewportcrosslength = 
-            (orientation == 'vertical')?
-                viewportwidth:
-                viewportheight
+        const 
+            viewportcrosslength = 
+                (orientation == 'vertical')?
+                    viewportwidth:
+                    viewportheight,
 
-        // cross length of viewport (gap to match crossLength)
-        const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
+            // cross length of viewport (gap to match crossLength)
+            viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap,
 
-        const cellcrosslength = 
-            ((orientation == 'vertical')?
-                cellWidth:
-                cellHeight) 
-            + gap
+            cellcrosslength = 
+                ((orientation == 'vertical')?
+                    cellWidth:
+                    cellHeight) 
+                + gap,
 
-        const cellcrosslengthforcalc = 
-            Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
+            cellcrosslengthforcalc = 
+                Math.min(cellcrosslength,viewportcrosslengthforcalc), // result cannot be less than 1
 
-        const crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
+            crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
 
         return crosscount
 
@@ -560,16 +562,14 @@ const Cradle = ({
     
     const restoreScrollPos = () => {
 
-        const { cradlePositionData } = layoutHandler
+        const 
+            { cradlePositionData } = layoutHandler,
+            blockScrollPos = cradlePositionData.blockScrollPos,
+            blockXScrollPos = cradlePositionData.blockXScrollPos
 
-        const blockScrollPos = cradlePositionData.blockScrollPos
-        const blockXScrollPos = cradlePositionData.blockXScrollPos
         if (blockScrollPos !== null) {
 
             const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-
-            // const scrollTop = viewportElement.scrollTop
-            // const scrollLeft = viewportElement.scrollLeft
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
@@ -587,9 +587,6 @@ const Cradle = ({
             }
 
             viewportElement.scroll(scrollOptions)
-
-            // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            // viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
         }
 
@@ -779,29 +776,6 @@ const Cradle = ({
 
         }
     },[])
-
-    // variable content requires special handling
-    // useEffect(() => {
-
-    //     const { layout } = cradleInheritedPropertiesRef.current
-
-    //     const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-
-    //     if (layout == 'uniform') {
-    //         viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
-    //         return
-    //     }
-
-    //     viewportElement.addEventListener('scroll',scrollHandler.onScrollForVariable)
-
-    //     return () => {
-
-    //         viewportElement && 
-    //             viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
-
-    //     }
-
-    // },[layout])
 
     // caching change
     useEffect(()=> {
@@ -1223,9 +1197,6 @@ const Cradle = ({
             case 'reload': {
 
                 if (!isMountedRef.current) return // possible async latency with nested scrollers
-
-                // interruptHandler.triggerlinesIntersect.disconnect()
-                // interruptHandler.cradleIntersect.disconnect()
 
                 if (isCachedRef.current) {
                     setCradleState('cached')

@@ -40,25 +40,26 @@ export default class StylesHandler {
 
     }) => {
 
-        const headstyles = this.getBaseHeadStyles(gap, padding, orientation, userstyles.cradle)
-        const tailstyles = this.getBaseTailStyles(gap, padding, orientation, userstyles.cradle)
-        const axisstyles = this.getAxisStyles(gap, padding, orientation)
+        const 
+            headstyles = this.getBaseHeadStyles(gap, padding, orientation, userstyles.cradle),
+            tailstyles = this.getBaseTailStyles(gap, padding, orientation, userstyles.cradle),
+            axisstyles = this.getAxisStyles(gap, padding, orientation),
 
-        const triggercelltriggerlineheadstyles =
-            this.getTriggercellTriggerlineHeadStyles(
-                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        const triggercelltriggerlinetailstyles = 
-            this.getTriggercellTriggerlineTailStyles(
-                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+            triggercelltriggerlineheadstyles =
+                this.getTriggercellTriggerlineHeadStyles(
+                    orientation,cellHeight, cellWidth, triggerlineOffset, gap),
+            triggercelltriggerlinetailstyles = 
+                this.getTriggercellTriggerlineTailStyles(
+                    orientation,cellHeight, cellWidth, triggerlineOffset, gap),
 
-        const cradledividerstyles = 
-            {
-                zIndex:1, 
-                position:'absolute',
-                width:'100%',
-                height:'100%',
-                boxShadow:'0 0 5px 3px red'
-            }
+            cradledividerstyles = 
+                {
+                    zIndex:1, 
+                    position:'absolute',
+                    width:'100%',
+                    height:'100%',
+                    boxShadow:'0 0 5px 3px red'
+                }
 
         headstyles.gap = tailstyles.gap = gap + 'px'
 
@@ -226,6 +227,7 @@ export default class StylesHandler {
         const position = 'absolute'
 
         let width, height, top, right, bottom, left
+
         if (orientation == 'vertical') {
 
             width = '100%'
@@ -264,6 +266,7 @@ export default class StylesHandler {
         const position = 'absolute'
 
         let width, height, top, right, bottom, left
+        
         if (orientation == 'vertical') {
 
             width = '100%'

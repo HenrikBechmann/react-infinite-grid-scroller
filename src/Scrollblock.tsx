@@ -31,29 +31,30 @@ const Scrollblock = ({
         
     } = gridSpecs
 
-    const { size:listsize } = virtualListSpecs
+    const 
+        { size:listsize } = virtualListSpecs,
 
-    // -------------------------[ context and state ]-------------------------
+        // -------------------------[ context and state ]-------------------------
 
-    const ViewportContextProperties = useContext(ViewportContext)
+        ViewportContextProperties = useContext(ViewportContext),
 
-    const [blockState,setBlockState] = useState('setup') // to trigger render
+        [blockState,setBlockState] = useState('setup'), // to trigger render
 
-    // -----------------------------------[ data heap ]-------------------------
+        // -----------------------------------[ data ]-------------------------
 
-    const baseScrollBlockLengthRef = useRef(null)
+        baseScrollBlockLengthRef = useRef(null),
 
-    // just for init
-    const linerStyle = useMemo(() =>{
+        // just for init
+        linerStyle = useMemo(() =>{
 
-        return {
-            ...styles.scrollblock,
-            position:'relative',
-        }
+            return {
+                ...styles.scrollblock,
+                position:'relative',
+            }
 
-    }, [])
+        }, []),
 
-    const divlinerstyleRef = useRef(linerStyle)
+        divlinerstyleRef = useRef(linerStyle)
 
     const getViewportDimensions = () => {
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -65,8 +66,6 @@ const Scrollblock = ({
 
     const { height,width } = getViewportDimensions() // viewportDimensions
 
-    // const { width, height } = ViewportContextProperties.viewportDimensions
-    
     // reconfigure
     useLayoutEffect(() => {
 
@@ -146,9 +145,8 @@ const calcBaseScrollblockLength = ({
     // ---------------[ calculate crosscount ]------------------
     //crosscount is also calculated by Cradle
 
-    let crosslength
-    let cellLength
-    let viewportcrosslength
+    let crosslength, cellLength, viewportcrosslength
+
     if (orientation == 'vertical') {
 
         crosslength = cellWidth + gap
@@ -169,17 +167,18 @@ const calcBaseScrollblockLength = ({
 
     if (viewportcrosslength < crosslength) viewportcrosslength = crosslength // must be at least one
 
-    const crosscount = Math.floor(viewportcrosslength/crosslength)
+    const 
+        crosscount = Math.floor(viewportcrosslength/crosslength),
 
-    // -------------------[ calculate scrollblock length ]-----------------
+        // -------------------[ calculate scrollblock length ]-----------------
 
-    const listrowcount = Math.ceil(listsize/crosscount)
+        listrowcount = Math.ceil(listsize/crosscount),
 
-    const baselength = (listrowcount * cellLength) - 
-        ((listrowcount > 0)?
-            gap: // final cell has no trailing gap
-            0) 
-        + (padding * 2) // leading and trailing padding
+        baselength = (listrowcount * cellLength) - 
+            ((listrowcount > 0)?
+                gap: // final cell has no trailing gap
+                0) 
+            + (padding * 2) // leading and trailing padding
 
     return baselength
 
@@ -189,18 +188,25 @@ const updateScrollblockStyles = (
     orientation, stylesRef, baseScrollblocklengthRef, cellWidth, cellHeight, padding) => {
 
     const localstyles = {...stylesRef.current} // new object
+
     let height, width, minHeight, minWidth
+
     if (orientation == 'vertical') {
+    
         height = baseScrollblocklengthRef.current + 'px'
         width = '100%'
         minWidth = (cellWidth + (padding * 2)) + 'px'
         minHeight = null
+    
     } else { // orientation == 'horizontal'
+    
         height = '100%'
         width = baseScrollblocklengthRef.current + 'px'
         minHeight = (cellHeight + (padding * 2)) + 'px'
         minWidth = null
+    
     }
+    
     localstyles.height = height
     localstyles.width = width
     localstyles.minHeight = minHeight

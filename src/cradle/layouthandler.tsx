@@ -47,15 +47,15 @@ export default class LayoutHandler {
             // padding
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const 
+            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            { 
 
-        const { 
+                size:listsize,
+                lowindex,
+                highindex,
 
-            size:listsize,
-            lowindex,
-            highindex,
-
-        } = virtualListProps
+            } = virtualListProps
 
         if (listsize) {
 
@@ -81,17 +81,18 @@ export default class LayoutHandler {
 
     public get triggerlineSpan() {
 
-        const {
-            orientation, 
-            // padding
-        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            {
+                orientation, 
+                // padding
+            } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const span = (orientation == 'vertical')?
-            this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
-            this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
-            // horizontal
-            this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
-            this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
+            span = (orientation == 'vertical')?
+                this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
+                this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
+                // horizontal
+                this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
+                this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
 
         return span
     }
@@ -160,44 +161,45 @@ export default class LayoutHandler {
     // called by interruptHandler
     public restoreBaseScrollblockConfig = () => {
 
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
-        const viewportElement = ViewportContextProperties.elementRef.current
-        const scrollblockElement = viewportElement.firstChild
+        const 
+            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
+            viewportElement = ViewportContextProperties.elementRef.current,
+            scrollblockElement = viewportElement.firstChild,
 
-        const { 
+            { 
 
-            // scrollerID, 
-            orientation, 
-            padding, 
-            gap,
-            cellHeight,
-            cellWidth,
-            layout 
+                // scrollerID, 
+                orientation, 
+                padding, 
+                gap,
+                cellHeight,
+                cellWidth,
+                layout 
 
-        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+            } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const {
-            rowcount:listRowcount,
-            crosscount,
-        } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps
+            {
+                rowcount:listRowcount,
+                crosscount,
+            } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps,
 
-        const { 
+            { 
 
-            // stateHandler, 
-            // serviceHandler, 
-            scrollHandler, 
-            layoutHandler 
+                // stateHandler, 
+                // serviceHandler, 
+                scrollHandler, 
+                layoutHandler 
 
-        } = this.cradleParameters.handlersRef.current
+            } = this.cradleParameters.handlersRef.current,
 
-        const cellLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth)
-            + gap
+            cellLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth)
+                + gap,
 
-        const baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
-            + (padding * 2) // leading and trailing padding
+            baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
+                + (padding * 2) // leading and trailing padding
 
         if (orientation == 'vertical') {
 
@@ -211,22 +213,24 @@ export default class LayoutHandler {
 
         }
 
-        const { cradlePositionData } = layoutHandler
-        const axisReferencePosition = cradlePositionData.targetAxisReferencePosition
-        const rowReferencePosition = Math.ceil(axisReferencePosition/crosscount)
-        const calculatedBlockScrollPos = 
-            (rowReferencePosition * cellLength) + padding
+        const 
+            { cradlePositionData } = layoutHandler,
+            axisReferencePosition = cradlePositionData.targetAxisReferencePosition,
+            rowReferencePosition = Math.ceil(axisReferencePosition/crosscount),
+            calculatedBlockScrollPos = 
+                (rowReferencePosition * cellLength) + padding
 
 
         if (layout == 'variable') { // scrollPos overwritten by Safari iOS momentum engine
         // if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine
 
-            const originalScrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
+            const 
+                originalScrollPos = 
+                    (orientation == 'vertical')?
+                        viewportElement.scrollTop:
+                        viewportElement.scrollLeft,
 
-            const scrollShift = calculatedBlockScrollPos - originalScrollPos
+                scrollShift = calculatedBlockScrollPos - originalScrollPos
 
             if (orientation == 'vertical') {
 
@@ -241,8 +245,9 @@ export default class LayoutHandler {
 
         } else {
 
-            const scrollTop = viewportElement.scrollTop
-            const scrollLeft = viewportElement.scrollLeft
+            const 
+                scrollTop = viewportElement.scrollTop,
+                scrollLeft = viewportElement.scrollLeft
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
@@ -259,12 +264,7 @@ export default class LayoutHandler {
                 }            
             }
 
-            // viewportElement[cradlePositionData.blockScrollProperty] =
-            //     cradlePositionData.blockScrollPos 
-
             viewportElement.scroll(scrollOptions)
-
-            // viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
 
         }
         cradlePositionData.blockScrollPos = calculatedBlockScrollPos

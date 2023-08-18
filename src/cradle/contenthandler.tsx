@@ -77,21 +77,21 @@ export default class ContentHandler {
     // - called only from the Cradle state handler
     public updateVirtualListSize = (newlistsize) => {
 
-        const { cradleParameters } = this
-        const cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
-        const cradleHandlers = cradleParameters.handlersRef.current
+        const 
+            { cradleParameters } = this,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+            { 
 
-        const { 
+                cradleContentProps,
+                setVirtualListSize,
 
-            cradleContentProps,
-            setVirtualListSize,
-
-        } = cradleInternalProperties
+            } = cradleInternalProperties
 
         if (newlistsize == 0) {
 
             const 
                 cradleContent = this.content,
+                cradleHandlers = cradleParameters.handlersRef.current,
                 { layoutHandler } = cradleHandlers,
                 { cradlePositionData } = layoutHandler
 
@@ -263,9 +263,9 @@ export default class ContentHandler {
                 // baserowblanks,
                 // endrowblanks,
 
-            } = virtualListProps
+            } = virtualListProps,
 
-        const cradleContent = this.content
+            cradleContent = this.content
 
         let { targetAxisViewportPixelOffset } =  cradlePositionData
 
@@ -302,15 +302,16 @@ export default class ContentHandler {
 
         }
 
-        const workingContentList = []
+        const 
+            workingContentList = [],
 
-        // ----------------------[ 3. get content requirements ]----------------------
+            // ----------------------[ 3. get content requirements ]----------------------
 
-        const baseRowPixelLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth)
-            + gap
+            baseRowPixelLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth)
+                + gap
 
         const {
 
@@ -442,10 +443,10 @@ export default class ContentHandler {
         //  ----------------------[ 5. set CSS ]-----------------------
 
         // reset scrollblock Offset and length
-        const scrollblockElement = viewportElement.firstChild
-
-        const blockbaselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
-            + (padding * 2) // leading and trailing padding
+        const 
+            scrollblockElement = viewportElement.firstChild,
+            blockbaselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
+                + (padding * 2) // leading and trailing padding
 
         if (cradleState == 'pivot') {
 
@@ -659,7 +660,6 @@ export default class ContentHandler {
 
         const 
             axisViewportPixelOffset = newAxisViewportPixelOffset,
-
             isShift = !((axisItemShift == 0) && (cradleItemShift == 0)),
             axisElement = cradleElements.axisRef.current,
             headElement = cradleElements.headRef.current
@@ -840,19 +840,23 @@ export default class ContentHandler {
 
         // --------------
         // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
-        const preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount )
+        const 
+            preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount ),
     
-        const baseCellLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth)
-            + gap
+            baseCellLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth)
+                + gap,
 
-        const testScrollPos = (baseCellLength * preAxisVirtualRows) + padding - axisViewportPixelOffset
-        const scrollDiff = testScrollPos - scrollPos
+            testScrollPos = (baseCellLength * preAxisVirtualRows) + padding - axisViewportPixelOffset,
+            
+            scrollDiff = testScrollPos - scrollPos
 
         if (scrollDiff) {
+
             axisViewportPixelOffset += scrollDiff
+
         }
         // ---------
 
@@ -1062,12 +1066,13 @@ export default class ContentHandler {
         }
 
         // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to blockScrollPos
-        const startingScrollPos = 
-            (orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft
+        const 
+            startingScrollPos = 
+                (orientation == 'vertical')?
+                    viewportElement.scrollTop:
+                    viewportElement.scrollLeft,
 
-        const scrollDiff = blockScrollPos - startingScrollPos
+            scrollDiff = blockScrollPos - startingScrollPos
 
         if (orientation == 'vertical') {
 
@@ -1181,11 +1186,12 @@ export default class ContentHandler {
 
     public guardAgainstRunawayCaching = () => { 
 
-        const { cacheMax, MAX_CACHE_OVER_RUN } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            { cacheMax, MAX_CACHE_OVER_RUN } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
+            { cacheAPI } = this.cradleParameters.handlersRef.current,
 
-        const modelComponentList = this.content.cradleModelComponents
+            modelComponentList = this.content.cradleModelComponents
  
         if (cacheAPI.guardAgainstRunawayCaching(cacheMax, modelComponentList.length, MAX_CACHE_OVER_RUN )) {
 
@@ -1196,18 +1202,20 @@ export default class ContentHandler {
     
     public pareCacheToMax = () => {
 
-        const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const { cache, scrollerID } = cradleInheritedProperties
+            { cache, scrollerID } = cradleInheritedProperties
         
         if (cache == 'keepload') {
 
-            const cradleHandlers = this.cradleParameters.handlersRef.current
-            const { cacheAPI, serviceHandler } = cradleHandlers
+            const 
+                cradleHandlers = this.cradleParameters.handlersRef.current,
+                { cacheAPI, serviceHandler } = cradleHandlers,
 
-            const modelIndexList = this.getModelIndexList()
+                modelIndexList = this.getModelIndexList(),
 
-            const { deleteListCallback } = serviceHandler.callbacks
+                { deleteListCallback } = serviceHandler.callbacks
 
             let dListCallback
             if (deleteListCallback) {
@@ -1268,13 +1276,14 @@ export default class ContentHandler {
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
         // asssemble resources
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-        // const { indexToItemIDMap } = cacheAPI.cacheProps
-        const { indexToItemIDMap } = cacheAPI
+        const 
+            { cacheAPI } = this.cradleParameters.handlersRef.current,
+            
+            { indexToItemIDMap } = cacheAPI,
 
-        const { cradleModelComponents } = this.content
+            { cradleModelComponents } = this.content,
 
-        const { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+            { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         if (cradleContentProps.size == 0) return
 
@@ -1305,18 +1314,19 @@ export default class ContentHandler {
 
         if (firstIndex < lowSpan) firstIndex = lowSpan
 
-        const lowPtr = firstIndex - lowSpan
+        const 
+            lowPtr = firstIndex - lowSpan,
 
-        const highPtr = isInsertRemove?
-            cradleModelComponents.length - 1:
-            Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
+            highPtr = isInsertRemove?
+                cradleModelComponents.length - 1:
+                Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
         // function to update individual cradle components to cache changes
         function processcomponentFn(component, componentptr, componentarray) {
 
-            const index = component.props.index
-
-            const cacheItemID = indexToItemIDMap.get(index)
+            const 
+                index = component.props.index,
+                cacheItemID = indexToItemIDMap.get(index)
 
             // if cache has no component for cradle item, then get one
             if (cacheItemID === undefined) {
@@ -1327,9 +1337,9 @@ export default class ContentHandler {
 
             } else { // match cache itemID to cradle component itemID
 
-                const cradleItemID = component.props.itemID
-
-                const updateptr = updatedIndexList.indexOf(index) // TODO verify need for updatelist
+                const 
+                    cradleItemID = component.props.itemID,
+                    updateptr = updatedIndexList.indexOf(index) // TODO verify need for updatelist
 
                 if (updateptr != -1) { // update list confirms there is a cache item for this index
 
@@ -1359,10 +1369,10 @@ export default class ContentHandler {
 
         if (!newList.length) return
 
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-        const { cradleModelComponents } = this.content
-
-        const { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const 
+            { cacheAPI } = this.cradleParameters.handlersRef.current,
+            { cradleModelComponents } = this.content,
+            { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
 
         if (cradleContentProps.size == 0) return
 
@@ -1372,11 +1382,10 @@ export default class ContentHandler {
 
             if (newlistindex < lowSpan || newlistindex > highSpan) return // defensive
 
-            const cradlePtr = newlistindex - lowSpan
-
-            const component = cradleModelComponents[cradlePtr]
-
-            const newItemID = cacheAPI.getNewItemID()
+            const 
+                cradlePtr = newlistindex - lowSpan,
+                component = cradleModelComponents[cradlePtr],
+                newItemID = cacheAPI.getNewItemID()
 
             cradleModelComponents[cradlePtr] = React.cloneElement(component, {itemID:newItemID})
 
@@ -1391,11 +1400,10 @@ export default class ContentHandler {
 
         if (!modifiedIndexesList.length) return
 
-        const { cradleModelComponents } = this.content
-
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-
-        const { indexToItemIDMap } = cacheAPI
+        const 
+            { cradleModelComponents } = this.content,
+            { cacheAPI } = this.cradleParameters.handlersRef.current,
+            { indexToItemIDMap } = cacheAPI
 
         function processComponentFn (component, i, array ) {
             const { index, itemID } = component.props

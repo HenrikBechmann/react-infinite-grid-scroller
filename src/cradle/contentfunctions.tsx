@@ -80,10 +80,10 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
     // leading edge
-    let targetCradleReferenceRow = Math.max(rangerowshift,targetAxisReferenceRow - runwayRowcount)
-
-    // trailing edge
-    let targetCradleEndRow = targetCradleReferenceRow + (cradleRowcount - 1)
+    let 
+        targetCradleReferenceRow = Math.max(rangerowshift,targetAxisReferenceRow - runwayRowcount),
+        // trailing edge
+        targetCradleEndRow = targetCradleReferenceRow + (cradleRowcount - 1)
 
     const listEndRowOffset = (listRowcount - 1) + rangerowshift
 
@@ -452,12 +452,13 @@ export const calculateShiftSpecs = ({
     // measure exising variable rows for pixel length
     if (layout == 'variable') { 
 
-        const engagedGridElement = // moving axis (and triggers) toward the reference grid element
-            (shiftinstruction == 'moveaxistailward')? // scrolling up or left
-                tailGridElement:
-                headGridElement
+        const 
+            engagedGridElement = // moving axis (and triggers) toward the reference grid element
+                (shiftinstruction == 'moveaxistailward')? // scrolling up or left
+                    tailGridElement:
+                    headGridElement,
 
-        const gridRowPixelLengthsList = getGridRowLengths(engagedGridElement, orientation, crosscount, gap)
+            gridRowPixelLengthsList = getGridRowLengths(engagedGridElement, orientation, crosscount, gap)
 
         if (shiftinstruction == 'moveaxisheadward') { // scrolling down or right; move triggerlines up or left
 
@@ -590,21 +591,22 @@ export const calculateShiftSpecs = ({
     // -----------[ 3. calculate current viewport axis pixel offset ]-------------------
     // gaps beyond rendered rows can be caused by rapid scrolling
 
-    const scrollblockAxisPixelOffset = 
-        (orientation == 'vertical')?
-            axisElement.offsetTop:
-            axisElement.offsetLeft
+    const 
+        scrollblockAxisPixelOffset = 
+            (orientation == 'vertical')?
+                axisElement.offsetTop:
+                axisElement.offsetLeft,
 
-    const scrollblockPixelOffset = // to capture current top/left adjustment to viewport for variable layout
-        (orientation == 'vertical')?
-            scrollblockElement.offsetTop:
-            scrollblockElement.offsetLeft
+        scrollblockPixelOffset = // to capture current top/left adjustment to viewport for variable layout
+            (orientation == 'vertical')?
+                scrollblockElement.offsetTop:
+                scrollblockElement.offsetLeft,
 
-    // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
-    //     and positive for scroll block tailward
-    // the pixel distance between the viewport frame and the axis, toward the head
-    const currentViewportAxisPixelOffset = 
-        scrollblockAxisPixelOffset + scrollblockPixelOffset - scrollPos
+        // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
+        //     and positive for scroll block tailward
+        // the pixel distance between the viewport frame and the axis, toward the head
+        currentViewportAxisPixelOffset = 
+            scrollblockAxisPixelOffset + scrollblockPixelOffset - scrollPos
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
@@ -635,10 +637,11 @@ export const calculateShiftSpecs = ({
         // shortening of cradle content.
 
         // --- start of list adjustment
-        const targetCradleReferenceRow = 
-            Math.max(rangerowshift, (newAxisReferenceRow - runwayRowcount - 1)) // extra row for visibility
+        const 
+            targetCradleReferenceRow = 
+                Math.max(rangerowshift, (newAxisReferenceRow - runwayRowcount - 1)), // extra row for visibility
+            headrowDiff = newCradleReferenceRow - targetCradleReferenceRow
 
-        const headrowDiff = newCradleReferenceRow - targetCradleReferenceRow
         if (headrowDiff > 0) {
 
             newCradleReferenceRow -= headrowDiff
@@ -647,8 +650,9 @@ export const calculateShiftSpecs = ({
         }
 
         // --- end of list adjustment: case of being in bounds of trailing runway (end of list)
-        const targetCradleEndrow = newCradleReferenceRow + (cradleRowcount - 1)
-        const tailrowdiff = targetCradleEndrow - listEndRow
+        const 
+            targetCradleEndrow = newCradleReferenceRow + (cradleRowcount - 1),
+            tailrowdiff = targetCradleEndrow - listEndRow
 
         if (tailrowdiff > 0) {
 
@@ -681,11 +685,11 @@ export const calculateShiftSpecs = ({
 
         // --- end of list adjustment; case of in bounds of trailing runway
 
-        const computedNextCradleEndRow = 
-            (previousCradleReferenceRow + (cradleRowcount -1) + cradleReferenceRowshift)
-
-        const targetCradleEndRow = 
-            newAxisReferenceRow + (viewportRowcount - 1) + (runwayRowcount - 1)
+        const 
+            computedNextCradleEndRow = 
+                (previousCradleReferenceRow + (cradleRowcount -1) + cradleReferenceRowshift),
+            targetCradleEndRow = 
+                newAxisReferenceRow + (viewportRowcount - 1) + (runwayRowcount - 1)
 
         let tailrowdiff =  computedNextCradleEndRow - targetCradleEndRow
 
@@ -730,7 +734,6 @@ export const calculateShiftSpecs = ({
     // create head and tail change counts
     const 
         changeOfCradleContentCount = cradlecontentlist.length - newCradleContentCount,
-
         listStartChangeCount = -(cradleReferenceItemShift),
         listEndChangeCount = -listStartChangeCount - changeOfCradleContentCount
 
@@ -755,11 +758,13 @@ export const calculateShiftSpecs = ({
 // supports calcContentShift above
 const getGridRowLengths = (grid, orientation, crosscount, gap) => {
 
-    const rowLengths = []
-    const elementList = grid.childNodes
+    const 
+        rowLengths = [],
+        elementList = grid.childNodes
 
-    let elementPtr = 0
-    let element = elementList[elementPtr]
+    let 
+        elementPtr = 0,
+        element = elementList[elementPtr]
 
     while (element) {
         const rowlength = 
@@ -767,6 +772,7 @@ const getGridRowLengths = (grid, orientation, crosscount, gap) => {
                 element.offsetHeight:
                 element.offsetWidth) 
             + gap
+
         rowLengths.push(rowlength)
         elementPtr += crosscount
         element = elementList[elementPtr]
@@ -809,17 +815,19 @@ export const getCellFrameComponentList = ({
 
     }) => {
 
-    const localContentlist = [...contentlist]
-    const lastindexoffset = cradleReferenceIndex + localContentlist.length - 1
+    const 
+        localContentlist = [...contentlist],
+        lastindexoffset = cradleReferenceIndex + localContentlist.length - 1,
 
-    const headContentlist = [], tailContentlist = []
+        headContentlist = [], tailContentlist = []
 
     let deletedtailitems = [], deletedheaditems = []
 
     if (listStartChangeCount >= 0) { // acquire new items
 
-        let referenceIndex = cradleReferenceIndex
-        let changeCount = listStartChangeCount
+        let 
+            referenceIndex = cradleReferenceIndex,
+            changeCount = listStartChangeCount
         
         if (listStartChangeCount > cradleContentCount) {
             referenceIndex = cradleReferenceIndex - (listStartChangeCount - cradleContentCount)
@@ -855,12 +863,15 @@ export const getCellFrameComponentList = ({
 
     if (listEndChangeCount >= 0) { // acquire new items
 
-        let referenceIndex = lastindexoffset
-        let changeCount = listEndChangeCount
+        let 
+            referenceIndex = lastindexoffset,
+            changeCount = listEndChangeCount
+
         if (listEndChangeCount > cradleContentCount) {
             referenceIndex = lastindexoffset + (listEndChangeCount - cradleContentCount)
             changeCount = cradleContentCount
         }
+
         for (let newindex = referenceIndex + 1; newindex < (referenceIndex + 1 + changeCount); newindex++) {
 
             tailContentlist.push(
@@ -888,9 +899,9 @@ export const getCellFrameComponentList = ({
 
     }
 
-    const deletedItems = [...deletedheaditems,...deletedtailitems]
-
-    const componentList = [...headContentlist,...localContentlist,...tailContentlist]
+    const 
+        deletedItems = [...deletedheaditems,...deletedtailitems],
+        componentList = [...headContentlist,...localContentlist,...tailContentlist]
 
     return [componentList,deletedItems]
 
@@ -907,17 +918,18 @@ export const allocateContentList = (
     }
 ) => {
 
-    const { triggercellIndex } = layoutHandler
+    const 
+        { triggercellIndex } = layoutHandler,
 
-    const lowcontentindex = contentlist[0]?.props.index,
-        highcontentindex = lowcontentindex + contentlist.length
+        lowcontentindex = contentlist[0]?.props.index,
+        highcontentindex = lowcontentindex + contentlist.length,
 
-    const headitemcount = (axisReferenceIndex - lowcontentindex)
+        headitemcount = (axisReferenceIndex - lowcontentindex),
 
-    const targetTriggercellIndex = 
-        (headitemcount == 0)?
-            axisReferenceIndex:
-            axisReferenceIndex - 1
+        targetTriggercellIndex = 
+            (headitemcount == 0)?
+                axisReferenceIndex:
+                axisReferenceIndex - 1
 
     layoutHandler.triggercellIsInTail = 
         (headitemcount == 0)?
@@ -926,17 +938,19 @@ export const allocateContentList = (
 
     if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) { //&& 
         if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {
-            const triggercellPtr = triggercellIndex - lowcontentindex
-            const triggercellComponent = contentlist[triggercellPtr]
+            const 
+                triggercellPtr = triggercellIndex - lowcontentindex,
+                triggercellComponent = contentlist[triggercellPtr]
             if (triggercellComponent) { // otherwise has been asynchronously cleared
                 contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:false})
             }
         }
     }
 
-    const triggercellPtr = targetTriggercellIndex - lowcontentindex
+    const 
+        triggercellPtr = targetTriggercellIndex - lowcontentindex,
+        triggercellComponent = contentlist[triggercellPtr]
 
-    const triggercellComponent = contentlist[triggercellPtr]
     if (triggercellComponent) {
 
         contentlist[triggercellPtr] = React.cloneElement(triggercellComponent, {isTriggercell:true})
@@ -953,8 +967,9 @@ export const allocateContentList = (
 
     }
 
-    const headlist = contentlist.slice(0,headitemcount)
-    const taillist = contentlist.slice(headitemcount)
+    const 
+        headlist = contentlist.slice(0,headitemcount),
+        taillist = contentlist.slice(headitemcount)
 
     return [ headlist, taillist ]
 
@@ -1002,10 +1017,10 @@ const createCellFrame = ({
 
     } = cradleInheritedProperties
 
-    const listsize = cradleInternalProperties.virtualListProps.size
-
-    // get new or existing itemID
-    const itemID = cacheAPI.getNewOrExistingItemID(index)
+    const 
+        listsize = cradleInternalProperties.virtualListProps.size,
+        // get new or existing itemID
+        itemID = cacheAPI.getNewOrExistingItemID(index)
 
     return <CellFrame 
         key = { instanceID } 
