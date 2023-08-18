@@ -156,7 +156,7 @@ export const generateShiftInstruction = ({
     
     // isFirstRowTriggerConfig is true if the triggerlines are with the first tail row instead of the
     // last headrow. That happens (workaround) when there are no head rows
-    isFirstRowTriggerConfig, 
+    isFirstRowTriggerConfig, // boolean
 
     // Safari doesn't measure zoomed values for rootbounds in triggerlineEntries, so we take a direct reading
     viewportBoundingRect, 
@@ -164,8 +164,9 @@ export const generateShiftInstruction = ({
 
 }) => {
 
+    // collect resources
     const 
-        triggerData = {
+        triggerConfigData = {
             headOffset:null,
             tailOffset:null,
             span:triggerlineSpan,
@@ -204,16 +205,16 @@ export const generateShiftInstruction = ({
         triggerHistory = triggerHistoryRef.current
 
     entry.referencename = referencename // for debug
-    // set triggerData
+    // set triggerConfigData
     if (referencename == 'headtrigger') {
 
-        triggerData.headOffset = viewportTriggerOffset
-        triggerData.tailOffset = viewportTriggerOffset + span
+        triggerConfigData.headOffset = viewportTriggerOffset
+        triggerConfigData.tailOffset = viewportTriggerOffset + span
 
     } else { // tailtrigger
 
-        triggerData.headOffset = viewportTriggerOffset - span
-        triggerData.tailOffset = viewportTriggerOffset
+        triggerConfigData.headOffset = viewportTriggerOffset - span
+        triggerConfigData.tailOffset = viewportTriggerOffset
 
     }
 
@@ -223,9 +224,9 @@ export const generateShiftInstruction = ({
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
     // Obviously needs work to generalize...
-    if ((isSafariIOS && (triggerData.headOffset == 0 || triggerData.tailOffset == 0)) ||
-        (!isSafariIOS && (((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) || 
-        ((triggerData.tailOffset >= -1) && (triggerData.tailOffset <= 1))))) {
+    if ((isSafariIOS && (triggerConfigData.headOffset == 0 || triggerConfigData.tailOffset == 0)) ||
+        (!isSafariIOS && (((triggerConfigData.headOffset >= -1) && (triggerConfigData.headOffset <= 1)) || 
+        ((triggerConfigData.tailOffset >= -1) && (triggerConfigData.tailOffset <= 1))))) {
 
         // some browsers do an infinite loop with the same previousReferenceName;
         // usually alternates
@@ -237,7 +238,7 @@ export const generateShiftInstruction = ({
             
         } else {
 
-            if ((triggerData.headOffset >= -1) && (triggerData.headOffset <= 1)) {
+            if ((triggerConfigData.headOffset >= -1) && (triggerConfigData.headOffset <= 1)) {
 
                 triggerHistory.previousReferenceName = 'headtrigger'
 
@@ -266,7 +267,7 @@ export const generateShiftInstruction = ({
 
     if (isFirstRowTriggerConfig) {
 
-        if (triggerData.headOffset <= 0) {
+        if (triggerConfigData.headOffset <= 0) {
 
             shiftinstruction = 'moveaxistailward'
 
@@ -278,11 +279,11 @@ export const generateShiftInstruction = ({
 
     } else {
 
-        if (triggerData.tailOffset <= 0) {
+        if (triggerConfigData.tailOffset <= 0) {
 
             shiftinstruction = 'moveaxistailward'
 
-        } else if (triggerData.headOffset >= 0) {
+        } else if (triggerConfigData.headOffset >= 0) {
 
             shiftinstruction = 'moveaxisheadward'
 
@@ -296,8 +297,8 @@ export const generateShiftInstruction = ({
 
     const triggerViewportReferencePixelPos = 
         (shiftinstruction == 'moveaxistailward')? // block is scrolling up or left
-            triggerData.tailOffset: // needs to move up or left toward head
-            triggerData.headOffset // needs to move down or right toward tail
+            triggerConfigData.tailOffset: // needs to move up or left toward head
+            triggerConfigData.headOffset // needs to move down or right toward tail
 
     return [shiftinstruction, triggerViewportReferencePixelPos]
 

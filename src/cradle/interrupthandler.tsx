@@ -34,9 +34,10 @@ export default class InterruptHandler {
 
         }
 
-        const viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current
+        const 
+            viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
 
-        const viewportBoundingRect = viewportElement.getBoundingClientRect()
+            viewportBoundingRect = viewportElement.getBoundingClientRect()
 
         if (viewportBoundingRect.width == 0 && viewportBoundingRect.height == 0) { // reparenting or pivoting
 
@@ -60,45 +61,45 @@ export default class InterruptHandler {
             scrollData.previousupdate = scrollData.currentupdate
             scrollData.currentupdate = scrollData.current
 
-            const cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
-                cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current
-            
-            const { 
-
-                orientation, 
-
-            } = cradleInheritedProperties
-
             const 
-            { 
-
-                triggerHistoryRef,
-                virtualListProps,
-
-            } = cradleInternalProperties,
-
-            { 
+                cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
+                cradleInternalProperties = this.cradleParameters.cradleInternalPropertiesRef.current,
             
-                crosscount, 
-                size:listsize,
-                rowshift,
+                { 
 
-            } = virtualListProps
+                    orientation, 
 
-            const scrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
+                } = cradleInheritedProperties,
 
-            const contentLength = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollHeight:
-                    viewportElement.scrollWidth
+                { 
 
-            const viewportLength = 
-                (orientation == 'vertical')?
-                    viewportElement.offsetHeight:
-                    viewportElement.offsetWidth
+                    triggerHistoryRef,
+                    virtualListProps,
+
+                } = cradleInternalProperties,
+
+                { 
+                
+                    crosscount, 
+                    size:listsize,
+                    rowshift,
+
+                } = virtualListProps,
+
+                scrollPos = 
+                    (orientation == 'vertical')?
+                        viewportElement.scrollTop:
+                        viewportElement.scrollLeft,
+
+                contentLength = 
+                    (orientation == 'vertical')?
+                        viewportElement.scrollHeight:
+                        viewportElement.scrollWidth,
+
+                viewportLength = 
+                    (orientation == 'vertical')?
+                        viewportElement.offsetHeight:
+                        viewportElement.offsetWidth
 
             // for browser top or bottom bounce
             // fractional pixels can cause this to fail, hence Math.floor)
@@ -124,11 +125,11 @@ export default class InterruptHandler {
 
                 if (shiftinstruction == 'moveaxistailward') { // filter out oversize last row
 
-                    const lastListRowOffset = Math.ceil(listsize/crosscount) - 1 + rowshift
-
-                    const tailcontentlist = contentHandler.content.tailModelComponents
-                    const previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0)
-                    const previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
+                    const 
+                        lastListRowOffset = Math.ceil(listsize/crosscount) - 1 + rowshift,
+                        tailcontentlist = contentHandler.content.tailModelComponents,
+                        previousAxisReferenceIndex = (tailcontentlist[0]?.props.index || 0),
+                        previousAxisRowOffset = Math.ceil(previousAxisReferenceIndex/crosscount)
 
                     if (lastListRowOffset == previousAxisRowOffset) return
 
@@ -149,8 +150,8 @@ export default class InterruptHandler {
     }
 
     // data transfer to updateCradleContent triggered by closing axisTriggerlinesObserverCallback setCradleState call
-    shiftinstruction
-    triggerViewportReferencePixelPos
+    public shiftinstruction
+    public triggerViewportReferencePixelPos
 
     private cradleIntersectionObserverCallback = (entries) => {
 
