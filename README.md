@@ -252,16 +252,16 @@ This is a sparse in-memory cache, and indexes in the cache are not guaranteed to
 
 These properties would rarely be changed.
 
-|property:datatype|value|notes|
-|---|---|---|
-|showAxis:boolean | default = false |axis can be made visible for debug|
-|triggerlineOffset:integer| default = 10| distance from cell head or tail for content shifts above/below axis|
-|VIEWPORT_RESIZE_TIMEOUT:integer| default = 250|milliseconds before the Viewport resizing state is cleared|
-|ONAFTERSCROLL_TIMEOUT:integer| default = 100|milliseconds after last scroll event before onAfter scroll event is fired|
-|IDLECALLBACK_TIMEOUT:integer| default = 175|milliseconds timeout for requestIdleCallback|
-|VARIABLE_MEASUREMENTS_TIMEOUT:integer| default = 250|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
-|CACHE_PARTITION_SIZE:integer| default = 30|the cache is partitioned for performance reasons|
-|MAX_CACHE_OVER_RUN:number| default = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
+|property:datatype = default|notes|
+|---|---|
+|showAxis:boolean = false |axis can be made visible for debug|
+|triggerlineOffset:integer = 10| distance from cell head or tail for content shifts above/below axis|
+|VIEWPORT_RESIZE_TIMEOUT:integer = 250|milliseconds before the Viewport resizing state is cleared|
+|ONAFTERSCROLL_TIMEOUT:integer = 100|milliseconds after last scroll event before onAfter scroll event is fired|
+|IDLECALLBACK_TIMEOUT:integer = 175|milliseconds timeout for requestIdleCallback|
+|VARIABLE_MEASUREMENTS_TIMEOUT:integer = 250|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
+|CACHE_PARTITION_SIZE:integer = 30|the cache is partitioned for performance reasons|
+|MAX_CACHE_OVER_RUN:number = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
 
 ### `scrollerProperties` object
 
