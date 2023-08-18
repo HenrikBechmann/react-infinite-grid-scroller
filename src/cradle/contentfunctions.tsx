@@ -164,7 +164,7 @@ export const generateShiftInstruction = ({
 
 }) => {
 
-    // collect resources
+    // ---------------------[ collect resources ]----------------
     const 
         triggerConfigData = {
             headOffset:null,
@@ -173,98 +173,131 @@ export const generateShiftInstruction = ({
             isFirstRowTriggerConfig
         },
 
-        // most recent; either triggerline will do
+        // most recent observer record; either triggerline will do
         entry = triggerlineEntries[triggerlineEntries.length - 1], //.at(-1) at not available in iOS 15
-        referencename = entry.target.dataset.type,
+        referencename = entry.target.dataset.type, // headtrigger or tailtrigger
 
-        span = triggerlineSpan,
+        span = triggerlineSpan, // current pixel distance between triggers
 
-        intersectrootpos = 
+        // --- identify viewportpos...
+        intersectrootpos = // the viewport measured by the observer
             (orientation == 'vertical')?
                 Math.trunc(entry.rootBounds.y):
                 Math.trunc(entry.rootBounds.x),
 
-        boundingrootpos =
+        boundingrootpos = // the viewport measured directly
             (orientation == 'vertical')?
                 Math.trunc(viewportBoundingRect.y):
                 Math.trunc(viewportBoundingRect.x),
 
         // this selection is redundant, but documents what's going on
-        rootpos = 
+        viewportpos = // the viewportpos selection, to accommodate Safari zooming anomaly
             (intersectrootpos == boundingrootpos)?
             intersectrootpos:
             boundingrootpos, // we're in Safari, zoomed
+        // --- end of identify viewportpos
 
-        entrypos = 
+
+        triggerpos = 
             (orientation == 'vertical')?
                 Math.trunc(entry.boundingClientRect.y):
                 Math.trunc(entry.boundingClientRect.x),
 
-        viewportTriggerOffset = entrypos - rootpos,
+        // get the triggeroffset, which controls the determination of the shift instruction
+        triggerOffset = triggerpos - viewportpos,
 
         triggerHistory = triggerHistoryRef.current
 
     entry.referencename = referencename // for debug
-    // set triggerConfigData
+
+    // -------------- [ set the offset data for both triggers ] ------------
+
     if (referencename == 'headtrigger') {
 
-        triggerConfigData.headOffset = viewportTriggerOffset
-        triggerConfigData.tailOffset = viewportTriggerOffset + span
+        triggerConfigData.headOffset = triggerOffset
+        triggerConfigData.tailOffset = triggerOffset + span
 
     } else { // tailtrigger
 
-        triggerConfigData.headOffset = viewportTriggerOffset - span
-        triggerConfigData.tailOffset = viewportTriggerOffset
+        triggerConfigData.headOffset = triggerOffset - span
+        triggerConfigData.tailOffset = triggerOffset
 
     }
 
-    // calculate shift instruction
+    // -------------------[ calculate shift instruction ]--------------
+
     let shiftinstruction
+
+    // --------------[ FILTER OUT INFINITE RECURSION ]--------------
     
     // since triggers are moved and can share the 0 (zero) offset, an infinite loop can occur
     // between the head and tail triggers. The following short-circuits that.
-    // Obviously needs work to generalize...
-    if ((isSafariIOS && (triggerConfigData.headOffset == 0 || triggerConfigData.tailOffset == 0)) ||
-        (!isSafariIOS && (((triggerConfigData.headOffset >= -1) && (triggerConfigData.headOffset <= 1)) || 
-        ((triggerConfigData.tailOffset >= -1) && (triggerConfigData.tailOffset <= 1))))) {
+    // Identify case of trigger at border
+    if (
+            (isSafariIOS && // either trigger offset is exactly 0
 
-        // some browsers do an infinite loop with the same previousReferenceName;
+                (triggerConfigData.headOffset == 0 || triggerConfigData.tailOffset == 0)
+
+            ) 
+
+        ||
+
+            (!isSafariIOS && // either trigger offset is within range of 0
+
+                (
+                    (triggerConfigData.headOffset >= -1 && triggerConfigData.headOffset <= 1) 
+
+                    || 
+                    
+                    (triggerConfigData.tailOffset >= -1 && triggerConfigData.tailOffset <= 1)
+
+                )
+            )
+
+        ) {
+
+        // some browsers do an infinite loop with the same previousTriggerNameAtBorder;
         // usually alternates
-        if (triggerHistory.previousReferenceName) {
+        // so if this is a repeat of the same at-border, short-circuit and cancel
+        if (triggerHistory.previousTriggerNameAtBorder) {
 
-            triggerHistory.previousReferenceName = null
+            triggerHistory.previousTriggerNameAtBorder = null
 
             shiftinstruction = 'none'
             
-        } else {
+        } else { // record this instance, to prevent a repeat next time
 
             if ((triggerConfigData.headOffset >= -1) && (triggerConfigData.headOffset <= 1)) {
 
-                triggerHistory.previousReferenceName = 'headtrigger'
+                triggerHistory.previousTriggerNameAtBorder = 'headtrigger'
 
             } else {
 
-                triggerHistory.previousReferenceName = 'tailtrigger'
+                triggerHistory.previousTriggerNameAtBorder = 'tailtrigger'
 
             }
 
         }
 
-    } else {
+    } else { // otherwise if not at-border clear record of previous trigger at border
 
-        if (triggerHistory.previousReferenceName) {
+        if (triggerHistory.previousTriggerNameAtBorder) {
 
-            triggerHistory.previousReferenceName = null
+            triggerHistory.previousTriggerNameAtBorder = null
 
         }
     }
 
-    if (shiftinstruction) { // will be 'none'
+    if (shiftinstruction) { // will be 'none', owing to repeat of trigger at border
 
         return [shiftinstruction, 0]
 
     }
 
+    // --------------[ END OF FILTER OUT INFINITE RECURSION ]--------------
+
+    // now safely calculate the shift instruction
+    // the head offset should always be placed above the border; the tail below
     if (isFirstRowTriggerConfig) {
 
         if (triggerConfigData.headOffset <= 0) {
@@ -295,7 +328,7 @@ export const generateShiftInstruction = ({
 
     }
 
-    const triggerViewportReferencePixelPos = 
+    const triggerViewportReferencePixelPos = // used to calculate required pixel shift
         (shiftinstruction == 'moveaxistailward')? // block is scrolling up or left
             triggerConfigData.tailOffset: // needs to move up or left toward head
             triggerConfigData.headOffset // needs to move down or right toward tail

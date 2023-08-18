@@ -159,7 +159,7 @@ const Cradle = ({
         hasBeenRenderedRef = useRef(false),
         // trigger control
         triggerHistoryRef = useRef({
-            previousReferenceName:null,
+            previousTriggerNameAtBorder:null,
         })
 
     //  viewport dimensions and cached state
