@@ -33,12 +33,14 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 // defensive
 import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
 
-export const isSafariIOS = () => {
+const isSafariIOSFn = () => {
     const
         is_ios = /iP(ad|od|hone)/i.test(window.navigator.userAgent),
         is_safari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/)
     return ( is_ios && is_safari ) 
 }
+
+export const isSafariIOS = isSafariIOSFn()
 
 // based on module template
 function ErrorFallback({error, resetErrorBoundary}) {
@@ -417,7 +419,7 @@ const InfiniteGridScroller = (props) => {
             if (listrange.length == 0) {
                 listrange = [0,listsize - 1]
             } else {
-                const [lowindex,highindex] = listRangeRef.current
+                const [lowindex/*,highindex*/] = listRangeRef.current
                 listrange = [lowindex,lowindex + listsize - 1]
             }
         }
@@ -524,7 +526,7 @@ const InfiniteGridScroller = (props) => {
 
                     cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }
-                    useScrollTracker = { useScrollTracker }
+                    // useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }
                     ONAFTERSCROLL_TIMEOUT = { ONAFTERSCROLL_TIMEOUT }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }

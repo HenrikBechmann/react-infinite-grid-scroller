@@ -92,7 +92,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |cellWidth:integer| number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
 |startingListSize:integer| the starting number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange` array|
 |startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list|
-|getItem(index:integer,itemID:integer):React.FC \| Promise \| undefined \| null|host-provided function. session `itemID` (integer) is for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
+|getItem(index:integer,itemID:integer):<br />React.FC \| Promise \| undefined \| null|host-provided function. session `itemID` (integer) is for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
 |[_**SCROLLER OPTIONS**_]|
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
 |layout:string| 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
@@ -225,12 +225,12 @@ Details about the functions returned in an object by `functionsCallback`:
 |---|---|
 |[_**OPERATIONS**_]|
 |scrollToIndex(index:integer):_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
+|scrollToPixel(pixel:integer[,behavior:string = 'smooth']):void|scrolls the scroller to the provided pixel, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` must be >=0 |
+|scrollByPixel(pixel:integer[,behavior:string = 'smooth']):void|scrolls the scroller up or down by the number of provided pixels, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` can be positive (scroll down) or negative (scroll up) |
 |setListsize(index:integer):_void_|changes the list size, by adjusting the list range high index. Favour use of `setListRange` instead|
 |setListRange(array [lowindex, highindex] \| []):_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers. [] (empty array) creates an empty virtual list|
 |prependIndexCount(count:integer):_void_|the number of indexes to expand the start of the virtual list|
 |appendIndexCount(count:integer):_void_|the number of indexes to expand the end of the virtual list|
-|reload():_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
-|clearCache():_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 |[_**SNAPSHOTS**_]|
 |getCacheIndexMap():Map|snapshot of cache index (=key) to itemID (=value) map|
 |getCacheItemMap():Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
@@ -241,6 +241,8 @@ Details about the functions returned in an object by `functionsCallback`:
 |removeIndex(index:integer, rangehighindex:integer \| null):array[changeList:array, replaceList:array, removeList:array]|a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
 |moveIndex(toindex:integer, fromindex:integer, fromhighrange: integer \| null):array[processedIndexList:array]|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 |remapIndexes(changeMap:Map):array[<br />modifiedIndexList: array,<br />processedIndexList: array,<br />deletedIndexList: array,<br />indexesOfReplacedItemsList: array,<br />deletedOrphanedItemIDList: array,<br />deletedOrphanedIndexList: array,<br />errorEntriesMap: Map,<br />changeMap: Map] |(return changeMap is the same as input parameter). changeMap is index (=key) to itemID (=value) map. indexes or itemIDs not in the cache are ignored. indexes with values set to `null` are deleted. indexes with values set to `undefined` have their component items replaced. `itemID`s are assigned to the new indexes; synchronizes to the `Cradle`. List size is adjusted as necessary|
+|reload():_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
+|clearCache():_void_|clears the cache and the `Cradle` (leaving nothing to display)|
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
 
@@ -252,16 +254,16 @@ This is a sparse in-memory cache, and indexes in the cache are not guaranteed to
 
 These properties would rarely be changed.
 
-|property:datatype|value|notes|
-|---|---|---|
-|showAxis:boolean | default = false |axis can be made visible for debug|
-|triggerlineOffset:integer| default = 10| distance from cell head or tail for content shifts above/below axis|
-|VIEWPORT_RESIZE_TIMEOUT:integer| default = 250|milliseconds before the Viewport resizing state is cleared|
-|ONAFTERSCROLL_TIMEOUT:integer| default = 100|milliseconds after last scroll event before onAfter scroll event is fired|
-|IDLECALLBACK_TIMEOUT:integer| default = 175|milliseconds timeout for requestIdleCallback|
-|VARIABLE_MEASUREMENTS_TIMEOUT:integer| default = 250|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
-|CACHE_PARTITION_SIZE:integer| default = 30|the cache is partitioned for performance reasons|
-|MAX_CACHE_OVER_RUN:number| default = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
+|property:datatype = default|notes|
+|---|---|
+|showAxis:boolean = false |axis can be made visible for debug|
+|triggerlineOffset:integer = 10| distance from cell head or tail for content shifts above/below axis|
+|VIEWPORT_RESIZE_TIMEOUT:integer = 250|milliseconds before the Viewport resizing state is cleared|
+|ONAFTERSCROLL_TIMEOUT:integer = 100|milliseconds after last scroll event before onAfter scroll event is fired|
+|IDLECALLBACK_TIMEOUT:integer = 175|milliseconds timeout for requestIdleCallback|
+|VARIABLE_MEASUREMENTS_TIMEOUT:integer = 250|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
+|CACHE_PARTITION_SIZE:integer = 30|the cache is partitioned for performance reasons|
+|MAX_CACHE_OVER_RUN:number = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
 
 ### `scrollerProperties` object
 

@@ -83,7 +83,7 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 // cacheAPI is imported as a property; instantiated at the root
 
-import { isSafariIOS } from './InfiniteGridScroller'
+// import { isSafariIOS } from './InfiniteGridScroller'
 
 // for children
 export const CradleContext = React.createContext(null)
@@ -111,7 +111,7 @@ const Cradle = ({
         cacheAPI,
         // system
         usePlaceholder,
-        useScrollTracker,
+        // useScrollTracker,
         showAxis,
         ONAFTERSCROLL_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
@@ -159,7 +159,7 @@ const Cradle = ({
         hasBeenRenderedRef = useRef(false),
         // trigger control
         triggerHistoryRef = useRef({
-            previousReferenceName:null,
+            previousTriggerNameAtBorder:null,
         })
 
     //  viewport dimensions and cached state
@@ -368,6 +368,7 @@ const Cradle = ({
             viewportRowcount, 
             listRowcount,
             runwayRowcount,
+            layout,
         ]
 
     },[
@@ -567,8 +568,28 @@ const Cradle = ({
 
             const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-            viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
+            // const scrollTop = viewportElement.scrollTop
+            // const scrollLeft = viewportElement.scrollLeft
+
+            let scrollOptions
+            if (cradlePositionData.blockScrollProperty == 'scrollTop') {
+                scrollOptions = {
+                    top:blockScrollPos,
+                    left:blockXScrollPos,
+                    behavior:'instant',
+                }
+            } else {
+                scrollOptions = {
+                    left:blockScrollPos,
+                    top:blockXScrollPos,
+                    behavior:'instant',
+                }            
+            }
+
+            viewportElement.scroll(scrollOptions)
+
+            // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
+            // viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
         }
 
@@ -631,6 +652,8 @@ const Cradle = ({
         const {
 
             scrollToIndex, 
+            scrollToPixel,
+            scrollByPixel,
             reload, 
             setListsize, // deprecated
             setListSize,
@@ -654,6 +677,8 @@ const Cradle = ({
         const functions = {
 
             scrollToIndex,
+            scrollToPixel,
+            scrollByPixel,
             reload,
             setListsize, // deprecated
             setListSize,
@@ -688,25 +713,6 @@ const Cradle = ({
 
             viewportElement && 
                 viewportElement.removeEventListener('scroll',scrollHandler.onScroll)
-
-        }
-
-    },[])
-
-    // iOS Safari requires special handling - it ignores assignments to scrollLeft/scrollTop during scrolling
-    useEffect(() => {
-
-        const { layout } = cradleInheritedPropertiesRef.current
-
-        if (!isSafariIOS() || (layout == 'uniform')) return
-
-        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-        viewportElement.addEventListener('scroll',scrollHandler.iOSonScroll)
-
-        return () => {
-
-            viewportElement && 
-                viewportElement.removeEventListener('scroll',scrollHandler.iOSonScroll)
 
         }
 
@@ -773,6 +779,29 @@ const Cradle = ({
 
         }
     },[])
+
+    // variable content requires special handling
+    // useEffect(() => {
+
+    //     const { layout } = cradleInheritedPropertiesRef.current
+
+    //     const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+
+    //     if (layout == 'uniform') {
+    //         viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
+    //         return
+    //     }
+
+    //     viewportElement.addEventListener('scroll',scrollHandler.onScrollForVariable)
+
+    //     return () => {
+
+    //         viewportElement && 
+    //             viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
+
+    //     }
+
+    // },[layout])
 
     // caching change
     useEffect(()=> {
@@ -999,7 +1028,7 @@ const Cradle = ({
 
         setCradleState('pivot')
 
-    },[orientation])
+    },[orientation, layout]) // TODO: check for side-effects of layout-only change
 
     // =====================[ STYLES ]===========================
 
@@ -1506,9 +1535,6 @@ const Cradle = ({
 
     // ==========================[ RENDER ]===========================
 
-    const scrollAxisReferencePosition = layoutHandler.cradlePositionData.targetAxisReferencePosition
-    const scrollAxisReferenceIndex = scrollAxisReferencePosition + lowindex
-    const scrollIndexRef = useRef(scrollAxisReferencePosition)
     const cradleContent = contentHandler.content
 
     const triggercellTriggerlinesRef = useRef(null)
