@@ -419,7 +419,7 @@ const InfiniteGridScroller = (props) => {
             if (listrange.length == 0) {
                 listrange = [0,listsize - 1]
             } else {
-                const [lowindex,highindex] = listRangeRef.current
+                const [lowindex/*,highindex*/] = listRangeRef.current
                 listrange = [lowindex,lowindex + listsize - 1]
             }
         }
@@ -526,7 +526,7 @@ const InfiniteGridScroller = (props) => {
 
                     cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }
-                    useScrollTracker = { useScrollTracker }
+                    // useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }
                     ONAFTERSCROLL_TIMEOUT = { ONAFTERSCROLL_TIMEOUT }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }

@@ -75,7 +75,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
 
     // derive target row
-    let targetAxisReferenceRow = Math.floor(targetAxisReferenceIndex/crosscount)
+    const targetAxisReferenceRow = Math.floor(targetAxisReferenceIndex/crosscount)
 
     // -----------------------[ calc cradleReferenceRow & Index ]------------------------
 
@@ -380,7 +380,7 @@ export const calculateShiftSpecs = ({
 
             crosscount, 
             rowcount:listRowcount, 
-            size:listsize,
+            // size:listsize,
             lowindex:listlowindex,
             baserowblanks,
             endrowblanks,

@@ -37,7 +37,8 @@
 
 */
 
-import React, {useState, useEffect, useRef, useCallback} from 'react'
+// import React, {useState, useEffect, useRef, useCallback} from 'react'
+import React from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
@@ -484,11 +485,12 @@ export default class CacheAPI {
 
         mapkeysList.sort((a,b) => a - b) // ascending
 
-        const { cradleParameters } = this.scrollerDataMap.get(scrollerID)
+        // const { cradleParameters } = this.scrollerDataMap.get(scrollerID)
 
-        const { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current
+        // const { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { lowcurrentindex, highcurrentindex } = virtualListProps
+        // const { lowcurrentindex, highcurrentindex } = virtualListProps
+
         const [ lownewindex, highnewindex ] = newlistrange
 
         const highestindex = mapkeysList.at(-1)
@@ -621,19 +623,21 @@ export default class CacheAPI {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current
 
-        const { getItem, cacheMax } = cradleInheritedProperties,
-            {size:listsize, lowindex, highindex} = cradleInternalProperties.virtualListProps
+        // const { getItem, cacheMax } = cradleInheritedProperties,
+        const { getItem } = cradleInheritedProperties,
+            // {size:listsize, lowindex, highindex} = cradleInternalProperties.virtualListProps
+            {lowindex, highindex} = cradleInternalProperties.virtualListProps
 
         const promises = []
 
-        let cacheSize = cacheMax ?? 0
+        // let cacheSize = cacheMax ?? 0
 
-        cacheSize = Math.min(cacheSize, listsize)
+        // cacheSize = Math.min(cacheSize, listsize)
 
-        const preloadsize = 
-            cacheSize?
-                cacheSize:
-                listsize
+        // const preloadsize = 
+        //     cacheSize?
+        //         cacheSize:
+        //         listsize
 
         const breakloop = {
             current:false
@@ -1178,8 +1182,8 @@ export default class CacheAPI {
 
         if (!scrollerDataMap) return null
 
-        const { layout, cellHeight, cellWidth, orientation } = 
-            this.scrollerDataMap.get(scrollerID).cradleParameters.cradleInheritedPropertiesRef.current
+        // const { layout, cellHeight, cellWidth, orientation } = 
+        //     this.scrollerDataMap.get(scrollerID).cradleParameters.cradleInheritedPropertiesRef.current
 
         const portalNode = createPortalNode(index, itemID)
 

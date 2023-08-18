@@ -373,7 +373,7 @@ const CellFrame = ({
                                     scrollerPropertiesRef,
                                 }
                                 let addinCount = 0
-                                const addinProps:{scrollerProperties?:Object, cacheAPI?:Function} = {}
+                                const addinProps:{scrollerProperties?:object, cacheAPI?:object} = {}
                                 if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
                                     addinProps.scrollerProperties = scrollerProperties
                                     addinCount++

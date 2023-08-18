@@ -260,7 +260,7 @@ export default class ContentHandler {
                 size:listsize, 
                 crosscount, 
                 rowcount:listRowcount,
-                baserowblanks,
+                // baserowblanks,
                 // endrowblanks,
 
             } = virtualListProps
@@ -960,7 +960,7 @@ export default class ContentHandler {
             {
 
                 virtualListProps,
-                cradleContentProps,
+                // cradleContentProps,
 
             } = cradleInternalProperties,
 
@@ -1094,7 +1094,7 @@ export default class ContentHandler {
 
     private resizeTimeoutID
 
-    private resizeObserverCallback = (entries) => {
+    private resizeObserverCallback = () => {
 
         clearTimeout(this.resizeTimeoutID)
 
@@ -1104,9 +1104,9 @@ export default class ContentHandler {
 
             const
                 { cradleParameters } = this,
-                cradleHandlers = cradleParameters.handlersRef.current,
+                // cradleHandlers = cradleParameters.handlersRef.current,
                 ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
-                { serviceHandler } = cradleHandlers,
+                // { serviceHandler } = cradleHandlers,
                 viewportElement = ViewportContextProperties.elementRef.current,
                 scrollblockElement = viewportElement.firstChild,
                 cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,

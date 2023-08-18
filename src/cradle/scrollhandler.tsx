@@ -238,7 +238,11 @@ export default class ScrollHandler {
 
         this._scrolltimerid = setTimeout(() => {
 
-            this.onAfterScroll()
+            if ( stateHandler.isMountedRef.current ) {
+
+                this.onAfterScroll()
+
+            }
 
         },this._onAfterScrollTimeout)
 
@@ -274,7 +278,9 @@ export default class ScrollHandler {
 
                 this._scrollforvariabletimerid = setTimeout(() => {
 
-                    this.onAfterScrollForVariable() // deferred halt and adjust
+                    if ( stateHandler.isMountedRef.current ) {
+                        this.onAfterScrollForVariable() // deferred halt and adjust
+                    }
 
                 },this._onAfterScrollTimeout)
 

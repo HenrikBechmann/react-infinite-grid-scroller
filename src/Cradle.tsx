@@ -111,7 +111,7 @@ const Cradle = ({
         cacheAPI,
         // system
         usePlaceholder,
-        useScrollTracker,
+        // useScrollTracker,
         showAxis,
         ONAFTERSCROLL_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
@@ -568,8 +568,8 @@ const Cradle = ({
 
             const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
-            const scrollTop = viewportElement.scrollTop
-            const scrollLeft = viewportElement.scrollLeft
+            // const scrollTop = viewportElement.scrollTop
+            // const scrollLeft = viewportElement.scrollLeft
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
