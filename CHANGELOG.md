@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.0 August 18, 2023
+
+New API calls:
+- scrollToPixel(pixel:number[,behavior:string])
+- scrollByPixel(pixel:number[,behavior;string])
+
+Internal updates:
+- scroll mechanics for variable content was changed to accomodate scroll API calls. 
+
 ## 1.1.0 August 13, 2023
 
 Breaking change:
