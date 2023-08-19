@@ -406,7 +406,7 @@ export default class ScrollHandler {
         const 
             ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
             cradleSpecs = this.cradleParameters.cradleInheritedPropertiesRef.current,
-            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            { virtualListProps, paddingProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
 
             viewportElement = ViewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild,
@@ -433,11 +433,16 @@ export default class ScrollHandler {
 
         let axisPixelOffset = cellLength - ((scrollPos + scrollblockOffset) % cellLength)
 
-        if (axisPixelOffset == (cellLength + cradleSpecs.padding)) {
+        const paddingOffset = 
+            orientation == 'vertical'?
+                paddingProps.top:
+                paddingProps.left
+
+        if (axisPixelOffset == (cellLength + paddingOffset)) {
             axisPixelOffset = 0
         }
 
-        const axisRowPosition = Math.ceil((scrollPos - cradleSpecs.padding)/cellLength)
+        const axisRowPosition = Math.ceil((scrollPos - paddingOffset)/cellLength)
 
         let axisReferencePosition = axisRowPosition * crosscount
         axisReferencePosition = Math.min(axisReferencePosition,listsize - 1)
