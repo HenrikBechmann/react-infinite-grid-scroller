@@ -94,8 +94,8 @@ const InfiniteGridScroller = (props) => {
 
         // grid specs:
         orientation = 'vertical', // vertical or horizontal
-        gap = 0, // space between grid cells, not including the leading and trailing padding
-        padding = 0, // the border space between the items and the viewport, applied to the cradle
+        gap = 0, // space between grid cells
+        padding = 0, // the padding around the Scrollblock
         layout = 'uniform', // uniform, variable
         cellMinHeight = 25, // for layout == 'variable' && orientation == 'vertical'
         cellMinWidth = 25, // for layout == 'variable' && orientation == 'horizontal'
@@ -144,7 +144,7 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         gap,
-        padding,
+        // padding,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -169,7 +169,66 @@ const InfiniteGridScroller = (props) => {
     cellMinHeight = +cellMinHeight
     cellMinWidth = +cellMinWidth
     gap = +gap
-    padding = +padding
+    const paddingPropsRef = useRef({
+        top:null,
+        right:null,
+        bottom:null,
+        left:null,
+        source:null,
+        original:null,
+        list:[],
+        CSS:'',
+    })
+    let paddingProps = paddingPropsRef.current
+    if (padding !== paddingProps.source) {
+        console.log('updating padding')
+        paddingProps.source = padding
+        if (!Array.isArray(padding)) {
+            padding = +padding
+            if (!isNaN(padding)) {
+                paddingProps.original = [padding]
+            } else {
+                paddingProps.original = [0]
+            }
+        } else {
+            let isProblem = false
+            if (padding.length > 4) {
+                isProblem = true
+            }
+            if (!isProblem) padding.forEach((value,index,list) => {
+                value = +value
+                if (isNaN(value)) {
+                    isProblem = true
+                }
+            })
+            if (!isProblem) {
+                paddingProps.original = padding
+            } else {
+                paddingProps.original = [0]
+            }
+        }
+        const list = [...paddingProps.original]
+        const lgth = list.length
+        let a,b,c
+        switch (lgth) {
+        case 1:
+            [a] = list
+            list.push(a,a,a)
+            break
+        case 2:
+            [a,b] = list
+            list.push(a,b)
+        case 3:
+            [a,b] = list
+            list.push(a)
+        }
+        paddingProps.list = list
+        const [top, right, bottom, left] = list
+        Object.assign(paddingProps,{top,right,bottom,left})
+        paddingProps.CSS = list.join('px ') + 'px'
+        paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
+    }
+    console.log('paddingPropsRef',paddingPropsRef)
     startingIndex = +startingIndex
     startingListSize = +startingListSize
     runwaySize = +runwaySize
@@ -181,7 +240,7 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         gap,
-        padding,
+        // padding,
         startingIndex,
         startingListSize,
         runwaySize,
