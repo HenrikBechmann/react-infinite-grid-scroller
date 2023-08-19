@@ -136,8 +136,8 @@ export default class ScrollHandler {
 
 
         // keep up to date in case of reparenting interrupt
-        cradlePositionData.blockScrollPos = scrollPositionCurrent
-        cradlePositionData.blockXScrollPos = scrollXPositionCurrent
+        cradlePositionData.trackingBlockScrollPos = scrollPositionCurrent
+        cradlePositionData.trackingXBlockScrollPos = scrollXPositionCurrent
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
@@ -164,20 +164,20 @@ export default class ScrollHandler {
 
         if (layout == 'variable') {
 
-            let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
+            let scrollblockLength, viewportLength, trackingBlockScrollPos, scrollblockOffset
 
             if (orientation == 'vertical') {
 
                 scrollblockLength = viewportElement.scrollHeight
                 viewportLength =  viewportElement.offsetHeight
-                blockScrollPos = viewportElement.scrollTop
+                trackingBlockScrollPos = viewportElement.scrollTop
                 scrollblockOffset = scrollblockElement.offsetTop
 
             } else {
 
                 scrollblockLength = viewportElement.scrollWidth
                 viewportLength =  viewportElement.offsetWidth
-                blockScrollPos = viewportElement.scrollLeft
+                trackingBlockScrollPos = viewportElement.scrollLeft
                 scrollblockOffset = scrollblockElement.offsetLeft
 
             }
@@ -185,8 +185,8 @@ export default class ScrollHandler {
             clearTimeout(this._scrollforvariabletimerid)
 
             // immediate interrupt halt and adjustment for overshoot at start of end of scrollblock
-            if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
-                (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
+            if ((( trackingBlockScrollPos - scrollblockOffset) < 0) || // overshoot start
+                (scrollblockLength < (trackingBlockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
 
                 this.onAfterScrollForVariable() // immediate halt and adjust
 
@@ -287,7 +287,7 @@ export default class ScrollHandler {
                     scrollblockElement.offsetTop:
                     scrollblockElement.offsetLeft,
 
-            blockScrollPos =
+            trackingBlockScrollPos =
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft,
@@ -301,7 +301,7 @@ export default class ScrollHandler {
         if (orientation == 'vertical') {
 
             scrollOptions = {
-                top:blockScrollPos - scrollblockOffset,
+                top:trackingBlockScrollPos - scrollblockOffset,
                 left:scrollLeft,
                 behavior:'instant'
             }
@@ -312,7 +312,7 @@ export default class ScrollHandler {
 
             scrollOptions = {
                 top:scrollTop,
-                left:blockScrollPos - scrollblockOffset,
+                left:trackingBlockScrollPos - scrollblockOffset,
                 behavior:'instant'
             }
 
@@ -386,13 +386,13 @@ export default class ScrollHandler {
 
             if (cradleSpecs.orientation == 'vertical') {
 
-                cradlePositionData.blockScrollPos = viewportElement.scrollTop
-                cradlePositionData.blockXScrollPos = viewportElement.scrollLeft
+                cradlePositionData.trackingBlockScrollPos = viewportElement.scrollTop
+                cradlePositionData.trackingXBlockScrollPos = viewportElement.scrollLeft
 
             } else {
 
-                cradlePositionData.blockScrollPos = viewportElement.scrollLeft
-                cradlePositionData.blockXScrollPos = viewportElement.scrollTop
+                cradlePositionData.trackingBlockScrollPos = viewportElement.scrollLeft
+                cradlePositionData.trackingXBlockScrollPos = viewportElement.scrollTop
 
             }
 

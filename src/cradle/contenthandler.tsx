@@ -483,7 +483,7 @@ export default class ContentHandler {
 
         }
 
-        cradlePositionData.blockScrollPos = pixelOffsetViewportFromScrollblock
+        cradlePositionData.trackingBlockScrollPos = pixelOffsetViewportFromScrollblock
 
         // avoid bogus call to updateCradleContent
         scrollHandler.resetScrollData(pixelOffsetViewportFromScrollblock) 
@@ -495,13 +495,13 @@ export default class ContentHandler {
         let scrollOptions
         if (cradlePositionData.blockScrollProperty == 'scrollTop') {
             scrollOptions = {
-                top:cradlePositionData.blockScrollPos,
+                top:cradlePositionData.trackingBlockScrollPos,
                 left:scrollLeft,
                 behavior:'instant',
             }
         } else {
             scrollOptions = {
-                left:cradlePositionData.blockScrollPos,
+                left:cradlePositionData.trackingBlockScrollPos,
                 top:scrollTop,
                 behavior:'instant',
             }            
@@ -907,7 +907,7 @@ export default class ContentHandler {
     // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
 /*  
-    blockScrollPos is the amount the scrollBlock is scrolled to reveal the centre of the Cradle
+    trackingBlockScrollPos is the amount the scrollBlock is scrolled to reveal the centre of the Cradle
         at the edge of the Viewport
     
     the length of the Scrollblock is shortened by the amount the measured tail length differs from the 
@@ -954,7 +954,7 @@ export default class ContentHandler {
             { 
 
                 targetAxisReferencePosition: axisReferencePosition,
-                targetPixelOffsetAxisFromViewport: axisViewportPixelOffset,
+                targetPixelOffsetAxisFromViewport: pixelOffsetAxisFromViewport,
 
             } = cradlePositionData,
 
@@ -1056,18 +1056,18 @@ export default class ContentHandler {
 
         const 
             totalScrollblockPixelLength = totalPreAxisPixelLength + totalPostAxisPixelLength,
-            blockScrollPos = totalPreAxisPixelLength - axisViewportPixelOffset,
-            newAxisScrollblockPixelOffset = blockScrollPos + axisViewportPixelOffset // ie. totalPreAxisPixelLength, but semantics
+            trackingBlockScrollPos = totalPreAxisPixelLength - pixelOffsetAxisFromViewport,
+            newPixelOffsetAxisFromScrollblock = trackingBlockScrollPos + pixelOffsetAxisFromViewport // ie. totalPreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
 
-            axisElement.style.top = (newAxisScrollblockPixelOffset - paddingProps.top) + 'px'
+            axisElement.style.top = (newPixelOffsetAxisFromScrollblock - paddingProps.top) + 'px'
 
             scrollblockElement.style.height = (totalScrollblockPixelLength) + 'px'
 
         } else { // 'horizontal'
 
-            axisElement.style.left = (newAxisScrollblockPixelOffset - paddingProps.left) + 'px'
+            axisElement.style.left = (newPixelOffsetAxisFromScrollblock - paddingProps.left) + 'px'
 
             scrollblockElement.style.width = totalScrollblockPixelLength + 'px'
 
@@ -1090,14 +1090,14 @@ export default class ContentHandler {
 
         }
 
-        // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to blockScrollPos
+        // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to trackingBlockScrollPos
         const 
             startingScrollPos = 
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft,
 
-            scrollDiff = blockScrollPos - startingScrollPos
+            scrollDiff = trackingBlockScrollPos - startingScrollPos
 
         if (orientation == 'vertical') {
 

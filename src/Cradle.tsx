@@ -36,7 +36,7 @@
             the first item in the head section of the Cradle, unless the cradle shows the very top of the
             list, in which case the cradleReferenceIndex is the same as the AxisReferenceIndex)
         - axisViewportPixelOffset (pixels that place the axis in relation to the viewport's leading edge)
-        - the blockScrollPos, which is the amount of scroll (Viewport scrollTop or scrollLeft) of the 
+        - the trackingBlockScrollPos, which is the amount of scroll (Viewport scrollTop or scrollLeft) of the 
             ScrollBlock
     
     Overscroll handling (repositioning):
@@ -568,24 +568,24 @@ const Cradle = ({
 
         const 
             { cradlePositionData } = layoutHandler,
-            blockScrollPos = cradlePositionData.blockScrollPos,
-            blockXScrollPos = cradlePositionData.blockXScrollPos
+            trackingBlockScrollPos = cradlePositionData.trackingBlockScrollPos,
+            trackingXBlockScrollPos = cradlePositionData.trackingXBlockScrollPos
 
-        if (blockScrollPos !== null) {
+        if (trackingBlockScrollPos !== null) {
 
             const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
                 scrollOptions = {
-                    top:blockScrollPos,
-                    left:blockXScrollPos,
+                    top:trackingBlockScrollPos,
+                    left:trackingXBlockScrollPos,
                     behavior:'instant',
                 }
             } else {
                 scrollOptions = {
-                    left:blockScrollPos,
-                    top:blockXScrollPos,
+                    left:trackingBlockScrollPos,
+                    top:trackingXBlockScrollPos,
                     behavior:'instant',
                 }            
             }
@@ -947,8 +947,8 @@ const Cradle = ({
                 "scrollLeft"
 
         if (cradleStateRef.current == 'setup') {
-            layoutHandler.cradlePositionData.blockScrollPos = 0
-            layoutHandler.cradlePositionData.blockXScrollPos = 0
+            layoutHandler.cradlePositionData.trackingBlockScrollPos = 0
+            layoutHandler.cradlePositionData.trackingXBlockScrollPos = 0
             return
 
         }

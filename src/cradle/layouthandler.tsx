@@ -8,7 +8,7 @@
 
     The structural elements are the axis, head (grid), tail (grid), 
         and the head and tail triggerlines
-    The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
+    The key control values are the trackingBlockScrollPos & trackingXBlockScrollPos (scrollTop or scrollLeft), the block scroll
         property ("scrollTop" or "scrollLeft"), the targetAxisReferencePosition (first index of the
         tail block), and the targetPixelOffsetAxisFromViewport (pixels offset from the edge of the 
         viewport)
@@ -110,23 +110,23 @@ export default class LayoutHandler {
         /*
             "block" = cradleblock, which is the element that is scrolled
 
-            blockScrollPos is set by scrollHandler during and after scrolling,
+            trackingBlockScrollPos is set by scrollHandler during and after scrolling,
             and by setCradleContent in contentHandler, which repositions the cradle.
 
-            blockScrollPos is used by
+            trackingBlockScrollPos is used by
                 - cradle initialization in response to reparenting interrupt
                 - setCradleContent
 
         */
-        blockScrollPos:null, // the edge of the viewport
-        blockXScrollPos:null, // the cross position for oversized scrollBlock
+        trackingBlockScrollPos:null, // the edge of the viewport
+        trackingXBlockScrollPos:null, // the cross position for oversized scrollBlock
 
         /*
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
 
             blockScrollProperty is set by the orientation reconfiguration effect in cradle module.
 
-            it is used where blockScrollPos is used above.
+            it is used where trackingBlockScrollPos is used above.
         */
         blockScrollProperty: null,
         blockXScrollProperty: null,
@@ -272,13 +272,13 @@ export default class LayoutHandler {
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
                 scrollOptions = {
-                    top:cradlePositionData.blockScrollPos,
+                    top:cradlePositionData.trackingBlockScrollPos,
                     left:scrollLeft,
                     behavior:'instant',
                 }
             } else {
                 scrollOptions = {
-                    left:cradlePositionData.blockScrollPos,
+                    left:cradlePositionData.trackingBlockScrollPos,
                     top:scrollTop,
                     behavior:'instant',
                 }            
@@ -287,7 +287,7 @@ export default class LayoutHandler {
             viewportElement.scroll(scrollOptions)
 
         }
-        cradlePositionData.blockScrollPos = calculatedBlockScrollPos
+        cradlePositionData.trackingBlockScrollPos = calculatedBlockScrollPos
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
 
     }
