@@ -10,7 +10,7 @@
         and the head and tail triggerlines
     The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
         property ("scrollTop" or "scrollLeft"), the targetAxisReferencePosition (first index of the
-        tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
+        tail block), and the targetPixelOffsetAxisFromViewport (pixels offset from the edge of the 
         viewport)
 */
 
@@ -74,7 +74,7 @@ export default class LayoutHandler {
             this.cradlePositionData.targetAxisReferencePosition = 0
         }
 
-        this.cradlePositionData.targetAxisViewportPixelOffset = 0
+        this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
     }
 
@@ -146,19 +146,19 @@ export default class LayoutHandler {
         targetAxisReferencePosition:null,
 
         /*
-            targetAxisViewportPixelOffset is set by
+            targetPixelOffsetAxisFromViewport is set by
                 - setCradleContent
                 - updateCradleContent
                 - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - pivot effect (change of orientation) in cradle module
 
-            targetAxisViewportPixelOffset is used by
+            targetPixelOffsetAxisFromViewport is used by
                 - previousAxisOffset in pivot effect
                 - setCradleContent
 
         */
-        targetAxisViewportPixelOffset:null, // pixels into the viewport
+        targetPixelOffsetAxisFromViewport:null, // pixels into the viewport
 
     }
 

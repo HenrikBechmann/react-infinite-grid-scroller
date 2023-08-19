@@ -110,7 +110,7 @@ export default class ContentHandler {
             )
 
             cradlePositionData.targetAxisReferencePosition = 0
-            cradlePositionData.targetAxisViewportPixelOffset = 0
+            cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
         }
 
@@ -149,7 +149,7 @@ export default class ContentHandler {
 
             newlistsize = 0
             cradlePositionData.targetAxisReferencePosition = 0
-            cradlePositionData.targetAxisViewportPixelOffset = 0
+            cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
         } else {
 
@@ -272,7 +272,7 @@ export default class ContentHandler {
 
             cradleContent = this.content
 
-        let { targetAxisViewportPixelOffset } =  cradlePositionData
+        let { targetPixelOffsetAxisFromViewport } =  cradlePositionData
 
         // ----------------------[ 2. normalize data ]--------------------------
 
@@ -300,7 +300,7 @@ export default class ContentHandler {
             'scrollto', 
         ].includes(cradleState)) {
 
-            targetAxisViewportPixelOffset = 
+            targetPixelOffsetAxisFromViewport = 
                 (workingAxisReferenceIndex == listlowindex)?
                     paddingOffset:
                     gap // default
@@ -328,13 +328,13 @@ export default class ContentHandler {
             newCradleContentCount:cradleContentCount, 
 
             // target scrollPos by pixels
-            targetScrollblockViewportPixelOffset:scrollblockViewportPixelOffset,
+            targetPixelOffsetViewportFromScrollblock:pixelOffsetViewportFromScrollblock,
 
         } = calculateContentListRequirements({
 
                 // pixel
                 baseRowPixelLength,
-                targetAxisViewportPixelOffset,
+                targetPixelOffsetAxisFromViewport,
 
                 // index
                 targetAxisReferenceIndex:workingAxisReferenceIndex,
@@ -345,7 +345,7 @@ export default class ContentHandler {
 
             })
 
-        const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
+        const pixelOffsetAxisFromViewport = targetPixelOffsetAxisFromViewport // semantics
 
         // ----------------------[ 4. get and config content ]----------------------
         
@@ -433,7 +433,7 @@ export default class ContentHandler {
         cradleContent.tailModelComponents = tailcontentlist
 
         cradlePositionData.targetAxisReferencePosition = targetAxisReferenceIndex - listlowindex
-        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+        cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
@@ -485,10 +485,10 @@ export default class ContentHandler {
 
 
 
-        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset + paddingOffset
+        cradlePositionData.blockScrollPos = pixelOffsetViewportFromScrollblock + paddingOffset
 
         // avoid bogus call to updateCradleContent
-        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
+        scrollHandler.resetScrollData(pixelOffsetViewportFromScrollblock) 
 
         const 
             scrollTop = viewportElement.scrollTop,
@@ -517,12 +517,12 @@ export default class ContentHandler {
             axisElement = cradleElements.axisRef.current,
             headElement = cradleElements.headRef.current,
 
-            axisScrollblockPixelOffset = 
-                scrollblockViewportPixelOffset + axisViewportPixelOffset
+            pixelOffsetAxisFromScrollblock = 
+                pixelOffsetViewportFromScrollblock + pixelOffsetAxisFromViewport
 
         if (orientation == 'vertical') {
 
-            const top = axisScrollblockPixelOffset - paddingProps.top
+            const top = pixelOffsetAxisFromScrollblock - paddingProps.top
 
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
@@ -534,7 +534,7 @@ export default class ContentHandler {
 
         } else { // orientation = 'horizontal'
 
-            const left = axisScrollblockPixelOffset - paddingProps.left
+            const left = pixelOffsetAxisFromScrollblock - paddingProps.left
 
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
@@ -652,7 +652,7 @@ export default class ContentHandler {
             listEndChangeCount,
 
             // pixels
-            newAxisViewportPixelOffset, 
+            newPixelOffsetAxisFromViewport,
 
         } = calculateShiftSpecs({
 
@@ -671,7 +671,7 @@ export default class ContentHandler {
         })
 
         const 
-            axisViewportPixelOffset = newAxisViewportPixelOffset,
+            pixelOffsetAxisFromViewport = newPixelOffsetAxisFromViewport,
             isShift = !((axisItemShift == 0) && (cradleItemShift == 0)),
             axisElement = cradleElements.axisRef.current,
             headElement = cradleElements.headRef.current
@@ -684,11 +684,11 @@ export default class ContentHandler {
         // abandon option; nothing to do but reposition
         if (!isShift) { // can happen first row; oversized last row
     
-            cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+            cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
             this.applyStyling({
                 layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
                 crosscount, 
-                axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+                axisReferenceIndex, pixelOffsetAxisFromViewport, scrollPos, 
                 headcontent:cradleContent.headModelComponents,
                 axisElement, headElement, listlowindex,
             })
@@ -821,14 +821,14 @@ export default class ContentHandler {
         // -------------------------------[ 6. css changes ]-------------------------
 
         cradlePositionData.targetAxisReferencePosition = axisReferenceIndex - listlowindex
-        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+        cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
 
         if (isShift) cacheAPI.renderPortalLists()
 
         this.applyStyling({
             layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
             crosscount, 
-            axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+            axisReferenceIndex, pixelOffsetAxisFromViewport, scrollPos, 
             headcontent,
             axisElement, headElement, listlowindex
         })
@@ -843,7 +843,7 @@ export default class ContentHandler {
     private applyStyling = ({
         layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
         crosscount, 
-        axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+        axisReferenceIndex, pixelOffsetAxisFromViewport, scrollPos, 
         headcontent,
         axisElement, headElement, listlowindex
     }) => {
@@ -866,13 +866,13 @@ export default class ContentHandler {
                     paddingProps.top:
                     paddingProps.left,
 
-            testScrollPos = (baseCellLength * preAxisVirtualRows) + paddingOffset - axisViewportPixelOffset,
+            testScrollPos = (baseCellLength * preAxisVirtualRows) + paddingOffset - pixelOffsetAxisFromViewport,
             
             scrollDiff = testScrollPos - scrollPos
 
         if (scrollDiff) {
 
-            axisViewportPixelOffset += scrollDiff
+            pixelOffsetAxisFromViewport += scrollDiff
 
         }
         // ---------
@@ -881,7 +881,7 @@ export default class ContentHandler {
         let topAxisPos, leftAxisPos
         if (orientation == 'vertical') {
 
-            topAxisPos = scrollPos + axisViewportPixelOffset - paddingProps.top
+            topAxisPos = scrollPos + pixelOffsetAxisFromViewport - paddingProps.top
 
             axisElement.style.top = topAxisPos + 'px'
             axisElement.style.left = 'auto'
@@ -893,7 +893,7 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            leftAxisPos = scrollPos + axisViewportPixelOffset - paddingProps.left
+            leftAxisPos = scrollPos + pixelOffsetAxisFromViewport - paddingProps.left
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftAxisPos + 'px'
@@ -956,7 +956,7 @@ export default class ContentHandler {
             { 
 
                 targetAxisReferencePosition: axisReferencePosition,
-                targetAxisViewportPixelOffset: axisViewportPixelOffset,
+                targetPixelOffsetAxisFromViewport: axisViewportPixelOffset,
 
             } = cradlePositionData,
 

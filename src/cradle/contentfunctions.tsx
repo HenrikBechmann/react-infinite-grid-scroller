@@ -29,7 +29,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         targetAxisReferenceIndex, // from user, or from pivot
         // pixels
         baseRowPixelLength,
-        targetAxisViewportPixelOffset,
+        targetPixelOffsetAxisFromViewport,
         // resources
         cradleInheritedProperties,
         cradleInternalProperties,
@@ -114,20 +114,15 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // --------------------[ calc css positioning ]-----------------------
 
     const
-        // paddingOffset = 
-        //     orientation == 'vertical'?
-        //         paddingProps.top:
-        //         paddingProps.left,
-
-        targetScrollblockViewportPixelOffset = 
-            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) /*+ paddingOffset*/ - targetAxisViewportPixelOffset
+        targetPixelOffsetViewportFromScrollblock = 
+            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) - targetPixelOffsetAxisFromViewport
 
     // ----------------------[ return required values ]---------------------
 
     return {
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex,
-        targetScrollblockViewportPixelOffset, 
+        targetPixelOffsetViewportFromScrollblock, 
         newCradleContentCount, 
     } 
 
@@ -623,7 +618,7 @@ export const calculateShiftSpecs = ({
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    let newAxisViewportPixelOffset = currentViewportAxisPixelOffset + axisPixelShift
+    let newPixelOffsetAxisFromViewport = currentViewportAxisPixelOffset + axisPixelShift
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
@@ -698,7 +693,7 @@ export const calculateShiftSpecs = ({
         //         paddingProps.left
 
         if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
-            newAxisViewportPixelOffset = 0 // paddingOffset
+            newPixelOffsetAxisFromViewport = 0 // paddingOffset
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway
@@ -764,7 +759,7 @@ export const calculateShiftSpecs = ({
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
 
-        newAxisViewportPixelOffset,
+        newPixelOffsetAxisFromViewport,
 
         newCradleContentCount,
         listStartChangeCount,

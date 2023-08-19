@@ -984,9 +984,9 @@ const Cradle = ({
                     cellHeight)
                 + gap
 
-            const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
+            const previousPixelOffsetAxisFromViewport = layoutHandler.cradlePositionData.targetPixelOffsetAxisFromViewport
 
-            const previousratio = previousAxisOffset/previousCellPixelLength
+            const previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength
 
             const pivotCellPixelLength = 
                 ((orientation == 'vertical')?
@@ -996,11 +996,11 @@ const Cradle = ({
 
             const pivotAxisOffset = previousratio * pivotCellPixelLength
 
-            cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+            cradlePositionData.targetPixelOffsetAxisFromViewport = Math.round(pivotAxisOffset)
 
         } else {
 
-            cradlePositionData.targetAxisViewportPixelOffset = gap
+            cradlePositionData.targetPixelOffsetAxisFromViewport = gap
 
         }
 

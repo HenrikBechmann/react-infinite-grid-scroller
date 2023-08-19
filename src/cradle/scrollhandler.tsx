@@ -4,7 +4,7 @@
 /*
     This module holds the response to scrolling. It also triggers an onAfterScroll event (after a timeout)
     It's main job is to maintain records of scrollPos, targetAxisReferencePosition, and 
-        targetAxisViewportPixelOffset
+        targetPixelOffsetAxisFromViewport
 */
 
 import { isSafariIOS } from '../InfiniteGridScroller'
@@ -360,7 +360,7 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = layoutHandler
 
-        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+        cradlePositionData.targetPixelOffsetAxisFromViewport = axisViewportPixelOffset
 
         if (!ViewportContextProperties.isResizing) {
 
@@ -400,7 +400,7 @@ export default class ScrollHandler {
 
     }
 
-    // sets cradlePositionData targetAxisReferencePosition and targetAxisViewportPixelOffset
+    // sets cradlePositionData targetAxisReferencePosition and targetPixelOffsetAxisFromViewport
     public calcImpliedRepositioningData = (source) => { // source for debug
 
         const 
@@ -455,7 +455,7 @@ export default class ScrollHandler {
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
 
         cradlePositionData.targetAxisReferencePosition = axisReferencePosition
-        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset;
+        cradlePositionData.targetPixelOffsetAxisFromViewport = axisPixelOffset;
 
         (source == 'onScroll') && ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
 
