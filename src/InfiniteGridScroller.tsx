@@ -195,7 +195,6 @@ const InfiniteGridScroller = (props) => {
                 isProblem = true
             }
             if (!isProblem) padding.forEach((value,index,list) => {
-                value = +value
                 if (isNaN(value)) {
                     isProblem = true
                 }
@@ -223,7 +222,7 @@ const InfiniteGridScroller = (props) => {
         }
         paddingProps.list = list
         const [top, right, bottom, left] = list
-        Object.assign(paddingProps,{top,right,bottom,left})
+        Object.assign(paddingProps,{top:+top,right:+right,bottom:+bottom,left:+left})
         paddingProps.CSS = list.join('px ') + 'px'
         paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
         console.log('new paddingProps',paddingPropsRef.current)
