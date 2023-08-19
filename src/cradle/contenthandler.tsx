@@ -520,7 +520,7 @@ export default class ContentHandler {
 
         if (orientation == 'vertical') {
 
-            const top = axisScrollblockPixelOffset 
+            const top = axisScrollblockPixelOffset - paddingProps.top
 
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
@@ -532,7 +532,7 @@ export default class ContentHandler {
 
         } else { // orientation = 'horizontal'
 
-            const left = axisScrollblockPixelOffset
+            const left = axisScrollblockPixelOffset - paddingProps.left
 
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
@@ -879,7 +879,7 @@ export default class ContentHandler {
         let topAxisPos, leftAxisPos
         if (orientation == 'vertical') {
 
-            topAxisPos = scrollPos + axisViewportPixelOffset
+            topAxisPos = scrollPos + axisViewportPixelOffset - paddingProps.top
 
             axisElement.style.top = topAxisPos + 'px'
             axisElement.style.left = 'auto'
@@ -891,7 +891,7 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            leftAxisPos = scrollPos + axisViewportPixelOffset
+            leftAxisPos = scrollPos + axisViewportPixelOffset - paddingProps.left
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftAxisPos + 'px'

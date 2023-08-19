@@ -177,12 +177,17 @@ export default class LayoutHandler {
             } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
             {
+                virtualListProps,
+                paddingProps,
+
+            } = this.cradleParameters.cradleInternalPropertiesRef.current,
+
+            {
 
                 rowcount:listRowcount,
                 crosscount,
-                paddingProps,
 
-            } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps,
+            } = virtualListProps,
 
             { 
 

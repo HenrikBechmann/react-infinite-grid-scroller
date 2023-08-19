@@ -607,8 +607,8 @@ export const calculateShiftSpecs = ({
     const 
         scrollblockAxisPixelOffset = 
             (orientation == 'vertical')?
-                axisElement.offsetTop:
-                axisElement.offsetLeft,
+                axisElement.clientTop://offsetTop:
+                axisElement.clientLeft,//offsetLeft,
 
         scrollblockPixelOffset = // to capture current top/left adjustment to viewport for variable layout
             (orientation == 'vertical')?
