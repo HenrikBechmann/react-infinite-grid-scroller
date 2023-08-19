@@ -30,7 +30,8 @@ export default class StylesHandler {
         // cellMinHeight,
         // cellMinWidth,
         gap,
-        padding, 
+        // padding, 
+        // paddingProps,
         crosscount, 
         // viewportheight, 
         // viewportwidth,
@@ -41,9 +42,9 @@ export default class StylesHandler {
     }) => {
 
         const 
-            headstyles = this.getBaseHeadStyles(gap, padding, orientation, userstyles.cradle),
-            tailstyles = this.getBaseTailStyles(gap, padding, orientation, userstyles.cradle),
-            axisstyles = this.getAxisStyles(gap, padding, orientation),
+            headstyles = this.getBaseHeadStyles(gap, orientation, userstyles.cradle),
+            tailstyles = this.getBaseTailStyles(gap, orientation, userstyles.cradle),
+            axisstyles = this.getAxisStyles(gap, orientation),
 
             triggercelltriggerlineheadstyles =
                 this.getTriggercellTriggerlineHeadStyles(
@@ -67,7 +68,7 @@ export default class StylesHandler {
         if (orientation == 'vertical') {
 
             // padding varies
-            tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
+            tailstyles.padding = `0px`
 
             // the following are identical for head and tail
             headstyles.width = tailstyles.width = '100%'
@@ -91,7 +92,7 @@ export default class StylesHandler {
 
         } else { // orientation == 'horizontal'
 
-            tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
+            tailstyles.padding = `0px`
 
             headstyles.width = tailstyles.width = 'auto'
             headstyles.height = tailstyles.height = '100%'
@@ -126,7 +127,7 @@ export default class StylesHandler {
 
     // the top, right, bottom, left setting determine the direction of expansion of the grid block
     private getBaseHeadStyles = 
-        (gap,padding,orientation,userheadstyles) => {
+        (gap,orientation,userheadstyles) => {
 
         let bottom, left, top, right
 
@@ -147,7 +148,7 @@ export default class StylesHandler {
             position: 'absolute',
             display: 'grid',
             gridGap: gap + 'px',
-            padding: padding + 'px',
+            // padding: padding + 'px',
             boxSizing:'border-box',
             bottom,
             left,
@@ -158,7 +159,7 @@ export default class StylesHandler {
 
     // the top, right, bottom, left setting determine the direction of expansion of the grid block
     private getBaseTailStyles = 
-        (gap,padding,orientation,usertailstyles) => {
+        (gap,orientation,usertailstyles) => {
 
         let bottom, left, top, right
 
@@ -179,7 +180,7 @@ export default class StylesHandler {
             position: 'absolute',
             display: 'grid',
             gridGap: gap + 'px',
-            padding: padding + 'px',
+            // padding: padding + 'px',
             boxSizing:'border-box',
             top,
             left,
@@ -189,13 +190,13 @@ export default class StylesHandler {
     }
 
     private getAxisStyles = 
-        (gap, padding, orientation) => {
+        (gap, orientation) => {
 
         let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
 
-            top = padding + 'px' // default
+            // top = padding + 'px' // default
             left = 'auto'
             width = '100%'
             height = 0
@@ -203,7 +204,7 @@ export default class StylesHandler {
         } else {
 
             top = 'auto'
-            left = padding + 'px' // default
+            // left = padding + 'px' // default
             width = 0
             height = '100%'
 
