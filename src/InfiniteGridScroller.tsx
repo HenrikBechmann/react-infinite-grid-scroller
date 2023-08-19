@@ -329,9 +329,10 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
 
     // system
-    const stylesRef = useRef(styles)
-    const callbacksRef = useRef(callbacks)
-    const placeholderMessagesRef = useRef(placeholderMessages)
+    const 
+        stylesRef = useRef(styles),
+        callbacksRef = useRef(callbacks),
+        placeholderMessagesRef = useRef(placeholderMessages)
 
     let {
 
@@ -364,29 +365,30 @@ const InfiniteGridScroller = (props) => {
     if (typeof useScrollTracker != 'boolean') useScrollTracker = true
 
     // for mount version
-    const scrollerSessionIDRef = useRef(null)
-    const scrollerID = scrollerSessionIDRef.current
+    const 
+        scrollerSessionIDRef = useRef(null),
+        scrollerID = scrollerSessionIDRef.current,
 
-    // for children
-    const cacheAPIRef = useRef(cacheAPI)
+        // for children
+        cacheAPIRef = useRef(cacheAPI),
 
-    const updateFunctionRef = useRef(null)
+        updateFunctionRef = useRef(null),
 
-    const listsizeRef = useRef(startingListSize)
-    const listRangeRef = useRef(startingListRange)
+        listsizeRef = useRef(startingListSize),
+        listRangeRef = useRef(startingListRange),
 
-    const listsize = listsizeRef.current
-    const listrange = listRangeRef.current
-    const [lowlistrange, highlistrange] = listrange // ranges undefined if listrange length is 0
+        listsize = listsizeRef.current,
+        listrange = listRangeRef.current,
+        [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
 
-    const virtualListSpecs = {
-        size:listsize,
-        range:listrange,
-        lowindex:lowlistrange,
-        highindex:highlistrange,
-    }
+        virtualListSpecs = {
+            size:listsize,
+            range:listrange,
+            lowindex:lowlistrange,
+            highindex:highlistrange,
+        },
 
-    const virtualListSpecsRef = useRef(virtualListSpecs)
+        virtualListSpecsRef = useRef(virtualListSpecs)
 
     if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
         virtualListSpecsRef.current = virtualListSpecs
@@ -558,6 +560,7 @@ const InfiniteGridScroller = (props) => {
             {<Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
+                paddingProps = {paddingProps}
                 styles = { stylesRef.current }
                 virtualListSpecs = {virtualListSpecsRef.current}
                 scrollerID = { scrollerID }

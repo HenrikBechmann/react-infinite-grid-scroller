@@ -16,7 +16,8 @@ import { ViewportContext } from './Viewport'
 const Scrollblock = ({
     children,
     virtualListSpecs,
-    gridSpecs, 
+    gridSpecs,
+    paddingProps,
     styles,
     scrollerID,
 }) => {
@@ -64,7 +65,7 @@ const Scrollblock = ({
         }
     }
 
-    const { height,width } = getViewportDimensions() // viewportDimensions
+    const { height, width } = getViewportDimensions() // viewportDimensions
 
     // reconfigure
     useLayoutEffect(() => {
@@ -142,7 +143,6 @@ const calcBaseScrollblockLength = ({
 
     // ---------------[ calculate crosscount ]------------------
     //crosscount is also calculated by Cradle
-
     let crosslength, cellLength, viewportcrosslength
 
     if (orientation == 'vertical') {
