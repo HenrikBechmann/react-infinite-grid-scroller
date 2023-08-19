@@ -569,6 +569,7 @@ const InfiniteGridScroller = (props) => {
                 <Cradle 
 
                     gridSpecs = { gridSpecsRef.current }
+                    paddingProps = { paddingProps }
                     styles = { stylesRef.current }
                     virtualListSpecs = {virtualListSpecsRef.current}
                     setVirtualListSize = { setVirtualListSize }

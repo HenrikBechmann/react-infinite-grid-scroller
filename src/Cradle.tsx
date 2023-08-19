@@ -91,6 +91,7 @@ export const CradleContext = React.createContext(null)
 // component
 const Cradle = ({ 
         gridSpecs,
+        paddingProps,
         // basics
         runwaySize, 
         virtualListSpecs,
@@ -228,8 +229,13 @@ const Cradle = ({
                     viewportwidth:
                     viewportheight,
 
+            crosspadding = 
+                (orientation == 'vertical')?
+                    paddingProps.left + paddingProps.right:
+                    paddingProps.top + paddingProps.bottom,
+
             // cross length of viewport (gap to match crossLength)
-            viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap,
+            viewportcrosslengthforcalc = viewportcrosslength - crosspadding + gap,
 
             cellcrosslength = 
                 ((orientation == 'vertical')?
@@ -247,7 +253,8 @@ const Cradle = ({
     },[
         orientation, 
         gap, 
-        padding, 
+        // padding,
+        paddingProps,
         cellWidth, 
         cellHeight, 
         viewportheight, 
@@ -456,7 +463,7 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, gap, padding, layout,
+        orientation, gap, paddingProps, padding, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
         cache, cacheMax,
@@ -477,7 +484,7 @@ const Cradle = ({
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
-        orientation, gap, padding, layout,
+        orientation, gap, padding, paddingProps, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
         cradleContentProps,
@@ -897,7 +904,7 @@ const Cradle = ({
         cellHeight,
         cellWidth,
         gap,
-        padding,
+        paddingProps,
         triggerlineOffset,
         layout,
         runwaySize,
@@ -1025,6 +1032,7 @@ const Cradle = ({
             cellMinWidth,
             gap,
             padding,
+            paddingProps,
             viewportheight, 
             viewportwidth,
             crosscount, 
@@ -1043,6 +1051,7 @@ const Cradle = ({
         cellMinWidth,
         gap,
         padding,
+        paddingProps,
         viewportheight,
         viewportwidth,
         crosscount,
