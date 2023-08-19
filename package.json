@@ -67,8 +67,7 @@
     "typescript": "^5.0.4",
     "webpack": "^5.61.0",
     "webpack-cli": "^5.0.1",
-    "webpack-sources": "^3.2.1",
-    "wepack-cli": "^0.0.1-security"
+    "webpack-sources": "^3.2.1"
   },
   "directories": {
     "lib": "lib"
