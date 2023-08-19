@@ -170,7 +170,7 @@ export default class LayoutHandler {
 
                 // scrollerID, 
                 orientation, 
-                padding, 
+                // padding, 
                 gap,
                 cellHeight,
                 cellWidth,
@@ -179,8 +179,11 @@ export default class LayoutHandler {
             } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
             {
+
                 rowcount:listRowcount,
                 crosscount,
+                paddingProps,
+
             } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps,
 
             { 
@@ -198,8 +201,13 @@ export default class LayoutHandler {
                     cellWidth)
                 + gap,
 
+            paddingLength = 
+                orientation == 'vertical'?
+                    paddingProps.top + paddingProps.bottom:
+                    paddingProps.left + paddingProps.right,
+
             baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
-                + (padding * 2) // leading and trailing padding
+                + paddingLength // leading and trailing padding
 
         if (orientation == 'vertical') {
 
@@ -217,8 +225,12 @@ export default class LayoutHandler {
             { cradlePositionData } = layoutHandler,
             axisReferencePosition = cradlePositionData.targetAxisReferencePosition,
             rowReferencePosition = Math.ceil(axisReferencePosition/crosscount),
+            paddingOffset = 
+                orientation == 'vertical'?
+                    paddingProps.top:
+                    paddingProps.left,
             calculatedBlockScrollPos = 
-                (rowReferencePosition * cellLength) + padding
+                (rowReferencePosition * cellLength) + paddingOffset
 
 
         if (layout == 'variable') { // scrollPos overwritten by Safari iOS momentum engine
