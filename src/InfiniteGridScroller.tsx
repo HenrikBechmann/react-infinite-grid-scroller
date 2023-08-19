@@ -181,7 +181,6 @@ const InfiniteGridScroller = (props) => {
     })
     let paddingProps = paddingPropsRef.current
     if (padding !== paddingProps.source) {
-        console.log('updating padding')
         paddingProps.source = padding
         if (!Array.isArray(padding)) {
             padding = +padding
@@ -220,15 +219,15 @@ const InfiniteGridScroller = (props) => {
             list.push(a,b)
         case 3:
             [a,b] = list
-            list.push(a)
+            list.push(b)
         }
         paddingProps.list = list
         const [top, right, bottom, left] = list
         Object.assign(paddingProps,{top,right,bottom,left})
         paddingProps.CSS = list.join('px ') + 'px'
         paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
+        console.log('new paddingProps',paddingPropsRef.current)
     }
-    console.log('paddingPropsRef',paddingPropsRef)
     startingIndex = +startingIndex
     startingListSize = +startingListSize
     runwaySize = +runwaySize
