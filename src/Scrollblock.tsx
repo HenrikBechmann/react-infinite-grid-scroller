@@ -103,15 +103,13 @@ const Scrollblock = ({
         padding,
     ])
 
-    const updateBaseBlockLength = useCallback(
-        (layoutspecs) => {
+    const updateBaseBlockLength = useCallback((layoutspecs) => {
             
-            const basescrollblocklength = calcBaseScrollblockLength(layoutspecs)
+        const basescrollblocklength = calcBaseScrollblockLength(layoutspecs)
 
-            baseScrollBlockLengthRef.current = basescrollblocklength
+        baseScrollBlockLengthRef.current = basescrollblocklength
 
-        },[]
-    )
+    },[])
 
     useLayoutEffect(()=>{
 
