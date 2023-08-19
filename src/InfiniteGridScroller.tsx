@@ -224,7 +224,7 @@ const InfiniteGridScroller = (props) => {
         const [top, right, bottom, left] = list
         Object.assign(paddingProps,{top:+top,right:+right,bottom:+bottom,left:+left}) // assure numeric
         paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
-        console.log('new paddingProps',paddingPropsRef.current)
+        // console.log('new paddingProps',paddingPropsRef.current)
     }
     startingIndex = +startingIndex
     startingListSize = +startingListSize

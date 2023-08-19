@@ -44,11 +44,16 @@ export default class LayoutHandler {
         let {
 
             startingIndex, 
+            orientation,
 
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const 
-            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            { 
+            
+                virtualListProps,
+
+            } = this.cradleParameters.cradleInternalPropertiesRef.current,
             { 
 
                 size:listsize,

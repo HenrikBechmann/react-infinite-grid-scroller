@@ -106,8 +106,6 @@ export default class InterruptHandler {
 
             if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
 
-                // const viewportBoundingRect = viewportElement.getBoundingClientRect()
-
                 const [shiftinstruction, triggerViewportReferencePixelPos] = generateShiftInstruction({
 
                     scrollerID: cradleInheritedProperties.scrollerID,
@@ -196,6 +194,8 @@ export default class InterruptHandler {
         }
 
         this.signals.repositioningRequired = (!(this.isHeadCradleInView) && !(this.isTailCradleInView))
+
+        console.log('repositioningRequired',this.signals.repositioningRequired)
 
         const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
 
