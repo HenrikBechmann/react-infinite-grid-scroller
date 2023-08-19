@@ -211,7 +211,7 @@ const InfiniteGridScroller = (props) => {
         let a,b,c
         switch (lgth) {
         case 1:
-            [a] = list // t
+            [a] = list // t/b/r/l
             list.push(a,a,a) //r,b,l
             break
         case 2:
