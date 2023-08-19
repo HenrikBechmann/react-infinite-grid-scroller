@@ -206,24 +206,24 @@ const InfiniteGridScroller = (props) => {
             }
         }
         const list = [...paddingProps.original]
+        paddingProps.CSS = list.join('px ') + 'px'
         const lgth = list.length
         let a,b,c
         switch (lgth) {
         case 1:
-            [a] = list
-            list.push(a,a,a)
+            [a] = list // t
+            list.push(a,a,a) //r,b,l
             break
         case 2:
-            [a,b] = list
-            list.push(a,b)
+            [a,b] = list // t/b, r/l
+            list.push(a,b) //b,l
         case 3:
-            [a,b] = list
-            list.push(b)
+            [a,b] = list // t, r/l, b
+            list.push(b) //l
         }
         paddingProps.list = list
         const [top, right, bottom, left] = list
-        Object.assign(paddingProps,{top:+top,right:+right,bottom:+bottom,left:+left})
-        paddingProps.CSS = list.join('px ') + 'px'
+        Object.assign(paddingProps,{top:+top,right:+right,bottom:+bottom,left:+left}) // assure numeric
         paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
         console.log('new paddingProps',paddingPropsRef.current)
     }
