@@ -463,7 +463,7 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, gap, paddingProps, padding, layout,
+        orientation, gap, padding, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
         cache, cacheMax,
@@ -504,7 +504,7 @@ const Cradle = ({
         setVirtualListRange,
 
         cradleContentProps:cradleContentPropsRef.current,
-        
+        paddingProps,         
         // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
