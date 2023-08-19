@@ -27,14 +27,8 @@ export default class StylesHandler {
         orientation, 
         cellHeight, 
         cellWidth, 
-        // cellMinHeight,
-        // cellMinWidth,
         gap,
-        // padding, 
-        // paddingProps,
         crosscount, 
-        // viewportheight, 
-        // viewportwidth,
         userstyles,
         triggerlineOffset,
         layout,
@@ -148,7 +142,6 @@ export default class StylesHandler {
             position: 'absolute',
             display: 'grid',
             gridGap: gap + 'px',
-            // padding: padding + 'px',
             boxSizing:'border-box',
             bottom,
             left,
@@ -180,7 +173,6 @@ export default class StylesHandler {
             position: 'absolute',
             display: 'grid',
             gridGap: gap + 'px',
-            // padding: padding + 'px',
             boxSizing:'border-box',
             top,
             left,
@@ -196,7 +188,7 @@ export default class StylesHandler {
 
         if (orientation == 'vertical') {
 
-            // top = padding + 'px' // default
+            top = 0 // default
             left = 'auto'
             width = '100%'
             height = 0
@@ -204,7 +196,7 @@ export default class StylesHandler {
         } else {
 
             top = 'auto'
-            // left = padding + 'px' // default
+            left = 0 // default
             width = 0
             height = '100%'
 

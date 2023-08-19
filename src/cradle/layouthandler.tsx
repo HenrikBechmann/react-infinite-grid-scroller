@@ -44,7 +44,7 @@ export default class LayoutHandler {
         let {
 
             startingIndex, 
-            // padding
+
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const 
@@ -84,7 +84,6 @@ export default class LayoutHandler {
         const 
             {
                 orientation, 
-                // padding
             } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
             span = (orientation == 'vertical')?
@@ -170,7 +169,6 @@ export default class LayoutHandler {
 
                 // scrollerID, 
                 orientation, 
-                // padding, 
                 gap,
                 cellHeight,
                 cellWidth,

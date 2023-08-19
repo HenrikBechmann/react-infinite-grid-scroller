@@ -438,7 +438,7 @@ export default class ScrollHandler {
                 paddingProps.top:
                 paddingProps.left
 
-        if (axisPixelOffset == (cellLength + paddingOffset)) {
+        if (axisPixelOffset == cellLength) { // + paddingOffset)) {
             axisPixelOffset = 0
         }
 

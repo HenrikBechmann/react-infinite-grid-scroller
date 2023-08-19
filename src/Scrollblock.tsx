@@ -26,7 +26,6 @@ const Scrollblock = ({
 
         orientation,
         gap,
-        // padding,
         cellHeight,
         cellWidth,
         
@@ -79,7 +78,6 @@ const Scrollblock = ({
                 cellHeight,
                 cellWidth,
                 gap,
-                // padding,
                 paddingProps,
             }
         )
@@ -90,7 +88,6 @@ const Scrollblock = ({
                 baseScrollBlockLengthRef,
                 cellWidth,
                 cellHeight,
-                // padding,
                 paddingProps,
             )
         setBlockState('update')
@@ -140,7 +137,6 @@ const calcBaseScrollblockLength = ({
         cellHeight,
         cellWidth,
         gap,
-        // padding,
         paddingProps,
     }) => {
 

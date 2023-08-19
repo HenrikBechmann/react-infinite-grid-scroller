@@ -237,7 +237,6 @@ export default class ContentHandler {
 
                 orientation, 
                 gap, 
-                padding,
                 cellHeight,
                 cellWidth,
                 styles,
@@ -296,14 +295,14 @@ export default class ContentHandler {
             'scrollto', 
         ].includes(cradleState)) {
 
-            const paddingOffset = 
-                orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left
+            // const paddingOffset = 
+            //     orientation == 'vertical'?
+            //     paddingProps.top:
+            //     paddingProps.left
 
             targetAxisViewportPixelOffset = 
                 (workingAxisReferenceIndex == listlowindex)?
-                    paddingOffset:
+                    0:// paddingOffset:
                     gap // default
 
         }
@@ -605,7 +604,6 @@ export default class ContentHandler {
                 layout, 
                 cellHeight, 
                 cellWidth, 
-                padding, 
                 gap,
                 scrollerID, // debug
 
@@ -686,7 +684,7 @@ export default class ContentHandler {
     
             cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
             this.applyStyling({
-                layout, orientation, padding, paddingProps, gap, cellHeight, cellWidth, 
+                layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
                 crosscount, 
                 axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
                 headcontent:cradleContent.headModelComponents,
@@ -826,7 +824,7 @@ export default class ContentHandler {
         if (isShift) cacheAPI.renderPortalLists()
 
         this.applyStyling({
-            layout, orientation, padding, paddingProps, gap, cellHeight, cellWidth, 
+            layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
             crosscount, 
             axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
             headcontent,
@@ -841,7 +839,7 @@ export default class ContentHandler {
 
     // move the offset of the axis
     private applyStyling = ({
-        layout, orientation, padding, paddingProps, gap, cellHeight, cellWidth, 
+        layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
         crosscount, 
         axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
         headcontent,
@@ -972,7 +970,6 @@ export default class ContentHandler {
 
                 orientation, 
                 gap, 
-                padding, 
                 cellHeight,
                 cellWidth,
 

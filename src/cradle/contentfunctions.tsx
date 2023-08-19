@@ -39,7 +39,6 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     const 
         { 
 
-            padding,
             orientation,
 
         } = cradleInheritedProperties,
@@ -115,13 +114,13 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     // --------------------[ calc css positioning ]-----------------------
 
     const
-        paddingOffset = 
-            orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left,
+        // paddingOffset = 
+        //     orientation == 'vertical'?
+        //         paddingProps.top:
+        //         paddingProps.left,
 
         targetScrollblockViewportPixelOffset = 
-            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset - targetAxisViewportPixelOffset
+            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) /*+ paddingOffset*/ - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
 
@@ -396,7 +395,6 @@ export const calculateShiftSpecs = ({
         { 
 
             gap,
-            padding,
             orientation,
             cellHeight,
             cellWidth,
@@ -694,13 +692,13 @@ export const calculateShiftSpecs = ({
 
         }
 
-        const paddingOffset = 
-            orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left
+        // const paddingOffset = 
+        //     orientation == 'vertical'?
+        //         paddingProps.top:
+        //         paddingProps.left
 
         if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
-            newAxisViewportPixelOffset = paddingOffset
+            newAxisViewportPixelOffset = 0 // paddingOffset
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway

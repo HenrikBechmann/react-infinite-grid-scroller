@@ -137,7 +137,6 @@ const Cradle = ({
 
         orientation,
         gap,
-        padding,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -253,7 +252,6 @@ const Cradle = ({
     },[
         orientation, 
         gap, 
-        // padding,
         paddingProps,
         cellWidth, 
         cellHeight, 
@@ -383,7 +381,6 @@ const Cradle = ({
     },[
         orientation, 
         gap, 
-        // padding,
         cellWidth, 
         cellHeight,
         cellMinWidth,
@@ -463,7 +460,7 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, gap, padding, layout,
+        orientation, gap, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
         cache, cacheMax,
@@ -484,7 +481,7 @@ const Cradle = ({
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
-        orientation, gap, padding, paddingProps, layout,
+        orientation, gap, paddingProps, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
         cradleContentProps,
@@ -1031,8 +1028,6 @@ const Cradle = ({
             cellMinHeight,
             cellMinWidth,
             gap,
-            // padding,
-            // paddingProps,
             viewportheight, 
             viewportwidth,
             crosscount, 
@@ -1050,8 +1045,6 @@ const Cradle = ({
         cellMinHeight,
         cellMinWidth,
         gap,
-        padding,
-        paddingProps,
         viewportheight,
         viewportwidth,
         crosscount,
