@@ -40,6 +40,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         { 
 
             padding,
+            orientation,
 
         } = cradleInheritedProperties,
 
@@ -47,6 +48,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
             cradleContentProps,
             virtualListProps,
+            paddingProps,
 
         } = cradleInternalProperties,
 
@@ -112,8 +114,14 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // --------------------[ calc css positioning ]-----------------------
 
-    const targetScrollblockViewportPixelOffset = 
-        ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
+    const
+        paddingOffset = 
+            orientation == 'vertical'?
+                paddingProps.top:
+                paddingProps.left,
+
+        targetScrollblockViewportPixelOffset = 
+            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset - targetAxisViewportPixelOffset
 
     // ----------------------[ return required values ]---------------------
 
@@ -366,6 +374,7 @@ export const calculateShiftSpecs = ({
 
     // property repos
     cradleInheritedProperties,
+    cradleInternalProperties,
     cradleContentProps,
     virtualListProps,
 
@@ -395,6 +404,12 @@ export const calculateShiftSpecs = ({
             scrollerID, // debug
 
         } = cradleInheritedProperties,
+
+        {
+
+            paddingProps,
+
+        } = cradleInternalProperties,
 
         // cradle contents
         {
@@ -679,8 +694,13 @@ export const calculateShiftSpecs = ({
 
         }
 
+        const paddingOffset = 
+            orientation == 'vertical'?
+                paddingProps.top:
+                paddingProps.left
+
         if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
-            newAxisViewportPixelOffset = padding
+            newAxisViewportPixelOffset = paddingOffset
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway

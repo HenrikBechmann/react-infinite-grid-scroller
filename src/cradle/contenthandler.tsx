@@ -662,6 +662,7 @@ export default class ContentHandler {
             scrollblockElement: viewportElement.firstChild,
 
             cradleInheritedProperties,
+            cradleInternalProperties,
             cradleContentProps,
             virtualListProps,
             cradleContent,
