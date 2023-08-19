@@ -483,9 +483,7 @@ export default class ContentHandler {
 
         }
 
-
-
-        cradlePositionData.blockScrollPos = pixelOffsetViewportFromScrollblock + paddingOffset
+        cradlePositionData.blockScrollPos = pixelOffsetViewportFromScrollblock
 
         // avoid bogus call to updateCradleContent
         scrollHandler.resetScrollData(pixelOffsetViewportFromScrollblock) 
@@ -993,7 +991,7 @@ export default class ContentHandler {
 
             } = virtualListProps
 
-        console.log('var cradlePositionData', {...cradlePositionData})
+        // console.log('var cradlePositionData', {...cradlePositionData})
 
         // cancel end of list reconciliation if scrolling re-starts
         if (scrollHandler.isScrolling && this.gridResizeObserver) {
