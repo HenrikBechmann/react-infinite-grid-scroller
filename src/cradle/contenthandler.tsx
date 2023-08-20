@@ -1030,7 +1030,7 @@ export default class ContentHandler {
                     tailGridElement.offsetHeight:
                     tailGridElement.offsetWidth,
 
-            postCradleRowsPixelLength = postCradleRowCount * baseCellLength,
+            postCradleRowsPixelLength = (postCradleRowCount * baseCellLength) - gap,
 
             paddingTailOffset = 
                 orientation == 'vertical'?
