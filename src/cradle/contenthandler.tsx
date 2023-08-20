@@ -454,7 +454,7 @@ export default class ContentHandler {
                     paddingProps.top + paddingProps.bottom:
                     paddingProps.left + paddingProps.right,
             scrollblockElement = viewportElement.firstChild,
-            blockbaselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
+            blocknewlength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
                 + totalpaddinglength // leading and trailing padding
 
         if (cradleState == 'pivot') {
@@ -474,12 +474,12 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             scrollblockElement.style.top = null
-            scrollblockElement.style.height = blockbaselength + 'px'
+            scrollblockElement.style.height = blocknewlength + 'px'
 
         } else {
 
             scrollblockElement.style.left = null
-            scrollblockElement.style.width = blockbaselength + 'px'
+            scrollblockElement.style.width = blocknewlength + 'px'
 
         }
 
