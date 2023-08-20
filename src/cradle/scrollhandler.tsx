@@ -4,7 +4,7 @@
 /*
     This module holds the response to scrolling. It also triggers an onAfterScroll event (after a timeout)
     It's main job is to maintain records of scrollPos, targetAxisReferencePosition, and 
-        targetAxisViewportPixelOffset
+        targetPixelOffsetAxisFromViewport
 */
 
 import { isSafariIOS } from '../InfiniteGridScroller'
@@ -136,8 +136,8 @@ export default class ScrollHandler {
 
 
         // keep up to date in case of reparenting interrupt
-        cradlePositionData.blockScrollPos = scrollPositionCurrent
-        cradlePositionData.blockXScrollPos = scrollXPositionCurrent
+        cradlePositionData.trackingBlockScrollPos = scrollPositionCurrent
+        cradlePositionData.trackingXBlockScrollPos = scrollXPositionCurrent
 
         this.scrollData.previous = this.scrollData.current
         this.scrollData.current = scrollPositionCurrent
@@ -164,20 +164,20 @@ export default class ScrollHandler {
 
         if (layout == 'variable') {
 
-            let scrollblockLength, viewportLength, blockScrollPos, scrollblockOffset
+            let scrollblockLength, viewportLength, trackingBlockScrollPos, scrollblockOffset
 
             if (orientation == 'vertical') {
 
                 scrollblockLength = viewportElement.scrollHeight
                 viewportLength =  viewportElement.offsetHeight
-                blockScrollPos = viewportElement.scrollTop
+                trackingBlockScrollPos = viewportElement.scrollTop
                 scrollblockOffset = scrollblockElement.offsetTop
 
             } else {
 
                 scrollblockLength = viewportElement.scrollWidth
                 viewportLength =  viewportElement.offsetWidth
-                blockScrollPos = viewportElement.scrollLeft
+                trackingBlockScrollPos = viewportElement.scrollLeft
                 scrollblockOffset = scrollblockElement.offsetLeft
 
             }
@@ -185,8 +185,8 @@ export default class ScrollHandler {
             clearTimeout(this._scrollforvariabletimerid)
 
             // immediate interrupt halt and adjustment for overshoot at start of end of scrollblock
-            if ((( blockScrollPos - scrollblockOffset) < 0) || // overshoot start
-                (scrollblockLength < (blockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
+            if ((( trackingBlockScrollPos - scrollblockOffset) < 0) || // overshoot start
+                (scrollblockLength < (trackingBlockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
 
                 this.onAfterScrollForVariable() // immediate halt and adjust
 
@@ -287,7 +287,7 @@ export default class ScrollHandler {
                     scrollblockElement.offsetTop:
                     scrollblockElement.offsetLeft,
 
-            blockScrollPos =
+            trackingBlockScrollPos =
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft,
@@ -301,7 +301,7 @@ export default class ScrollHandler {
         if (orientation == 'vertical') {
 
             scrollOptions = {
-                top:blockScrollPos - scrollblockOffset,
+                top:trackingBlockScrollPos - scrollblockOffset,
                 left:scrollLeft,
                 behavior:'instant'
             }
@@ -312,7 +312,7 @@ export default class ScrollHandler {
 
             scrollOptions = {
                 top:scrollTop,
-                left:blockScrollPos - scrollblockOffset,
+                left:trackingBlockScrollPos - scrollblockOffset,
                 behavior:'instant'
             }
 
@@ -360,7 +360,7 @@ export default class ScrollHandler {
 
         const { cradlePositionData } = layoutHandler
 
-        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+        cradlePositionData.targetPixelOffsetAxisFromViewport = axisViewportPixelOffset
 
         if (!ViewportContextProperties.isResizing) {
 
@@ -386,13 +386,13 @@ export default class ScrollHandler {
 
             if (cradleSpecs.orientation == 'vertical') {
 
-                cradlePositionData.blockScrollPos = viewportElement.scrollTop
-                cradlePositionData.blockXScrollPos = viewportElement.scrollLeft
+                cradlePositionData.trackingBlockScrollPos = viewportElement.scrollTop
+                cradlePositionData.trackingXBlockScrollPos = viewportElement.scrollLeft
 
             } else {
 
-                cradlePositionData.blockScrollPos = viewportElement.scrollLeft
-                cradlePositionData.blockXScrollPos = viewportElement.scrollTop
+                cradlePositionData.trackingBlockScrollPos = viewportElement.scrollLeft
+                cradlePositionData.trackingXBlockScrollPos = viewportElement.scrollTop
 
             }
 
@@ -400,13 +400,13 @@ export default class ScrollHandler {
 
     }
 
-    // sets cradlePositionData targetAxisReferencePosition and targetAxisViewportPixelOffset
+    // sets cradlePositionData targetAxisReferencePosition and targetPixelOffsetAxisFromViewport
     public calcImpliedRepositioningData = (source) => { // source for debug
 
         const 
             ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
             cradleSpecs = this.cradleParameters.cradleInheritedPropertiesRef.current,
-            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            { virtualListProps, paddingProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
 
             viewportElement = ViewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild,
@@ -433,11 +433,16 @@ export default class ScrollHandler {
 
         let axisPixelOffset = cellLength - ((scrollPos + scrollblockOffset) % cellLength)
 
-        if (axisPixelOffset == (cellLength + cradleSpecs.padding)) {
+        const paddingOffset = 
+            orientation == 'vertical'?
+                paddingProps.top:
+                paddingProps.left
+
+        if (axisPixelOffset == cellLength) { // + paddingOffset)) {
             axisPixelOffset = 0
         }
 
-        const axisRowPosition = Math.ceil((scrollPos - cradleSpecs.padding)/cellLength)
+        const axisRowPosition = Math.ceil((scrollPos - paddingOffset)/cellLength)
 
         let axisReferencePosition = axisRowPosition * crosscount
         axisReferencePosition = Math.min(axisReferencePosition,listsize - 1)
@@ -450,7 +455,7 @@ export default class ScrollHandler {
         const { cradlePositionData } = this.cradleParameters.handlersRef.current.layoutHandler
 
         cradlePositionData.targetAxisReferencePosition = axisReferencePosition
-        cradlePositionData.targetAxisViewportPixelOffset = axisPixelOffset;
+        cradlePositionData.targetPixelOffsetAxisFromViewport = axisPixelOffset;
 
         (source == 'onScroll') && ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
 

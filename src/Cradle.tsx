@@ -36,7 +36,7 @@
             the first item in the head section of the Cradle, unless the cradle shows the very top of the
             list, in which case the cradleReferenceIndex is the same as the AxisReferenceIndex)
         - axisViewportPixelOffset (pixels that place the axis in relation to the viewport's leading edge)
-        - the blockScrollPos, which is the amount of scroll (Viewport scrollTop or scrollLeft) of the 
+        - the trackingBlockScrollPos, which is the amount of scroll (Viewport scrollTop or scrollLeft) of the 
             ScrollBlock
     
     Overscroll handling (repositioning):
@@ -91,6 +91,7 @@ export const CradleContext = React.createContext(null)
 // component
 const Cradle = ({ 
         gridSpecs,
+        paddingProps,
         // basics
         runwaySize, 
         virtualListSpecs,
@@ -136,7 +137,6 @@ const Cradle = ({
 
         orientation,
         gap,
-        padding,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -228,8 +228,13 @@ const Cradle = ({
                     viewportwidth:
                     viewportheight,
 
+            crosspadding = 
+                (orientation == 'vertical')?
+                    paddingProps.left + paddingProps.right:
+                    paddingProps.top + paddingProps.bottom,
+
             // cross length of viewport (gap to match crossLength)
-            viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap,
+            viewportcrosslengthforcalc = viewportcrosslength - crosspadding + gap,
 
             cellcrosslength = 
                 ((orientation == 'vertical')?
@@ -247,7 +252,7 @@ const Cradle = ({
     },[
         orientation, 
         gap, 
-        padding, 
+        paddingProps,
         cellWidth, 
         cellHeight, 
         viewportheight, 
@@ -376,7 +381,6 @@ const Cradle = ({
     },[
         orientation, 
         gap, 
-        // padding,
         cellWidth, 
         cellHeight,
         cellMinWidth,
@@ -456,7 +460,7 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, gap, padding, layout,
+        orientation, gap, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
         cache, cacheMax,
@@ -477,7 +481,7 @@ const Cradle = ({
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
-        orientation, gap, padding, layout,
+        orientation, gap, paddingProps, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
         cradleContentProps,
@@ -497,7 +501,7 @@ const Cradle = ({
         setVirtualListRange,
 
         cradleContentProps:cradleContentPropsRef.current,
-        
+        paddingProps,         
         // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
@@ -564,24 +568,24 @@ const Cradle = ({
 
         const 
             { cradlePositionData } = layoutHandler,
-            blockScrollPos = cradlePositionData.blockScrollPos,
-            blockXScrollPos = cradlePositionData.blockXScrollPos
+            trackingBlockScrollPos = cradlePositionData.trackingBlockScrollPos,
+            trackingXBlockScrollPos = cradlePositionData.trackingXBlockScrollPos
 
-        if (blockScrollPos !== null) {
+        if (trackingBlockScrollPos !== null) {
 
             const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
                 scrollOptions = {
-                    top:blockScrollPos,
-                    left:blockXScrollPos,
+                    top:trackingBlockScrollPos,
+                    left:trackingXBlockScrollPos,
                     behavior:'instant',
                 }
             } else {
                 scrollOptions = {
-                    left:blockScrollPos,
-                    top:blockXScrollPos,
+                    left:trackingBlockScrollPos,
+                    top:trackingXBlockScrollPos,
                     behavior:'instant',
                 }            
             }
@@ -897,7 +901,7 @@ const Cradle = ({
         cellHeight,
         cellWidth,
         gap,
-        padding,
+        paddingProps,
         triggerlineOffset,
         layout,
         runwaySize,
@@ -943,8 +947,8 @@ const Cradle = ({
                 "scrollLeft"
 
         if (cradleStateRef.current == 'setup') {
-            layoutHandler.cradlePositionData.blockScrollPos = 0
-            layoutHandler.cradlePositionData.blockXScrollPos = 0
+            layoutHandler.cradlePositionData.trackingBlockScrollPos = 0
+            layoutHandler.cradlePositionData.trackingXBlockScrollPos = 0
             return
 
         }
@@ -980,9 +984,9 @@ const Cradle = ({
                     cellHeight)
                 + gap
 
-            const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
+            const previousPixelOffsetAxisFromViewport = layoutHandler.cradlePositionData.targetPixelOffsetAxisFromViewport
 
-            const previousratio = previousAxisOffset/previousCellPixelLength
+            const previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength
 
             const pivotCellPixelLength = 
                 ((orientation == 'vertical')?
@@ -992,11 +996,11 @@ const Cradle = ({
 
             const pivotAxisOffset = previousratio * pivotCellPixelLength
 
-            cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+            cradlePositionData.targetPixelOffsetAxisFromViewport = Math.round(pivotAxisOffset)
 
         } else {
 
-            cradlePositionData.targetAxisViewportPixelOffset = gap
+            cradlePositionData.targetPixelOffsetAxisFromViewport = gap
 
         }
 
@@ -1024,7 +1028,6 @@ const Cradle = ({
             cellMinHeight,
             cellMinWidth,
             gap,
-            padding,
             viewportheight, 
             viewportwidth,
             crosscount, 
@@ -1042,7 +1045,6 @@ const Cradle = ({
         cellMinHeight,
         cellMinWidth,
         gap,
-        padding,
         viewportheight,
         viewportwidth,
         crosscount,

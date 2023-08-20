@@ -110,7 +110,7 @@ export default class ContentHandler {
             )
 
             cradlePositionData.targetAxisReferencePosition = 0
-            cradlePositionData.targetAxisViewportPixelOffset = 0
+            cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
         }
 
@@ -149,7 +149,7 @@ export default class ContentHandler {
 
             newlistsize = 0
             cradlePositionData.targetAxisReferencePosition = 0
-            cradlePositionData.targetAxisViewportPixelOffset = 0
+            cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
         } else {
 
@@ -237,7 +237,6 @@ export default class ContentHandler {
 
                 orientation, 
                 gap, 
-                padding, 
                 cellHeight,
                 cellWidth,
                 styles,
@@ -250,6 +249,7 @@ export default class ContentHandler {
 
                 virtualListProps, 
                 cradleContentProps,
+                paddingProps,
 
             } = cradleInternalProperties,
 
@@ -265,9 +265,14 @@ export default class ContentHandler {
 
             } = virtualListProps,
 
+            paddingOffset = 
+                orientation == 'vertical'?
+                    paddingProps.top:
+                    paddingProps.left,
+
             cradleContent = this.content
 
-        let { targetAxisViewportPixelOffset } =  cradlePositionData
+        let { targetPixelOffsetAxisFromViewport } =  cradlePositionData
 
         // ----------------------[ 2. normalize data ]--------------------------
 
@@ -295,9 +300,9 @@ export default class ContentHandler {
             'scrollto', 
         ].includes(cradleState)) {
 
-            targetAxisViewportPixelOffset = 
+            targetPixelOffsetAxisFromViewport = 
                 (workingAxisReferenceIndex == listlowindex)?
-                    padding:
+                    paddingOffset:
                     gap // default
 
         }
@@ -323,13 +328,13 @@ export default class ContentHandler {
             newCradleContentCount:cradleContentCount, 
 
             // target scrollPos by pixels
-            targetScrollblockViewportPixelOffset:scrollblockViewportPixelOffset,
+            targetPixelOffsetViewportFromScrollblock:pixelOffsetViewportFromScrollblock,
 
         } = calculateContentListRequirements({
 
                 // pixel
                 baseRowPixelLength,
-                targetAxisViewportPixelOffset,
+                targetPixelOffsetAxisFromViewport,
 
                 // index
                 targetAxisReferenceIndex:workingAxisReferenceIndex,
@@ -340,7 +345,7 @@ export default class ContentHandler {
 
             })
 
-        const axisViewportPixelOffset = targetAxisViewportPixelOffset // semantics
+        const pixelOffsetAxisFromViewport = targetPixelOffsetAxisFromViewport // semantics
 
         // ----------------------[ 4. get and config content ]----------------------
         
@@ -428,7 +433,7 @@ export default class ContentHandler {
         cradleContent.tailModelComponents = tailcontentlist
 
         cradlePositionData.targetAxisReferencePosition = targetAxisReferenceIndex - listlowindex
-        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+        cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
 
         if (serviceHandler.callbacks.referenceIndexCallback) {
 
@@ -444,9 +449,13 @@ export default class ContentHandler {
 
         // reset scrollblock Offset and length
         const 
+            totalpaddinglength = 
+                orientation == 'vertical'?
+                    paddingProps.top + paddingProps.bottom:
+                    paddingProps.left + paddingProps.right,
             scrollblockElement = viewportElement.firstChild,
-            blockbaselength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
-                + (padding * 2) // leading and trailing padding
+            blocknewlength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
+                + totalpaddinglength // leading and trailing padding
 
         if (cradleState == 'pivot') {
 
@@ -465,19 +474,19 @@ export default class ContentHandler {
         if (orientation == 'vertical') {
 
             scrollblockElement.style.top = null
-            scrollblockElement.style.height = blockbaselength + 'px'
+            scrollblockElement.style.height = blocknewlength + 'px'
 
         } else {
 
             scrollblockElement.style.left = null
-            scrollblockElement.style.width = blockbaselength + 'px'
+            scrollblockElement.style.width = blocknewlength + 'px'
 
         }
 
-        cradlePositionData.blockScrollPos = scrollblockViewportPixelOffset 
-        // avoid bogus call to updateCradleContent
+        cradlePositionData.trackingBlockScrollPos = pixelOffsetViewportFromScrollblock
 
-        scrollHandler.resetScrollData(scrollblockViewportPixelOffset) 
+        // avoid bogus call to updateCradleContent
+        scrollHandler.resetScrollData(pixelOffsetViewportFromScrollblock) 
 
         const 
             scrollTop = viewportElement.scrollTop,
@@ -486,13 +495,13 @@ export default class ContentHandler {
         let scrollOptions
         if (cradlePositionData.blockScrollProperty == 'scrollTop') {
             scrollOptions = {
-                top:cradlePositionData.blockScrollPos,
+                top:cradlePositionData.trackingBlockScrollPos,
                 left:scrollLeft,
                 behavior:'instant',
             }
         } else {
             scrollOptions = {
-                left:cradlePositionData.blockScrollPos,
+                left:cradlePositionData.trackingBlockScrollPos,
                 top:scrollTop,
                 behavior:'instant',
             }            
@@ -506,32 +515,32 @@ export default class ContentHandler {
             axisElement = cradleElements.axisRef.current,
             headElement = cradleElements.headRef.current,
 
-            axisScrollblockPixelOffset = 
-                scrollblockViewportPixelOffset + axisViewportPixelOffset
+            pixelOffsetAxisFromScrollblock = 
+                pixelOffsetViewportFromScrollblock + pixelOffsetAxisFromViewport
 
         if (orientation == 'vertical') {
 
-            const top = axisScrollblockPixelOffset 
+            const top = pixelOffsetAxisFromScrollblock - paddingProps.top
 
             axisElement.style.top = top + 'px'
             axisElement.style.left = 'auto'
 
             headElement.style.padding = 
                 headcontentlist.length?
-                    `${padding}px ${padding}px ${gap}px ${padding}px`:
-                    `${padding}px ${padding}px 0px ${padding}px`
+                    `0px 0px ${gap}px 0px`:
+                    `0px`
 
         } else { // orientation = 'horizontal'
 
-            const left = axisScrollblockPixelOffset
+            const left = pixelOffsetAxisFromScrollblock - paddingProps.left
 
             axisElement.style.top = 'auto'
             axisElement.style.left = left + 'px'
 
             headElement.style.padding = 
                 headcontentlist.length?
-                    `${padding}px ${gap}px ${padding}px ${padding}px`:
-                    `${padding}px 0px ${padding}px ${padding}px`
+                    `0px ${gap}px 0px 0px`:
+                    `0px`
 
         }
 
@@ -595,7 +604,6 @@ export default class ContentHandler {
                 layout, 
                 cellHeight, 
                 cellWidth, 
-                padding, 
                 gap,
                 scrollerID, // debug
 
@@ -605,6 +613,7 @@ export default class ContentHandler {
 
                 virtualListProps,
                 cradleContentProps,
+                paddingProps,
 
             } = cradleInternalProperties,
 
@@ -616,7 +625,7 @@ export default class ContentHandler {
             } = virtualListProps,
 
             // new vars
-            scrollPos = 
+            currentScrollPos = 
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft,
@@ -641,16 +650,17 @@ export default class ContentHandler {
             listEndChangeCount,
 
             // pixels
-            newAxisViewportPixelOffset, 
+            newPixelOffsetAxisFromViewport,
 
         } = calculateShiftSpecs({
 
             shiftinstruction,
             triggerViewportReferencePixelPos,
-            scrollPos,
+            currentScrollPos,
             scrollblockElement: viewportElement.firstChild,
 
             cradleInheritedProperties,
+            cradleInternalProperties,
             cradleContentProps,
             virtualListProps,
             cradleContent,
@@ -659,7 +669,7 @@ export default class ContentHandler {
         })
 
         const 
-            axisViewportPixelOffset = newAxisViewportPixelOffset,
+            pixelOffsetAxisFromViewport = newPixelOffsetAxisFromViewport,
             isShift = !((axisItemShift == 0) && (cradleItemShift == 0)),
             axisElement = cradleElements.axisRef.current,
             headElement = cradleElements.headRef.current
@@ -672,14 +682,21 @@ export default class ContentHandler {
         // abandon option; nothing to do but reposition
         if (!isShift) { // can happen first row; oversized last row
     
-            cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
-            this.applyStyling({
-                layout, orientation, padding, gap, cellHeight, cellWidth, 
-                crosscount, 
-                axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
-                headcontent:cradleContent.headModelComponents,
-                axisElement, headElement, listlowindex,
-            })
+            if (layout == 'uniform') {// there's a separate routine for variable adjustments and css
+
+                cradlePositionData.targetPixelOffsetAxisFromViewport = this.applyStyling({
+                    layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
+                    crosscount, 
+                    axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
+                    headcontent:cradleContent.headModelComponents,
+                    axisElement, headElement, listlowindex,
+                })
+
+            } else {
+
+                cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
+
+            }
 
             return
 
@@ -745,15 +762,14 @@ export default class ContentHandler {
                 gridstart = 'unset'
             }
 
-            const firstcomponent = updatedContentList[0]
+            const 
+                firstcomponent = updatedContentList[0],
+                gridstartstyle =
+                    (orientation == 'vertical')?
+                        { gridColumnStart:gridstart }:
+                        { gridRowStart:gridstart },
+                revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
 
-            let gridstartstyle
-            if (orientation == 'vertical') {
-                gridstartstyle = {gridColumnStart:gridstart}
-            } else {
-                gridstartstyle = {gridRowStart:gridstart}
-            }
-            const revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
             updatedContentList[0] = revisedcomponent
 
         } else {
@@ -809,17 +825,21 @@ export default class ContentHandler {
         // -------------------------------[ 6. css changes ]-------------------------
 
         cradlePositionData.targetAxisReferencePosition = axisReferenceIndex - listlowindex
-        cradlePositionData.targetAxisViewportPixelOffset = axisViewportPixelOffset
+        cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
 
         if (isShift) cacheAPI.renderPortalLists()
 
-        this.applyStyling({
-            layout, orientation, padding, gap, cellHeight, cellWidth, 
-            crosscount, 
-            axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
-            headcontent,
-            axisElement, headElement, listlowindex
-        })
+        if (layout == 'uniform') {// there's a separate routine for variable adjustments and css
+
+            cradlePositionData.targetPixelOffsetAxisFromViewport = this.applyStyling({
+                layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
+                crosscount, 
+                axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
+                headcontent,
+                axisElement, headElement, listlowindex
+            })
+
+        }
 
         // load new display data
         cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -829,17 +849,13 @@ export default class ContentHandler {
 
     // move the offset of the axis
     private applyStyling = ({
-        layout, orientation, padding, gap, cellHeight, cellWidth, 
+        layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
         crosscount, 
-        axisReferenceIndex, axisViewportPixelOffset, scrollPos, 
+        axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
         headcontent,
         axisElement, headElement, listlowindex
     }) => {
         
-        if (layout == 'variable') return // there's a separate routine for variable adjustments and css
-
-        // --------------
-        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
         const 
             preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount ),
     
@@ -849,50 +865,56 @@ export default class ContentHandler {
                     cellWidth)
                 + gap,
 
-            testScrollPos = (baseCellLength * preAxisVirtualRows) + padding - axisViewportPixelOffset,
+            paddingOffset = 
+                orientation == 'vertical'?
+                    paddingProps.top:
+                    paddingProps.left,
+
+            testScrollPos = (baseCellLength * preAxisVirtualRows) + paddingOffset - pixelOffsetAxisFromViewport,
             
-            scrollDiff = testScrollPos - scrollPos
+            scrollDiff = testScrollPos - currentScrollPos
 
         if (scrollDiff) {
 
-            axisViewportPixelOffset += scrollDiff
+            pixelOffsetAxisFromViewport += scrollDiff
 
         }
-        // ---------
 
         // move the axis to accomodate change of content
         let topAxisPos, leftAxisPos
         if (orientation == 'vertical') {
 
-            topAxisPos = scrollPos + axisViewportPixelOffset
+            topAxisPos = currentScrollPos + pixelOffsetAxisFromViewport - paddingProps.top
 
             axisElement.style.top = topAxisPos + 'px'
             axisElement.style.left = 'auto'
             
             headElement.style.padding = 
                 headcontent.length?
-                    `${padding}px ${padding}px ${gap}px ${padding}px`:
-                    `${padding}px ${padding}px 0px ${padding}px`
+                    `0px 0px ${gap}px 0px`:
+                    `0px`
 
         } else { // 'horizontal'
 
-            leftAxisPos = scrollPos + axisViewportPixelOffset
+            leftAxisPos = currentScrollPos + pixelOffsetAxisFromViewport - paddingProps.left
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftAxisPos + 'px'
 
             headElement.style.padding = 
                 headcontent.length?
-                    `${padding}px ${gap}px ${padding}px ${padding}px`:
-                    `${padding}px 0px ${padding}px ${padding}px`
+                    `0px ${gap}px 0px 0px`:
+                    `0px`
         }
+
+        return pixelOffsetAxisFromViewport
 
     }
 
     // ===================[ RECONFIGURE THE SCROLLBLOCK FOR VARIABLE CONTENT ]=======================
 
 /*  
-    blockScrollPos is the amount the scrollBlock is scrolled to reveal the centre of the Cradle
+    trackingBlockScrollPos is the amount the scrollBlock is scrolled to reveal the centre of the Cradle
         at the edge of the Viewport
     
     the length of the Scrollblock is shortened by the amount the measured tail length differs from the 
@@ -939,7 +961,7 @@ export default class ContentHandler {
             { 
 
                 targetAxisReferencePosition: axisReferencePosition,
-                targetAxisViewportPixelOffset: axisViewportPixelOffset,
+                targetPixelOffsetAxisFromViewport: pixelOffsetAxisFromViewport,
 
             } = cradlePositionData,
 
@@ -955,7 +977,6 @@ export default class ContentHandler {
 
                 orientation, 
                 gap, 
-                padding, 
                 cellHeight,
                 cellWidth,
 
@@ -964,7 +985,7 @@ export default class ContentHandler {
             {
 
                 virtualListProps,
-                // cradleContentProps,
+                paddingProps,
 
             } = cradleInternalProperties,
 
@@ -975,8 +996,9 @@ export default class ContentHandler {
                 lowindex:listlowindex,
                 rowshift:listrowshift,
 
-
             } = virtualListProps
+
+        // console.log('var cradlePositionData', {...cradlePositionData})
 
         // cancel end of list reconciliation if scrolling re-starts
         if (scrollHandler.isScrolling && this.gridResizeObserver) {
@@ -1016,12 +1038,24 @@ export default class ContentHandler {
                     tailGridElement.offsetHeight:
                     tailGridElement.offsetWidth,
 
-            basePostCradlePixelLength = postCradleRowCount * baseCellLength,
+            postCradleRowsPixelLength = (postCradleRowCount * baseCellLength),
 
-            computedPostAxisPixelLength = basePostCradlePixelLength + measuredTailPixelLength,
+            paddingTailOffset = 
+                orientation == 'vertical'?
+                    paddingProps.bottom:
+                    paddingProps.right,
+
+            totalPostAxisScrollblockPixelLength = 
+                postCradleRowsPixelLength + measuredTailPixelLength + paddingTailOffset,
+
+            paddingHeadOffset = 
+                orientation == 'vertical'?
+                    paddingProps.top:
+                    paddingProps.left,
 
             // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
-            basePreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + padding
+            totalPreAxisScrollblockPixelLength = 
+                ((preCradleRowCount + headRowCount) * baseCellLength) + paddingHeadOffset
 
         this.latestAxisReferenceIndex = axisReferenceIndex
 
@@ -1030,21 +1064,21 @@ export default class ContentHandler {
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
         const 
-            computedScrollblockPixelLength = basePreAxisPixelLength + computedPostAxisPixelLength,
-            blockScrollPos = basePreAxisPixelLength - axisViewportPixelOffset,
-            newAxisScrollblockPixelOffset = blockScrollPos + axisViewportPixelOffset // ie. basePreAxisPixelLength, but semantics
+            totalScrollblockPixelLength = totalPreAxisScrollblockPixelLength + totalPostAxisScrollblockPixelLength,
+            trackingBlockScrollPos = totalPreAxisScrollblockPixelLength - pixelOffsetAxisFromViewport,
+            newPixelOffsetAxisFromScrollblock = trackingBlockScrollPos + pixelOffsetAxisFromViewport // ie. totalPreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
 
-            axisElement.style.top = newAxisScrollblockPixelOffset + 'px'
+            axisElement.style.top = (newPixelOffsetAxisFromScrollblock - paddingProps.top) + 'px'
 
-            scrollblockElement.style.height = (computedScrollblockPixelLength) + 'px'
+            scrollblockElement.style.height = (totalScrollblockPixelLength) + 'px'
 
         } else { // 'horizontal'
 
-            axisElement.style.left = newAxisScrollblockPixelOffset + 'px'
+            axisElement.style.left = (newPixelOffsetAxisFromScrollblock - paddingProps.left) + 'px'
 
-            scrollblockElement.style.width = computedScrollblockPixelLength + 'px'
+            scrollblockElement.style.width = totalScrollblockPixelLength + 'px'
 
         }
         // -----------------------[ scrollPos adjustment ]-------------------------
@@ -1053,26 +1087,26 @@ export default class ContentHandler {
 
             headGridElement.style.padding = 
                 headRowCount?
-                    `${padding}px ${padding}px ${gap}px ${padding}px`:
-                    `${padding}px ${padding}px 0px ${padding}px`
+                    `0px 0px ${gap}px 0px`:
+                    `0px`
 
         } else {
 
             headGridElement.style.padding = 
                 headRowCount?
-                    `${padding}px ${gap}px ${padding}px ${padding}px`:
-                    `${padding}px 0px ${padding}px ${padding}px`
+                    `0px ${gap}px 0px 0px`:
+                    `0px`
 
         }
 
-        // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to blockScrollPos
+        // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to trackingBlockScrollPos
         const 
             startingScrollPos = 
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft,
 
-            scrollDiff = blockScrollPos - startingScrollPos
+            scrollDiff = trackingBlockScrollPos - startingScrollPos
 
         if (orientation == 'vertical') {
 

@@ -94,8 +94,8 @@ const InfiniteGridScroller = (props) => {
 
         // grid specs:
         orientation = 'vertical', // vertical or horizontal
-        gap = 0, // space between grid cells, not including the leading and trailing padding
-        padding = 0, // the border space between the items and the viewport, applied to the cradle
+        gap = 0, // space between grid cells
+        padding = 0, // the padding around the Scrollblock
         layout = 'uniform', // uniform, variable
         cellMinHeight = 25, // for layout == 'variable' && orientation == 'vertical'
         cellMinWidth = 25, // for layout == 'variable' && orientation == 'horizontal'
@@ -144,7 +144,6 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         gap,
-        padding,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -169,7 +168,64 @@ const InfiniteGridScroller = (props) => {
     cellMinHeight = +cellMinHeight
     cellMinWidth = +cellMinWidth
     gap = +gap
-    padding = +padding
+    const paddingPropsRef = useRef({
+        top:null,
+        right:null,
+        bottom:null,
+        left:null,
+        source:null,
+        original:null,
+        list:[],
+        CSS:'',
+    })
+    let paddingProps = paddingPropsRef.current
+    if (padding !== paddingProps.source) {
+        paddingProps.source = padding
+        if (!Array.isArray(padding)) {
+            padding = +padding
+            if (!isNaN(padding)) {
+                paddingProps.original = [padding]
+            } else {
+                paddingProps.original = [0]
+            }
+        } else {
+            let isProblem = false
+            if (padding.length > 4) {
+                isProblem = true
+            }
+            if (!isProblem) padding.forEach((value,index,list) => {
+                if (isNaN(value)) {
+                    isProblem = true
+                }
+            })
+            if (!isProblem) {
+                paddingProps.original = padding
+            } else {
+                paddingProps.original = [0]
+            }
+        }
+        const list = [...paddingProps.original]
+        paddingProps.CSS = list.join('px ') + 'px'
+        const lgth = list.length
+        let a,b,c
+        switch (lgth) {
+        case 1:
+            [a] = list // t/b/r/l
+            list.push(a,a,a) //r,b,l
+            break
+        case 2:
+            [a,b] = list // t/b, r/l
+            list.push(a,b) //b,l
+        case 3:
+            [a,b] = list // t, r/l, b
+            list.push(b) //l
+        }
+        paddingProps.list = list
+        const [top, right, bottom, left] = list
+        Object.assign(paddingProps,{top:+top,right:+right,bottom:+bottom,left:+left}) // assure numeric
+        paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
+        // console.log('new paddingProps',paddingPropsRef.current)
+    }
     startingIndex = +startingIndex
     startingListSize = +startingListSize
     runwaySize = +runwaySize
@@ -181,7 +237,6 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         gap,
-        padding,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -261,7 +316,6 @@ const InfiniteGridScroller = (props) => {
     const gridSpecs = {
         orientation,
         gap,
-        padding,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -272,9 +326,10 @@ const InfiniteGridScroller = (props) => {
     const gridSpecsRef = useRef(gridSpecs)
 
     // system
-    const stylesRef = useRef(styles)
-    const callbacksRef = useRef(callbacks)
-    const placeholderMessagesRef = useRef(placeholderMessages)
+    const 
+        stylesRef = useRef(styles),
+        callbacksRef = useRef(callbacks),
+        placeholderMessagesRef = useRef(placeholderMessages)
 
     let {
 
@@ -307,29 +362,30 @@ const InfiniteGridScroller = (props) => {
     if (typeof useScrollTracker != 'boolean') useScrollTracker = true
 
     // for mount version
-    const scrollerSessionIDRef = useRef(null)
-    const scrollerID = scrollerSessionIDRef.current
+    const 
+        scrollerSessionIDRef = useRef(null),
+        scrollerID = scrollerSessionIDRef.current,
 
-    // for children
-    const cacheAPIRef = useRef(cacheAPI)
+        // for children
+        cacheAPIRef = useRef(cacheAPI),
 
-    const updateFunctionRef = useRef(null)
+        updateFunctionRef = useRef(null),
 
-    const listsizeRef = useRef(startingListSize)
-    const listRangeRef = useRef(startingListRange)
+        listsizeRef = useRef(startingListSize),
+        listRangeRef = useRef(startingListRange),
 
-    const listsize = listsizeRef.current
-    const listrange = listRangeRef.current
-    const [lowlistrange, highlistrange] = listrange // ranges undefined if listrange length is 0
+        listsize = listsizeRef.current,
+        listrange = listRangeRef.current,
+        [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
 
-    const virtualListSpecs = {
-        size:listsize,
-        range:listrange,
-        lowindex:lowlistrange,
-        highindex:highlistrange,
-    }
+        virtualListSpecs = {
+            size:listsize,
+            range:listrange,
+            lowindex:lowlistrange,
+            highindex:highlistrange,
+        },
 
-    const virtualListSpecsRef = useRef(virtualListSpecs)
+        virtualListSpecsRef = useRef(virtualListSpecs)
 
     if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
         virtualListSpecsRef.current = virtualListSpecs
@@ -501,6 +557,7 @@ const InfiniteGridScroller = (props) => {
             {<Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
+                paddingProps = {paddingProps}
                 styles = { stylesRef.current }
                 virtualListSpecs = {virtualListSpecsRef.current}
                 scrollerID = { scrollerID }
@@ -509,6 +566,7 @@ const InfiniteGridScroller = (props) => {
                 <Cradle 
 
                     gridSpecs = { gridSpecsRef.current }
+                    paddingProps = { paddingProps }
                     styles = { stylesRef.current }
                     virtualListSpecs = {virtualListSpecsRef.current}
                     setVirtualListSize = { setVirtualListSize }

@@ -8,9 +8,9 @@
 
     The structural elements are the axis, head (grid), tail (grid), 
         and the head and tail triggerlines
-    The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
+    The key control values are the trackingBlockScrollPos & trackingXBlockScrollPos (scrollTop or scrollLeft), the block scroll
         property ("scrollTop" or "scrollLeft"), the targetAxisReferencePosition (first index of the
-        tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
+        tail block), and the targetPixelOffsetAxisFromViewport (pixels offset from the edge of the 
         viewport)
 */
 
@@ -44,11 +44,16 @@ export default class LayoutHandler {
         let {
 
             startingIndex, 
-            // padding
+            orientation,
+
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         const 
-            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            { 
+            
+                virtualListProps,
+
+            } = this.cradleParameters.cradleInternalPropertiesRef.current,
             { 
 
                 size:listsize,
@@ -69,7 +74,7 @@ export default class LayoutHandler {
             this.cradlePositionData.targetAxisReferencePosition = 0
         }
 
-        this.cradlePositionData.targetAxisViewportPixelOffset = 0
+        this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
     }
 
@@ -84,7 +89,6 @@ export default class LayoutHandler {
         const 
             {
                 orientation, 
-                // padding
             } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
             span = (orientation == 'vertical')?
@@ -106,23 +110,23 @@ export default class LayoutHandler {
         /*
             "block" = cradleblock, which is the element that is scrolled
 
-            blockScrollPos is set by scrollHandler during and after scrolling,
+            trackingBlockScrollPos is set by scrollHandler during and after scrolling,
             and by setCradleContent in contentHandler, which repositions the cradle.
 
-            blockScrollPos is used by
+            trackingBlockScrollPos is used by
                 - cradle initialization in response to reparenting interrupt
                 - setCradleContent
 
         */
-        blockScrollPos:null, // the edge of the viewport
-        blockXScrollPos:null, // the cross position for oversized scrollBlock
+        trackingBlockScrollPos:null, // the edge of the viewport
+        trackingXBlockScrollPos:null, // the cross position for oversized scrollBlock
 
         /*
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
 
             blockScrollProperty is set by the orientation reconfiguration effect in cradle module.
 
-            it is used where blockScrollPos is used above.
+            it is used where trackingBlockScrollPos is used above.
         */
         blockScrollProperty: null,
         blockXScrollProperty: null,
@@ -142,19 +146,19 @@ export default class LayoutHandler {
         targetAxisReferencePosition:null,
 
         /*
-            targetAxisViewportPixelOffset is set by
+            targetPixelOffsetAxisFromViewport is set by
                 - setCradleContent
                 - updateCradleContent
                 - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - pivot effect (change of orientation) in cradle module
 
-            targetAxisViewportPixelOffset is used by
+            targetPixelOffsetAxisFromViewport is used by
                 - previousAxisOffset in pivot effect
                 - setCradleContent
 
         */
-        targetAxisViewportPixelOffset:null, // pixels into the viewport
+        targetPixelOffsetAxisFromViewport:null, // pixels into the viewport
 
     }
 
@@ -170,7 +174,6 @@ export default class LayoutHandler {
 
                 // scrollerID, 
                 orientation, 
-                padding, 
                 gap,
                 cellHeight,
                 cellWidth,
@@ -179,9 +182,17 @@ export default class LayoutHandler {
             } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
             {
+                virtualListProps,
+                paddingProps,
+
+            } = this.cradleParameters.cradleInternalPropertiesRef.current,
+
+            {
+
                 rowcount:listRowcount,
                 crosscount,
-            } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps,
+
+            } = virtualListProps,
 
             { 
 
@@ -198,18 +209,23 @@ export default class LayoutHandler {
                     cellWidth)
                 + gap,
 
-            baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
-                + (padding * 2) // leading and trailing padding
+            paddingLength = 
+                orientation == 'vertical'?
+                    paddingProps.top + paddingProps.bottom:
+                    paddingProps.left + paddingProps.right,
+
+            blocklength = (listRowcount * cellLength) - gap // final cell has no trailing gap
+                + paddingLength // leading and trailing padding
 
         if (orientation == 'vertical') {
 
             scrollblockElement.style.top = null
-            scrollblockElement.style.height = baselength + 'px'
+            scrollblockElement.style.height = blocklength + 'px'
 
         } else {
 
             scrollblockElement.style.left = null
-            scrollblockElement.style.width = baselength + 'px'
+            scrollblockElement.style.width = blocklength + 'px'
 
         }
 
@@ -217,12 +233,15 @@ export default class LayoutHandler {
             { cradlePositionData } = layoutHandler,
             axisReferencePosition = cradlePositionData.targetAxisReferencePosition,
             rowReferencePosition = Math.ceil(axisReferencePosition/crosscount),
+            paddingOffset = 
+                orientation == 'vertical'?
+                    paddingProps.top:
+                    paddingProps.left,
             calculatedBlockScrollPos = 
-                (rowReferencePosition * cellLength) + padding
+                (rowReferencePosition * cellLength) + paddingOffset
 
 
         if (layout == 'variable') { // scrollPos overwritten by Safari iOS momentum engine
-        // if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine
 
             const 
                 originalScrollPos = 
@@ -252,13 +271,13 @@ export default class LayoutHandler {
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
                 scrollOptions = {
-                    top:cradlePositionData.blockScrollPos,
+                    top:cradlePositionData.trackingBlockScrollPos,
                     left:scrollLeft,
                     behavior:'instant',
                 }
             } else {
                 scrollOptions = {
-                    left:cradlePositionData.blockScrollPos,
+                    left:cradlePositionData.trackingBlockScrollPos,
                     top:scrollTop,
                     behavior:'instant',
                 }            
@@ -267,7 +286,7 @@ export default class LayoutHandler {
             viewportElement.scroll(scrollOptions)
 
         }
-        cradlePositionData.blockScrollPos = calculatedBlockScrollPos
+        cradlePositionData.trackingBlockScrollPos = calculatedBlockScrollPos
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
 
     }

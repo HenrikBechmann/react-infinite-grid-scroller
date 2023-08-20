@@ -29,7 +29,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
         targetAxisReferenceIndex, // from user, or from pivot
         // pixels
         baseRowPixelLength,
-        targetAxisViewportPixelOffset,
+        targetPixelOffsetAxisFromViewport,
         // resources
         cradleInheritedProperties,
         cradleInternalProperties,
@@ -39,7 +39,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
     const 
         { 
 
-            padding,
+            orientation,
 
         } = cradleInheritedProperties,
 
@@ -47,6 +47,7 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
             cradleContentProps,
             virtualListProps,
+            paddingProps,
 
         } = cradleInternalProperties,
 
@@ -112,15 +113,22 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // --------------------[ calc css positioning ]-----------------------
 
-    const targetScrollblockViewportPixelOffset = 
-        ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + padding - targetAxisViewportPixelOffset
+    const 
+        paddingOffset = 
+            orientation == 'vertical'?
+                paddingProps.top:
+                paddingProps.left,
+
+        targetPixelOffsetViewportFromScrollblock = 
+            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset
+                - targetPixelOffsetAxisFromViewport
 
     // ----------------------[ return required values ]---------------------
 
     return {
         targetCradleReferenceIndex, 
         targetAxisReferenceIndex,
-        targetScrollblockViewportPixelOffset, 
+        targetPixelOffsetViewportFromScrollblock, 
         newCradleContentCount, 
     } 
 
@@ -361,11 +369,12 @@ export const calculateShiftSpecs = ({
     triggerViewportReferencePixelPos,
 
     // positional
-    scrollPos,
+    currentScrollPos,
     scrollblockElement,
 
     // property repos
     cradleInheritedProperties,
+    cradleInternalProperties,
     cradleContentProps,
     virtualListProps,
 
@@ -387,7 +396,6 @@ export const calculateShiftSpecs = ({
         { 
 
             gap,
-            padding,
             orientation,
             cellHeight,
             cellWidth,
@@ -395,6 +403,12 @@ export const calculateShiftSpecs = ({
             scrollerID, // debug
 
         } = cradleInheritedProperties,
+
+        {
+
+            paddingProps,
+
+        } = cradleInternalProperties,
 
         // cradle contents
         {
@@ -606,11 +620,11 @@ export const calculateShiftSpecs = ({
         //     and positive for scroll block tailward
         // the pixel distance between the viewport frame and the axis, toward the head
         currentViewportAxisPixelOffset = 
-            scrollblockAxisPixelOffset + scrollblockPixelOffset - scrollPos
+            scrollblockAxisPixelOffset + scrollblockPixelOffset - currentScrollPos
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 
-    let newAxisViewportPixelOffset = currentViewportAxisPixelOffset + axisPixelShift
+    let newPixelOffsetAxisFromViewport = currentViewportAxisPixelOffset + axisPixelShift
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 
@@ -679,8 +693,13 @@ export const calculateShiftSpecs = ({
 
         }
 
+        // const paddingOffset = 
+        //     orientation == 'vertical'?
+        //         paddingProps.top:
+        //         paddingProps.left
+
         if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
-            newAxisViewportPixelOffset = padding
+            newPixelOffsetAxisFromViewport = 0 // paddingOffset
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway
@@ -746,7 +765,7 @@ export const calculateShiftSpecs = ({
         newAxisReferenceIndex, 
         axisReferenceItemShift, 
 
-        newAxisViewportPixelOffset,
+        newPixelOffsetAxisFromViewport,
 
         newCradleContentCount,
         listStartChangeCount,
