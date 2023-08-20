@@ -363,7 +363,7 @@ export const calculateShiftSpecs = ({
     triggerViewportReferencePixelPos,
 
     // positional
-    scrollPos,
+    currentScrollPos,
     scrollblockElement,
 
     // property repos
@@ -614,7 +614,7 @@ export const calculateShiftSpecs = ({
         //     and positive for scroll block tailward
         // the pixel distance between the viewport frame and the axis, toward the head
         currentViewportAxisPixelOffset = 
-            scrollblockAxisPixelOffset + scrollblockPixelOffset - scrollPos
+            scrollblockAxisPixelOffset + scrollblockPixelOffset - currentScrollPos
 
     // -------------[ 4. calculate new axis pixel position ]------------------
 

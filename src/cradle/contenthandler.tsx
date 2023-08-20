@@ -625,7 +625,7 @@ export default class ContentHandler {
             } = virtualListProps,
 
             // new vars
-            scrollPos = 
+            currentScrollPos = 
                 (orientation == 'vertical')?
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft,
@@ -656,7 +656,7 @@ export default class ContentHandler {
 
             shiftinstruction,
             triggerViewportReferencePixelPos,
-            scrollPos,
+            currentScrollPos,
             scrollblockElement: viewportElement.firstChild,
 
             cradleInheritedProperties,
@@ -686,7 +686,7 @@ export default class ContentHandler {
             this.applyStyling({
                 layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
                 crosscount, 
-                axisReferenceIndex, pixelOffsetAxisFromViewport, scrollPos, 
+                axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
                 headcontent:cradleContent.headModelComponents,
                 axisElement, headElement, listlowindex,
             })
@@ -755,15 +755,14 @@ export default class ContentHandler {
                 gridstart = 'unset'
             }
 
-            const firstcomponent = updatedContentList[0]
+            const 
+                firstcomponent = updatedContentList[0],
+                gridstartstyle =
+                    (orientation == 'vertical')?
+                        { gridColumnStart:gridstart }:
+                        { gridRowStart:gridstart },
+                revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
 
-            let gridstartstyle
-            if (orientation == 'vertical') {
-                gridstartstyle = {gridColumnStart:gridstart}
-            } else {
-                gridstartstyle = {gridRowStart:gridstart}
-            }
-            const revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
             updatedContentList[0] = revisedcomponent
 
         } else {
@@ -826,7 +825,7 @@ export default class ContentHandler {
         this.applyStyling({
             layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
             crosscount, 
-            axisReferenceIndex, pixelOffsetAxisFromViewport, scrollPos, 
+            axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
             headcontent,
             axisElement, headElement, listlowindex
         })
@@ -841,7 +840,7 @@ export default class ContentHandler {
     private applyStyling = ({
         layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
         crosscount, 
-        axisReferenceIndex, pixelOffsetAxisFromViewport, scrollPos, 
+        axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
         headcontent,
         axisElement, headElement, listlowindex
     }) => {
@@ -866,7 +865,7 @@ export default class ContentHandler {
 
             testScrollPos = (baseCellLength * preAxisVirtualRows) + paddingOffset - pixelOffsetAxisFromViewport,
             
-            scrollDiff = testScrollPos - scrollPos
+            scrollDiff = testScrollPos - currentScrollPos
 
         if (scrollDiff) {
 
@@ -879,7 +878,7 @@ export default class ContentHandler {
         let topAxisPos, leftAxisPos
         if (orientation == 'vertical') {
 
-            topAxisPos = scrollPos + pixelOffsetAxisFromViewport - paddingProps.top
+            topAxisPos = currentScrollPos + pixelOffsetAxisFromViewport - paddingProps.top
 
             axisElement.style.top = topAxisPos + 'px'
             axisElement.style.left = 'auto'
@@ -891,7 +890,7 @@ export default class ContentHandler {
 
         } else { // 'horizontal'
 
-            leftAxisPos = scrollPos + pixelOffsetAxisFromViewport - paddingProps.left
+            leftAxisPos = currentScrollPos + pixelOffsetAxisFromViewport - paddingProps.left
 
             axisElement.style.top = 'auto'
             axisElement.style.left = leftAxisPos + 'px'
