@@ -608,8 +608,8 @@ export const calculateShiftSpecs = ({
     const 
         scrollblockAxisPixelOffset = 
             (orientation == 'vertical')?
-                axisElement.clientTop://offsetTop:
-                axisElement.clientLeft,//offsetLeft,
+                axisElement.offsetTop:
+                axisElement.offsetLeft,
 
         scrollblockPixelOffset = // to capture current top/left adjustment to viewport for variable layout
             (orientation == 'vertical')?
@@ -622,15 +622,9 @@ export const calculateShiftSpecs = ({
         currentViewportAxisPixelOffset = 
             scrollblockAxisPixelOffset + scrollblockPixelOffset - currentScrollPos
 
-        console.log('calculateShiftSpecs:currentViewportAxisPixelOffset = scrollblockAxisPixelOffset + scrollblockPixelOffset - currentScrollPos',
-            currentViewportAxisPixelOffset , scrollblockAxisPixelOffset, scrollblockPixelOffset, currentScrollPos)
-
     // -------------[ 4. calculate new axis pixel position ]------------------
 
     let newPixelOffsetAxisFromViewport = currentViewportAxisPixelOffset + axisPixelShift
-
-    console.log('currentViewportAxisPixelOffset, axisPixelShift',
-        currentViewportAxisPixelOffset, axisPixelShift)
 
     // Note: sections 5, 6 and 7 deal entirely with row calculations; no pixels
 

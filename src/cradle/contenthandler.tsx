@@ -634,8 +634,6 @@ export default class ContentHandler {
 
             previousCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
-        console.log('updateCradleContent:currentScrollPos',currentScrollPos)
-
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
@@ -675,8 +673,6 @@ export default class ContentHandler {
             isShift = !((axisItemShift == 0) && (cradleItemShift == 0)),
             axisElement = cradleElements.axisRef.current,
             headElement = cradleElements.headRef.current
-
-        console.log('==> newPixelOffsetAxisFromViewport, isShift',newPixelOffsetAxisFromViewport, isShift)
 
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
@@ -883,8 +879,6 @@ export default class ContentHandler {
             pixelOffsetAxisFromViewport += scrollDiff
 
         }
-
-        console.log('***> applyStyling: scrollDiff, pixelOffsetAxisFromViewport', scrollDiff, pixelOffsetAxisFromViewport)
 
         // move the axis to accomodate change of content
         let topAxisPos, leftAxisPos
