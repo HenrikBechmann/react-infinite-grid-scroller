@@ -1038,7 +1038,8 @@ export default class ContentHandler {
                     paddingProps.bottom:
                     paddingProps.right,
 
-            totalPostAxisPixelLength = postCradleRowsPixelLength + measuredTailPixelLength + paddingTailOffset,
+            totalPostAxisScrollblockPixelLength = 
+                postCradleRowsPixelLength + measuredTailPixelLength + paddingTailOffset,
 
             paddingHeadOffset = 
                 orientation == 'vertical'?
@@ -1046,7 +1047,8 @@ export default class ContentHandler {
                     paddingProps.left,
 
             // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
-            totalPreAxisPixelLength = ((preCradleRowCount + headRowCount) * baseCellLength) + paddingHeadOffset
+            totalPreAxisScrollblockPixelLength = 
+                ((preCradleRowCount + headRowCount) * baseCellLength) + paddingHeadOffset
 
         this.latestAxisReferenceIndex = axisReferenceIndex
 
@@ -1055,8 +1057,8 @@ export default class ContentHandler {
         interruptHandler.signals.pauseCradleIntersectionObserver = true
 
         const 
-            totalScrollblockPixelLength = totalPreAxisPixelLength + totalPostAxisPixelLength,
-            trackingBlockScrollPos = totalPreAxisPixelLength - pixelOffsetAxisFromViewport,
+            totalScrollblockPixelLength = totalPreAxisScrollblockPixelLength + totalPostAxisScrollblockPixelLength,
+            trackingBlockScrollPos = totalPreAxisScrollblockPixelLength - pixelOffsetAxisFromViewport,
             newPixelOffsetAxisFromScrollblock = trackingBlockScrollPos + pixelOffsetAxisFromViewport // ie. totalPreAxisPixelLength, but semantics
 
         if (orientation == 'vertical') {
