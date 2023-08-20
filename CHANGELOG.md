@@ -3,7 +3,7 @@
 ## 1.3.0 August xx, 2023
 
 - `padding` has been moved from `Cradle` grid blocks to the `Scrollblock`.
-- the `padding` property now accepts an array of integers as well as a standalone integer. Values match standard CSS order. integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b,r/l]. 3-item array = [t,r/l,b]. 4-item array = [t,r,b,l]
+- the `padding` property now accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b,r/l]. 3-item array = [t,r/l,b]. 4-item array = [t,r,b,l]
 
 ## 1.2.0 August 18, 2023
 
