@@ -214,18 +214,18 @@ export default class LayoutHandler {
                     paddingProps.top + paddingProps.bottom:
                     paddingProps.left + paddingProps.right,
 
-            baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
+            blocklength = (listRowcount * cellLength) - gap // final cell has no trailing gap
                 + paddingLength // leading and trailing padding
 
         if (orientation == 'vertical') {
 
             scrollblockElement.style.top = null
-            scrollblockElement.style.height = baselength + 'px'
+            scrollblockElement.style.height = blocklength + 'px'
 
         } else {
 
             scrollblockElement.style.left = null
-            scrollblockElement.style.width = baselength + 'px'
+            scrollblockElement.style.width = blocklength + 'px'
 
         }
 
