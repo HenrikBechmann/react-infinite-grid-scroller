@@ -242,7 +242,6 @@ export default class LayoutHandler {
 
 
         if (layout == 'variable') { // scrollPos overwritten by Safari iOS momentum engine
-        // if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine
 
             const 
                 originalScrollPos = 

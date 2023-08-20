@@ -634,6 +634,8 @@ export default class ContentHandler {
 
             previousCradleReferenceIndex = (modelcontentlist[0]?.props.index || 0)
 
+        console.log('updateCradleContent:currentScrollPos',currentScrollPos)
+
         // --------------------------------[ 3. Calculate shifts ]-------------------------------
 
         // cradle properties
@@ -674,6 +676,8 @@ export default class ContentHandler {
             axisElement = cradleElements.axisRef.current,
             headElement = cradleElements.headRef.current
 
+        console.log('==> newPixelOffsetAxisFromViewport, isShift',newPixelOffsetAxisFromViewport, isShift)
+
         // the triggerlines will be moved, so disconnect them from their observer.
         // they are reconnected with 'renderupdatedcontent' state in cradle.tsx, or at 'finishupdateforvariability'
         //    for variable content
@@ -682,14 +686,21 @@ export default class ContentHandler {
         // abandon option; nothing to do but reposition
         if (!isShift) { // can happen first row; oversized last row
     
-            cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
-            this.applyStyling({
-                layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
-                crosscount, 
-                axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
-                headcontent:cradleContent.headModelComponents,
-                axisElement, headElement, listlowindex,
-            })
+            if (layout == 'uniform') {// there's a separate routine for variable adjustments and css
+
+                cradlePositionData.targetPixelOffsetAxisFromViewport = this.applyStyling({
+                    layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
+                    crosscount, 
+                    axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
+                    headcontent:cradleContent.headModelComponents,
+                    axisElement, headElement, listlowindex,
+                })
+
+            } else {
+
+                cradlePositionData.targetPixelOffsetAxisFromViewport = pixelOffsetAxisFromViewport
+
+            }
 
             return
 
@@ -822,13 +833,17 @@ export default class ContentHandler {
 
         if (isShift) cacheAPI.renderPortalLists()
 
-        this.applyStyling({
-            layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
-            crosscount, 
-            axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
-            headcontent,
-            axisElement, headElement, listlowindex
-        })
+        if (layout == 'uniform') {// there's a separate routine for variable adjustments and css
+
+            cradlePositionData.targetPixelOffsetAxisFromViewport = this.applyStyling({
+                layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
+                crosscount, 
+                axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
+                headcontent,
+                axisElement, headElement, listlowindex
+            })
+
+        }
 
         // load new display data
         cradleContent.headDisplayComponents = cradleContent.headModelComponents
@@ -845,10 +860,6 @@ export default class ContentHandler {
         axisElement, headElement, listlowindex
     }) => {
         
-        if (layout == 'variable') return // there's a separate routine for variable adjustments and css
-
-        // --------------
-        // Safari when zoomed drifts (calc precision one presumes). This is a hack to correct that.
         const 
             preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount ),
     
@@ -872,7 +883,8 @@ export default class ContentHandler {
             pixelOffsetAxisFromViewport += scrollDiff
 
         }
-        // ---------
+
+        console.log('***> applyStyling: scrollDiff, pixelOffsetAxisFromViewport', scrollDiff, pixelOffsetAxisFromViewport)
 
         // move the axis to accomodate change of content
         let topAxisPos, leftAxisPos
@@ -900,6 +912,8 @@ export default class ContentHandler {
                     `0px ${gap}px 0px 0px`:
                     `0px`
         }
+
+        return pixelOffsetAxisFromViewport
 
     }
 

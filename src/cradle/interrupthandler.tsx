@@ -134,7 +134,9 @@ export default class InterruptHandler {
                 }
 
                 // none == nothing to do
-                if (shiftinstruction != 'none') { 
+                if (shiftinstruction != 'none') {
+
+                    console.log('shiftinstruction, triggerViewportReferencePixelPos',shiftinstruction, triggerViewportReferencePixelPos)
 
                     this.shiftinstruction = shiftinstruction
                     this.triggerViewportReferencePixelPos = triggerViewportReferencePixelPos
