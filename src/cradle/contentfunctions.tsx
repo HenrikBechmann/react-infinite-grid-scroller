@@ -113,9 +113,15 @@ export const calculateContentListRequirements = ({ // called from setCradleConte
 
     // --------------------[ calc css positioning ]-----------------------
 
-    const
+    const 
+        paddingOffset = 
+            orientation == 'vertical'?
+                paddingProps.top:
+                paddingProps.left,
+
         targetPixelOffsetViewportFromScrollblock = 
-            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) - targetPixelOffsetAxisFromViewport
+            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset
+                - targetPixelOffsetAxisFromViewport
 
     // ----------------------[ return required values ]---------------------
 
