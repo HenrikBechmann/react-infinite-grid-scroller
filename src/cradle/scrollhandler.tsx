@@ -406,7 +406,7 @@ export default class ScrollHandler {
         const 
             ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
             cradleInheritedProperties = this.cradleParameters.cradleInheritedPropertiesRef.current,
-            { virtualListProps, paddingProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            { virtualListProps, paddingProps, gapProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
 
             viewportElement = ViewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild,
@@ -420,13 +420,13 @@ export default class ScrollHandler {
         if (orientation == 'vertical') {
 
             scrollPos = viewportElement.scrollTop
-            cellLength = cradleInheritedProperties.cellHeight + cradleInheritedProperties.gap
+            cellLength = cradleInheritedProperties.cellHeight + gapProps.column
             scrollblockOffset = scrollblockElement.offsetTop
 
         } else {
 
             scrollPos = viewportElement.scrollLeft
-            cellLength = cradleInheritedProperties.cellWidth + cradleInheritedProperties.gap
+            cellLength = cradleInheritedProperties.cellWidth + gapProps.row
             scrollblockOffset = scrollblockElement.offsetLeft
 
         }

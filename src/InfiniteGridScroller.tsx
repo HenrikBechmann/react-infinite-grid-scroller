@@ -143,7 +143,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth,
         cellMinHeight,
         cellMinWidth,
-        gap,
+        // gap,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -167,7 +167,7 @@ const InfiniteGridScroller = (props) => {
     cellWidth = +cellWidth
     cellMinHeight = +cellMinHeight
     cellMinWidth = +cellMinWidth
-    gap = +gap
+    // gap = +gap
     const paddingPropsRef = useRef({
         top:null,
         right:null,
@@ -224,7 +224,53 @@ const InfiniteGridScroller = (props) => {
         const [top, right, bottom, left] = list
         Object.assign(paddingProps,{top:+top,right:+right,bottom:+bottom,left:+left}) // assure numeric
         paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
-        // console.log('new paddingProps',paddingPropsRef.current)
+    }
+    const gapPropsRef = useRef({
+        column:null,
+        row:null,
+        source:null,
+        original:null,
+        list:[],
+        CSS:'',
+    })
+    let gapProps = gapPropsRef.current
+    if (gap !== gapProps.source) {
+        gapProps.source = gap
+        if (!Array.isArray(gap)) {
+            gap = +gap
+            if (!isNaN(gap)) {
+                gapProps.original = [gap]
+            } else {
+                gapProps.original = [0]
+            }
+        } else {
+            let isProblem = false
+            if (gap.length > 2) {
+                isProblem = true
+            }
+            if (!isProblem) gap.forEach((value,index,list) => {
+                if (isNaN(value)) {
+                    isProblem = true
+                }
+            })
+            if (!isProblem) {
+                gapProps.original = gap
+            } else {
+                gapProps.original = [0]
+            }
+        }
+        const list = [...gapProps.original]
+        gapProps.CSS = list.join('px ') + 'px'
+        const lgth = list.length
+        let a
+        if (lgth == 1) {
+            [a] = list // t/b/r/l
+            list.push(a) //r,b,l
+        }
+        paddingProps.list = list
+        const [column, row] = list
+        Object.assign(gapProps,{column:+column,row:+row}) // assure numeric
+        gapPropsRef.current = gapProps = {...gapProps} // signal change to React
     }
     startingIndex = +startingIndex
     startingListSize = +startingListSize
@@ -236,7 +282,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth,
         cellMinHeight,
         cellMinWidth,
-        gap,
+        // gap,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -315,7 +361,7 @@ const InfiniteGridScroller = (props) => {
 
     const gridSpecs = {
         orientation,
-        gap,
+        // gap,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -558,6 +604,7 @@ const InfiniteGridScroller = (props) => {
 
                 gridSpecs = { gridSpecsRef.current }
                 paddingProps = {paddingProps}
+                gapProps = { gapProps }
                 styles = { stylesRef.current }
                 virtualListSpecs = {virtualListSpecsRef.current}
                 scrollerID = { scrollerID }
@@ -567,6 +614,7 @@ const InfiniteGridScroller = (props) => {
 
                     gridSpecs = { gridSpecsRef.current }
                     paddingProps = { paddingProps }
+                    gapProps = { gapProps }
                     styles = { stylesRef.current }
                     virtualListSpecs = {virtualListSpecsRef.current}
                     setVirtualListSize = { setVirtualListSize }

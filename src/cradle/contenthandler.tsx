@@ -236,7 +236,7 @@ export default class ContentHandler {
             {
 
                 orientation, 
-                gap, 
+                // gap, 
                 cellHeight,
                 cellWidth,
                 styles,
@@ -250,6 +250,7 @@ export default class ContentHandler {
                 virtualListProps, 
                 cradleContentProps,
                 paddingProps,
+                gapProps,
 
             } = cradleInternalProperties,
 
@@ -270,7 +271,12 @@ export default class ContentHandler {
                     paddingProps.top:
                     paddingProps.left,
 
-            cradleContent = this.content
+            cradleContent = this.content,
+
+            gaplength =
+                orientation == 'vertical'?
+                    gapProps.column:
+                    gapProps.row
 
         let { targetPixelOffsetAxisFromViewport } =  cradlePositionData
 
@@ -303,7 +309,7 @@ export default class ContentHandler {
             targetPixelOffsetAxisFromViewport = 
                 (workingAxisReferenceIndex == listlowindex)?
                     paddingOffset:
-                    gap // default
+                    gaplength // default
 
         }
 
@@ -316,7 +322,7 @@ export default class ContentHandler {
                 ((orientation == 'vertical')?
                     cellHeight:
                     cellWidth)
-                + gap
+                + gaplength
 
         const {
 
@@ -453,8 +459,9 @@ export default class ContentHandler {
                 orientation == 'vertical'?
                     paddingProps.top + paddingProps.bottom:
                     paddingProps.left + paddingProps.right,
+
             scrollblockElement = viewportElement.firstChild,
-            blocknewlength = (listRowcount * baseRowPixelLength) - gap // final cell has no trailing gap
+            blocknewlength = (listRowcount * baseRowPixelLength) - gaplength // final cell has no trailing gap
                 + totalpaddinglength // leading and trailing padding
 
         if (cradleState == 'pivot') {
@@ -527,7 +534,7 @@ export default class ContentHandler {
 
             headElement.style.padding = 
                 headcontentlist.length?
-                    `0px 0px ${gap}px 0px`:
+                    `0px 0px ${gapProps.column}px 0px`:
                     `0px`
 
         } else { // orientation = 'horizontal'
@@ -539,7 +546,7 @@ export default class ContentHandler {
 
             headElement.style.padding = 
                 headcontentlist.length?
-                    `0px ${gap}px 0px 0px`:
+                    `0px ${gapProps.row}px 0px 0px`:
                     `0px`
 
         }
@@ -604,7 +611,7 @@ export default class ContentHandler {
                 layout, 
                 cellHeight, 
                 cellWidth, 
-                gap,
+                // gap,
                 scrollerID, // debug
 
             } = cradleInheritedProperties,
@@ -614,6 +621,7 @@ export default class ContentHandler {
                 virtualListProps,
                 cradleContentProps,
                 paddingProps,
+                gapProps,
 
             } = cradleInternalProperties,
 
@@ -685,7 +693,7 @@ export default class ContentHandler {
             if (layout == 'uniform') {// there's a separate routine for variable adjustments and css
 
                 cradlePositionData.targetPixelOffsetAxisFromViewport = this.applyStyling({
-                    layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
+                    layout, orientation, paddingProps, gapProps, cellHeight, cellWidth, 
                     crosscount, 
                     axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
                     headcontent:cradleContent.headModelComponents,
@@ -832,7 +840,7 @@ export default class ContentHandler {
         if (layout == 'uniform') {// there's a separate routine for variable adjustments and css
 
             cradlePositionData.targetPixelOffsetAxisFromViewport = this.applyStyling({
-                layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
+                layout, orientation, paddingProps, gapProps, cellHeight, cellWidth, 
                 crosscount, 
                 axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
                 headcontent,
@@ -849,7 +857,7 @@ export default class ContentHandler {
 
     // move the offset of the axis
     private applyStyling = ({
-        layout, orientation, paddingProps, gap, cellHeight, cellWidth, 
+        layout, orientation, paddingProps, gapProps, cellHeight, cellWidth, 
         crosscount, 
         axisReferenceIndex, pixelOffsetAxisFromViewport, currentScrollPos, 
         headcontent,
@@ -858,12 +866,17 @@ export default class ContentHandler {
         
         const 
             preAxisVirtualRows = Math.ceil( ( axisReferenceIndex - listlowindex )/crosscount ),
+
+            gaplength = 
+                orientation == 'vertical'?
+                    gapProps.column:
+                    gapProps.row,
     
             baseCellLength = 
                 ((orientation == 'vertical')?
                     cellHeight:
                     cellWidth)
-                + gap,
+                + gaplength,
 
             paddingOffset = 
                 orientation == 'vertical'?
@@ -891,7 +904,7 @@ export default class ContentHandler {
             
             headElement.style.padding = 
                 headcontent.length?
-                    `0px 0px ${gap}px 0px`:
+                    `0px 0px ${gapProps.column}px 0px`:
                     `0px`
 
         } else { // 'horizontal'
@@ -903,7 +916,7 @@ export default class ContentHandler {
 
             headElement.style.padding = 
                 headcontent.length?
-                    `0px ${gap}px 0px 0px`:
+                    `0px ${gapProps.row}px 0px 0px`:
                     `0px`
         }
 
@@ -976,7 +989,7 @@ export default class ContentHandler {
             {
 
                 orientation, 
-                gap, 
+                // gap, 
                 cellHeight,
                 cellWidth,
 
@@ -986,6 +999,7 @@ export default class ContentHandler {
 
                 virtualListProps,
                 paddingProps,
+                gapProps,
 
             } = cradleInternalProperties,
 
@@ -1026,12 +1040,17 @@ export default class ContentHandler {
             preCradleRowCount = cradleReferenceRow - listrowshift,
             postCradleRowCount = listLastRow - cradleLastRow,
 
+            gaplength = 
+                orientation == 'vertical'?
+                    gapProps.column:
+                    gapProps.row,
+
             // base pixel values
             baseCellLength = 
                 ((orientation == 'vertical')?
                     cellHeight:
                     cellWidth
-                ) + gap,
+                ) + gaplength,
 
             measuredTailPixelLength = 
                 (orientation == 'vertical')?
@@ -1087,14 +1106,14 @@ export default class ContentHandler {
 
             headGridElement.style.padding = 
                 headRowCount?
-                    `0px 0px ${gap}px 0px`:
+                    `0px 0px ${gapProps.column}px 0px`:
                     `0px`
 
         } else {
 
             headGridElement.style.padding = 
                 headRowCount?
-                    `0px ${gap}px 0px 0px`:
+                    `0px ${gapProps.row}px 0px 0px`:
                     `0px`
 
         }
