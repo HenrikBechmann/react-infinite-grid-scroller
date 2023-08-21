@@ -254,7 +254,7 @@ const InfiniteGridScroller = (props) => {
                 }
             })
             if (!isProblem) {
-                gapProps.original = padding
+                gapProps.original = gap
             } else {
                 gapProps.original = [0]
             }
