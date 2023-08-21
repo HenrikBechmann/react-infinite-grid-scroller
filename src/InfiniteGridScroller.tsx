@@ -143,7 +143,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth,
         cellMinHeight,
         cellMinWidth,
-        gap,
+        // gap,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -167,7 +167,7 @@ const InfiniteGridScroller = (props) => {
     cellWidth = +cellWidth
     cellMinHeight = +cellMinHeight
     cellMinWidth = +cellMinWidth
-    gap = +gap
+    // gap = +gap
     const paddingPropsRef = useRef({
         top:null,
         right:null,
@@ -282,7 +282,7 @@ const InfiniteGridScroller = (props) => {
         cellWidth,
         cellMinHeight,
         cellMinWidth,
-        gap,
+        // gap,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -361,7 +361,7 @@ const InfiniteGridScroller = (props) => {
 
     const gridSpecs = {
         orientation,
-        gap,
+        // gap,
         cellHeight,
         cellWidth,
         cellMinHeight,
