@@ -15,7 +15,7 @@ Breaking change:
 - `changeListSizeCallback` API replaces changeListsizeCallback (note the camel case)
 
 Other changes:
-- new RIGS property `startingListRange` optionally takes an array of two numbers `[lowindex, highindex]`, being the `lowindex` and `highindex` of the virtual list. `lowindex` must be <= `highindex`, but both can be positive or negative integers. `startingListRange` if present supercedes `startingListSize`. If `setListRange` is given an empty array (`[]`) it creates an empty virtual list 
+- new RIGS property `startingListRange` optionally takes an array of two numbers `[lowindex, highindex]`, being the `lowindex` and `highindex` of the virtual list. `lowindex` must be <= `highindex`, but both can be positive or negative integers. `startingListRange` if present supercedes `startingListSize`. If `startingListRange` is given an empty array (`[]`) it creates an empty virtual list 
 - `setListsize` is deprecated, replaced by `setListSize` (note the camel case)
 - new API calls: setListRange, prependIndexCount, appendIndexCount, getPropertiesSnapshot. See documentation
 
