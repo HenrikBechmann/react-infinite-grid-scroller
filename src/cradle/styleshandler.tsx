@@ -27,46 +27,42 @@ export default class StylesHandler {
         orientation, 
         cellHeight, 
         cellWidth, 
-        // cellMinHeight,
-        // cellMinWidth,
-        gap,
-        padding, 
+        gapProps,
         crosscount, 
-        // viewportheight, 
-        // viewportwidth,
         userstyles,
         triggerlineOffset,
         layout,
 
     }) => {
 
-        const headstyles = this.getBaseHeadStyles(gap, padding, orientation, userstyles.cradle)
-        const tailstyles = this.getBaseTailStyles(gap, padding, orientation, userstyles.cradle)
-        const axisstyles = this.getAxisStyles(gap, padding, orientation)
+        const 
+            headstyles = this.getBaseHeadStyles(gapProps, orientation, userstyles.cradle),
+            tailstyles = this.getBaseTailStyles(gapProps, orientation, userstyles.cradle),
+            axisstyles = this.getAxisStyles(gapProps, orientation),
 
-        const triggercelltriggerlineheadstyles =
-            this.getTriggercellTriggerlineHeadStyles(
-                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
-        const triggercelltriggerlinetailstyles = 
-            this.getTriggercellTriggerlineTailStyles(
-                orientation,cellHeight, cellWidth, triggerlineOffset, gap)
+            triggercelltriggerlineheadstyles =
+                this.getTriggercellTriggerlineHeadStyles(
+                    orientation,cellHeight, cellWidth, triggerlineOffset, gapProps),
+            triggercelltriggerlinetailstyles = 
+                this.getTriggercellTriggerlineTailStyles(
+                    orientation,cellHeight, cellWidth, triggerlineOffset, gapProps),
 
-        const cradledividerstyles = 
-            {
-                zIndex:1, 
-                position:'absolute',
-                width:'100%',
-                height:'100%',
-                boxShadow:'0 0 5px 3px red'
-            }
+            cradledividerstyles = 
+                {
+                    zIndex:1, 
+                    position:'absolute',
+                    width:'100%',
+                    height:'100%',
+                    boxShadow:'0 0 5px 3px red'
+                }
 
-        headstyles.gap = tailstyles.gap = gap + 'px'
+        headstyles.gap = tailstyles.gap = gapProps.CSS
 
         // headstyles.padding set in contentHandler setCradleContent and updateCradleContent
         if (orientation == 'vertical') {
 
             // padding varies
-            tailstyles.padding = `0 ${padding}px ${padding}px ${padding}px`
+            tailstyles.padding = `0px`
 
             // the following are identical for head and tail
             headstyles.width = tailstyles.width = '100%'
@@ -90,7 +86,7 @@ export default class StylesHandler {
 
         } else { // orientation == 'horizontal'
 
-            tailstyles.padding = `${padding}px ${padding}px ${padding}px 0`
+            tailstyles.padding = `0px`
 
             headstyles.width = tailstyles.width = 'auto'
             headstyles.height = tailstyles.height = '100%'
@@ -125,7 +121,7 @@ export default class StylesHandler {
 
     // the top, right, bottom, left setting determine the direction of expansion of the grid block
     private getBaseHeadStyles = 
-        (gap,padding,orientation,userheadstyles) => {
+        (gapProps,orientation,userheadstyles) => {
 
         let bottom, left, top, right
 
@@ -145,8 +141,7 @@ export default class StylesHandler {
             ...userheadstyles,
             position: 'absolute',
             display: 'grid',
-            gridGap: gap + 'px',
-            padding: padding + 'px',
+            gridGap: gapProps.CSS,
             boxSizing:'border-box',
             bottom,
             left,
@@ -157,7 +152,7 @@ export default class StylesHandler {
 
     // the top, right, bottom, left setting determine the direction of expansion of the grid block
     private getBaseTailStyles = 
-        (gap,padding,orientation,usertailstyles) => {
+        (gapProps,orientation,usertailstyles) => {
 
         let bottom, left, top, right
 
@@ -177,8 +172,7 @@ export default class StylesHandler {
             ...usertailstyles,
             position: 'absolute',
             display: 'grid',
-            gridGap: gap + 'px',
-            padding: padding + 'px',
+            gridGap: gapProps.CSS,
             boxSizing:'border-box',
             top,
             left,
@@ -188,13 +182,13 @@ export default class StylesHandler {
     }
 
     private getAxisStyles = 
-        (gap, padding, orientation) => {
+        (gapProps, orientation) => {
 
         let top, left, width, height // for axis
 
         if (orientation == 'vertical') {
 
-            top = padding + 'px' // default
+            top = 0 // default
             left = 'auto'
             width = '100%'
             height = 0
@@ -202,7 +196,7 @@ export default class StylesHandler {
         } else {
 
             top = 'auto'
-            left = padding + 'px' // default
+            left = 0 // default
             width = 0
             height = '100%'
 
@@ -221,11 +215,12 @@ export default class StylesHandler {
     }
 
     private getTriggercellTriggerlineHeadStyles = 
-        (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+        (orientation, cellHeight, cellWidth, triggerlineOffset, gapProps) => {
 
         const position = 'absolute'
 
         let width, height, top, right, bottom, left
+
         if (orientation == 'vertical') {
 
             width = '100%'
@@ -259,18 +254,19 @@ export default class StylesHandler {
         }
     }
     private getTriggercellTriggerlineTailStyles = 
-        (orientation, cellHeight, cellWidth, triggerlineOffset, gap) => {
+        (orientation, cellHeight, cellWidth, triggerlineOffset, gapProps) => {
 
         const position = 'absolute'
 
         let width, height, top, right, bottom, left
+        
         if (orientation == 'vertical') {
 
             width = '100%'
             height = 0
             top = null
             right = '0px'
-            bottom = -(triggerlineOffset + gap) + 'px'
+            bottom = -(triggerlineOffset + gapProps.column) + 'px'
             left = '0px'
 
         } else {
@@ -278,7 +274,7 @@ export default class StylesHandler {
             width = 0
             height = '100%'
             top = '0px'
-            right = -(triggerlineOffset + gap) + 'px'
+            right = -(triggerlineOffset + gapProps.row) + 'px'
             bottom = '0px'
             left = null
 

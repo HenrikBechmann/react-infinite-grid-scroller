@@ -8,9 +8,9 @@
 
     The structural elements are the axis, head (grid), tail (grid), 
         and the head and tail triggerlines
-    The key control values are the blockScrollPos & blockXScrollPos (scrollTop or scrollLeft), the block scroll
+    The key control values are the trackingBlockScrollPos & trackingXBlockScrollPos (scrollTop or scrollLeft), the block scroll
         property ("scrollTop" or "scrollLeft"), the targetAxisReferencePosition (first index of the
-        tail block), and the targetAxisViewportPixelOffset (pixels offset from the edge of the 
+        tail block), and the targetPixelOffsetAxisFromViewport (pixels offset from the edge of the 
         viewport)
 */
 
@@ -44,18 +44,23 @@ export default class LayoutHandler {
         let {
 
             startingIndex, 
-            // padding
+            orientation,
+
         } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+        const 
+            { 
+            
+                virtualListProps,
 
-        const { 
+            } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            { 
 
-            size:listsize,
-            lowindex,
-            highindex,
+                size:listsize,
+                lowindex,
+                highindex,
 
-        } = virtualListProps
+            } = virtualListProps
 
         if (listsize) {
 
@@ -69,7 +74,7 @@ export default class LayoutHandler {
             this.cradlePositionData.targetAxisReferencePosition = 0
         }
 
-        this.cradlePositionData.targetAxisViewportPixelOffset = 0
+        this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
     }
 
@@ -81,17 +86,17 @@ export default class LayoutHandler {
 
     public get triggerlineSpan() {
 
-        const {
-            orientation, 
-            // padding
-        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            {
+                orientation, 
+            } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const span = (orientation == 'vertical')?
-            this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
-            this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
-            // horizontal
-            this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
-            this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
+            span = (orientation == 'vertical')?
+                this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
+                this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
+                // horizontal
+                this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
+                this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
 
         return span
     }
@@ -105,23 +110,23 @@ export default class LayoutHandler {
         /*
             "block" = cradleblock, which is the element that is scrolled
 
-            blockScrollPos is set by scrollHandler during and after scrolling,
+            trackingBlockScrollPos is set by scrollHandler during and after scrolling,
             and by setCradleContent in contentHandler, which repositions the cradle.
 
-            blockScrollPos is used by
+            trackingBlockScrollPos is used by
                 - cradle initialization in response to reparenting interrupt
                 - setCradleContent
 
         */
-        blockScrollPos:null, // the edge of the viewport
-        blockXScrollPos:null, // the cross position for oversized scrollBlock
+        trackingBlockScrollPos:null, // the edge of the viewport
+        trackingXBlockScrollPos:null, // the cross position for oversized scrollBlock
 
         /*
             values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
 
             blockScrollProperty is set by the orientation reconfiguration effect in cradle module.
 
-            it is used where blockScrollPos is used above.
+            it is used where trackingBlockScrollPos is used above.
         */
         blockScrollProperty: null,
         blockXScrollProperty: null,
@@ -141,92 +146,116 @@ export default class LayoutHandler {
         targetAxisReferencePosition:null,
 
         /*
-            targetAxisViewportPixelOffset is set by
+            targetPixelOffsetAxisFromViewport is set by
                 - setCradleContent
                 - updateCradleContent
                 - layoutHandler (initialization)
                 - scrollHandler (during and after scroll)
                 - pivot effect (change of orientation) in cradle module
 
-            targetAxisViewportPixelOffset is used by
+            targetPixelOffsetAxisFromViewport is used by
                 - previousAxisOffset in pivot effect
                 - setCradleContent
 
         */
-        targetAxisViewportPixelOffset:null, // pixels into the viewport
+        targetPixelOffsetAxisFromViewport:null, // pixels into the viewport
 
     }
 
     // called by interruptHandler
     public restoreBaseScrollblockConfig = () => {
 
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
-        const viewportElement = ViewportContextProperties.elementRef.current
-        const scrollblockElement = viewportElement.firstChild
+        const 
+            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
+            viewportElement = ViewportContextProperties.elementRef.current,
+            scrollblockElement = viewportElement.firstChild,
 
-        const { 
+            { 
 
-            // scrollerID, 
-            orientation, 
-            padding, 
-            gap,
-            cellHeight,
-            cellWidth,
-            layout 
+                // scrollerID, 
+                orientation, 
+                // gap,
+                cellHeight,
+                cellWidth,
+                layout 
 
-        } = this.cradleParameters.cradleInheritedPropertiesRef.current
+            } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const {
-            rowcount:listRowcount,
-            crosscount,
-        } = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps
+            {
+                virtualListProps,
+                paddingProps,
+                gapProps,
 
-        const { 
+            } = this.cradleParameters.cradleInternalPropertiesRef.current,
 
-            // stateHandler, 
-            // serviceHandler, 
-            scrollHandler, 
-            layoutHandler 
+            {
 
-        } = this.cradleParameters.handlersRef.current
+                rowcount:listRowcount,
+                crosscount,
 
-        const cellLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth)
-            + gap
+            } = virtualListProps,
 
-        const baselength = (listRowcount * cellLength) - gap // final cell has no trailing gap
-            + (padding * 2) // leading and trailing padding
+            { 
+
+                // stateHandler, 
+                // serviceHandler, 
+                scrollHandler, 
+                layoutHandler 
+
+            } = this.cradleParameters.handlersRef.current,
+
+            gaplength = 
+                orientation == 'vertical'?
+                    gapProps.column:
+                    gapProps.row,
+
+            cellLength = 
+                ((orientation == 'vertical')?
+                    cellHeight:
+                    cellWidth) 
+                + gaplength,
+
+            paddingLength = 
+                orientation == 'vertical'?
+                    paddingProps.top + paddingProps.bottom:
+                    paddingProps.left + paddingProps.right,
+
+            blocklength = (listRowcount * cellLength) - gaplength // final cell has no trailing gap
+                + paddingLength // leading and trailing padding
 
         if (orientation == 'vertical') {
 
             scrollblockElement.style.top = null
-            scrollblockElement.style.height = baselength + 'px'
+            scrollblockElement.style.height = blocklength + 'px'
 
         } else {
 
             scrollblockElement.style.left = null
-            scrollblockElement.style.width = baselength + 'px'
+            scrollblockElement.style.width = blocklength + 'px'
 
         }
 
-        const { cradlePositionData } = layoutHandler
-        const axisReferencePosition = cradlePositionData.targetAxisReferencePosition
-        const rowReferencePosition = Math.ceil(axisReferencePosition/crosscount)
-        const calculatedBlockScrollPos = 
-            (rowReferencePosition * cellLength) + padding
+        const 
+            { cradlePositionData } = layoutHandler,
+            axisReferencePosition = cradlePositionData.targetAxisReferencePosition,
+            rowReferencePosition = Math.ceil(axisReferencePosition/crosscount),
+            paddingOffset = 
+                orientation == 'vertical'?
+                    paddingProps.top:
+                    paddingProps.left,
+            calculatedBlockScrollPos = 
+                (rowReferencePosition * cellLength) + paddingOffset
 
 
         if (layout == 'variable') { // scrollPos overwritten by Safari iOS momentum engine
-        // if (isSafariIOS()) { // scrollPos overwritten by Safari iOS momentum engine
 
-            const originalScrollPos = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
+            const 
+                originalScrollPos = 
+                    (orientation == 'vertical')?
+                        viewportElement.scrollTop:
+                        viewportElement.scrollLeft,
 
-            const scrollShift = calculatedBlockScrollPos - originalScrollPos
+                scrollShift = calculatedBlockScrollPos - originalScrollPos
 
             if (orientation == 'vertical') {
 
@@ -241,33 +270,29 @@ export default class LayoutHandler {
 
         } else {
 
-            const scrollTop = viewportElement.scrollTop
-            const scrollLeft = viewportElement.scrollLeft
+            const 
+                scrollTop = viewportElement.scrollTop,
+                scrollLeft = viewportElement.scrollLeft
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
                 scrollOptions = {
-                    top:cradlePositionData.blockScrollPos,
+                    top:cradlePositionData.trackingBlockScrollPos,
                     left:scrollLeft,
                     behavior:'instant',
                 }
             } else {
                 scrollOptions = {
-                    left:cradlePositionData.blockScrollPos,
+                    left:cradlePositionData.trackingBlockScrollPos,
                     top:scrollTop,
                     behavior:'instant',
                 }            
             }
 
-            // viewportElement[cradlePositionData.blockScrollProperty] =
-            //     cradlePositionData.blockScrollPos 
-
             viewportElement.scroll(scrollOptions)
 
-            // viewportElement[cradlePositionData.blockScrollProperty] = calculatedBlockScrollPos
-
         }
-        cradlePositionData.blockScrollPos = calculatedBlockScrollPos
+        cradlePositionData.trackingBlockScrollPos = calculatedBlockScrollPos
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
 
     }
