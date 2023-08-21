@@ -26,7 +26,7 @@ const Scrollblock = ({
     const {
 
         orientation,
-        gap,
+        // gap,
         cellHeight,
         cellWidth,
         
@@ -78,7 +78,7 @@ const Scrollblock = ({
                 listsize,
                 cellHeight,
                 cellWidth,
-                gap,
+                gapProps,
                 paddingProps,
             }
         )
@@ -100,7 +100,7 @@ const Scrollblock = ({
         listsize,
         cellHeight,
         cellWidth,
-        gap,
+        gapProps,
         paddingProps,
     ])
 
@@ -137,7 +137,7 @@ const calcBaseScrollblockLength = ({
         listsize,
         cellHeight,
         cellWidth,
-        gap,
+        gapProps,
         paddingProps,
     }) => {
 
@@ -145,22 +145,27 @@ const calcBaseScrollblockLength = ({
     //crosscount is also calculated by Cradle
     let crosslength, cellLength, viewportcrosslength
 
+    let gaplength, gapxlength
     if (orientation == 'vertical') {
 
-        crosslength = cellWidth + gap
-        cellLength = cellHeight + gap
+        gaplength = gapProps.column
+        gapxlength = gapProps.row
+        crosslength = gapxlength
+        cellLength = gaplength
         viewportcrosslength = viewportwidth - paddingProps.left - paddingProps.right
 
     } else { // 'horizontal'
 
-        crosslength = cellHeight + gap
-        cellLength = cellWidth + gap
+        gaplength = gapProps.row
+        gapxlength = gapProps.column
+        crosslength = cellHeight + gaplength
+        cellLength = cellWidth + gapxlength
         viewportcrosslength = viewportheight - paddingProps.top - paddingProps.bottom
 
     }
 
     // adjustments to viewportcrosslength
-    viewportcrosslength += gap // to match crossLength
+    viewportcrosslength += gapxlength // to match crosslength
 
     if (viewportcrosslength < crosslength) viewportcrosslength = crosslength // must be at least one
 
@@ -173,7 +178,7 @@ const calcBaseScrollblockLength = ({
 
         baselength = (listrowcount * cellLength) - 
             ((listrowcount > 0)?
-                gap: // final cell has no trailing gap
+                gaplength: // final cell has no trailing gap
                 0)
     if (orientation == 'vertical') {
         baselength + paddingProps.top + paddingProps.bottom
