@@ -267,7 +267,7 @@ const InfiniteGridScroller = (props) => {
             [a] = list // t/b/r/l
             list.push(a) //r,b,l
         }
-        paddingProps.list = list
+        gapProps.list = list
         const [column, row] = list
         Object.assign(gapProps,{column:+column,row:+row}) // assure numeric
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
