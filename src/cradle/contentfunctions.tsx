@@ -395,7 +395,7 @@ export const calculateShiftSpecs = ({
         // configuration data
         { 
 
-            gap,
+            // gap,
             orientation,
             cellHeight,
             cellWidth,
@@ -407,6 +407,7 @@ export const calculateShiftSpecs = ({
         {
 
             paddingProps,
+            gapProps,
 
         } = cradleInternalProperties,
 
@@ -447,11 +448,16 @@ export const calculateShiftSpecs = ({
 
         listEndRow = (listRowcount - 1) + rangerowshift,
 
+        gaplength = 
+            orientation == 'vertical'?
+                gapProps.column:
+                gapProps.row,
+
         baseRowPixelLength =
             ((orientation == 'vertical')?
                 cellHeight:
                 cellWidth) 
-            + gap
+            + gaplength
 
     let 
         foundGridSpanRowShiftIncrement,
@@ -472,7 +478,7 @@ export const calculateShiftSpecs = ({
                     tailGridElement:
                     headGridElement,
 
-            gridRowPixelLengthsList = getGridRowLengths(engagedGridElement, orientation, crosscount, gap)
+            gridRowPixelLengthsList = getGridRowLengths(engagedGridElement, orientation, crosscount, gapProps)
 
         if (shiftinstruction == 'moveaxisheadward') { // scrolling down or right; move triggerlines up or left
 
@@ -775,7 +781,7 @@ export const calculateShiftSpecs = ({
 }
 
 // supports calcContentShift above
-const getGridRowLengths = (grid, orientation, crosscount, gap) => {
+const getGridRowLengths = (grid, orientation, crosscount, gapProps) => {
 
     const 
         rowLengths = [],
@@ -788,9 +794,8 @@ const getGridRowLengths = (grid, orientation, crosscount, gap) => {
     while (element) {
         const rowlength = 
             ((orientation == 'vertical')?
-                element.offsetHeight:
-                element.offsetWidth) 
-            + gap
+                element.offsetHeight + gapProps.column:
+                element.offsetWidth + gapProps.row)
 
         rowLengths.push(rowlength)
         elementPtr += crosscount

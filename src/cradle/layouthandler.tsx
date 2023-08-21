@@ -174,7 +174,7 @@ export default class LayoutHandler {
 
                 // scrollerID, 
                 orientation, 
-                gap,
+                // gap,
                 cellHeight,
                 cellWidth,
                 layout 
@@ -184,6 +184,7 @@ export default class LayoutHandler {
             {
                 virtualListProps,
                 paddingProps,
+                gapProps,
 
             } = this.cradleParameters.cradleInternalPropertiesRef.current,
 
@@ -203,18 +204,23 @@ export default class LayoutHandler {
 
             } = this.cradleParameters.handlersRef.current,
 
+            gaplength = 
+                orientation == 'vertical'?
+                    gapProps.column:
+                    gapProps.row,
+
             cellLength = 
                 ((orientation == 'vertical')?
                     cellHeight:
-                    cellWidth)
-                + gap,
+                    cellWidth) 
+                + gaplength,
 
             paddingLength = 
                 orientation == 'vertical'?
                     paddingProps.top + paddingProps.bottom:
                     paddingProps.left + paddingProps.right,
 
-            blocklength = (listRowcount * cellLength) - gap // final cell has no trailing gap
+            blocklength = (listRowcount * cellLength) - gaplength // final cell has no trailing gap
                 + paddingLength // leading and trailing padding
 
         if (orientation == 'vertical') {

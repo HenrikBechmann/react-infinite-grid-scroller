@@ -150,8 +150,8 @@ const calcBaseScrollblockLength = ({
 
         gaplength = gapProps.column
         gapxlength = gapProps.row
-        crosslength = gapxlength
-        cellLength = gaplength
+        crosslength = cellWidth + gapxlength
+        cellLength = cellHeight + gaplength
         viewportcrosslength = viewportwidth - paddingProps.left - paddingProps.right
 
     } else { // 'horizontal'
