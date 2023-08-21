@@ -18,6 +18,7 @@ const Scrollblock = ({
     virtualListSpecs,
     gridSpecs,
     paddingProps,
+    gapProps,
     styles,
     scrollerID,
 }) => {

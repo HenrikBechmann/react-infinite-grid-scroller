@@ -92,6 +92,7 @@ export const CradleContext = React.createContext(null)
 const Cradle = ({ 
         gridSpecs,
         paddingProps,
+        gapProps,
         // basics
         runwaySize, 
         virtualListSpecs,
