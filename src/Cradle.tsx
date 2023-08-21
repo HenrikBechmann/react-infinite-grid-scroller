@@ -36,7 +36,7 @@
             the first item in the head section of the Cradle, unless the cradle shows the very top of the
             list, in which case the cradleReferenceIndex is the same as the AxisReferenceIndex)
         - axisViewportPixelOffset (pixels that place the axis in relation to the viewport's leading edge)
-        - the blockScrollPos, which is the amount of scroll (Viewport scrollTop or scrollLeft) of the 
+        - the trackingBlockScrollPos, which is the amount of scroll (Viewport scrollTop or scrollLeft) of the 
             ScrollBlock
     
     Overscroll handling (repositioning):
@@ -91,6 +91,8 @@ export const CradleContext = React.createContext(null)
 // component
 const Cradle = ({ 
         gridSpecs,
+        paddingProps,
+        gapProps,
         // basics
         runwaySize, 
         virtualListSpecs,
@@ -135,8 +137,7 @@ const Cradle = ({
     const {
 
         orientation,
-        gap,
-        padding,
+        // gap,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -185,8 +186,9 @@ const Cradle = ({
     }
 
     // cradle state
-    const [cradleState, setCradleState] = useState('setup')
-    const cradleStateRef = useRef(null) // access by closures
+    const 
+        [cradleState, setCradleState] = useState('setup'),
+        cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
@@ -221,31 +223,42 @@ const Cradle = ({
 
         if (isCachedRef.current) return 0
 
-        const viewportcrosslength = 
-            (orientation == 'vertical')?
-                viewportwidth:
-                viewportheight
+        const 
+            viewportcrosslength = 
+                (orientation == 'vertical')?
+                    viewportwidth:
+                    viewportheight,
 
-        // cross length of viewport (gap to match crossLength)
-        const viewportcrosslengthforcalc = viewportcrosslength - (padding * 2) + gap 
+            crosspadding = 
+                (orientation == 'vertical')?
+                    paddingProps.left + paddingProps.right:
+                    paddingProps.top + paddingProps.bottom,
 
-        const cellcrosslength = 
-            ((orientation == 'vertical')?
-                cellWidth:
-                cellHeight) 
-            + gap
+            crossgap = 
+                (orientation == 'vertical')?
+                    gapProps.column:
+                    gapProps.row,
 
-        const cellcrosslengthforcalc = 
-            Math.min(cellcrosslength,viewportcrosslengthforcalc) // result cannot be less than 1
+            // cross length of viewport (gap to match crossLength)
+            viewportcrosslengthforcalc = viewportcrosslength - crosspadding + crossgap,
 
-        const crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
+            cellcrosslength = 
+                ((orientation == 'vertical')?
+                    cellWidth:
+                    cellHeight) 
+                + crossgap,
+
+            cellcrosslengthforcalc = 
+                Math.min(cellcrosslength,viewportcrosslengthforcalc), // result cannot be less than 1
+
+            crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
 
         return crosscount
 
     },[
         orientation, 
-        gap, 
-        padding, 
+        gapProps, 
+        paddingProps,
         cellWidth, 
         cellHeight, 
         viewportheight, 
@@ -297,10 +310,16 @@ const Cradle = ({
 
     ] = useMemo(()=> {
 
-        const viewportLength = 
-            (orientation == 'vertical')?
-                viewportheight:
-                viewportwidth
+        const 
+            viewportLength = 
+                (orientation == 'vertical')?
+                    viewportheight:
+                    viewportwidth,
+
+            gaplength = 
+                (orientation == 'vertical')?
+                    gapProps.column:
+                    gapProps.row
 
         let baseRowLength
         if (layout == 'uniform') {
@@ -329,7 +348,7 @@ const Cradle = ({
 
         }
 
-        baseRowLength += gap
+        baseRowLength += gaplength
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
@@ -373,8 +392,7 @@ const Cradle = ({
 
     },[
         orientation, 
-        gap, 
-        // padding,
+        gapProps, 
         cellWidth, 
         cellHeight,
         cellMinWidth,
@@ -454,7 +472,7 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, gap, padding, layout,
+        orientation, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
         cache, cacheMax,
@@ -475,7 +493,7 @@ const Cradle = ({
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
-        orientation, gap, padding, layout,
+        orientation, gapProps, paddingProps, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
         cradleContentProps,
@@ -495,7 +513,8 @@ const Cradle = ({
         setVirtualListRange,
 
         cradleContentProps:cradleContentPropsRef.current,
-        
+        paddingProps,
+        gapProps,
         // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
@@ -560,36 +579,31 @@ const Cradle = ({
     
     const restoreScrollPos = () => {
 
-        const { cradlePositionData } = layoutHandler
+        const 
+            { cradlePositionData } = layoutHandler,
+            trackingBlockScrollPos = cradlePositionData.trackingBlockScrollPos,
+            trackingXBlockScrollPos = cradlePositionData.trackingXBlockScrollPos
 
-        const blockScrollPos = cradlePositionData.blockScrollPos
-        const blockXScrollPos = cradlePositionData.blockXScrollPos
-        if (blockScrollPos !== null) {
+        if (trackingBlockScrollPos !== null) {
 
             const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-
-            // const scrollTop = viewportElement.scrollTop
-            // const scrollLeft = viewportElement.scrollLeft
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
                 scrollOptions = {
-                    top:blockScrollPos,
-                    left:blockXScrollPos,
+                    top:trackingBlockScrollPos,
+                    left:trackingXBlockScrollPos,
                     behavior:'instant',
                 }
             } else {
                 scrollOptions = {
-                    left:blockScrollPos,
-                    top:blockXScrollPos,
+                    left:trackingBlockScrollPos,
+                    top:trackingXBlockScrollPos,
                     behavior:'instant',
                 }            
             }
 
             viewportElement.scroll(scrollOptions)
-
-            // viewportElement[cradlePositionData.blockScrollProperty] = blockScrollPos
-            // viewportElement[cradlePositionData.blockXScrollProperty] = blockXScrollPos
 
         }
 
@@ -780,29 +794,6 @@ const Cradle = ({
         }
     },[])
 
-    // variable content requires special handling
-    // useEffect(() => {
-
-    //     const { layout } = cradleInheritedPropertiesRef.current
-
-    //     const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
-
-    //     if (layout == 'uniform') {
-    //         viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
-    //         return
-    //     }
-
-    //     viewportElement.addEventListener('scroll',scrollHandler.onScrollForVariable)
-
-    //     return () => {
-
-    //         viewportElement && 
-    //             viewportElement.removeEventListener('scroll',scrollHandler.onScrollForVariable)
-
-    //     }
-
-    // },[layout])
-
     // caching change
     useEffect(()=> {
 
@@ -922,8 +913,8 @@ const Cradle = ({
     },[
         cellHeight,
         cellWidth,
-        gap,
-        padding,
+        gapProps,
+        paddingProps,
         triggerlineOffset,
         layout,
         runwaySize,
@@ -969,8 +960,8 @@ const Cradle = ({
                 "scrollLeft"
 
         if (cradleStateRef.current == 'setup') {
-            layoutHandler.cradlePositionData.blockScrollPos = 0
-            layoutHandler.cradlePositionData.blockXScrollPos = 0
+            layoutHandler.cradlePositionData.trackingBlockScrollPos = 0
+            layoutHandler.cradlePositionData.trackingXBlockScrollPos = 0
             return
 
         }
@@ -988,41 +979,54 @@ const Cradle = ({
 
         // cacheAPI.measureMemory('pivot')
 
-        const { layout, gap } = cradleInheritedPropertiesRef.current
-        const { cradlePositionData } = layoutHandler
+        const 
+            { layout } = cradleInheritedPropertiesRef.current,
+            { cradlePositionData } = layoutHandler,
+
+            gaplength = 
+                (orientation == 'vertical')?
+                    gapProps.column:
+                    gapProps.row,
+
+            gapxlength = 
+                (orientation == 'vertical')?
+                    gapProps.row:
+                    gapProps.column
 
         if (layout == 'uniform') {
 
-            const { 
-                cellWidth,
-                cellHeight,
-                gap,
-            } = cradleInheritedPropertiesRef.current
+            const 
+                { 
+                    cellWidth,
+                    cellHeight,
+                    gapProps,
+                } = cradleInheritedPropertiesRef.current,
 
             // get previous ratio
-            const previousCellPixelLength = 
-                ((orientation == 'vertical')?
-                    cellWidth:
-                    cellHeight)
-                + gap
+                previousCellPixelLength = 
+                    ((orientation == 'vertical')?
+                        cellWidth:
+                        cellHeight)
+                    + gapxlength,
 
-            const previousAxisOffset = layoutHandler.cradlePositionData.targetAxisViewportPixelOffset
+                previousPixelOffsetAxisFromViewport = 
+                    layoutHandler.cradlePositionData.targetPixelOffsetAxisFromViewport,
 
-            const previousratio = previousAxisOffset/previousCellPixelLength
+                previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength,
 
-            const pivotCellPixelLength = 
-                ((orientation == 'vertical')?
-                    cellHeight:
-                    cellWidth)
-                + gap
+                pivotCellPixelLength = 
+                    ((orientation == 'vertical')?
+                        cellHeight:
+                        cellWidth)
+                + gaplength,
 
-            const pivotAxisOffset = previousratio * pivotCellPixelLength
+                pivotAxisOffset = previousratio * pivotCellPixelLength
 
-            cradlePositionData.targetAxisViewportPixelOffset = Math.round(pivotAxisOffset)
+            cradlePositionData.targetPixelOffsetAxisFromViewport = Math.round(pivotAxisOffset)
 
         } else {
 
-            cradlePositionData.targetAxisViewportPixelOffset = gap
+            cradlePositionData.targetPixelOffsetAxisFromViewport = gapxlength
 
         }
 
@@ -1049,8 +1053,7 @@ const Cradle = ({
             cellWidth, 
             cellMinHeight,
             cellMinWidth,
-            gap,
-            padding,
+            gapProps,
             viewportheight, 
             viewportwidth,
             crosscount, 
@@ -1067,8 +1070,7 @@ const Cradle = ({
         cellWidth,
         cellMinHeight,
         cellMinWidth,
-        gap,
-        padding,
+        gapProps,
         viewportheight,
         viewportwidth,
         crosscount,
@@ -1223,9 +1225,6 @@ const Cradle = ({
             case 'reload': {
 
                 if (!isMountedRef.current) return // possible async latency with nested scrollers
-
-                // interruptHandler.triggerlinesIntersect.disconnect()
-                // interruptHandler.cradleIntersect.disconnect()
 
                 if (isCachedRef.current) {
                     setCradleState('cached')

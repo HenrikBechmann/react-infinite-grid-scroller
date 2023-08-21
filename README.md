@@ -1,7 +1,11 @@
 # react-infinite-grid-scroller (RIGS)
 Heavy-duty vertical or horizontal infinite scroller
 
+<<<<<<< HEAD
 [![npm](https://img.shields.io/badge/npm-1.2.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+=======
+[![npm](https://img.shields.io/badge/npm-1.3.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+>>>>>>> staging
 
 # Key Features
 
@@ -97,9 +101,9 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
 |layout:string| 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
 |startingIndex:integer| starting index when the scroller first loads|default = 0|
-|padding:integer| number of pixels padding the `Cradle`| default = 0|
+|padding:integer \| []| number of pixels padding the `Scrollblock`| default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b, r/l]. 3-item array = [t, r/l, b]. 4-item array = [t, r, b, l]|
 |[_**MORE CELL OPTIONS**_]|
-|gap:integer| number of pixels between cells|there is no gap at start or end of rows or columns; default = 0|
+|gap:integer \| []| number of pixels between cells|there is no gap at start or end of rows or columns; default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = gap (in pixels) for both of column-gap (horizontal) and row-gap (vertical). 1-item array, same as integer. 2-item array = [col-gap, row-gap]|
 |cellMinHeight:integer| default = 25, minimum = 25, maximum = cellHeight|used for 'variable' layout with 'vertical' orientation. Applied to `min-height`|
 |cellMinWidth:integer| default = 25, minimum = 25, maximum = cellWidth|used for 'variable' layout with 'horizontal' orientation. Applied to `min-width`|
 |[_**SYSTEM SETTINGS**_]|

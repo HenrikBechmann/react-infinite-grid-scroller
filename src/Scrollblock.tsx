@@ -16,7 +16,9 @@ import { ViewportContext } from './Viewport'
 const Scrollblock = ({
     children,
     virtualListSpecs,
-    gridSpecs, 
+    gridSpecs,
+    paddingProps,
+    gapProps,
     styles,
     scrollerID,
 }) => {
@@ -24,36 +26,36 @@ const Scrollblock = ({
     const {
 
         orientation,
-        gap,
-        padding,
+        // gap,
         cellHeight,
         cellWidth,
         
     } = gridSpecs
 
-    const { size:listsize } = virtualListSpecs
+    const 
+        { size:listsize } = virtualListSpecs,
 
-    // -------------------------[ context and state ]-------------------------
+        // -------------------------[ context and state ]-------------------------
 
-    const ViewportContextProperties = useContext(ViewportContext)
+        ViewportContextProperties = useContext(ViewportContext),
 
-    const [blockState,setBlockState] = useState('setup') // to trigger render
+        [blockState,setBlockState] = useState('setup'), // to trigger render
 
-    // -----------------------------------[ data heap ]-------------------------
+        // -----------------------------------[ data ]-------------------------
 
-    const baseScrollBlockLengthRef = useRef(null)
+        baseScrollBlockLengthRef = useRef(null),
 
-    // just for init
-    const linerStyle = useMemo(() =>{
+        // just for init
+        linerStyle = useMemo(() =>{
 
-        return {
-            ...styles.scrollblock,
-            position:'relative',
-        }
+            return {
+                ...styles.scrollblock,
+                position:'relative',
+            }
 
-    }, [])
+        }, []),
 
-    const divlinerstyleRef = useRef(linerStyle)
+        divlinerstyleRef = useRef(linerStyle)
 
     const getViewportDimensions = () => {
         const viewportElement = ViewportContextProperties.elementRef.current
@@ -63,10 +65,8 @@ const Scrollblock = ({
         }
     }
 
-    const { height,width } = getViewportDimensions() // viewportDimensions
+    const { height, width } = getViewportDimensions() // viewportDimensions
 
-    // const { width, height } = ViewportContextProperties.viewportDimensions
-    
     // reconfigure
     useLayoutEffect(() => {
 
@@ -78,8 +78,8 @@ const Scrollblock = ({
                 listsize,
                 cellHeight,
                 cellWidth,
-                gap,
-                padding,
+                gapProps,
+                paddingProps,
             }
         )
         divlinerstyleRef.current = 
@@ -89,7 +89,7 @@ const Scrollblock = ({
                 baseScrollBlockLengthRef,
                 cellWidth,
                 cellHeight,
-                padding
+                paddingProps,
             )
         setBlockState('update')
 
@@ -100,19 +100,17 @@ const Scrollblock = ({
         listsize,
         cellHeight,
         cellWidth,
-        gap,
-        padding,
+        gapProps,
+        paddingProps,
     ])
 
-    const updateBaseBlockLength = useCallback(
-        (layoutspecs) => {
+    const updateBaseBlockLength = useCallback((layoutspecs) => {
             
-            const basescrollblocklength = calcBaseScrollblockLength(layoutspecs)
+        const basescrollblocklength = calcBaseScrollblockLength(layoutspecs)
 
-            baseScrollBlockLengthRef.current = basescrollblocklength
+        baseScrollBlockLengthRef.current = basescrollblocklength
 
-        },[]
-    )
+    },[])
 
     useLayoutEffect(()=>{
 
@@ -139,72 +137,87 @@ const calcBaseScrollblockLength = ({
         listsize,
         cellHeight,
         cellWidth,
-        gap,
-        padding,
+        gapProps,
+        paddingProps,
     }) => {
 
     // ---------------[ calculate crosscount ]------------------
     //crosscount is also calculated by Cradle
+    let crosslength, cellLength, viewportcrosslength
 
-    let crosslength
-    let cellLength
-    let viewportcrosslength
+    let gaplength, gapxlength
     if (orientation == 'vertical') {
 
-        crosslength = cellWidth + gap
-        cellLength = cellHeight + gap
-        viewportcrosslength = viewportwidth 
+        gaplength = gapProps.column
+        gapxlength = gapProps.row
+        crosslength = cellWidth + gapxlength
+        cellLength = cellHeight + gaplength
+        viewportcrosslength = viewportwidth - paddingProps.left - paddingProps.right
 
     } else { // 'horizontal'
 
-        crosslength = cellHeight + gap
-        cellLength = cellWidth + gap
-        viewportcrosslength = viewportheight
+        gaplength = gapProps.row
+        gapxlength = gapProps.column
+        crosslength = cellHeight + gaplength
+        cellLength = cellWidth + gapxlength
+        viewportcrosslength = viewportheight - paddingProps.top - paddingProps.bottom
 
     }
 
     // adjustments to viewportcrosslength
-    viewportcrosslength -= (padding * 2)
-    viewportcrosslength += gap // to match crossLength
+    viewportcrosslength += gapxlength // to match crosslength
 
     if (viewportcrosslength < crosslength) viewportcrosslength = crosslength // must be at least one
 
-    const crosscount = Math.floor(viewportcrosslength/crosslength)
+    const 
+        crosscount = Math.floor(viewportcrosslength/crosslength),
 
-    // -------------------[ calculate scrollblock length ]-----------------
+        // -------------------[ calculate scrollblock length ]-----------------
 
-    const listrowcount = Math.ceil(listsize/crosscount)
+        listrowcount = Math.ceil(listsize/crosscount),
 
-    const baselength = (listrowcount * cellLength) - 
-        ((listrowcount > 0)?
-            gap: // final cell has no trailing gap
-            0) 
-        + (padding * 2) // leading and trailing padding
+        baselength = (listrowcount * cellLength) - 
+            ((listrowcount > 0)?
+                gaplength: // final cell has no trailing gap
+                0)
+    if (orientation == 'vertical') {
+        baselength + paddingProps.top + paddingProps.bottom
+    } else {
+        baselength + paddingProps.left + paddingProps.right
+    }
 
     return baselength
 
 }
 
 const updateScrollblockStyles = (
-    orientation, stylesRef, baseScrollblocklengthRef, cellWidth, cellHeight, padding) => {
+    orientation, stylesRef, baseScrollblocklengthRef, cellWidth, cellHeight, paddingProps) => {
 
     const localstyles = {...stylesRef.current} // new object
+
     let height, width, minHeight, minWidth
+
     if (orientation == 'vertical') {
+    
         height = baseScrollblocklengthRef.current + 'px'
         width = '100%'
-        minWidth = (cellWidth + (padding * 2)) + 'px'
+        minWidth = (cellWidth + (paddingProps.left + paddingProps.right)) + 'px'
         minHeight = null
+    
     } else { // orientation == 'horizontal'
+    
         height = '100%'
         width = baseScrollblocklengthRef.current + 'px'
-        minHeight = (cellHeight + (padding * 2)) + 'px'
+        minHeight = (cellHeight + (paddingProps.top + paddingProps.bottom)) + 'px'
         minWidth = null
+    
     }
+    
     localstyles.height = height
     localstyles.width = width
     localstyles.minHeight = minHeight
     localstyles.minWidth = minWidth
+    localstyles.padding = paddingProps.CSS
 
     return localstyles
 
