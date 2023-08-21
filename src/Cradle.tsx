@@ -137,7 +137,7 @@ const Cradle = ({
     const {
 
         orientation,
-        gap,
+        // gap,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -234,14 +234,19 @@ const Cradle = ({
                     paddingProps.left + paddingProps.right:
                     paddingProps.top + paddingProps.bottom,
 
+            crossgap = 
+                (orientation == 'vertical')?
+                    gapProps.column:
+                    gapProps.row,
+
             // cross length of viewport (gap to match crossLength)
-            viewportcrosslengthforcalc = viewportcrosslength - crosspadding + gap,
+            viewportcrosslengthforcalc = viewportcrosslength - crosspadding + crossgap,
 
             cellcrosslength = 
                 ((orientation == 'vertical')?
                     cellWidth:
                     cellHeight) 
-                + gap,
+                + crossgap,
 
             cellcrosslengthforcalc = 
                 Math.min(cellcrosslength,viewportcrosslengthforcalc), // result cannot be less than 1
@@ -252,7 +257,7 @@ const Cradle = ({
 
     },[
         orientation, 
-        gap, 
+        gapProps, 
         paddingProps,
         cellWidth, 
         cellHeight, 
@@ -305,10 +310,16 @@ const Cradle = ({
 
     ] = useMemo(()=> {
 
-        const viewportLength = 
-            (orientation == 'vertical')?
-                viewportheight:
-                viewportwidth
+        const 
+            viewportLength = 
+                (orientation == 'vertical')?
+                    viewportheight:
+                    viewportwidth,
+
+            gaplength = 
+                (orientation == 'vertical')?
+                    gapProps.column:
+                    gapProps.row
 
         let baseRowLength
         if (layout == 'uniform') {
@@ -337,7 +348,7 @@ const Cradle = ({
 
         }
 
-        baseRowLength += gap
+        baseRowLength += gaplength
 
         const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
 
@@ -381,7 +392,7 @@ const Cradle = ({
 
     },[
         orientation, 
-        gap, 
+        gapProps, 
         cellWidth, 
         cellHeight,
         cellMinWidth,
@@ -461,7 +472,7 @@ const Cradle = ({
     // up to date values
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
-        orientation, gap, layout,
+        orientation, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         // ...rest
         cache, cacheMax,
@@ -482,7 +493,7 @@ const Cradle = ({
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
-        orientation, gap, paddingProps, layout,
+        orientation, gapProps, paddingProps, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
         virtualListProps,
         cradleContentProps,
@@ -502,7 +513,8 @@ const Cradle = ({
         setVirtualListRange,
 
         cradleContentProps:cradleContentPropsRef.current,
-        paddingProps,         
+        paddingProps,
+        gapProps,
         // the following values are maintained elsewhere
         isMountedRef,
         cradleElementsRef,
@@ -901,7 +913,7 @@ const Cradle = ({
     },[
         cellHeight,
         cellWidth,
-        gap,
+        gapProps,
         paddingProps,
         triggerlineOffset,
         layout,
@@ -967,41 +979,54 @@ const Cradle = ({
 
         // cacheAPI.measureMemory('pivot')
 
-        const { layout, gap } = cradleInheritedPropertiesRef.current
-        const { cradlePositionData } = layoutHandler
+        const 
+            { layout } = cradleInheritedPropertiesRef.current,
+            { cradlePositionData } = layoutHandler,
+
+            gaplength = 
+                (orientation == 'vertical')?
+                    gapProps.column:
+                    gapProps.row,
+
+            gapxlength = 
+                (orientation == 'vertical')?
+                    gapProps.row:
+                    gapProps.column
 
         if (layout == 'uniform') {
 
-            const { 
-                cellWidth,
-                cellHeight,
-                gap,
-            } = cradleInheritedPropertiesRef.current
+            const 
+                { 
+                    cellWidth,
+                    cellHeight,
+                    gapProps,
+                } = cradleInheritedPropertiesRef.current,
 
             // get previous ratio
-            const previousCellPixelLength = 
-                ((orientation == 'vertical')?
-                    cellWidth:
-                    cellHeight)
-                + gap
+                previousCellPixelLength = 
+                    ((orientation == 'vertical')?
+                        cellWidth:
+                        cellHeight)
+                    + gapxlength,
 
-            const previousPixelOffsetAxisFromViewport = layoutHandler.cradlePositionData.targetPixelOffsetAxisFromViewport
+                previousPixelOffsetAxisFromViewport = 
+                    layoutHandler.cradlePositionData.targetPixelOffsetAxisFromViewport,
 
-            const previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength
+                previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength,
 
-            const pivotCellPixelLength = 
-                ((orientation == 'vertical')?
-                    cellHeight:
-                    cellWidth)
-                + gap
+                pivotCellPixelLength = 
+                    ((orientation == 'vertical')?
+                        cellHeight:
+                        cellWidth)
+                + gaplength,
 
-            const pivotAxisOffset = previousratio * pivotCellPixelLength
+                pivotAxisOffset = previousratio * pivotCellPixelLength
 
             cradlePositionData.targetPixelOffsetAxisFromViewport = Math.round(pivotAxisOffset)
 
         } else {
 
-            cradlePositionData.targetPixelOffsetAxisFromViewport = gap
+            cradlePositionData.targetPixelOffsetAxisFromViewport = gapxlength
 
         }
 
@@ -1028,7 +1053,7 @@ const Cradle = ({
             cellWidth, 
             cellMinHeight,
             cellMinWidth,
-            gap,
+            gapProps,
             viewportheight, 
             viewportwidth,
             crosscount, 
@@ -1045,7 +1070,7 @@ const Cradle = ({
         cellWidth,
         cellMinHeight,
         cellMinWidth,
-        gap,
+        gapProps,
         viewportheight,
         viewportwidth,
         crosscount,
