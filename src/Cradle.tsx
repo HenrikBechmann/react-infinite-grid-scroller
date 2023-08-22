@@ -192,7 +192,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
-        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
         // console.log('-- itemID','+'+scrollerProperties?.cellFramePropertiesRef.current.itemID+'+')
     // }
@@ -1319,37 +1319,39 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
-                if (layoutHandler.triggerBoundaryNotifications()) {
-
-                    setCradleState('triggersetboundarynotications')
-
-                } else {
-
-                    setCradleState('restoreinterrupts')
-
-                }
-
-                break
-            }
-
-            case 'triggersetboundarynotications': {
-
-                console.log('triggerboundarynotications')
-                layoutHandler.cancelBoundaryNotifications()
-
-                break
-
                 setCradleState('restoreinterrupts')
 
+                break
             }
 
             case 'restoreinterrupts': { // normalize
 
                 interruptHandler.restoreInterrupts()
 
-                setCradleState('ready')
+
+                if (layoutHandler.triggerBoundaryNotifications()) {
+
+                    setCradleState('triggersetboundarynotications')
+
+                } else {
+
+                    setCradleState('ready')
+
+                }
 
                 break 
+
+            }
+
+            case 'triggersetboundarynotications': {
+
+                console.log('triggerboundarynotications')
+
+                layoutHandler.cancelBoundaryNotifications()
+
+                setCradleState('ready')
+
+                break
 
             }
 
