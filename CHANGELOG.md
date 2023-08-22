@@ -2,11 +2,15 @@
 
 ## 1.3.0 August 21, 2023
 
+This version adds flexible padding and gap configuration.
+
 - `padding` has been moved from `Cradle` grid blocks to the `Scrollblock`.
 - the `padding` property now accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b, r/l]. 3-item array = [t, r/l, b]. 4-item array = [t, r, b, l]
 - the `gap` property now accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = gap (in pixels) for both of column-gap (horizontal) and row-gap (vertical). 1-item array, same as integer. 2-item array = [col, row]
 
 ## 1.2.0 August 18, 2023
+
+This version introduces programmatic scrolling.
 
 New API calls:
 - scrollToPixel(pixel:number[,behavior:string])
@@ -17,7 +21,7 @@ Internal updates:
 
 ## 1.1.0 August 13, 2023
 
-This version introduces bi-directional virtual list expansion (or contraction).
+This version introduces bi-directional virtual list expansion (or contraction), by allowing negative indexes.
 
 Breaking change:
 - `changeListSizeCallback` API replaces changeListsizeCallback (note the camel case)
