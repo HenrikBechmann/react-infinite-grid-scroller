@@ -17,6 +17,8 @@ Internal updates:
 
 ## 1.1.0 August 13, 2023
 
+This version introduces bi-directional virtual list expansion (or contraction).
+
 Breaking change:
 - `changeListSizeCallback` API replaces changeListsizeCallback (note the camel case)
 
