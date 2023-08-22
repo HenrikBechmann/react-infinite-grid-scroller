@@ -461,6 +461,7 @@ const Cradle = ({
             changeListSizeCallback:userCallbacks?.changeListSizeCallback,
             changeListRangeCallback:userCallbacks?.changeListRangeCallback,
             itemExceptionCallback:userCallbacks?.itemExceptionCallback,
+            boundaryCallback:userCallbacks?.boundaryCallback,
         }
     )
 
