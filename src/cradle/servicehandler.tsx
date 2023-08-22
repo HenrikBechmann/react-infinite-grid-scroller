@@ -112,6 +112,7 @@ export default class ServiceHandler {
            itemExceptionCallback, // (index, itemID, returnvalue, location, error)
            repositioningFlagCallback, // (flag) // boolean
            repositioningIndexCallback,
+           boundaryCallback,
            
        } = cradleParameters.externalCallbacksRef.current,
 
@@ -123,7 +124,8 @@ export default class ServiceHandler {
            changeListRangeCallback,
            itemExceptionCallback,
            repositioningFlagCallback,
-           repositioningIndexCallback
+           repositioningIndexCallback,
+           boundaryCallback,
        }
 
        this.callbacks = callbacks
@@ -134,6 +136,40 @@ export default class ServiceHandler {
 
     // see above for list
     public callbacks
+
+    // =======================[ BOUNDARY TRIGGERS ]===================
+
+    public triggerBoundaryCallbacks = () => {
+
+        const 
+            { 
+
+                cradleParameters,
+                callbacks
+
+            } = this,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+            { virtualListProps } = cradleInternalProperties,
+            { layoutHandler } = cradleParameters.handlersRef.current
+
+        if (layoutHandler.boundaryNotificationsRequired()) {
+
+            if (callbacks.boundaryCallback) {
+
+                if (layoutHandler.SOLSignal) {
+                    callbacks.boundaryCallback('SOL', virtualListProps.lowindex)
+                }
+                if (layoutHandler.EOLSignal) {
+                    callbacks.boundaryCallback('EOL', virtualListProps.highindex)
+                }
+
+            }
+
+            layoutHandler.cancelBoundaryNotifications()
+
+        }
+
+    }
 
     // ========================[ GENERAL ]============================
 

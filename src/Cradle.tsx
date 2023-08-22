@@ -1328,26 +1328,15 @@ const Cradle = ({
 
                 interruptHandler.restoreInterrupts()
 
-
-                if (layoutHandler.triggerBoundaryNotifications()) {
-
-                    setCradleState('triggersetboundarynotications')
-
-                } else {
-
-                    setCradleState('ready')
-
-                }
+                setCradleState('ready')
 
                 break 
 
             }
 
-            case 'triggersetboundarynotications': {
+            case 'triggerboundarynotications': {
 
-                console.log('triggerboundarynotications')
-
-                layoutHandler.cancelBoundaryNotifications()
+                serviceHandler.triggerBoundaryCallbacks()
 
                 setCradleState('ready')
 
@@ -1546,6 +1535,12 @@ const Cradle = ({
                 break
 
             case 'ready': // no-op
+
+                if (layoutHandler.boundaryNotificationsRequired()) {
+
+                    setCradleState('triggerboundarynotications')
+
+                }
 
                 break
 

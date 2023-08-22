@@ -85,7 +85,7 @@ export default class LayoutHandler {
     public SOLSignal = false
     public EOLSignal = false
 
-    public triggerBoundaryNotifications = () => {
+    public boundaryNotificationsRequired = () => {
         let trigger = false
         if (this.SOLSignal || this.EOLSignal) {
             trigger = true
