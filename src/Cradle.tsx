@@ -1319,9 +1319,28 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
-                setCradleState('restoreinterrupts') // to restore interrupts
+                if (layoutHandler.triggerBoundaryNotifications()) {
+
+                    setCradleState('triggersetboundarynotications')
+
+                } else {
+
+                    setCradleState('restoreinterrupts')
+
+                }
 
                 break
+            }
+
+            case 'triggersetboundarynotications': {
+
+                console.log('triggerboundarynotications')
+                layoutHandler.cancelBoundaryNotifications()
+
+                break
+
+                setCradleState('restoreinterrupts')
+
             }
 
             case 'restoreinterrupts': { // normalize
