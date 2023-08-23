@@ -140,6 +140,7 @@ export default class ServiceHandler {
 
     // =======================[ BOUNDARY TRIGGERS ]===================
 
+    // called by Cradle 'triggerboundarynotications' state
     public triggerBoundaryCallbacks = () => {
 
         const 
@@ -151,8 +152,8 @@ export default class ServiceHandler {
             } = this,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
-            { virtualListProps } = cradleInternalProperties,
             { layoutHandler, serviceHandler } = cradleParameters.handlersRef.current,
+            { virtualListProps } = cradleInternalProperties,
             { getExpansionCount } = cradleInheritedProperties
 
         if (layoutHandler.boundaryNotificationsRequired()) {
