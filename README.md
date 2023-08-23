@@ -181,8 +181,11 @@ callbacks: {
 
      // operations tracking, called when triggered
      changeListSizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
+     changeListRangeCallback, // (listrange) two part array lowindex, highindex 
      deleteListCallback, // (reason, deleteList) - data about which items have been deleted from the cache
-     repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
+     repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning,
+     boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
+
      
 }
 ~~~
@@ -214,6 +217,8 @@ Details about the callbacks:
 |itemExceptionCallback(index: integer, itemID: integer, returnvalue: any, location: string, error: Error)|triggered whenever getItem does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
 |changeListsizeCallback(newlistsize: integer)|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
+|changeListRangeCallback(listrange:array) | notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
+|boundaryCallback(position:string, index:integer) | called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
 |deleteListCallback(reason: string, deleteList: array)|gives an array of indexes that have been deleted from the cache, and text of the reason|
 |repositioningFlagCallback(flag: boolean)| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
