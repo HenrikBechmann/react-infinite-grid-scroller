@@ -112,7 +112,7 @@ export default class ServiceHandler {
            changeListRangeCallback,
            itemExceptionCallback, // (index, itemID, returnvalue, location, error)
            repositioningFlagCallback, // (flag) // boolean
-           repositioningIndexCallback,
+           repositioningIndexCallback, 
            boundaryCallback,
            
        } = cradleParameters.externalCallbacksRef.current,

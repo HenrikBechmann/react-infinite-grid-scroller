@@ -1193,7 +1193,7 @@ const Cradle = ({
                         lowindex, listsize
                     )
 
-                    setCradleState('repositioningRender') // toggles with repositioningContinuation
+                    setCradleState('repositioningRender')
 
                 } else {
 

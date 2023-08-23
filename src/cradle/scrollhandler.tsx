@@ -413,7 +413,10 @@ export default class ScrollHandler {
 
             { orientation } = cradleInheritedProperties,
 
-            { crosscount, size:listsize } = virtualListProps
+            { crosscount, size:listsize, lowindex } = virtualListProps,
+
+            { serviceHandler } = this.cradleParameters.handlersRef.current,
+            { repositioningIndexCallback } = serviceHandler.callbacks
 
         let scrollPos, cellLength, scrollblockOffset
 
@@ -457,7 +460,10 @@ export default class ScrollHandler {
         cradlePositionData.targetAxisReferencePosition = axisReferencePosition
         cradlePositionData.targetPixelOffsetAxisFromViewport = axisPixelOffset;
 
-        (source == 'onScroll') && ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
+        if (source == 'onScroll') {
+            repositioningIndexCallback && repositioningIndexCallback(axisReferencePosition + lowindex)
+            ViewportContextProperties.scrollTrackerAPIRef.current.updateReposition(axisReferencePosition)
+        }
 
     }
 
