@@ -55,8 +55,9 @@ const isInteger = (value:any) => {
 
     const test = +value
 
-    return (isNumber(value) && (Math.floor(test) == test))
-
+    // return (isNumber(value) && (Math.floor(test) == test))
+    return (Number.isInteger(test))
+    
 }
 
 const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:any) => {
@@ -171,14 +172,14 @@ export default class ServiceHandler {
                 if (layoutHandler.SOLSignal) {
                     let prepend = getExpansionCount('SOL', virtualListProps.lowindex)
                     prepend = +prepend
-                    if (!isNaN(prepend) && prepend > 0) {
+                    if (!isNaN(prepend) && prepend > 0 && Number.isInteger(prepend)) {
                         serviceHandler.prepend(prepend)
                     }
                 }
                 if (layoutHandler.EOLSignal) {
                     let append = getExpansionCount('EOL', virtualListProps.highindex)
                     append = +append
-                    if (!isNaN(append) && append > 0) {
+                    if (!isNaN(append) && append > 0 && Number.isInteger(append)) {
                         serviceHandler.prepend(append)
                     }
                 }
