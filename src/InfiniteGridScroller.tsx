@@ -419,10 +419,10 @@ const InfiniteGridScroller = (props) => {
 
         updateFunctionRef = useRef(null),
 
-        listsizeRef = useRef(startingListSize),
+        listSizeRef = useRef(startingListSize),
         listRangeRef = useRef(startingListRange),
 
-        listsize = listsizeRef.current,
+        listsize = listSizeRef.current,
         listrange = listRangeRef.current,
         [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
 
@@ -502,7 +502,7 @@ const InfiniteGridScroller = (props) => {
             listsize = highrange - lowrange + 1
         }
 
-        listsizeRef.current = listsize
+        listSizeRef.current = listsize
         listRangeRef.current = listrange
 
         // inform the user
@@ -528,7 +528,7 @@ const InfiniteGridScroller = (props) => {
             }
         }
 
-        listsizeRef.current = listsize
+        listSizeRef.current = listsize
         listRangeRef.current = listrange
 
         // inform the user
