@@ -5,7 +5,7 @@
 This version deals with virtual list boundaries - SOL (start-of-list) & EOL (end-of-list)
 
 A new callback function is recognized:
-- `boundaryCallback(position:string,index:number):void` is called whenever a SOL or EOL index is loaded into the Cradle. `position` = "SOL" | "EOL", `index` being the start or end index.
+- `boundaryCallback(position:string,index:number):void` provided by the host is called whenever a SOL or EOL index is loaded into the Cradle. `position` = "SOL" | "EOL", `index` being the start or end index.
 
 A new property has been added:
 - `getExpansionCount(position, index):integer` is a function optionally provided by the host. If provided, it is called whenever a SOL or EOL index is loaded into the Cradle with `position` = "SOL" | "EOL" and `index` being the start or end index. The function is expected to return the number (>=0) of indexes to add to the virtual list at the noted start or end.
