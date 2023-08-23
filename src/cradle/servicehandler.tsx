@@ -109,11 +109,11 @@ export default class ServiceHandler {
            preloadIndexCallback, // (index)
            deleteListCallback, // (reason, deleteList)
            changeListSizeCallback, // (newlistsize)
-           changeListRangeCallback,
+           changeListRangeCallback, // (listrange) two part array lowindex, highindex 
            itemExceptionCallback, // (index, itemID, returnvalue, location, error)
-           repositioningFlagCallback, // (flag) // boolean
-           repositioningIndexCallback, 
-           boundaryCallback,
+           repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
+           repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
+           boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
            
        } = cradleParameters.externalCallbacksRef.current,
 
