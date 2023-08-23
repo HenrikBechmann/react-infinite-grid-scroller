@@ -104,6 +104,8 @@ const InfiniteGridScroller = (props) => {
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
         startingIndex = 0, // the starting index of the list, when first loaded
+        getExpansionCount, // optional, function provided by host, returns the number of indexes to add to
+            // the virtual list when the scroller hits the start or end of the list
 
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
@@ -624,6 +626,7 @@ const InfiniteGridScroller = (props) => {
                     userCallbacks = { callbacksRef.current }
                     startingIndex = { startingIndex }
                     getItem = { getItem }
+                    getExpansionCount = { getExpansionCount }
                     placeholder = { placeholder }
                     placeholderMessages = { placeholderMessagesRef.current }
                     runwaySize = { runwaySize }

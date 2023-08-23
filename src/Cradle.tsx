@@ -100,6 +100,7 @@ const Cradle = ({
         setVirtualListRange,
         startingIndex, 
         getItem, 
+        getExpansionCount,
         placeholder, 
         placeholderMessages,
         userCallbacks,
@@ -480,6 +481,7 @@ const Cradle = ({
         startingIndex, 
         runwaySize,
         getItem, 
+        getExpansionCount,
         placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
         scrollerID,
@@ -1535,7 +1537,7 @@ const Cradle = ({
             case 'repositioningRender': // no-op
                 break
 
-            case 'ready': // no-op
+            case 'ready':
 
                 if (layoutHandler.boundaryNotificationsRequired()) {
 

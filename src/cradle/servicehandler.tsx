@@ -149,8 +149,10 @@ export default class ServiceHandler {
 
             } = this,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             { virtualListProps } = cradleInternalProperties,
-            { layoutHandler } = cradleParameters.handlersRef.current
+            { layoutHandler, serviceHandler } = cradleParameters.handlersRef.current,
+            { getExpansionCount } = cradleInheritedProperties
 
         if (layoutHandler.boundaryNotificationsRequired()) {
 
@@ -163,6 +165,23 @@ export default class ServiceHandler {
                     callbacks.boundaryCallback('EOL', virtualListProps.highindex)
                 }
 
+            }
+
+            if (getExpansionCount) {
+                if (layoutHandler.SOLSignal) {
+                    let prepend = getExpansionCount('SOL', virtualListProps.lowindex)
+                    prepend = +prepend
+                    if (!isNaN(prepend) && prepend > 0) {
+                        serviceHandler.prepend(prepend)
+                    }
+                }
+                if (layoutHandler.EOLSignal) {
+                    let append = getExpansionCount('EOL', virtualListProps.highindex)
+                    append = +append
+                    if (!isNaN(append) && append > 0) {
+                        serviceHandler.prepend(append)
+                    }
+                }
             }
 
             layoutHandler.cancelBoundaryNotifications()
