@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.2 August 24, 2023
+
+fix debug error
+
 ## 1.4.1 August 24, 2023
 
 Fix regression re programmatic scrolling
