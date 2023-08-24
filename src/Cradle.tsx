@@ -193,7 +193,7 @@ const Cradle = ({
     cradleStateRef.current = cradleState
 
     // if (!scrollerProperties) { // root scroller
-        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+        console.log('--> cradleState','-'+scrollerID+'-', cradleState)
         // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
         // console.log('-- itemID','+'+scrollerProperties?.cellFramePropertiesRef.current.itemID+'+')
     // }
@@ -911,7 +911,7 @@ const Cradle = ({
 
         interruptHandler.pauseInterrupts()
 
-        // setCradleState('reconfigure')
+        setCradleState('reconfigure')
 
     },[
         cellHeight,
