@@ -911,7 +911,7 @@ const Cradle = ({
 
         interruptHandler.pauseInterrupts()
 
-        // setCradleState('reconfigure')
+        setCradleState('reconfigure')
 
     },[
         cellHeight,
