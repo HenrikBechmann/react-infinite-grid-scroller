@@ -55,7 +55,8 @@ const isInteger = (value:any) => {
 
     const test = +value
 
-    return (isNumber(value) && (Math.floor(test) == test))
+    // return (isNumber(value) && (Math.floor(test) == test))
+    return (Number.isInteger(test))
 
 }
 
@@ -108,10 +109,11 @@ export default class ServiceHandler {
            preloadIndexCallback, // (index)
            deleteListCallback, // (reason, deleteList)
            changeListSizeCallback, // (newlistsize)
-           changeListRangeCallback,
+           changeListRangeCallback, // (listrange) two part array lowindex, highindex 
            itemExceptionCallback, // (index, itemID, returnvalue, location, error)
-           repositioningFlagCallback, // (flag) // boolean
-           repositioningIndexCallback,
+           repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
+           repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
+           boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
            
        } = cradleParameters.externalCallbacksRef.current,
 
@@ -123,7 +125,8 @@ export default class ServiceHandler {
            changeListRangeCallback,
            itemExceptionCallback,
            repositioningFlagCallback,
-           repositioningIndexCallback
+           repositioningIndexCallback,
+           boundaryCallback,
        }
 
        this.callbacks = callbacks
@@ -134,6 +137,60 @@ export default class ServiceHandler {
 
     // see above for list
     public callbacks
+
+    // =======================[ BOUNDARY TRIGGERS ]===================
+
+    // called by Cradle 'triggerboundarynotications' state
+    public triggerBoundaryCallbacks = () => {
+
+        const 
+            { 
+
+                cradleParameters,
+                callbacks
+
+            } = this,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+            { layoutHandler, serviceHandler } = cradleParameters.handlersRef.current,
+            { virtualListProps } = cradleInternalProperties,
+            { getExpansionCount } = cradleInheritedProperties
+
+        if (layoutHandler.boundaryNotificationsRequired()) {
+
+            if (callbacks.boundaryCallback) {
+
+                if (layoutHandler.SOLSignal) {
+                    callbacks.boundaryCallback('SOL', virtualListProps.lowindex)
+                }
+                if (layoutHandler.EOLSignal) {
+                    callbacks.boundaryCallback('EOL', virtualListProps.highindex)
+                }
+
+            }
+
+            if (getExpansionCount) {
+                if (layoutHandler.SOLSignal) {
+                    let prepend = getExpansionCount('SOL', virtualListProps.lowindex)
+                    prepend = +prepend
+                    if (!isNaN(prepend) && prepend > 0 && Number.isInteger(prepend)) {
+                        serviceHandler.prependIndexCount(prepend)
+                    }
+                }
+                if (layoutHandler.EOLSignal) {
+                    let append = getExpansionCount('EOL', virtualListProps.highindex)
+                    append = +append
+                    if (!isNaN(append) && append > 0 && Number.isInteger(append)) {
+                        serviceHandler.appendIndexCount(append)
+                    }
+                }
+            }
+
+            layoutHandler.cancelBoundaryNotifications()
+
+        }
+
+    }
 
     // ========================[ GENERAL ]============================
 

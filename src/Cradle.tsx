@@ -100,6 +100,7 @@ const Cradle = ({
         setVirtualListRange,
         startingIndex, 
         getItem, 
+        getExpansionCount,
         placeholder, 
         placeholderMessages,
         userCallbacks,
@@ -461,6 +462,7 @@ const Cradle = ({
             changeListSizeCallback:userCallbacks?.changeListSizeCallback,
             changeListRangeCallback:userCallbacks?.changeListRangeCallback,
             itemExceptionCallback:userCallbacks?.itemExceptionCallback,
+            boundaryCallback:userCallbacks?.boundaryCallback,
         }
     )
 
@@ -479,6 +481,7 @@ const Cradle = ({
         startingIndex, 
         runwaySize,
         getItem, 
+        getExpansionCount,
         placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
         scrollerID,
@@ -1190,7 +1193,7 @@ const Cradle = ({
                         lowindex, listsize
                     )
 
-                    setCradleState('repositioningRender') // toggles with repositioningContinuation
+                    setCradleState('repositioningRender')
 
                 } else {
 
@@ -1319,7 +1322,7 @@ const Cradle = ({
                 interruptHandler.triggerlinesIntersect.connectElements()
                 interruptHandler.cradleIntersect.connectElements()
 
-                setCradleState('restoreinterrupts') // to restore interrupts
+                setCradleState('restoreinterrupts')
 
                 break
             }
@@ -1331,6 +1334,16 @@ const Cradle = ({
                 setCradleState('ready')
 
                 break 
+
+            }
+
+            case 'triggerboundarynotications': {
+
+                serviceHandler.triggerBoundaryCallbacks()
+
+                setCradleState('ready')
+
+                break
 
             }
 
@@ -1524,7 +1537,13 @@ const Cradle = ({
             case 'repositioningRender': // no-op
                 break
 
-            case 'ready': // no-op
+            case 'ready':
+
+                if (layoutHandler.boundaryNotificationsRequired()) {
+
+                    setCradleState('triggerboundarynotications')
+
+                }
 
                 break
 
