@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1 August 24, 2023
+
+Fix regression re programmatic scrolling
+
 ## 1.4.0 August 23, 2023
 
 This version deals with virtual list boundaries - SOL (start-of-list) & EOL (end-of-list)
