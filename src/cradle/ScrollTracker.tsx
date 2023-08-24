@@ -16,9 +16,9 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
     const indexRef = useRef(null)
     indexRef.current = index
     const lowindexRef = useRef(null)
-    const listsizeRef = useRef(null)
+    const listSizeRef = useRef(null)
 
-    const tracktext = `${index} (${index - lowindexRef.current + 1}/${listsizeRef.current})`
+    const tracktext = `${index} (${index - lowindexRef.current + 1}/${listSizeRef.current})`
 
     const stylesRef = useRef({
         top: '3px',
@@ -50,7 +50,7 @@ const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
         setIndex(position + lowindex)
         lowindexRef.current = lowindex
-        listsizeRef.current = listsize
+        listSizeRef.current = listsize
         stylesRef.current = {...stylesRef.current,visibility:'visible'}
 
     },[])

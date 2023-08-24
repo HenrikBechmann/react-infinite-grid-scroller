@@ -82,6 +82,24 @@ export default class LayoutHandler {
         return this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID
     }
 
+    public SOLSignal = false
+    public EOLSignal = false
+
+    public boundaryNotificationsRequired = () => {
+        let trigger = false
+        if (this.SOLSignal || this.EOLSignal) {
+            trigger = true
+        }
+        return trigger
+    }
+
+    public cancelBoundaryNotifications = () => {
+
+        this.SOLSignal = false
+        this.EOLSignal = false
+
+    }
+
     private cradleParameters
 
     public get triggerlineSpan() {
