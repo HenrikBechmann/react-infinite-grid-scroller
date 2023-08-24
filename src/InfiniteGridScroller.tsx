@@ -181,8 +181,8 @@ const InfiniteGridScroller = (props) => {
         CSS:'',
     })
     let paddingProps = paddingPropsRef.current
-    if (padding !== paddingProps.source) {
-        paddingProps.source = padding
+    if (String(props.padding) !== String(paddingProps.source)) {
+        paddingProps.source = props.padding
         if (!Array.isArray(padding)) {
             padding = +padding
             if (!isNaN(padding)) {
@@ -236,8 +236,8 @@ const InfiniteGridScroller = (props) => {
         CSS:'',
     })
     let gapProps = gapPropsRef.current
-    if (gap !== gapProps.source) {
-        gapProps.source = gap
+    if (String(props.gap) !== String(gapProps.source)) {
+        gapProps.source = props.gap
         if (!Array.isArray(gap)) {
             gap = +gap
             if (!isNaN(gap)) {
