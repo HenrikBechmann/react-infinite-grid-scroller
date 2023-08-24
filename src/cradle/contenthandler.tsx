@@ -389,6 +389,13 @@ export default class ContentHandler {
                 EOL:(virtualListProps.highindex == highindex),
             })
 
+            if (cradleContentProps.SOL && !layoutHandler.SOLSignal) {
+                layoutHandler.SOLSignal = true
+            }
+            if (cradleContentProps.EOL && !layoutHandler.EOLSignal) {
+                layoutHandler.EOLSignal = true
+            }
+
         } else {
 
             Object.assign(cradleContentProps,
@@ -748,6 +755,14 @@ export default class ContentHandler {
                     EOL:(virtualListProps.highindex == highindex),
                 })
 
+
+                if (cradleContentProps.SOL && !layoutHandler.SOLSignal) {
+                    layoutHandler.SOLSignal = true
+                }
+                if (cradleContentProps.EOL && !layoutHandler.EOLSignal) {
+                    layoutHandler.EOLSignal = true
+                }
+                
             } else {
 
                 Object.assign(cradleContentProps,

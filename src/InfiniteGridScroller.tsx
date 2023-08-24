@@ -104,6 +104,8 @@ const InfiniteGridScroller = (props) => {
         runwaySize = 3, // the number of rows outside the view of each side of the viewport 
             // -- gives time to assemble cellFrames before display
         startingIndex = 0, // the starting index of the list, when first loaded
+        getExpansionCount, // optional, function provided by host, returns the number of indexes to add to
+            // the virtual list when the scroller hits the start or end of the list
 
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
@@ -267,7 +269,7 @@ const InfiniteGridScroller = (props) => {
             [a] = list // t/b/r/l
             list.push(a) //r,b,l
         }
-        paddingProps.list = list
+        gapProps.list = list
         const [column, row] = list
         Object.assign(gapProps,{column:+column,row:+row}) // assure numeric
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
@@ -417,10 +419,10 @@ const InfiniteGridScroller = (props) => {
 
         updateFunctionRef = useRef(null),
 
-        listsizeRef = useRef(startingListSize),
+        listSizeRef = useRef(startingListSize),
         listRangeRef = useRef(startingListRange),
 
-        listsize = listsizeRef.current,
+        listsize = listSizeRef.current,
         listrange = listRangeRef.current,
         [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
 
@@ -500,7 +502,7 @@ const InfiniteGridScroller = (props) => {
             listsize = highrange - lowrange + 1
         }
 
-        listsizeRef.current = listsize
+        listSizeRef.current = listsize
         listRangeRef.current = listrange
 
         // inform the user
@@ -526,7 +528,7 @@ const InfiniteGridScroller = (props) => {
             }
         }
 
-        listsizeRef.current = listsize
+        listSizeRef.current = listsize
         listRangeRef.current = listrange
 
         // inform the user
@@ -624,6 +626,7 @@ const InfiniteGridScroller = (props) => {
                     userCallbacks = { callbacksRef.current }
                     startingIndex = { startingIndex }
                     getItem = { getItem }
+                    getExpansionCount = { getExpansionCount }
                     placeholder = { placeholder }
                     placeholderMessages = { placeholderMessagesRef.current }
                     runwaySize = { runwaySize }

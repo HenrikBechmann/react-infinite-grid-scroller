@@ -87,12 +87,15 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 
 | property | value | notes |
 |---|---|---|
-|[_**REQUIRED**_]|
+|[_**CELL SHAPE**_]|
 |cellHeight:integer| number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
 |cellWidth:integer| number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
-|startingListSize:integer| the starting number of items in the virtual list|required. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange` array|
-|startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list|
+|[_**CELL CONTENTS**_]|
 |getItem(index:integer,itemID:integer):<br />React.FC \| Promise \| undefined \| null|host-provided function. session `itemID` (integer) is for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
+|[_**LIST SIZE**_]|
+|startingListSize:integer| the starting number of items in the virtual list|required if `startingListRange` is not set. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange` array|
+|startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list. Can be modified at runtime. |
+|getExpansionCount(position:string, index:ingeger): integer| function optionally provided by host. Called whenever the lowindex or highindex are loaded into the Cradle.| `position` = "SOL" or "EOL"; index = the lowindex or highindex. Should return the number by which to expand the virtual list|
 |[_**SCROLLER OPTIONS**_]|
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
 |layout:string| 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
@@ -181,8 +184,11 @@ callbacks: {
 
      // operations tracking, called when triggered
      changeListSizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
+     changeListRangeCallback, // (listrange) two part array lowindex, highindex 
      deleteListCallback, // (reason, deleteList) - data about which items have been deleted from the cache
-     repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
+     repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning,
+     boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
+
      
 }
 ~~~
@@ -214,6 +220,8 @@ Details about the callbacks:
 |itemExceptionCallback(index: integer, itemID: integer, returnvalue: any, location: string, error: Error)|triggered whenever getItem does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
 |changeListsizeCallback(newlistsize: integer)|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
+|changeListRangeCallback(listrange:array) | notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
+|boundaryCallback(position:string, index:integer) | called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
 |deleteListCallback(reason: string, deleteList: array)|gives an array of indexes that have been deleted from the cache, and text of the reason|
 |repositioningFlagCallback(flag: boolean)| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
