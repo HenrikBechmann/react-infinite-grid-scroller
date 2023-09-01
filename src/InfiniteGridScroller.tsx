@@ -28,7 +28,7 @@
     containing block should be styled accordingly.
 */
 
-import React, { useEffect, useState, useCallback, useRef } from 'react'
+import React, { useEffect, useState, useCallback, useRef, useContext } from 'react'
 
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -135,9 +135,9 @@ const InfiniteGridScroller = (props) => {
 
     } = props
 
-    if (!scrollerProperties && !dragDropProperties) { // root
-        dragDropProperties = {}
-    }
+    // if (!scrollerProperties && !dragDropProperties) { // root
+        dragDropProperties = {} // must exist at root
+    // }
 
     let isMinimalPropsFail = false
     if (!(cellWidth && cellHeight && getItem )) {
