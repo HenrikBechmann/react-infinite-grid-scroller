@@ -39,6 +39,8 @@ import React, {
     useContext 
 } from 'react'
 
+import { useDrag } from 'react-dnd'
+
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // polyfill if needed
 
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
@@ -120,7 +122,16 @@ const CellFrame = ({
     frameStateRef.current = frameState
 
     // DOM ref
-    const frameRef = useRef(null)
+    // const frameRef = useRef(null)
+
+    const [{isDragging},frameRef] = useDrag(() => ({
+        type:'Cell',
+        collect: monitor => ({
+            isDragging:!!monitor.isDragging(),
+        }),
+        canDrag:true,
+    }))
+
     // to track unmount interrupt
     const isMountedRef = useRef(true)
     // cache data

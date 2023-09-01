@@ -128,12 +128,16 @@ const InfiniteGridScroller = (props) => {
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI = null,
-        dragdropProperties, // placeholder!
+        dragDropProperties = undefined, // placeholder!
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
 
     } = props
+
+    if (!scrollerProperties && !dragDropProperties) { // root
+        dragDropProperties = {}
+    }
 
     let isMinimalPropsFail = false
     if (!(cellWidth && cellHeight && getItem )) {
@@ -651,9 +655,9 @@ const InfiniteGridScroller = (props) => {
         // }}
     >
 
-        <DndProvider backend={HTML5Backend}>
+        {dragDropProperties? <DndProvider backend={HTML5Backend}>
             {viewport}
-        </DndProvider>
+        </DndProvider>:viewport}
 
 {/*        {(scrollerState != 'setup') && <Viewport
 
