@@ -30,6 +30,9 @@
 
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+
 // defensive
 import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
 
@@ -581,6 +584,62 @@ const InfiniteGridScroller = (props) => {
         return <div>error: see console.</div>        
     }
 
+    const viewport = 
+        (scrollerState != 'setup')? <Viewport
+
+            gridSpecs = { gridSpecsRef.current }
+            styles = { stylesRef.current }
+            scrollerID = { scrollerID }
+            VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
+            useScrollTracker = { useScrollTracker }
+
+        >
+        
+            {<Scrollblock
+
+                gridSpecs = { gridSpecsRef.current }
+                paddingProps = {paddingProps}
+                gapProps = { gapProps }
+                styles = { stylesRef.current }
+                virtualListSpecs = {virtualListSpecsRef.current}
+                scrollerID = { scrollerID }
+                
+            >
+                <Cradle 
+
+                    gridSpecs = { gridSpecsRef.current }
+                    paddingProps = { paddingProps }
+                    gapProps = { gapProps }
+                    styles = { stylesRef.current }
+                    virtualListSpecs = {virtualListSpecsRef.current}
+                    setVirtualListSize = { setVirtualListSize }
+                    setVirtualListRange = { setVirtualListRange }
+                    cache = { cache }
+                    cacheMax = { cacheMax }
+                    userCallbacks = { callbacksRef.current }
+                    startingIndex = { startingIndex }
+                    getItem = { getItem }
+                    getExpansionCount = { getExpansionCount }
+                    placeholder = { placeholder }
+                    placeholderMessages = { placeholderMessagesRef.current }
+                    runwaySize = { runwaySize }
+                    triggerlineOffset = { triggerlineOffset }
+                    scrollerProperties = { scrollerProperties }
+
+                    cacheAPI = { cacheAPIRef.current }
+                    usePlaceholder = { usePlaceholder }
+                    // useScrollTracker = { useScrollTracker }
+                    showAxis = { showAxis }
+                    ONAFTERSCROLL_TIMEOUT = { ONAFTERSCROLL_TIMEOUT }
+                    IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
+                    MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
+                    VARIABLE_MEASUREMENTS_TIMEOUT = { VARIABLE_MEASUREMENTS_TIMEOUT }
+                    scrollerID = { scrollerID }
+
+                />
+            </Scrollblock>}
+        </Viewport>:undefined
+
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
     return <ErrorBoundary
         FallbackComponent= { ErrorFallback }
@@ -592,7 +651,11 @@ const InfiniteGridScroller = (props) => {
         // }}
     >
 
-        {(scrollerState != 'setup') && <Viewport
+        <DndProvider backend={HTML5Backend}>
+            {viewport}
+        </DndProvider>
+
+{/*        {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
@@ -646,15 +709,15 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>}
         </Viewport>}
-        <div>
-        {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalCache 
+*/}        <div>
+            {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
+                <PortalCache 
 
-                getCacheAPI = { getCacheAPI } 
-                getUpdateFunction = { getUpdateFunction }
-                CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
+                    getCacheAPI = { getCacheAPI } 
+                    getUpdateFunction = { getUpdateFunction }
+                    CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
 
-        </div>}
+            </div>}
         </div>
     </ErrorBoundary>
 }
