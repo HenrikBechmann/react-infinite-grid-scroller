@@ -17,8 +17,6 @@
 
 import React from 'react'
 
-// import CellFrame from '../CellFrame'
-
 import { CellFrameController } from '../CellFrame'
 
 import { isSafariIOS } from '../InfiniteGridScroller'
@@ -205,6 +203,7 @@ export const generateShiftInstruction = ({
             (intersectrootpos == boundingrootpos)?
             intersectrootpos:
             boundingrootpos, // we're in Safari, zoomed
+
         // --- end of identify viewportpos
 
 
@@ -701,13 +700,8 @@ export const calculateShiftSpecs = ({
 
         }
 
-        // const paddingOffset = 
-        //     orientation == 'vertical'?
-        //         paddingProps.top:
-        //         paddingProps.left
-
         if (layout == 'variable' && newAxisReferenceRow == rangerowshift) { // start of list
-            newPixelOffsetAxisFromViewport = 0 // paddingOffset
+            newPixelOffsetAxisFromViewport = 0
         }
 
         // --- end of list adjustment; case of in bounds of trailing runway
@@ -1026,24 +1020,25 @@ const createCellFrame = ({
     placeholderErrorLinerStyles,
     placeholderMessages,
 }) => {
-    const instanceID = instanceIdCounterRef.current++
-
-    const { 
-        
-        orientation,
-        cellHeight,
-        cellWidth,
-        cellMinHeight,
-        cellMinWidth,
-        getItem,
-        placeholder,
-        scrollerID,
-        layout, 
-        usePlaceholder,
-
-    } = cradleInheritedProperties
 
     const 
+        instanceID = instanceIdCounterRef.current++,
+
+        { 
+        
+            orientation,
+            cellHeight,
+            cellWidth,
+            cellMinHeight,
+            cellMinWidth,
+            getItem,
+            placeholder,
+            scrollerID,
+            layout, 
+            usePlaceholder,
+
+        } = cradleInheritedProperties,
+
         listsize = cradleInternalProperties.virtualListProps.size,
         // get new or existing itemID
         itemID = cacheAPI.getNewOrExistingItemID(index),
@@ -1075,31 +1070,6 @@ const createCellFrame = ({
 
         }
 
-    return <CellFrameController { ...props } />
-
-    // return <CellFrame 
-    //     key = { instanceID } 
-    //     orientation = { orientation }
-    //     cellHeight = { cellHeight }
-    //     cellWidth = { cellWidth }
-    //     cellMinHeight = { cellMinHeight }
-    //     cellMinWidth = { cellMinWidth }
-    //     layout = { layout }
-    //     index = { index }
-    //     getItem = { getItem }
-    //     listsize = { listsize }
-    //     placeholder = { placeholder }
-    //     itemID = { itemID }
-    //     instanceID = { instanceID }
-    //     scrollerID = { scrollerID }
-    //     isTriggercell = { false }
-    //     usePlaceholder = { usePlaceholder }
-    //     placeholderFrameStyles = { placeholderFrameStyles }
-    //     placeholderLinerStyles = { placeholderLinerStyles }
-    //     placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
-    //     placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
-    //     placeholderMessages = { placeholderMessages }
-    //     gridstartstyle = {null}
-    // />
+    return <CellFrameController { ...props } /> // CellFrameController decides if DnD s/b supported
 
 }

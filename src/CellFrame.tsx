@@ -60,6 +60,7 @@ const defaultPlaceholderMessages = {
     invalid:'invalid React element',
 }
 
+// called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
 
     const dndContext = useContext(DndContext)
@@ -76,6 +77,7 @@ export const CellFrameController = props => {
 
 }
 
+// HoC for DnD functionality; requires frameRef
 const DndCellFrame = (props) => {
 
     const { itemID } = props
@@ -97,6 +99,7 @@ const DndCellFrame = (props) => {
     return <CellFrame {...enhancedProps}/>
 }
 
+// provide frameRef source when not required for DnD
 const CellFrameWrapper = (props) => {
 
     const frameRef = useRef(null)
@@ -129,7 +132,7 @@ const CellFrame = ({
     usePlaceholder,
     gridstartstyle,
     parentframeRef,
-    frameRef,
+    frameRef, // DOM ref used internally, and for DnD when invoked
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -171,21 +174,6 @@ const CellFrame = ({
     const [frameState, setFrameState] = useState('setup')
     const frameStateRef = useRef(null)
     frameStateRef.current = frameState
-
-    // DOM ref
-    // const frameRef = useRef(null)
-
-    // const [ { isDragging }, frameRef ] = useDrag(() => {
-    //     return {
-    //     type:'Cell',
-    //     id:itemID,
-    //     collect: monitor => {
-    //         return {
-    //             isDragging:!!monitor.isDragging()
-    //         }
-    //     },
-    //     canDrag:true,
-    // }},[itemID])
 
     // to track unmount interrupt
     const isMountedRef = useRef(true)

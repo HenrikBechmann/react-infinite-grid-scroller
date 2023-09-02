@@ -73,9 +73,12 @@ import PortalCache from './PortalCache'
 
 let globalScrollerID = 0
 
-export const DndContext = React.createContext({dnd:false}) // for children
+// -----------------[ Drag and drop option ]---------------------
 
-const RigsDnd = (props) => {
+export const DndContext = React.createContext({dnd:false}) // inform children
+
+// wrapper for Dnd provider
+export const RigsDnd = (props) => { // must be loaded for root sroller by host to set up Dnd provider
 
     const dndContext = useContext(DndContext)
 
@@ -87,7 +90,7 @@ const RigsDnd = (props) => {
 
 }
 
-export { RigsDnd }
+// export { RigsDnd }
 
 // ===================================[ INITIALIZE ]===========================
 
