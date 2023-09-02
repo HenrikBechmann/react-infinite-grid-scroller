@@ -17,7 +17,9 @@
 
 import React from 'react'
 
-import CellFrame from '../CellFrame'
+// import CellFrame from '../CellFrame'
+
+import { CellFrameController } from '../CellFrame'
 
 import { isSafariIOS } from '../InfiniteGridScroller'
 
@@ -1044,31 +1046,60 @@ const createCellFrame = ({
     const 
         listsize = cradleInternalProperties.virtualListProps.size,
         // get new or existing itemID
-        itemID = cacheAPI.getNewOrExistingItemID(index)
+        itemID = cacheAPI.getNewOrExistingItemID(index),
 
-    return <CellFrame 
-        key = { instanceID } 
-        orientation = { orientation }
-        cellHeight = { cellHeight }
-        cellWidth = { cellWidth }
-        cellMinHeight = { cellMinHeight }
-        cellMinWidth = { cellMinWidth }
-        layout = { layout }
-        index = { index }
-        getItem = { getItem }
-        listsize = { listsize }
-        placeholder = { placeholder }
-        itemID = { itemID }
-        instanceID = { instanceID }
-        scrollerID = { scrollerID }
-        isTriggercell = { false }
-        usePlaceholder = { usePlaceholder }
-        placeholderFrameStyles = { placeholderFrameStyles }
-        placeholderLinerStyles = { placeholderLinerStyles }
-        placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
-        placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
-        placeholderMessages = { placeholderMessages }
-        gridstartstyle = {null}
-    />
+        props = {
+
+            key: instanceID ,
+            orientation,
+            cellHeight,
+            cellWidth,
+            cellMinHeight,
+            cellMinWidth,
+            layout,
+            index,
+            getItem,
+            listsize,
+            placeholder,
+            itemID,
+            instanceID,
+            scrollerID,
+            isTriggercell:false,
+            usePlaceholder,
+            placeholderFrameStyles,
+            placeholderLinerStyles,
+            placeholderErrorFrameStyles,
+            placeholderErrorLinerStyles,
+            placeholderMessages,
+            gridstartstyle:null,
+
+        }
+
+    return <CellFrameController { ...props } />
+
+    // return <CellFrame 
+    //     key = { instanceID } 
+    //     orientation = { orientation }
+    //     cellHeight = { cellHeight }
+    //     cellWidth = { cellWidth }
+    //     cellMinHeight = { cellMinHeight }
+    //     cellMinWidth = { cellMinWidth }
+    //     layout = { layout }
+    //     index = { index }
+    //     getItem = { getItem }
+    //     listsize = { listsize }
+    //     placeholder = { placeholder }
+    //     itemID = { itemID }
+    //     instanceID = { instanceID }
+    //     scrollerID = { scrollerID }
+    //     isTriggercell = { false }
+    //     usePlaceholder = { usePlaceholder }
+    //     placeholderFrameStyles = { placeholderFrameStyles }
+    //     placeholderLinerStyles = { placeholderLinerStyles }
+    //     placeholderErrorFrameStyles = { placeholderErrorFrameStyles }
+    //     placeholderErrorLinerStyles = { placeholderErrorLinerStyles }
+    //     placeholderMessages = { placeholderMessages }
+    //     gridstartstyle = {null}
+    // />
 
 }

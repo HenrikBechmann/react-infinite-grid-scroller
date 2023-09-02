@@ -36,7 +36,7 @@ import React, {
     useLayoutEffect, 
     useState, 
     useMemo, 
-    useContext 
+    useContext,
 } from 'react'
 
 import { useDrag } from 'react-dnd'
@@ -49,12 +49,61 @@ import Placeholder from './cellframe/Placeholder' // default
 
 import { CradleContext } from './Cradle'
 
+import { DndContext } from './InfiniteGridScroller'
+
+
 const defaultPlaceholderMessages = {
     loading:'(loading...)',
     retrieving:'(retrieving from cache)',
     null:'end of list',
     undefined:'host returned "undefined"',
     invalid:'invalid React element',
+}
+
+export const CellFrameController = props => {
+
+    const dndContext = useContext(DndContext)
+
+    if (dndContext.dnd) {
+
+        return <DndCellFrame {...props}/>
+
+    } else {
+
+        return <CellFrameWrapper {...props} />
+
+    }
+
+}
+
+const DndCellFrame = (props) => {
+
+    const { itemID } = props
+
+    const [ { isDragging }, frameRef ] = useDrag(() => {
+        return {
+        type:'Cell',
+        id:itemID,
+        collect: monitor => {
+            return {
+                isDragging:!!monitor.isDragging()
+            }
+        },
+        canDrag:true,
+    }},[itemID])
+
+    const enhancedProps = {...props,frameRef}
+
+    return <CellFrame {...enhancedProps}/>
+}
+
+const CellFrameWrapper = (props) => {
+
+    const frameRef = useRef(null)
+
+    const enhancedProps = {...props,frameRef}
+
+    return <CellFrame {...enhancedProps}/>
 }
 
 const CellFrame = ({
@@ -79,6 +128,8 @@ const CellFrame = ({
     placeholderMessages,
     usePlaceholder,
     gridstartstyle,
+    parentframeRef,
+    frameRef,
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -124,17 +175,17 @@ const CellFrame = ({
     // DOM ref
     // const frameRef = useRef(null)
 
-    const [ { isDragging }, frameRef ] = useDrag(() => {
-        return {
-        type:'Cell',
-        id:itemID,
-        collect: monitor => {
-            return {
-                isDragging:!!monitor.isDragging()
-            }
-        },
-        canDrag:true,
-    }},[itemID])
+    // const [ { isDragging }, frameRef ] = useDrag(() => {
+    //     return {
+    //     type:'Cell',
+    //     id:itemID,
+    //     collect: monitor => {
+    //         return {
+    //             isDragging:!!monitor.isDragging()
+    //         }
+    //     },
+    //     canDrag:true,
+    // }},[itemID])
 
     // to track unmount interrupt
     const isMountedRef = useRef(true)
