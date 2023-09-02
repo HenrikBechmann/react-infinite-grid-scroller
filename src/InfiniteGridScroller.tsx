@@ -683,7 +683,7 @@ export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------
 
-const cacherootstyle = {display:'none'}// as React.CSSProperties // static, out of view 
+const cacherootstyle = {display:'none'} // static, out of view 
 
 // utility
 function compareProps (obj1,obj2) {
