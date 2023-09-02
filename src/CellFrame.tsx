@@ -124,13 +124,17 @@ const CellFrame = ({
     // DOM ref
     // const frameRef = useRef(null)
 
-    const [{isDragging},frameRef] = useDrag(() => ({
+    const [{isDragging},frameRef] = useDrag(() => {
+        return {
         type:'Cell',
-        collect: monitor => ({
-            isDragging:!!monitor.isDragging(),
-        }),
+        id:itemID,
+        collect: monitor => {
+            return {
+                isDragging:!!monitor.isDragging()
+            }
+        },
         canDrag:true,
-    }))
+    }},[itemID])
 
     // to track unmount interrupt
     const isMountedRef = useRef(true)

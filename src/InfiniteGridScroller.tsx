@@ -73,6 +73,22 @@ import PortalCache from './PortalCache'
 
 let globalScrollerID = 0
 
+export const DndContext = React.createContext({dnd:false}) // for children
+
+const RigsDnd = (props) => {
+
+    const dndContext = useContext(DndContext)
+
+    if (!dndContext.dnd) dndContext.dnd = true
+
+    return <DndProvider backend={HTML5Backend}>
+        <InfiniteGridScroller {...props} />
+    </DndProvider>
+
+}
+
+export { RigsDnd }
+
 // ===================================[ INITIALIZE ]===========================
 
 const InfiniteGridScroller = (props) => {
@@ -655,9 +671,7 @@ const InfiniteGridScroller = (props) => {
         // }}
     >
 
-        {dragDropProperties? <DndProvider backend={HTML5Backend}>
-            {viewport}
-        </DndProvider>:viewport}
+        {viewport}
 
 {/*        {(scrollerState != 'setup') && <Viewport
 
