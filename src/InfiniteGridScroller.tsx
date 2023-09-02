@@ -73,12 +73,12 @@ import PortalCache from './PortalCache'
 
 let globalScrollerID = 0
 
-// -----------------[ Drag and drop option ]---------------------
+// -----------------[ Drag and drop option support ]---------------------
 
 export const DndContext = React.createContext({dnd:false}) // inform children
 
 // wrapper for Dnd provider
-export const RigsDnd = (props) => { // must be loaded for root sroller by host to set up Dnd provider
+export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
     const dndContext = useContext(DndContext)
 
@@ -89,8 +89,6 @@ export const RigsDnd = (props) => { // must be loaded for root sroller by host t
     </DndProvider>
 
 }
-
-// export { RigsDnd }
 
 // ===================================[ INITIALIZE ]===========================
 
@@ -607,62 +605,6 @@ const InfiniteGridScroller = (props) => {
         return <div>error: see console.</div>        
     }
 
-    const viewport = 
-        (scrollerState != 'setup')? <Viewport
-
-            gridSpecs = { gridSpecsRef.current }
-            styles = { stylesRef.current }
-            scrollerID = { scrollerID }
-            VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
-            useScrollTracker = { useScrollTracker }
-
-        >
-        
-            {<Scrollblock
-
-                gridSpecs = { gridSpecsRef.current }
-                paddingProps = {paddingProps}
-                gapProps = { gapProps }
-                styles = { stylesRef.current }
-                virtualListSpecs = {virtualListSpecsRef.current}
-                scrollerID = { scrollerID }
-                
-            >
-                <Cradle 
-
-                    gridSpecs = { gridSpecsRef.current }
-                    paddingProps = { paddingProps }
-                    gapProps = { gapProps }
-                    styles = { stylesRef.current }
-                    virtualListSpecs = {virtualListSpecsRef.current}
-                    setVirtualListSize = { setVirtualListSize }
-                    setVirtualListRange = { setVirtualListRange }
-                    cache = { cache }
-                    cacheMax = { cacheMax }
-                    userCallbacks = { callbacksRef.current }
-                    startingIndex = { startingIndex }
-                    getItem = { getItem }
-                    getExpansionCount = { getExpansionCount }
-                    placeholder = { placeholder }
-                    placeholderMessages = { placeholderMessagesRef.current }
-                    runwaySize = { runwaySize }
-                    triggerlineOffset = { triggerlineOffset }
-                    scrollerProperties = { scrollerProperties }
-
-                    cacheAPI = { cacheAPIRef.current }
-                    usePlaceholder = { usePlaceholder }
-                    // useScrollTracker = { useScrollTracker }
-                    showAxis = { showAxis }
-                    ONAFTERSCROLL_TIMEOUT = { ONAFTERSCROLL_TIMEOUT }
-                    IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
-                    MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
-                    VARIABLE_MEASUREMENTS_TIMEOUT = { VARIABLE_MEASUREMENTS_TIMEOUT }
-                    scrollerID = { scrollerID }
-
-                />
-            </Scrollblock>}
-        </Viewport>:undefined
-
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
     return <ErrorBoundary
         FallbackComponent= { ErrorFallback }
@@ -674,9 +616,7 @@ const InfiniteGridScroller = (props) => {
         // }}
     >
 
-        {viewport}
-
-{/*        {(scrollerState != 'setup') && <Viewport
+        {(scrollerState != 'setup') && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
@@ -686,7 +626,7 @@ const InfiniteGridScroller = (props) => {
 
         >
         
-            {<Scrollblock
+            <Scrollblock
 
                 gridSpecs = { gridSpecsRef.current }
                 paddingProps = {paddingProps}
@@ -728,9 +668,9 @@ const InfiniteGridScroller = (props) => {
                     scrollerID = { scrollerID }
 
                 />
-            </Scrollblock>}
+            </Scrollblock>
         </Viewport>}
-*/}        <div>
+        <div>
             {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
                 <PortalCache 
 
