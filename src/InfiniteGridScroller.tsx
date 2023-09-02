@@ -152,10 +152,6 @@ const InfiniteGridScroller = (props) => {
 
     } = props
 
-    // if (!scrollerProperties && !dragDropProperties) { // root
-        dragDropProperties = {} // must exist at root
-    // }
-
     let isMinimalPropsFail = false
     if (!(cellWidth && cellHeight && getItem )) {
         console.log('RIGS: cellWidth, cellHeight, and getItem are required')
