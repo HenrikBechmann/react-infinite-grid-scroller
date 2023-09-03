@@ -39,7 +39,9 @@ import React, {
     useContext,
 } from 'react'
 
-import { useDrag } from 'react-dnd'
+import type { CSSProperties } from 'react'
+
+import { useDrag, DragLayerMonitor, useDragLayer } from 'react-dnd'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // polyfill if needed
 
@@ -51,6 +53,7 @@ import { CradleContext } from './Cradle'
 
 import { DndContext } from './InfiniteGridScroller'
 
+import { getEmptyImage } from 'react-dnd-html5-backend'
 
 const defaultPlaceholderMessages = {
     loading:'(loading...)',
@@ -76,7 +79,46 @@ export const CellFrameController = props => {
     }
 
 }
+const DnDDragLayer = (props) => {
 
+    const {itemID, index} = props
+
+    const {isDragging, currentOffset, item} = useDragLayer(
+        (monitor: DragLayerMonitor) => {
+            return {
+                isDragging: monitor.isDragging(),
+                currentOffset: monitor.getSourceClientOffset(),
+                item: monitor.getItem()
+            };
+        })
+
+    // console.log('itemID, index, isDragging', itemID, index, isDragging)
+
+    return (
+        isDragging && currentOffset
+            ? <div style={{ 
+                  // functional
+                  zIndex:5,
+                  transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  pointerEvents: 'none', 
+            
+                  // design only
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '150px',
+                  height: '50px',
+                  border: '1px solid red',
+              }}>
+                  Dragging itemID {itemID}, index {index} 
+              </div> 
+            : null
+        )
+
+}
 
 // for react-dnd previewRef. shows black stripe ad selected position
 const DnDCellDragPreview = (props) => {
@@ -94,7 +136,7 @@ const DnDCellDragPreview = (props) => {
             height:sourceElement.offsetHeight + 'px',
             width:'3px',
             border:'3px solid black',
-        } as React.CSSProperties
+        } as CSSProperties
 
     },[])
 
@@ -109,13 +151,15 @@ const DndCellFrame = (props) => {
     const { itemID, index } = props
 
     const frameRef = useRef(null)
+    const dndCellDragPreviewRef = useRef(null)
 
     const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
     // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
         // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
         return {
         type:'Cell',
-        id:itemID,
+
+        item:itemID,
         collect: monitor => {
             // console.log('monitor drag: itemID, index, isDragging','-'+itemID+'-', '+' + index + '+', !!monitor.isDragging())
             return {
@@ -125,17 +169,29 @@ const DndCellFrame = (props) => {
         canDrag:true,
     }},[itemID])
 
+    useEffect(()=>{
+        previewRef(getEmptyImage(),{ captureDraggingState: true })
+        // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
+    })
+
     const enhancedProps = {...props, frameRef, dndFrameRef}
 
+    // return <>
+    // {isDragging && (<>
+    //     <DnDCellDragPreview 
+    //         ref = {dndCellDragPreviewRef}
+    //         sourceElement = {frameRef.current}
+    //     />
+    //      <DnDDragLayer itemID = {itemID} index = {index}/>
+    //      </>)
+
+    // }
+    //  <CellFrame {...enhancedProps}/>
+    //  </>
     return <>
-    {isDragging && 
-        <DnDCellDragPreview 
-            ref = {previewRef}
-            sourceElement = {frameRef.current}
-        />}
-     <CellFrame {...enhancedProps}/>
-     </>
-    // return <CellFrame {...enhancedProps}/>
+        <CellFrame {...enhancedProps}/>
+        {isDragging && <DnDDragLayer itemID = {itemID} index = {index}/>}
+    </>
 
 }
 
@@ -627,7 +683,7 @@ const getFrameStyles =
 }
 
 const getContentHolderStyles = (layout,orientation,cellMinWidth, cellMinHeight ) => {
-    let styles:React.CSSProperties = {}
+    let styles:CSSProperties = {}
     if (layout == 'uniform') {
         styles = {
             inset:'0px',
