@@ -78,27 +78,30 @@ export const CellFrameController = props => {
 }
 
 
-// for react-dnd previewRef. Useless.
-// const DnDCellDragPreview = (props) => {
+// for react-dnd previewRef. shows black stripe ad selected position
+const DnDCellDragPreview = (props) => {
 
-//     const {sourceElement} = props
-//     const styles = useMemo(()=>{
-//         const boundingRect = sourceElement.getBoundingClientRect()
-//         return {
-//             position:'fixed',
-//             top: boundingRect.y,
-//             left: boundingRect.x,
-//             height:sourceElement.offsetHeight + 'px',
-//             width:'3px',
-//             border:'3px solid black',
-//         } as React.CSSProperties
+    const {sourceElement} = props
+    const styles = useMemo(()=>{
+        const boundingRect = sourceElement.getBoundingClientRect()
+        const {x,y,width,height} = boundingRect
+        // console.log('x,y,width,height',x,y,width,height)
+        return {
+            zIndex:5,
+            position:'fixed',
+            top: y + 'px',
+            left: (x - 3) + 'px',
+            height:sourceElement.offsetHeight + 'px',
+            width:'3px',
+            border:'3px solid black',
+        } as React.CSSProperties
 
-//     },[])
+    },[])
 
-//     return <div style = {styles}>
-//     </div>
+    return <div style = {styles}>
+    </div>
 
-// }
+}
 
 // HoC for DnD functionality; requires frameRef
 const DndCellFrame = (props) => {
@@ -107,8 +110,8 @@ const DndCellFrame = (props) => {
 
     const frameRef = useRef(null)
 
-    // const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
-    const [ { isDragging }, dndFrameRef ] = useDrag(() => {
+    const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
+    // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
         // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
         return {
         type:'Cell',
@@ -124,15 +127,15 @@ const DndCellFrame = (props) => {
 
     const enhancedProps = {...props, frameRef, dndFrameRef}
 
-    // return <>
-    // {isDragging && 
-    //     <DnDCellDragPreview 
-    //         ref = {previewRef}
-    //         sourceElement = {frameRef.current}
-    //     />}
-    //  <CellFrame {...enhancedProps}/>
-    //  </>
-    return <CellFrame {...enhancedProps}/>
+    return <>
+    {isDragging && 
+        <DnDCellDragPreview 
+            ref = {previewRef}
+            sourceElement = {frameRef.current}
+        />}
+     <CellFrame {...enhancedProps}/>
+     </>
+    // return <CellFrame {...enhancedProps}/>
 
 }
 
