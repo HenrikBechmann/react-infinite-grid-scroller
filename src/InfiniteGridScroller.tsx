@@ -429,8 +429,8 @@ const InfiniteGridScroller = (props) => {
     if (typeof usePlaceholder != 'boolean') usePlaceholder = true
     if (typeof useScrollTracker != 'boolean') useScrollTracker = true
 
-    // for mount version
     const 
+        // for mount version
         scrollerSessionIDRef = useRef(null),
         scrollerID = scrollerSessionIDRef.current,
 

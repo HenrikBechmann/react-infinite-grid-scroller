@@ -77,16 +77,44 @@ export const CellFrameController = props => {
 
 }
 
+
+// for react-dnd previewRef. Useless.
+// const DnDCellDragPreview = (props) => {
+
+//     const {sourceElement} = props
+//     const styles = useMemo(()=>{
+//         const boundingRect = sourceElement.getBoundingClientRect()
+//         return {
+//             position:'fixed',
+//             top: boundingRect.y,
+//             left: boundingRect.x,
+//             height:sourceElement.offsetHeight + 'px',
+//             width:'3px',
+//             border:'3px solid black',
+//         } as React.CSSProperties
+
+//     },[])
+
+//     return <div style = {styles}>
+//     </div>
+
+// }
+
 // HoC for DnD functionality; requires frameRef
 const DndCellFrame = (props) => {
 
-    const { itemID } = props
+    const { itemID, index } = props
 
-    const [ { isDragging }, frameRef ] = useDrag(() => {
+    const frameRef = useRef(null)
+
+    // const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
+    const [ { isDragging }, dndFrameRef ] = useDrag(() => {
+        // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
         return {
         type:'Cell',
         id:itemID,
         collect: monitor => {
+            // console.log('monitor drag: itemID, index, isDragging','-'+itemID+'-', '+' + index + '+', !!monitor.isDragging())
             return {
                 isDragging:!!monitor.isDragging()
             }
@@ -94,17 +122,29 @@ const DndCellFrame = (props) => {
         canDrag:true,
     }},[itemID])
 
-    const enhancedProps = {...props,frameRef}
+    const enhancedProps = {...props, frameRef, dndFrameRef}
 
+    // return <>
+    // {isDragging && 
+    //     <DnDCellDragPreview 
+    //         ref = {previewRef}
+    //         sourceElement = {frameRef.current}
+    //     />}
+    //  <CellFrame {...enhancedProps}/>
+    //  </>
     return <CellFrame {...enhancedProps}/>
+
 }
 
 // provide frameRef source when not required for DnD
 const CellFrameWrapper = (props) => {
 
+    const dndFrameRef = (element) => {
+        //no-op
+    }
     const frameRef = useRef(null)
 
-    const enhancedProps = {...props,frameRef}
+    const enhancedProps = {...props,dndFrameRef, frameRef}
 
     return <CellFrame {...enhancedProps}/>
 }
@@ -133,6 +173,7 @@ const CellFrame = ({
     gridstartstyle,
     parentframeRef,
     frameRef, // DOM ref used internally, and for DnD when invoked
+    dndFrameRef,
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -508,7 +549,10 @@ const CellFrame = ({
     // Note: the contentholder type layer is included to provide an anchor for the triggerlines.
     return <div 
 
-        ref = { frameRef } 
+        ref = { r => {
+            dndFrameRef(r)
+            frameRef.current = r
+        } } 
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
