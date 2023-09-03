@@ -41,12 +41,12 @@
   "dependencies": {
     "react-error-boundary": "^4.0.4",
     "react-reverse-portal": "^2.0.1",
-    "requestidlecallback": "^0.3.0"
-  },
-  "peerDependencies": {
+    "requestidlecallback": "^0.3.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
-    "react-dnd-touch-backend": "^16.0.1",
+    "react-dnd-touch-backend": "^16.0.1"
+  },
+  "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },

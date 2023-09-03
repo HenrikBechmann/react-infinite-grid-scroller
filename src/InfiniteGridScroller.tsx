@@ -32,6 +32,28 @@ import React, { useEffect, useState, useCallback, useRef, useContext } from 'rea
 
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import {TouchBackend } from 'react-dnd-touch-backend'
+
+const ismobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
+const DndBackend = ismobile?TouchBackend:HTML5Backend
+
+const hasNative =
+  document && (document['elementsFromPoint'] || document['msElementsFromPoint'])
+
+function getDropTargetElementsAtPoint(x, y, dropTargets) {
+  return dropTargets.filter((t) => {
+    const rect = t.getBoundingClientRect()
+    return (
+      x >= rect.left && x <= rect.right && y <= rect.bottom && y >= rect.top
+    )
+  })
+}
+
+// use custom function only if elementsFromPoint is not supported
+const backendOptions = {
+  getDropTargetElementsAtPoint: !hasNative && getDropTargetElementsAtPoint
+}
 
 // defensive
 import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
@@ -84,7 +106,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     if (!dndContext.dnd) dndContext.dnd = true
 
-    return <DndProvider backend={HTML5Backend}>
+    return <DndProvider backend={DndBackend} options = {backendOptions}>
         <InfiniteGridScroller {...props} />
     </DndProvider>
 
