@@ -58,7 +58,8 @@ import { DndContext } from './InfiniteGridScroller'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
-// import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz48.svg"
+import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
+import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 
 const DragIcon = props => {
 
