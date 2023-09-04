@@ -77,8 +77,6 @@ const DragIcon = props => {
             border:'gray solid 1px',
             borderRadius:'5px',
             margin:'3px 0 0 3px',
-            height:'26px',
-            width:'26px',
         })
     return <div style = {iconstyles.current}>
         <img src={dragicon} />
