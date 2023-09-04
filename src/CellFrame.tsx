@@ -56,6 +56,7 @@ import { DndContext } from './InfiniteGridScroller'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
+// import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz48.svg"
 
 const defaultPlaceholderMessages = {
     loading:'(loading...)',
@@ -63,6 +64,25 @@ const defaultPlaceholderMessages = {
     null:'end of list',
     undefined:'host returned "undefined"',
     invalid:'invalid React element',
+}
+
+const DragIcon = props => {
+
+    const iconstyles = useRef<CSSProperties>(
+        {
+            position:'absolute',
+            zIndex:5,
+            backgroundColor:'white',
+            opacity:0.5,
+            border:'gray solid 1px',
+            borderRadius:'5px',
+            margin:'3px 0 0 3px',
+            height:'26px',
+            width:'26px',
+        })
+    return <div style = {iconstyles.current}>
+        <img src={dragicon} />
+    </div>
 }
 
 // called to choose between dnd or no dnd for CellFrame
@@ -623,10 +643,9 @@ const CellFrame = ({
         style = { stylesRef.current }
 
     >
-
-        <img style = {{position:'absolute',zIndex:5}} src={dragicon} />
         {(frameState != 'setup')?
             (<div data-type = 'contentholder' style = {holderStylesRef.current}> 
+                <DragIcon/>
                 {((frameState != 'ready')?
                 placeholderRef.current:
                 <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
