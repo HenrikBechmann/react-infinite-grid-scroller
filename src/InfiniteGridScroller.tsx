@@ -97,7 +97,7 @@ let globalScrollerID = 0
 
 // -----------------[ Drag and drop option support ]---------------------
 
-export const DndContext = React.createContext({dnd:false}) // inform children
+export const DndContext = React.createContext({dnd:false,suspended:false}) // inform children
 
 // wrapper for Dnd provider
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
