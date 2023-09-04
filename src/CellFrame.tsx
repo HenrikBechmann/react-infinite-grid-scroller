@@ -55,6 +55,8 @@ import { DndContext } from './InfiniteGridScroller'
 
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
+import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
+
 const defaultPlaceholderMessages = {
     loading:'(loading...)',
     retrieving:'(retrieving from cache)',
@@ -190,7 +192,9 @@ const DndCellFrame = (props) => {
     //  </>
     return <>
         <CellFrame {...enhancedProps}/>
-        {isDragging && <DnDDragLayer itemID = {itemID} index = {index}/>}
+        {isDragging && 
+            <DnDDragLayer itemID = {itemID} index = {index}/>
+        }
     </>
 
 }
@@ -620,6 +624,7 @@ const CellFrame = ({
 
     >
 
+        <img style = {{position:'absolute',zIndex:5}} src={dragicon} />
         {(frameState != 'setup')?
             (<div data-type = 'contentholder' style = {holderStylesRef.current}> 
                 {((frameState != 'ready')?
