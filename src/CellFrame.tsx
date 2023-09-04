@@ -51,20 +51,14 @@ import Placeholder from './cellframe/Placeholder' // default
 
 import { CradleContext } from './Cradle'
 
+// =====================[ dnd support ]====================
+
 import { DndContext } from './InfiniteGridScroller'
 
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 // import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz48.svg"
-
-const defaultPlaceholderMessages = {
-    loading:'(loading...)',
-    retrieving:'(retrieving from cache)',
-    null:'end of list',
-    undefined:'host returned "undefined"',
-    invalid:'invalid React element',
-}
 
 const DragIcon = props => {
 
@@ -99,6 +93,7 @@ export const CellFrameController = props => {
     }
 
 }
+
 const DnDDragLayer = (props) => {
 
     const {itemID, index} = props
@@ -141,29 +136,29 @@ const DnDDragLayer = (props) => {
 }
 
 // for react-dnd previewRef. shows black stripe ad selected position
-const DnDCellDragPreview = (props) => {
+// const DnDCellDragPreview = (props) => {
 
-    const {sourceElement} = props
-    const styles = useMemo(()=>{
-        const boundingRect = sourceElement.getBoundingClientRect()
-        const {x,y,width,height} = boundingRect
-        // console.log('x,y,width,height',x,y,width,height)
-        return {
-            zIndex:5,
-            position:'fixed',
-            top: y + 'px',
-            left: (x - 3) + 'px',
-            height:sourceElement.offsetHeight + 'px',
-            width:'3px',
-            border:'3px solid black',
-        } as CSSProperties
+//     const {sourceElement} = props
+//     const styles = useMemo(()=>{
+//         const boundingRect = sourceElement.getBoundingClientRect()
+//         const {x,y,width,height} = boundingRect
+//         // console.log('x,y,width,height',x,y,width,height)
+//         return {
+//             zIndex:5,
+//             position:'fixed',
+//             top: y + 'px',
+//             left: (x - 3) + 'px',
+//             height:sourceElement.offsetHeight + 'px',
+//             width:'3px',
+//             border:'3px solid black',
+//         } as CSSProperties
 
-    },[])
+//     },[])
 
-    return <div style = {styles}>
-    </div>
+//     return <div style = {styles}>
+//     </div>
 
-}
+// }
 
 // HoC for DnD functionality; requires frameRef
 const DndCellFrame = (props) => {
@@ -225,11 +220,22 @@ const CellFrameWrapper = (props) => {
     }
     const frameRef = useRef(null)
 
-    const enhancedProps = {...props,dndFrameRef, frameRef}
+    const enhancedProps = {...props, dndFrameRef, frameRef}
 
     return <CellFrame {...enhancedProps}/>
+} 
+
+// =================[ end of dnd support ]=================
+
+const defaultPlaceholderMessages = {
+    loading:'(loading...)',
+    retrieving:'(retrieving from cache)',
+    null:'end of list',
+    undefined:'host returned "undefined"',
+    invalid:'invalid React element',
 }
 
+// core component
 const CellFrame = ({
     orientation, 
     cellHeight, 
