@@ -63,9 +63,34 @@ import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 
 const DragIcon = props => {
 
+    const { itemID, index } = props
+
+    const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
+    // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
+        // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
+        return {
+        type:'Cell',
+
+        item:itemID,
+        collect: monitor => {
+            // console.log('monitor drag: itemID, index, isDragging','-'+itemID+'-', '+' + index + '+', !!monitor.isDragging())
+            return {
+                isDragging:!!monitor.isDragging()
+            }
+        },
+        canDrag:true,
+    }},[itemID])
+
+    useEffect(()=>{
+        previewRef(getEmptyImage(),{ captureDraggingState: true })
+        // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
+    })
+
     const iconstyles = useRef<CSSProperties>(
         {
             position:'absolute',
+            top:0,
+            left:0,
             zIndex:5,
             backgroundColor:'white',
             opacity:0.5,
@@ -73,8 +98,12 @@ const DragIcon = props => {
             borderRadius:'5px',
             margin:'3px 0 0 3px',
         })
-    return <div style = {iconstyles.current}>
+
+    return <div ref = { dndFrameRef } style = {iconstyles.current}>
         <img src={dragicon} />
+        {isDragging && 
+            <DnDDragLayer itemID = {itemID} index = {index}/>
+        }
     </div>
 }
 
@@ -169,28 +198,28 @@ const DndCellFrame = (props) => {
     const frameRef = useRef(null)
     const dndCellDragPreviewRef = useRef(null)
 
-    const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
-    // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
-        // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
-        return {
-        type:'Cell',
+    // const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
+    // // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
+    //     // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
+    //     return {
+    //     type:'Cell',
 
-        item:itemID,
-        collect: monitor => {
-            // console.log('monitor drag: itemID, index, isDragging','-'+itemID+'-', '+' + index + '+', !!monitor.isDragging())
-            return {
-                isDragging:!!monitor.isDragging()
-            }
-        },
-        canDrag:true,
-    }},[itemID])
+    //     item:itemID,
+    //     collect: monitor => {
+    //         // console.log('monitor drag: itemID, index, isDragging','-'+itemID+'-', '+' + index + '+', !!monitor.isDragging())
+    //         return {
+    //             isDragging:!!monitor.isDragging()
+    //         }
+    //     },
+    //     canDrag:true,
+    // }},[itemID])
 
-    useEffect(()=>{
-        previewRef(getEmptyImage(),{ captureDraggingState: true })
-        // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
-    })
+    // useEffect(()=>{
+    //     previewRef(getEmptyImage(),{ captureDraggingState: true })
+    //     // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
+    // })
 
-    const enhancedProps = {...props, frameRef, dndFrameRef}
+    const enhancedProps = {...props, frameRef, isDnd: true}
 
     // return <>
     // {isDragging && (<>
@@ -206,22 +235,22 @@ const DndCellFrame = (props) => {
     //  </>
     return <>
         <CellFrame {...enhancedProps}/>
-        {isDragging && 
+{/*        {isDragging && 
             <DnDDragLayer itemID = {itemID} index = {index}/>
         }
-    </>
+*/}    </>
 
 }
 
 // provide frameRef source when not required for DnD
 const CellFrameWrapper = (props) => {
 
-    const dndFrameRef = (element) => {
-        //no-op
-    }
+    // const dndFrameRef = (element) => {
+    //     //no-op
+    // }
     const frameRef = useRef(null)
 
-    const enhancedProps = {...props, dndFrameRef, frameRef}
+    const enhancedProps = {...props, frameRef, isDnd:false}
 
     return <CellFrame {...enhancedProps}/>
 } 
@@ -262,7 +291,8 @@ const CellFrame = ({
     gridstartstyle,
     parentframeRef,
     frameRef, // DOM ref used internally, and for DnD when invoked
-    dndFrameRef,
+    // dndFrameRef,
+    isDnd,
 }) => {
 
     const coreConfigRef = useRef(null)
@@ -638,10 +668,7 @@ const CellFrame = ({
     // Note: the contentholder type layer is included to provide an anchor for the triggerlines.
     return <div 
 
-        ref = { r => {
-            dndFrameRef(r)
-            frameRef.current = r
-        } } 
+        ref = {frameRef}
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
@@ -650,12 +677,14 @@ const CellFrame = ({
 
     >
         {(frameState != 'setup')?
-            (<div data-type = 'contentholder' style = {holderStylesRef.current}> 
-                <DragIcon/>
+            (<><div data-type = 'contentholder' style = {holderStylesRef.current}> 
                 {((frameState != 'ready')?
                 placeholderRef.current:
                 <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
-            </div>):<div></div>}
+            </div>
+            {isDnd && <DragIcon itemID = {itemID} index = {index} />}
+            </>)
+            :<div></div>}
         {(isTriggercell?
             triggercellTriggerlinesRef.current:
             null)
