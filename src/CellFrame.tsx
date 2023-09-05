@@ -244,7 +244,8 @@ const CellFrame = ({
     cellMinHeight,
     cellMinWidth,
     layout,
-    getItem, // function provided by host
+    getItem,  // function provided by host
+    getItemPack,
     listsize, // for feedback in placeholder
     placeholder, // optionally provided by host
     itemID, // session itemID

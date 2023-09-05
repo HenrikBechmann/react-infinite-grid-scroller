@@ -628,7 +628,7 @@ export default class CacheAPI {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-            { getItem } = cradleInheritedProperties,
+            { getItem, getItemPack } = cradleInheritedProperties,
             {lowindex, highindex} = cradleInternalProperties.virtualListProps,
 
             promises = [],
@@ -658,6 +658,7 @@ export default class CacheAPI {
                         scrollerID,
                         index, 
                         getItem, 
+                        getItemPack,
                         scrollerPropertiesRef,
                         itemExceptionCallback,
                         maxListsizeInterrupt
@@ -1222,6 +1223,7 @@ export default class CacheAPI {
         scrollerID,
         index, 
         getItem, 
+        getItemPack,
         scrollerPropertiesRef, 
         itemExceptionCallback,
         maxListsizeInterrupt

@@ -100,6 +100,7 @@ const Cradle = ({
         setVirtualListRange,
         startingIndex, 
         getItem, 
+        getItemPack,
         getExpansionCount,
         placeholder, 
         placeholderMessages,
@@ -481,6 +482,7 @@ const Cradle = ({
         startingIndex, 
         runwaySize,
         getItem, 
+        getItemPack,
         getExpansionCount,
         placeholder, placeholderMessages, usePlaceholder,
         triggerlineOffset,
@@ -947,7 +949,7 @@ const Cradle = ({
 
         setCradleState('reload')
 
-    },[getItem])
+    },[getItem, getItemPack])
 
     // pivot triggered on change of orientation
     useEffect(()=> {

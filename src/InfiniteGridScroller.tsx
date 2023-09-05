@@ -133,7 +133,7 @@ const InfiniteGridScroller = (props) => {
         getItem, // required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
-
+        getItemPack, // returns a simple object with item components: content, profile, options, dragText
         // grid specs:
         orientation = 'vertical', // vertical or horizontal
         gap = 0, // space between grid cells
@@ -175,7 +175,7 @@ const InfiniteGridScroller = (props) => {
     } = props
 
     let isMinimalPropsFail = false
-    if (!(cellWidth && cellHeight && getItem )) {
+    if (!(cellWidth && cellHeight && (getItem || getItemPack) )) {
         console.log('RIGS: cellWidth, cellHeight, and getItem are required')
         isMinimalPropsFail = true
     }
@@ -668,6 +668,7 @@ const InfiniteGridScroller = (props) => {
                     userCallbacks = { callbacksRef.current }
                     startingIndex = { startingIndex }
                     getItem = { getItem }
+                    getItemPack = { getItemPack }
                     getExpansionCount = { getExpansionCount }
                     placeholder = { placeholder }
                     placeholderMessages = { placeholderMessagesRef.current }
