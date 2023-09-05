@@ -63,7 +63,7 @@ import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 
 const DragIcon = props => {
 
-    const { itemID, index } = props
+    const { itemID, index, frameRef} = props
 
     const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
     // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
@@ -86,23 +86,29 @@ const DragIcon = props => {
         // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
     })
 
-    const iconstyles = useRef<CSSProperties>(
+    const iconstylesRef = useRef<CSSProperties>(
+        {
+            opacity:0.75
+        })
+
+
+    const dragiconstylesRef = useRef<CSSProperties>(
         {
             position:'absolute',
             top:0,
             left:0,
-            zIndex:5,
-            backgroundColor:'white',
-            opacity:0.5,
+            // zIndex:1,
+            // backgroundColor:'white',
+            // opacity:0.5,
             border:'gray solid 1px',
             borderRadius:'5px',
-            margin:'3px 0 0 3px',
+            margin:'3px',
         })
 
-    return <div ref = { dndFrameRef } style = {iconstyles.current}>
-        <img src={dragicon} />
+    return <div data-type = 'dragicon' ref = { dndFrameRef } style = {dragiconstylesRef.current}>
+        <img style = {iconstylesRef.current} src={dragicon} />
         {isDragging && 
-            <DnDDragLayer itemID = {itemID} index = {index}/>
+            <DnDDragBar itemID = {itemID} index = {index}/>
         }
     </div>
 }
@@ -124,7 +130,7 @@ export const CellFrameController = props => {
 
 }
 
-const DnDDragLayer = (props) => {
+const DnDDragBar = (props) => {
 
     const {itemID, index} = props
 
@@ -137,28 +143,68 @@ const DnDDragLayer = (props) => {
             };
         })
 
+    const dragiconholderstylesRef = useRef<CSSProperties>(
+        {
+            float:'left',
+            top:0,
+            left:0,
+            border:'gray solid 1px',
+            borderRadius:'5px',
+            margin:'3px',
+        })
+
+    const modeiconholderstylesRef = useRef<CSSProperties>(
+        {
+            position:'absolute',
+            bottom:'-12px',
+            opacity:'!important 1',
+            right:0,
+            backgroundColor:'whitesmoke',
+            border:'gray solid 1px',
+            borderRadius:'3px',
+            padding:'2px',
+            margin:'3px',
+            height:'20px',
+            width:'20px'
+        })
+
+    const iconstylesRef = useRef<CSSProperties>(
+        {
+            opacity:0.75
+        })
+
     // console.log('itemID, index, isDragging', itemID, index, isDragging)
 
     return (
         isDragging && currentOffset
-            ? <div style={{ 
+            ? <div data-type = 'dragbar' style={{ 
                   // functional
-                  zIndex:5,
+                  zIndex:10,
                   transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
                   position: 'fixed',
                   top: 0,
                   left: 0,
                   pointerEvents: 'none', 
-            
+                  opacity:0.75,
+                  backgroundColor:'whitesmoke',
+
                   // design only
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: '150px',
-                  height: '50px',
-                  border: '1px solid red',
+                  // display: 'flex',
+                  // alignItems: 'center',
+                  // justifyContent: 'center',
+                  width: '200px',
+                  fontSize:'.75em',
+                  // height: '50px',
+                  border: '1px solid black',
+                  borderRadius:'5px',
               }}>
+                <div style = {dragiconholderstylesRef.current}>
+                    <img style = {iconstylesRef.current} src={dragicon} />
+                </div>
                   Dragging itemID {itemID}, index {index} 
+                <div style = {modeiconholderstylesRef.current}>
+                    <img style = {iconstylesRef.current} src={moveicon} />
+                </div>
               </div> 
             : null
         )
@@ -193,10 +239,10 @@ const DnDDragLayer = (props) => {
 // HoC for DnD functionality; requires frameRef
 const DndCellFrame = (props) => {
 
-    const { itemID, index } = props
+    // const { itemID, index } = props
 
-    const frameRef = useRef(null)
-    const dndCellDragPreviewRef = useRef(null)
+    // const frameRef = useRef(null)
+    // const dndCellDragPreviewRef = useRef(null)
 
     // const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
     // // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
@@ -219,7 +265,7 @@ const DndCellFrame = (props) => {
     //     // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
     // })
 
-    const enhancedProps = {...props, frameRef, isDnd: true}
+    const enhancedProps = {...props, isDnd: true}
 
     // return <>
     // {isDragging && (<>
@@ -248,9 +294,9 @@ const CellFrameWrapper = (props) => {
     // const dndFrameRef = (element) => {
     //     //no-op
     // }
-    const frameRef = useRef(null)
+    // const frameRef = useRef(null)
 
-    const enhancedProps = {...props, frameRef, isDnd:false}
+    const enhancedProps = {...props, isDnd:false}
 
     return <CellFrame {...enhancedProps}/>
 } 
@@ -290,7 +336,7 @@ const CellFrame = ({
     usePlaceholder,
     gridstartstyle,
     parentframeRef,
-    frameRef, // DOM ref used internally, and for DnD when invoked
+    // frameRef, // DOM ref used internally, and for DnD when invoked
     // dndFrameRef,
     isDnd,
 }) => {
@@ -302,6 +348,8 @@ const CellFrame = ({
         cellWidth,
         cellHeight
     }
+
+    const frameRef = useRef(null)
 
     // ----------------------[ setup ]----------------------
 
@@ -682,7 +730,7 @@ const CellFrame = ({
                 placeholderRef.current:
                 <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
             </div>
-            {isDnd && <DragIcon itemID = {itemID} index = {index} />}
+            {isDnd && <DragIcon itemID = {itemID} index = {index} frameRef = {frameRef} />}
             </>)
             :<div></div>}
         {(isTriggercell?
