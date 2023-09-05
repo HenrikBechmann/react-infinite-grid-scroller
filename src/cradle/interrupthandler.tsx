@@ -35,7 +35,7 @@ export default class InterruptHandler {
         }
 
         const 
-            viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+            viewportElement = this.cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
 
             viewportBoundingRect = viewportElement.getBoundingClientRect()
 
@@ -197,7 +197,7 @@ export default class InterruptHandler {
 
         // console.log('repositioningRequired',this.signals.repositioningRequired)
 
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportContextProperties = this.cradleParameters.viewportContextPropertiesRef.current
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
@@ -212,16 +212,16 @@ export default class InterruptHandler {
                         'renderupdatedcontent','finishupdatedcontent',
                         'finishviewportresize'].includes(cradleState) &&
 
-                    !ViewportContextProperties.isResizing
+                    !viewportContextProperties.isResizing
 
                 ) 
             {
                 
-                const viewportElement = ViewportContextProperties.elementRef.current
+                const viewportElement = viewportContextProperties.elementRef.current
 
                 if (!viewportElement) { // defensive; shouldn't happen
                     console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback (scrollerID)',
-                        scrollerID,ViewportContextProperties)
+                        scrollerID,viewportContextProperties)
                     return
                 }
 
@@ -270,10 +270,10 @@ export default class InterruptHandler {
             this.cradleIntersect.disconnected = true
         },
         createObserver:() => {
-            const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+            const viewportContextProperties = this.cradleParameters.viewportContextPropertiesRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
-                {root:ViewportContextProperties.elementRef.current, threshold:0}
+                {root:viewportContextProperties.elementRef.current, threshold:0}
             )    
             return this.cradleIntersect.observer
         }
@@ -301,10 +301,10 @@ export default class InterruptHandler {
             this.triggerlinesIntersect.disconnected = true
         },
         createObserver:() => {
-            const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+            const viewportContextProperties = this.cradleParameters.viewportContextPropertiesRef.current
             this.triggerlinesIntersect.observer = new IntersectionObserver(
                 this.triggerlinesIntersect.callback,
-                {root:ViewportContextProperties.elementRef.current, threshold:0}
+                {root:viewportContextProperties.elementRef.current, threshold:0}
             )
             return this.triggerlinesIntersect.observer
         }

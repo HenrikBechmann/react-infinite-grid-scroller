@@ -53,8 +53,8 @@ const Viewport = ({
 
     const scrollTrackerAPIRef = useRef(null)
 
-    // ViewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
-    const ViewportContextPropertiesRef = useRef(
+    // viewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
+    const viewportContextPropertiesRef = useRef(
         {
 
             isResizing:false, 
@@ -118,10 +118,10 @@ const Viewport = ({
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
 
-            ViewportContextPropertiesRef.current.isResizing = isResizingRef.current = true 
+            viewportContextPropertiesRef.current.isResizing = isResizingRef.current = true 
 
             // new object creation triggers a realtime interrupt message to cradle through context
-            ViewportContextPropertiesRef.current = {...ViewportContextPropertiesRef.current}
+            viewportContextPropertiesRef.current = {...viewportContextPropertiesRef.current}
 
             if (isMountedRef.current) setViewportState('resizing')
 
@@ -177,10 +177,10 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // update ViewportContextPropertiesRef
-    ViewportContextPropertiesRef.current = useMemo(() => {
+    // update viewportContextPropertiesRef
+    viewportContextPropertiesRef.current = useMemo(() => {
 
-        if (viewportState == 'setup') return ViewportContextPropertiesRef.current
+        if (viewportState == 'setup') return viewportContextPropertiesRef.current
 
         const localViewportData = {
             elementRef:viewportElementRef,
@@ -188,7 +188,7 @@ const Viewport = ({
         }
 
         // trigger context change with new object
-        const viewportdataobject = {...ViewportContextPropertiesRef.current, ...localViewportData}
+        const viewportdataobject = {...viewportContextPropertiesRef.current, ...localViewportData}
 
         return  viewportdataobject
 
@@ -210,7 +210,7 @@ const Viewport = ({
 
     // ----------------------[ render ]--------------------------------
 
-    return <ViewportContext.Provider value = { ViewportContextPropertiesRef.current }>
+    return <ViewportContext.Provider value = { viewportContextPropertiesRef.current }>
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }

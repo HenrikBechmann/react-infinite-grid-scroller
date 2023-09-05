@@ -73,6 +73,8 @@ import React, {
 
 import { ViewportContext } from './Viewport'
 
+import { DndContext } from './InfiniteGridScroller'
+
 // support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
 import StateHandler from './cradle/statehandler'
@@ -149,10 +151,12 @@ const Cradle = ({
     } = gridSpecs
 
     // get viewport context
-    const ViewportContextProperties = useContext(ViewportContext)
+    const viewportContextProperties = useContext(ViewportContext)
 
-    const ViewportContextPropertiesRef = useRef(null)
-    ViewportContextPropertiesRef.current = ViewportContextProperties // for closures
+    const dndContext = useContext(DndContext)
+
+    const viewportContextPropertiesRef = useRef(null)
+    viewportContextPropertiesRef.current = viewportContextProperties // for closures
 
     // flags
     const 
@@ -167,7 +171,7 @@ const Cradle = ({
 
     //  viewport dimensions and cached state
     const getViewportDimensions = () => {
-        const viewportElement = ViewportContextProperties.elementRef.current
+        const viewportElement = viewportContextProperties.elementRef.current
         return {
             width:viewportElement.offsetWidth,
             height:viewportElement.offsetHeight
@@ -503,6 +507,7 @@ const Cradle = ({
         virtualListProps,
         cradleContentProps,
         cache,
+        dnd:dndContext.dnd,
         cacheMax,
         startingIndex,
         scrollerID,
@@ -538,7 +543,7 @@ const Cradle = ({
     // cradle parameters MASTER BUNDLE
     const cradleParameters = {
         handlersRef,
-        ViewportContextPropertiesRef,
+        viewportContextPropertiesRef,
         cradleInheritedPropertiesRef, 
         scrollerPropertiesRef,
         cradleInternalPropertiesRef, 
@@ -591,7 +596,7 @@ const Cradle = ({
 
         if (trackingBlockScrollPos !== null) {
 
-            const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+            const viewportElement = viewportContextPropertiesRef.current.elementRef.current
 
             let scrollOptions
             if (cradlePositionData.blockScrollProperty == 'scrollTop') {
@@ -725,7 +730,7 @@ const Cradle = ({
     // initialize window scroll listeners
     useEffect(() => {
 
-        const viewportElement = ViewportContextPropertiesRef.current.elementRef.current
+        const viewportElement = viewportContextPropertiesRef.current.elementRef.current
         viewportElement.addEventListener('scroll',scrollHandler.onScroll)
 
         return () => {
@@ -886,7 +891,7 @@ const Cradle = ({
 
         }
 
-        if ((ViewportContextPropertiesRef.current.isResizing) && 
+        if ((viewportContextPropertiesRef.current.isResizing) && 
                 (cradleStateRef.current != 'viewportresizing')) {
 
             interruptHandler.pauseInterrupts()
@@ -896,13 +901,13 @@ const Cradle = ({
         }
 
         // complete viewportresizing mode
-        if (!ViewportContextPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
+        if (!viewportContextPropertiesRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
 
             setCradleState('finishviewportresize')
 
         }
 
-    },[ViewportContextPropertiesRef.current.isResizing])
+    },[viewportContextPropertiesRef.current.isResizing])
 
     // reconfigure for changed size parameters
     useEffect(()=>{
@@ -1190,7 +1195,7 @@ const Cradle = ({
 
                     const {lowindex, size:listsize } = cradleInternalPropertiesRef.current.virtualListProps
 
-                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.startReposition(
+                    viewportContextPropertiesRef.current.scrollTrackerAPIRef.current.startReposition(
                         layoutHandler.cradlePositionData.targetAxisReferencePosition, 
                         lowindex, listsize
                     )
@@ -1259,7 +1264,7 @@ const Cradle = ({
 
                 if (cradleState == 'finishreposition') {
 
-                    ViewportContextPropertiesRef.current.scrollTrackerAPIRef.current.finishReposition()
+                    viewportContextPropertiesRef.current.scrollTrackerAPIRef.current.finishReposition()
                     scrollHandler.calcImpliedRepositioningData('finishreposition')
                     
                 }

@@ -279,7 +279,7 @@ export default class ServiceHandler {
 
             { cradleParameters } = this,
 
-            viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+            viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
 
             scrollblockElement = viewportElement.firstChild,
 
@@ -342,7 +342,7 @@ export default class ServiceHandler {
 
             { cradleParameters } = this,
 
-            viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+            viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
 
             scrollblockElement = viewportElement.firstChild,
 

@@ -205,12 +205,12 @@ export default class ContentHandler {
 
             { cradleParameters } = this,
 
-            ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+            viewportContextProperties = cradleParameters.viewportContextPropertiesRef.current,
             cradleHandlers = cradleParameters.handlersRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-            viewportElement = ViewportContextProperties.elementRef.current,
+            viewportElement = viewportContextProperties.elementRef.current,
 
             {
 
@@ -580,7 +580,7 @@ export default class ContentHandler {
 
             } = this,
 
-            viewportElement = cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+            viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             cradleHandlers = cradleParameters.handlersRef.current,
@@ -965,7 +965,7 @@ export default class ContentHandler {
             // acquire repositories
             { cradleParameters } = this,
             cradleHandlers = cradleParameters.handlersRef.current,
-            ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+            viewportContextProperties = cradleParameters.viewportContextPropertiesRef.current,
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
@@ -994,7 +994,7 @@ export default class ContentHandler {
             } = cradlePositionData,
 
             // element references...
-            viewportElement = ViewportContextProperties.elementRef.current,
+            viewportElement = viewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild,
             headGridElement = cradleElements.headRef.current,
             tailGridElement = cradleElements.tailRef.current,
@@ -1178,9 +1178,9 @@ export default class ContentHandler {
             const
                 { cradleParameters } = this,
                 // cradleHandlers = cradleParameters.handlersRef.current,
-                ViewportContextProperties = cradleParameters.ViewportContextPropertiesRef.current,
+                viewportContextProperties = cradleParameters.viewportContextPropertiesRef.current,
                 // { serviceHandler } = cradleHandlers,
-                viewportElement = ViewportContextProperties.elementRef.current,
+                viewportElement = viewportContextProperties.elementRef.current,
                 scrollblockElement = viewportElement.firstChild,
                 cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
 

@@ -184,8 +184,8 @@ export default class LayoutHandler {
     public restoreBaseScrollblockConfig = () => {
 
         const 
-            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
-            viewportElement = ViewportContextProperties.elementRef.current,
+            viewportContextProperties = this.cradleParameters.viewportContextPropertiesRef.current,
+            viewportElement = viewportContextProperties.elementRef.current,
             scrollblockElement = viewportElement.firstChild,
 
             { 
