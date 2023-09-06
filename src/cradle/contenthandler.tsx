@@ -31,7 +31,7 @@
 import React from 'react'
 
 import { 
-    calculateContentListRequirements,
+    calculateContentParameters,
     calculateShiftSpecs,
     allocateContentList,
     deletePortals,
@@ -336,7 +336,7 @@ export default class ContentHandler {
             // target scrollPos by pixels
             targetPixelOffsetViewportFromScrollblock:pixelOffsetViewportFromScrollblock,
 
-        } = calculateContentListRequirements({
+        } = calculateContentParameters({
 
                 // pixel
                 baseRowPixelLength,

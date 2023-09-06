@@ -5,7 +5,7 @@
     This module supports the contenthandler module. The functions in this module perform
     the detailed calculations and processes required by the contenthandler.
 
-    calculateContentListRequirements is called by the contenthandler's setCradleContent function.
+    calculateContentParameters is called by the contenthandler's setCradleContent function.
 
     generateShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
     function. 
@@ -23,7 +23,7 @@ import { isSafariIOS } from '../InfiniteGridScroller'
 
 // ======================[ for setCradleContent ]===========================
 
-export const calculateContentListRequirements = ({ // called from setCradleContent only
+export const calculateContentParameters = ({ // called from setCradleContent only
 
         // index
         targetAxisReferenceIndex, // from user, or from pivot
