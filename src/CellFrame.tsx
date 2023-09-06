@@ -102,7 +102,7 @@ const CellFrameWrapper = (props) => {
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index, frameRef} = props
+    const { itemID, index } = props
 
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
@@ -151,10 +151,11 @@ const DragIcon = props => {
         })
 
     return <div data-type = 'dragicon' ref = { sourceConnector } style = {dragiconstylesRef.current}>
+
         <img style = {iconstylesRef.current} src={dragicon} />
-        {isDragging && // drag continues here
-            <DnDDragBar itemID = {itemID} index = {index}/>
-        }
+
+        {isDragging && <DnDDragBar itemID = {itemID} index = {index}/>}
+
     </div>
 }
 
@@ -228,10 +229,13 @@ const DnDDragBar = (props) => {
 
     return (isDragging && currentOffset
         ?<div data-type = 'dragbar' style={dragbarstyles}>
+
             <div style = {dragiconholderstylesRef.current}>
                 <img style = {iconstylesRef.current} src={dragicon} />
             </div>
+
                 {dragText}
+                
             <div style = {modeiconholderstylesRef.current}>
                 <img style = {iconstylesRef.current} src={moveicon} />
             </div>
@@ -674,7 +678,7 @@ const CellFrame = ({
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {isDnd && <DragIcon itemID = {itemID} index = {index} frameRef = {frameRef} />}
+                {isDnd && <DragIcon itemID = {itemID} index = {index} />}
 
             </>
 
