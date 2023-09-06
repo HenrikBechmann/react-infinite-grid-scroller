@@ -41,8 +41,6 @@ import React, {
 
 import type { CSSProperties } from 'react'
 
-import { useDrag, DragLayerMonitor, useDragLayer } from 'react-dnd'
-
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // polyfill if needed
 
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
@@ -53,9 +51,10 @@ import { CradleContext } from './Cradle'
 
 // =====================[ dnd support ]====================
 
-import { DndContext } from './InfiniteGridScroller'
-
+import { useDrag, useDragLayer, useDrop, DragSourceMonitor, DragLayerMonitor, DropTargetMonitor} from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
+
+import { DndContext } from './InfiniteGridScroller'
 
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
@@ -105,13 +104,13 @@ const DragIcon = props => {
 
     const { itemID, index, frameRef} = props
 
-    const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
+    const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
         type:'Cell',
 
         item:itemID,
-        collect: monitor => {
+        collect: (monitor:DragSourceMonitor) => {
 
             return {
 
@@ -125,11 +124,13 @@ const DragIcon = props => {
 
     }},[itemID])
 
+    const { isDragging } = sourceData
+
     useEffect(()=>{
 
-        previewRef(getEmptyImage(),{ captureDraggingState: true })
+        previewConnector(getEmptyImage(),{ captureDraggingState: true })
 
-    })
+    },[])
 
     const iconstylesRef = useRef<CSSProperties>(
         {
@@ -149,7 +150,7 @@ const DragIcon = props => {
             width:'32px',
         })
 
-    return <div data-type = 'dragicon' ref = { dndFrameRef } style = {dragiconstylesRef.current}>
+    return <div data-type = 'dragicon' ref = { sourceConnector } style = {dragiconstylesRef.current}>
         <img style = {iconstylesRef.current} src={dragicon} />
         {isDragging && // drag continues here
             <DnDDragBar itemID = {itemID} index = {index}/>
@@ -164,14 +165,16 @@ const DnDDragBar = (props) => {
 
     const dragText = `Dragging itemID ${itemID}, index ${index}`
 
-    const {isDragging, currentOffset, item} = useDragLayer(
+    const dragBarData = useDragLayer(
         (monitor: DragLayerMonitor) => {
             return {
                 isDragging: monitor.isDragging(),
                 currentOffset: monitor.getSourceClientOffset(),
                 item: monitor.getItem()
-            };
+            }
         })
+
+    const {isDragging, currentOffset, item} = dragBarData
 
     // static
     const dragiconholderstylesRef = useRef<CSSProperties>(
