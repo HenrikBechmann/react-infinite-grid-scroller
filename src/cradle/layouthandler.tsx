@@ -76,11 +76,17 @@ export default class LayoutHandler {
 
         this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
 
-    }
+    } // constructor
+
+    private cradleParameters
+
+    public elements
 
     public get scrollerID() { // for debug
         return this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID
     }
+
+    // control list boundary notifications
 
     public SOLSignal = false
     public EOLSignal = false
@@ -100,7 +106,7 @@ export default class LayoutHandler {
 
     }
 
-    private cradleParameters
+    // triggerline control
 
     public get triggerlineSpan() {
 
@@ -314,8 +320,6 @@ export default class LayoutHandler {
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
 
     }
-
-    public elements
 
 }
 
