@@ -110,6 +110,7 @@ const DragIcon = props => {
         type:'Cell',
 
         item:itemID,
+
         collect: (monitor:DragSourceMonitor) => {
 
             return {
@@ -130,7 +131,7 @@ const DragIcon = props => {
 
         previewConnector(getEmptyImage(),{ captureDraggingState: true })
 
-    },[])
+    }) // no dependency array here to prevent previewConnector from showing an image in list header
 
     const iconstylesRef = useRef<CSSProperties>(
         {
