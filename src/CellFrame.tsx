@@ -536,11 +536,21 @@ const CellFrame = ({
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        let returnvalue, usercontent, error
+                        let returnvalue, usercontent, itempack, error
                         // process the fetch
                         try {
 
                             usercontent = await getItem(index, itemID)
+                            /*
+
+                                itemPack = {
+                                    content
+                                    dndSourceOptions
+                                    dndTargetOptions
+                                    profile
+                                }
+                            */
+                            // itempack = await getItemPack, index, itemID, itemContext)
 
                             if (usercontent === null) returnvalue = usercontent
 

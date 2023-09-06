@@ -167,7 +167,7 @@ const InfiniteGridScroller = (props) => {
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI = null,
-        dragDropProperties = undefined, // placeholder!
+        dndOptions = undefined, // placeholder!
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
