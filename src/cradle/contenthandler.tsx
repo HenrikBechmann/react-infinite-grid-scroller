@@ -1033,7 +1033,7 @@ export default class ContentHandler {
         if (scrollHandler.isScrolling && this.gridResizeObserver) {
             this.gridResizeObserver.disconnect()
             this.gridResizeObserver = undefined
-            clearTimeout(this.resizeTimeoutID)
+            clearTimeout(this.gridResizeTimeoutID)
         }
 
         // ------------------------[ calculations ]------------------------
@@ -1157,7 +1157,7 @@ export default class ContentHandler {
 
             const tailGridElement = cradleElements.tailRef.current
 
-            this.gridResizeObserver = new ResizeObserver(this.resizeObserverCallback)
+            this.gridResizeObserver = new ResizeObserver(this.gridResizeObserverCallback)
 
             this.gridResizeObserver.observe(tailGridElement)
 
@@ -1165,15 +1165,15 @@ export default class ContentHandler {
 
     }
 
-    private resizeTimeoutID
+    private gridResizeTimeoutID
 
-    private resizeObserverCallback = () => {
+    private gridResizeObserverCallback = () => {
 
-        clearTimeout(this.resizeTimeoutID)
+        clearTimeout(this.gridResizeTimeoutID)
 
-        this.resizeTimeoutID = setTimeout(() => {
+        this.gridResizeTimeoutID = setTimeout(() => {
 
-            clearTimeout(this.resizeTimeoutID) // run once
+            clearTimeout(this.gridResizeTimeoutID) // run once
 
             const
                 { cradleParameters } = this,
