@@ -133,9 +133,9 @@ const DragIcon = props => {
 
     const iconstylesRef = useRef<CSSProperties>(
         {
+            margin:'3px',
             opacity:0.75
         })
-
 
     const dragiconstylesRef = useRef<CSSProperties>(
         {
@@ -145,6 +145,8 @@ const DragIcon = props => {
             border:'gray solid 1px',
             borderRadius:'5px',
             margin:'3px',
+            height:'32px',
+            width:'32px',
         })
 
     return <div data-type = 'dragicon' ref = { dndFrameRef } style = {dragiconstylesRef.current}>
@@ -159,6 +161,8 @@ const DragIcon = props => {
 const DnDDragBar = (props) => {
 
     const {itemID, index} = props
+
+    const dragText = `Dragging itemID ${itemID}, index ${index}`
 
     const {isDragging, currentOffset, item} = useDragLayer(
         (monitor: DragLayerMonitor) => {
@@ -194,19 +198,14 @@ const DnDDragBar = (props) => {
             width:'20px'
         })
 
-    const iconstylesRef = useRef<CSSProperties>(
+    const dragbarstyles = 
         {
-            opacity:0.75
-        })
-
-    return (isDragging && currentOffset
-        ?<div data-type = 'dragbar' style={{ 
             // functional
             zIndex:10,
-            transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
             position: 'fixed',
             top: 0,
             left: 0,
+            transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
             pointerEvents: 'none', 
             opacity:0.75,
             backgroundColor:'whitesmoke',
@@ -216,11 +215,19 @@ const DnDDragBar = (props) => {
             // height: '50px',
             border: '1px solid black',
             borderRadius:'5px',
-        }}>
+        } as CSSProperties
+
+    const iconstylesRef = useRef<CSSProperties>(
+        {
+            opacity:0.75
+        })
+
+    return (isDragging && currentOffset
+        ?<div data-type = 'dragbar' style={dragbarstyles}>
             <div style = {dragiconholderstylesRef.current}>
                 <img style = {iconstylesRef.current} src={dragicon} />
             </div>
-              Dragging itemID {itemID}, index {index} 
+                {dragText}
             <div style = {modeiconholderstylesRef.current}>
                 <img style = {iconstylesRef.current} src={moveicon} />
             </div>
