@@ -85,7 +85,7 @@ export default class ScrollHandler {
 
         }
 
-        if (scrollPositionCurrent < 0) { // for Safari
+        if (scrollPositionCurrent < 0) { // for Safari bounce
 
             return 
 

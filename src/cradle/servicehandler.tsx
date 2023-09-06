@@ -654,22 +654,23 @@ export default class ServiceHandler {
 
         if (changeMap.size == 0) return [] // nothing to do
 
-        const { cacheAPI, contentHandler, stateHandler } = 
-            this.cradleParameters.handlersRef.current
+        const 
+            { cacheAPI, contentHandler, stateHandler } = 
+                this.cradleParameters.handlersRef.current,
 
-        const { 
+            { 
 
-            itemMetadataMap, // itemID to component data, including index
-            indexToItemIDMap, // index to itemID
-            itemSet,
+                itemMetadataMap, // itemID to component data, including index
+                indexToItemIDMap, // index to itemID
+                itemSet,
 
-        } = cacheAPI 
+            } = cacheAPI,
 
-        const indexesToDeleteList = []
-        const indexesToReplaceItemIDList = []
-        const partitionItemsToReplaceList = []
-        const changeIndexToItemIDMap = new Map()
-        const errorEntriesMap = new Map()
+            indexesToDeleteList = [],
+            indexesToReplaceItemIDList = [],
+            partitionItemsToReplaceList = [],
+            changeIndexToItemIDMap = new Map(),
+            errorEntriesMap = new Map()
 
         // =====================[ PREPARE ]======================
 
@@ -754,11 +755,12 @@ export default class ServiceHandler {
 
         // -------------- filter out duplicate itemIDs ------------
 
-        const mapsize = changeIndexToItemIDMap.size
+        const 
+            mapsize = changeIndexToItemIDMap.size,
 
-        const itemIDSet = new Set(changeIndexToItemIDMap.values())
+            itemIDSet = new Set(changeIndexToItemIDMap.values()),
 
-        const itemsetsize = itemIDSet.size
+            itemsetsize = itemIDSet.size
 
         if (mapsize != itemsetsize) { // there must be duplicate itemIDs
 
@@ -800,8 +802,9 @@ export default class ServiceHandler {
 
             duplicatesToRemoveList.forEach((index)=>{
 
-                const itemID = changeIndexToItemIDMap.get(index)
-                const count = duplicateItemsMap.get(itemID)
+                const 
+                    itemID = changeIndexToItemIDMap.get(index),
+                    count = duplicateItemsMap.get(itemID)
 
                 errorEntriesMap.set(index, `target itemID ${itemID} has duplicates (${count})`)
                 changeIndexToItemIDMap.delete(index)
@@ -872,10 +875,11 @@ export default class ServiceHandler {
         // if the item's index has changed, but the original item index map still points to the item,
         //     then the index is orphaned (duplicate), and deleted
 
-        const deletedItemIDToIndexMap = new Map() // index => itemID; orphaned index
-        const deletedIndexToItemIDMap = new Map()
+        const 
+            deletedItemIDToIndexMap = new Map(), // index => itemID; orphaned index
+            deletedIndexToItemIDMap = new Map(),
 
-        const portalPartitionItemsForDeleteList = [] // hold deleted portals for deletion until after cradle synch
+            portalPartitionItemsForDeleteList = [] // hold deleted portals for deletion until after cradle synch
 
         originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
@@ -911,10 +915,11 @@ export default class ServiceHandler {
 
         // these are used to reconcile cradle cellFrames, and also for return information
         // const processedIndexList = Array.from(processedMap.keys())
-        const deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values())
-        const deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys())
-        // for return information...
-        const deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
+        const 
+            deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values()),
+            deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys()),
+            // for return information...
+            deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
 
         let modifiedIndexList = [
             ...processedIndexList,
@@ -970,8 +975,10 @@ export default class ServiceHandler {
 
         // ------------ confirm validity of arguments -------------
 
-        const isToindexInvalid = (!isInteger(tolowindex) || !isValueGreaterThanOrEqualToMinValue(tolowindex, listlowindex))
-        const isFromindexInvalid = (!isInteger(fromlowindex) || !isValueGreaterThanOrEqualToMinValue(fromlowindex, listlowindex))
+        const 
+            isToindexInvalid = (!isInteger(tolowindex) || !isValueGreaterThanOrEqualToMinValue(tolowindex, listlowindex)),
+            isFromindexInvalid = (!isInteger(fromlowindex) || !isValueGreaterThanOrEqualToMinValue(fromlowindex, listlowindex))
+
         let isHighrangeInvalid = false
 
         if ((!isFromindexInvalid)) {
@@ -1034,11 +1041,12 @@ export default class ServiceHandler {
 
         // ----------- perform cache and cradle operations -----------
 
-        const { cacheAPI, contentHandler, stateHandler } = 
-            this.cradleParameters.handlersRef.current
+        const 
+            { cacheAPI, contentHandler, stateHandler } = 
+                this.cradleParameters.handlersRef.current,
 
-        const processedIndexList = // both displaced and moved indexes
-            cacheAPI.moveIndex(tolowindex, fromlowindex, fromhighindex)
+            processedIndexList = // both displaced and moved indexes
+                cacheAPI.moveIndex(tolowindex, fromlowindex, fromhighindex)
 
         if (processedIndexList.length) {
 
@@ -1218,8 +1226,14 @@ export default class ServiceHandler {
             }
         }
 
-        const [startChangeIndex, rangeincrement, shiftedList, removedList, replaceList, portalPartitionItemsForDeleteList] = 
-            cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
+        const [
+            startChangeIndex, 
+            rangeincrement, 
+            shiftedList, 
+            removedList, 
+            replaceList, 
+            portalPartitionItemsForDeleteList] = 
+                cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 
@@ -1245,10 +1259,10 @@ export default class ServiceHandler {
 
             contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
 
-            const { content } = contentHandler
+            const 
+                { content } = contentHandler,
 
-            // const requestedSet = cacheAPI.cacheProps.requestedSet
-            const requestedSet = cacheAPI.requestedSet
+                requestedSet = cacheAPI.requestedSet
 
             const timeout = setInterval(() => { // wait until changed cache entries update the cradle
 
