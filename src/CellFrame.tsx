@@ -61,58 +61,6 @@ import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
 import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 
-const DragIcon = props => {
-
-    const { itemID, index, frameRef} = props
-
-    const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
-    // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
-        // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
-        return {
-        type:'Cell',
-
-        item:itemID,
-        collect: monitor => {
-            // console.log('monitor drag: itemID, index, isDragging','-'+itemID+'-', '+' + index + '+', !!monitor.isDragging())
-            return {
-                isDragging:!!monitor.isDragging()
-            }
-        },
-        canDrag:true,
-    }},[itemID])
-
-    useEffect(()=>{
-        previewRef(getEmptyImage(),{ captureDraggingState: true })
-        // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
-    })
-
-    const iconstylesRef = useRef<CSSProperties>(
-        {
-            opacity:0.75
-        })
-
-
-    const dragiconstylesRef = useRef<CSSProperties>(
-        {
-            position:'absolute',
-            top:0,
-            left:0,
-            // zIndex:1,
-            // backgroundColor:'white',
-            // opacity:0.5,
-            border:'gray solid 1px',
-            borderRadius:'5px',
-            margin:'3px',
-        })
-
-    return <div data-type = 'dragicon' ref = { dndFrameRef } style = {dragiconstylesRef.current}>
-        <img style = {iconstylesRef.current} src={dragicon} />
-        {isDragging && 
-            <DnDDragBar itemID = {itemID} index = {index}/>
-        }
-    </div>
-}
-
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
 
@@ -130,6 +78,84 @@ export const CellFrameController = props => {
 
 }
 
+// HoC for DnD functionality; requires frameRef
+const DndCellFrame = (props) => {
+
+    const enhancedProps = {...props, isDnd:true}
+
+    return <CellFrame {...enhancedProps}/>
+
+}
+
+// provide frameRef source when not required for DnD
+const CellFrameWrapper = (props) => {
+
+    // const dndFrameRef = (element) => {
+    //     //no-op
+    // }
+    // const frameRef = useRef(null)
+
+    const enhancedProps = {...props, isDnd:false}
+
+    return <CellFrame {...enhancedProps}/>
+} 
+
+// drag starts here
+const DragIcon = props => {
+
+    const { itemID, index, frameRef} = props
+
+    const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
+
+        return {
+        type:'Cell',
+
+        item:itemID,
+        collect: monitor => {
+
+            return {
+
+                isDragging:!!monitor.isDragging()
+
+            }
+
+        },
+
+        canDrag:true,
+
+    }},[itemID])
+
+    useEffect(()=>{
+
+        previewRef(getEmptyImage(),{ captureDraggingState: true })
+
+    })
+
+    const iconstylesRef = useRef<CSSProperties>(
+        {
+            opacity:0.75
+        })
+
+
+    const dragiconstylesRef = useRef<CSSProperties>(
+        {
+            position:'absolute',
+            top:0,
+            left:0,
+            border:'gray solid 1px',
+            borderRadius:'5px',
+            margin:'3px',
+        })
+
+    return <div data-type = 'dragicon' ref = { dndFrameRef } style = {dragiconstylesRef.current}>
+        <img style = {iconstylesRef.current} src={dragicon} />
+        {isDragging && // drag continues here
+            <DnDDragBar itemID = {itemID} index = {index}/>
+        }
+    </div>
+}
+
+// drag continues here
 const DnDDragBar = (props) => {
 
     const {itemID, index} = props
@@ -173,133 +199,38 @@ const DnDDragBar = (props) => {
             opacity:0.75
         })
 
-    // console.log('itemID, index, isDragging', itemID, index, isDragging)
+    return (isDragging && currentOffset
+        ?<div data-type = 'dragbar' style={{ 
+            // functional
+            zIndex:10,
+            transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            pointerEvents: 'none', 
+            opacity:0.75,
+            backgroundColor:'whitesmoke',
 
-    return (
-        isDragging && currentOffset
-            ? <div data-type = 'dragbar' style={{ 
-                  // functional
-                  zIndex:10,
-                  transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
-                  position: 'fixed',
-                  top: 0,
-                  left: 0,
-                  pointerEvents: 'none', 
-                  opacity:0.75,
-                  backgroundColor:'whitesmoke',
+            width: '200px',
+            fontSize:'.75em',
+            // height: '50px',
+            border: '1px solid black',
+            borderRadius:'5px',
+        }}>
+            <div style = {dragiconholderstylesRef.current}>
+                <img style = {iconstylesRef.current} src={dragicon} />
+            </div>
+              Dragging itemID {itemID}, index {index} 
+            <div style = {modeiconholderstylesRef.current}>
+                <img style = {iconstylesRef.current} src={moveicon} />
+            </div>
+        </div>
 
-                  // design only
-                  // display: 'flex',
-                  // alignItems: 'center',
-                  // justifyContent: 'center',
-                  width: '200px',
-                  fontSize:'.75em',
-                  // height: '50px',
-                  border: '1px solid black',
-                  borderRadius:'5px',
-              }}>
-                <div style = {dragiconholderstylesRef.current}>
-                    <img style = {iconstylesRef.current} src={dragicon} />
-                </div>
-                  Dragging itemID {itemID}, index {index} 
-                <div style = {modeiconholderstylesRef.current}>
-                    <img style = {iconstylesRef.current} src={moveicon} />
-                </div>
-              </div> 
-            : null
-        )
+        : null
+
+    )
 
 }
-
-// for react-dnd previewRef. shows black stripe ad selected position
-// const DnDCellDragPreview = (props) => {
-
-//     const {sourceElement} = props
-//     const styles = useMemo(()=>{
-//         const boundingRect = sourceElement.getBoundingClientRect()
-//         const {x,y,width,height} = boundingRect
-//         // console.log('x,y,width,height',x,y,width,height)
-//         return {
-//             zIndex:5,
-//             position:'fixed',
-//             top: y + 'px',
-//             left: (x - 3) + 'px',
-//             height:sourceElement.offsetHeight + 'px',
-//             width:'3px',
-//             border:'3px solid black',
-//         } as CSSProperties
-
-//     },[])
-
-//     return <div style = {styles}>
-//     </div>
-
-// }
-
-// HoC for DnD functionality; requires frameRef
-const DndCellFrame = (props) => {
-
-    // const { itemID, index } = props
-
-    // const frameRef = useRef(null)
-    // const dndCellDragPreviewRef = useRef(null)
-
-    // const [ { isDragging }, dndFrameRef, previewRef ] = useDrag(() => {
-    // // const [ { isDragging }, dndFrameRef ] = useDrag(() => {
-    //     // console.log('useDrag: itemID, index','-'+itemID+'-', '+' + index + '+')
-    //     return {
-    //     type:'Cell',
-
-    //     item:itemID,
-    //     collect: monitor => {
-    //         // console.log('monitor drag: itemID, index, isDragging','-'+itemID+'-', '+' + index + '+', !!monitor.isDragging())
-    //         return {
-    //             isDragging:!!monitor.isDragging()
-    //         }
-    //     },
-    //     canDrag:true,
-    // }},[itemID])
-
-    // useEffect(()=>{
-    //     previewRef(getEmptyImage(),{ captureDraggingState: true })
-    //     // previewRef(dndCellDragPreviewRef,{ captureDraggingState: true })
-    // })
-
-    const enhancedProps = {...props, isDnd: true}
-
-    // return <>
-    // {isDragging && (<>
-    //     <DnDCellDragPreview 
-    //         ref = {dndCellDragPreviewRef}
-    //         sourceElement = {frameRef.current}
-    //     />
-    //      <DnDDragLayer itemID = {itemID} index = {index}/>
-    //      </>)
-
-    // }
-    //  <CellFrame {...enhancedProps}/>
-    //  </>
-    return <>
-        <CellFrame {...enhancedProps}/>
-{/*        {isDragging && 
-            <DnDDragLayer itemID = {itemID} index = {index}/>
-        }
-*/}    </>
-
-}
-
-// provide frameRef source when not required for DnD
-const CellFrameWrapper = (props) => {
-
-    // const dndFrameRef = (element) => {
-    //     //no-op
-    // }
-    // const frameRef = useRef(null)
-
-    const enhancedProps = {...props, isDnd:false}
-
-    return <CellFrame {...enhancedProps}/>
-} 
 
 // =================[ end of dnd support ]=================
 
@@ -724,15 +655,20 @@ const CellFrame = ({
         style = { stylesRef.current }
 
     >
-        {(frameState != 'setup')?
-            (<><div data-type = 'contentholder' style = {holderStylesRef.current}> 
-                {((frameState != 'ready')?
-                placeholderRef.current:
-                <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
-            </div>
-            {isDnd && <DragIcon itemID = {itemID} index = {index} frameRef = {frameRef} />}
-            </>)
+        {(frameState != 'setup')
+            ?<>
+                <div data-type = 'contentholder' style = {holderStylesRef.current}> 
+                    {((frameState != 'ready')?
+                    placeholderRef.current:
+                    <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
+                </div>
+
+                {isDnd && <DragIcon itemID = {itemID} index = {index} frameRef = {frameRef} />}
+
+            </>
+
             :<div></div>}
+
         {(isTriggercell?
             triggercellTriggerlinesRef.current:
             null)
@@ -741,7 +677,7 @@ const CellFrame = ({
     </div>
 
 } // CellFrame
-export default CellFrame
+// export default CellFrame
 
 // utilities
 const getFrameStyles = 
