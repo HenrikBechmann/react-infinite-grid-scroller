@@ -11,7 +11,7 @@
     viewportResizing interrupts are handled by viewport
 */
 
-import { generateShiftInstruction } from './contentfunctions'
+import { getShiftInstruction } from './contentfunctions'
 
 export default class InterruptHandler {
 
@@ -106,7 +106,7 @@ export default class InterruptHandler {
 
             if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
 
-                const [shiftinstruction, triggerViewportReferencePixelPos] = generateShiftInstruction({
+                const [shiftinstruction, triggerViewportReferencePixelPos] = getShiftInstruction({
 
                     scrollerID: cradleInheritedProperties.scrollerID,
                     orientation,

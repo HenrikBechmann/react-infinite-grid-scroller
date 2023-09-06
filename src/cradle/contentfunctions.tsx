@@ -7,7 +7,7 @@
 
     calculateContentParameters is called by the contenthandler's setCradleContent function.
 
-    generateShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
+    getShiftInstruction and calcContentShift are called by contentHandler's updateCradleContent
     function. 
     
     getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
@@ -141,7 +141,7 @@ export const calculateContentParameters = ({ // called from setCradleContent onl
     cradle motion can be detected. Motion is most often caused by scrolling, but
     can also occur with change of size of cradle content rows.
 
-    generateShiftInstruction determines whether the axis should be moved toward the head or tail
+    getShiftInstruction determines whether the axis should be moved toward the head or tail
         to restore the straddling position of the two trigger lines. Lots of relative motion.
 
     'moveaxisheadward' (scrolling down or right) means moving the axis up or left, adjacent items down
@@ -155,7 +155,7 @@ export const calculateContentParameters = ({ // called from setCradleContent onl
     'none' means no shift is required
 */
 
-export const generateShiftInstruction = ({
+export const getShiftInstruction = ({
 
     orientation,
     triggerlineEntries,
@@ -776,7 +776,7 @@ export const calculateShiftSpecs = ({
 
 }
 
-// supports calcContentShift above
+// supports calculateShiftSpecs above
 const getGridRowLengths = (grid, orientation, crosscount, gapProps) => {
 
     const 
@@ -801,7 +801,7 @@ const getGridRowLengths = (grid, orientation, crosscount, gapProps) => {
     return rowLengths
 }
 
-// supports calcContentShift above
+// supports calculateShiftSpecs above
 const getGridRowAggregateSpans = (rowLengths) => {
 
     const rowSpans = []
