@@ -173,6 +173,7 @@ const DnDDragBar = (props) => {
             };
         })
 
+    // static
     const dragiconholderstylesRef = useRef<CSSProperties>(
         {
             float:'left',
@@ -183,6 +184,7 @@ const DnDDragBar = (props) => {
             margin:'3px',
         })
 
+    // static
     const modeiconholderstylesRef = useRef<CSSProperties>(
         {
             position:'absolute',
@@ -198,9 +200,15 @@ const DnDDragBar = (props) => {
             width:'20px'
         })
 
+    // static
+    const iconstylesRef = useRef<CSSProperties>(
+        {
+            opacity:0.75
+        })
+
+    // dynamic
     const dragbarstyles = 
         {
-            // functional
             zIndex:10,
             position: 'fixed',
             top: 0,
@@ -209,18 +217,11 @@ const DnDDragBar = (props) => {
             pointerEvents: 'none', 
             opacity:0.75,
             backgroundColor:'whitesmoke',
-
             width: '200px',
             fontSize:'.75em',
-            // height: '50px',
             border: '1px solid black',
             borderRadius:'5px',
         } as CSSProperties
-
-    const iconstylesRef = useRef<CSSProperties>(
-        {
-            opacity:0.75
-        })
 
     return (isDragging && currentOffset
         ?<div data-type = 'dragbar' style={dragbarstyles}>
