@@ -32,7 +32,7 @@ import React, { useEffect, useState, useCallback, useRef, useContext } from 'rea
 
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import {TouchBackend } from 'react-dnd-touch-backend'
+import { TouchBackend } from 'react-dnd-touch-backend'
 
 const ismobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
@@ -97,7 +97,8 @@ let globalScrollerID = 0
 
 // -----------------[ Drag and drop option support ]---------------------
 
-export const DndContext = React.createContext({dnd:false,suspended:false}) // inform children
+export const DndContext = React.createContext({dnd:false}) // inform children
+export const ScrollerDndOptions = React.createContext(null)
 
 // wrapper for Dnd provider
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
@@ -167,7 +168,7 @@ const InfiniteGridScroller = (props) => {
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI = null,
-        dndOptions = undefined, // placeholder!
+        dndOptions = {}, // placeholder!
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
@@ -475,7 +476,10 @@ const InfiniteGridScroller = (props) => {
             highindex:highlistrange,
         },
 
-        virtualListSpecsRef = useRef(virtualListSpecs)
+        virtualListSpecsRef = useRef(virtualListSpecs),
+
+        scrollerDndOptionsRef = useRef({scrollerID,dndOptions})
+
 
     if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
         virtualListSpecsRef.current = virtualListSpecs
@@ -529,7 +533,7 @@ const InfiniteGridScroller = (props) => {
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
-            scrollerSessionIDRef.current = globalScrollerID++
+            scrollerDndOptionsRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
         }
 
     },[]);
@@ -623,8 +627,10 @@ const InfiniteGridScroller = (props) => {
         return <div>error: see console.</div>        
     }
 
+    // console.log('scrollerID', scrollerID)
+
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
-    return <ErrorBoundary
+    return <ScrollerDndOptions.Provider value = {scrollerDndOptionsRef.current} ><ErrorBoundary
         FallbackComponent= { ErrorFallback }
         // elaboration TBD
         onReset = { () => {} }
@@ -699,7 +705,7 @@ const InfiniteGridScroller = (props) => {
 
             </div>}
         </div>
-    </ErrorBoundary>
+    </ErrorBoundary></ScrollerDndOptions.Provider>
 }
 
 export default InfiniteGridScroller

@@ -48,6 +48,7 @@ import { OutPortal } from 'react-reverse-portal' // fetch from cache
 import Placeholder from './cellframe/Placeholder' // default
 
 import { CradleContext } from './Cradle'
+import { ScrollerDndOptions } from './InfiniteGridScroller'
 
 // =====================[ dnd support ]====================
 
@@ -298,6 +299,10 @@ const CellFrame = ({
     targetConnector,
     isDnd,
 }) => {
+
+    const scrollerDndOptions = useContext(ScrollerDndOptions)
+
+    // console.log('scrollerDndOptions',scrollerDndOptions)
 
     const coreConfigRef = useRef(null)
     coreConfigRef.current = {
