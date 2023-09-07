@@ -73,7 +73,7 @@ import React, {
 
 import { ViewportContext } from './Viewport'
 
-import { DndContext } from './InfiniteGridScroller'
+import { DndContext, ScrollerDndOptions } from './InfiniteGridScroller'
 
 // support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
@@ -154,6 +154,8 @@ const Cradle = ({
     const viewportContextProperties = useContext(ViewportContext)
 
     const dndContext = useContext(DndContext)
+
+    const scrollerDndOptions = useContext(ScrollerDndOptions)
 
     const viewportContextPropertiesRef = useRef(null)
     viewportContextPropertiesRef.current = viewportContextProperties // for closures
