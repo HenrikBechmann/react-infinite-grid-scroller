@@ -78,7 +78,7 @@ export const CellFrameController = props => {
 
 }
 
-// HoC for DnD functionality; requires frameRef
+// HoC for DnD functionality; requires targetConnector
 const DndCellFrame = (props) => {
 
     const {itemID, index} = props
@@ -101,7 +101,7 @@ const DndCellFrame = (props) => {
 
 }
 
-// provide frameRef source when not required for DnD
+// provide targetConnector source when not required for DnD
 const CellFrameWrapper = (props) => {
 
     const targetConnector = (element) => {

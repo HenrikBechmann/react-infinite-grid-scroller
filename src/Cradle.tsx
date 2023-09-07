@@ -71,6 +71,8 @@ import React, {
     useCallback, 
 } from 'react'
 
+import { useDrop, DropTargetMonitor} from 'react-dnd'
+
 import { ViewportContext } from './Viewport'
 
 import { DndContext, ScrollerDndOptions } from './InfiniteGridScroller'
@@ -85,7 +87,50 @@ import ServiceHandler from './cradle/servicehandler'
 import StylesHandler from './cradle/styleshandler'
 // cacheAPI is imported as a property; instantiated at the root
 
-// import { isSafariIOS } from './InfiniteGridScroller'
+// called to choose between dnd or no dnd for CellFrame
+export const CradleController = props => {
+
+    const dndContext = useContext(DndContext)
+
+    if (dndContext.dnd) {
+
+        return <DndCradle {...props}/>
+
+    } else {
+
+        return <Cradle {...props} />
+
+    }
+
+}
+
+// HoC for DnD functionality; requires frameRef
+const DndCradle = (props) => {
+
+    const 
+        viewportContextProperties = useContext(ViewportContext),
+        viewportElement = viewportContextProperties.elementRef.current,
+        { scrollerID } = props
+
+    const [ targetData, targetConnector ] = useDrop({
+        accept:['Cell'],
+        collect:(monitor:DropTargetMonitor) => {
+            item:monitor.getItem()
+        },
+        hover:(item, monitor:DropTargetMonitor) => {
+
+            // console.log('Cradle hovering over scrollerID, item\n', scrollerID, item)
+
+        }
+    })
+
+    targetConnector(viewportElement)
+
+    // const enhancedProps = {...props, isDnd:true, targetConnector}
+
+    return <Cradle {...props}/>
+
+}
 
 // for children
 export const CradleContext = React.createContext(null)
@@ -1649,8 +1694,6 @@ const Cradle = ({
     </CradleContext.Provider>
 
 } // Cradle
-
-export default Cradle
 
 // utility
 

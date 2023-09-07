@@ -86,7 +86,7 @@ function ErrorFallback({error, resetErrorBoundary}) {
 // scroller components
 import Viewport from './Viewport'
 import Scrollblock from './Scrollblock'
-import Cradle from './Cradle'
+import { CradleController } from './Cradle'
 
 // loaded here to minimize redundant renders in Cradle
 import PortalCache from './PortalCache'
@@ -660,7 +660,7 @@ const InfiniteGridScroller = (props) => {
                 scrollerID = { scrollerID }
                 
             >
-                <Cradle 
+                <CradleController 
 
                     gridSpecs = { gridSpecsRef.current }
                     paddingProps = { paddingProps }
