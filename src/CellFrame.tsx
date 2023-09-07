@@ -557,8 +557,7 @@ const CellFrame = ({
 
                                 itemPack = {
                                     content
-                                    dndSourceOptions
-                                    dndTargetOptions
+                                    dndOptions
                                     profile
                                 }
                             */
