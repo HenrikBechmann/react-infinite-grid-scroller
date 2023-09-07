@@ -80,7 +80,21 @@ export const CellFrameController = props => {
 // HoC for DnD functionality; requires frameRef
 const DndCellFrame = (props) => {
 
-    const enhancedProps = {...props, isDnd:true}
+    const {itemID, index} = props
+
+    const [ targetData, targetConnector ] = useDrop({
+        accept:['Cell'],
+        collect:(monitor:DropTargetMonitor) => {
+            item:monitor.getItem()
+        },
+        hover:(item, monitor:DropTargetMonitor) => {
+
+            // console.log('hovering over item', item)
+
+        }
+    })
+
+    const enhancedProps = {...props, isDnd:true, targetConnector}
 
     return <CellFrame {...enhancedProps}/>
 
@@ -89,12 +103,10 @@ const DndCellFrame = (props) => {
 // provide frameRef source when not required for DnD
 const CellFrameWrapper = (props) => {
 
-    // const dndFrameRef = (element) => {
-    //     //no-op
-    // }
-    // const frameRef = useRef(null)
-
-    const enhancedProps = {...props, isDnd:false}
+    const targetConnector = (element) => {
+        //no-op
+    }
+    const enhancedProps = {...props, isDnd:false, targetConnector}
 
     return <CellFrame {...enhancedProps}/>
 } 
@@ -109,7 +121,7 @@ const DragIcon = props => {
         return {
         type:'Cell',
 
-        item:itemID,
+        item:{itemID,index},
 
         collect: (monitor:DragSourceMonitor) => {
 
@@ -283,8 +295,7 @@ const CellFrame = ({
     usePlaceholder,
     gridstartstyle,
     parentframeRef,
-    // frameRef, // DOM ref used internally, and for DnD when invoked
-    // dndFrameRef,
+    targetConnector,
     isDnd,
 }) => {
 
@@ -670,10 +681,12 @@ const CellFrame = ({
 
     }, [frameState])
 
-    // Note: the contentholder type layer is included to provide an anchor for the triggerlines.
     return <div 
 
-        ref = {frameRef}
+        ref = {(r) => {
+            targetConnector(r)
+            frameRef.current = r
+        }}
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
