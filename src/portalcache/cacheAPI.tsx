@@ -210,8 +210,8 @@ export default class CacheAPI {
             getNewOrExistingItemID:(index) => {
                 return this.getNewOrExistingItemID(scrollerID, index)
             },
-            createPortal:(component, index, itemID, scrollerProperties, isPreload = false) => {
-                return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, isPreload = false)
+            createPortal:(component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) => {
+                return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
             },
             deletePortalByIndex:(index, deleteListCallback) => {
                 return this.deletePortalByIndex(scrollerID, index, deleteListCallback)
@@ -1180,7 +1180,7 @@ export default class CacheAPI {
     }
 
      // create new portal
-    private async createPortal(scrollerID, component, index, itemID, scrollerProperties, isPreload = false) {
+    private async createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) {
 
         this.unregisterPendingPortal(scrollerID, index)
 
@@ -1205,6 +1205,8 @@ export default class CacheAPI {
             scrollerID,
             scrollerProperties,
             component,
+            dndOptions,
+            profile,
             partitionID,
         }
 
@@ -1231,7 +1233,7 @@ export default class CacheAPI {
 
         const itemID = this.getNewItemID()
 
-        let returnvalue, usercontent, error
+        let returnvalue, usercontent, error, dndOptions, profile
 
         try {
 
@@ -1269,7 +1271,7 @@ export default class CacheAPI {
             }
 
             // const portalData = 
-                await this.createPortal(scrollerID,content, index, itemID, scrollerProperties, true) // true = isPreload
+                await this.createPortal(scrollerID,content, index, itemID, scrollerProperties, dndOptions, profile, true) // true = isPreload
 
         } else {
 

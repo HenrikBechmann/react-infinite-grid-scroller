@@ -553,20 +553,28 @@ const CellFrame = ({
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        let returnvalue, usercontent, itempack, error
+                        let returnvalue, usercontent, dndOptions, profile, error
                         // process the fetch
                         try {
 
-                            usercontent = await getItem(index, itemID)
-                            /*
+                            if (getItemPack) {
 
-                                itemPack = {
-                                    content
-                                    dndOptions
-                                    profile
-                                }
-                            */
-                            // itempack = await getItemPack, index, itemID, itemContext)
+                                /*
+                                    itempack = {
+                                        content
+                                        dndOptions
+                                        profile
+                                    }
+                                */
+                                const itempack = getItemPack(index, itemID, {accepts:scrollerDndOptions.dndOptions.accepts});
+                                ({ dndOptions, profile} = itempack)
+                                usercontent = await itempack.content
+
+                            } else {
+
+                                usercontent = await getItem(index, itemID)
+
+                            }
 
                             if (usercontent === null) returnvalue = usercontent
 
@@ -622,7 +630,8 @@ const CellFrame = ({
                                     content = usercontent
                                 }
 
-                                const retval = portalMetadataRef.current = await cacheAPI.createPortal(content, index, itemID, scrollerProperties)
+                                const retval = portalMetadataRef.current = 
+                                    await cacheAPI.createPortal(content, index, itemID, scrollerProperties, dndOptions, profile)
 
                                 if (retval) {
                                 
