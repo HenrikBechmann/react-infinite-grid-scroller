@@ -60,6 +60,8 @@ import { DndContext } from './InfiniteGridScroller'
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
 import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
+import dropicon from "../task_alt_FILL0_wght400_GRAD0_opsz24.png"
+import nodropicon from "../block_FILL0_wght400_GRAD0_opsz24.png"
 
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
