@@ -1169,11 +1169,15 @@ export default class ContentHandler {
 
     private gridResizeObserverCallback = () => {
 
+        const { stateHandler } = this.cradleParameters.handlersRef.current
+
         clearTimeout(this.gridResizeTimeoutID)
 
         this.gridResizeTimeoutID = setTimeout(() => {
 
             clearTimeout(this.gridResizeTimeoutID) // run once
+
+            if (!stateHandler.isMountedRef.current) return
 
             const
                 { cradleParameters } = this,
