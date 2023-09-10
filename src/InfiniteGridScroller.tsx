@@ -115,7 +115,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
 // ===================================[ INITIALIZE ]===========================
 
-const RIGSWrapper = (props) => {
+const RIGSWrapper = (props) => { // default wrapper to set dnd context false
 
     const dndContext = useContext(DndContext)
     dndContext.dnd = false
@@ -643,7 +643,8 @@ const InfiniteGridScroller = (props) => {
     // console.log('scrollerID', scrollerID)
 
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
-    return <ScrollerDndOptions.Provider value = {scrollerDndOptionsRef.current} ><ErrorBoundary
+    return <ScrollerDndOptions.Provider value = {scrollerDndOptionsRef.current} >
+    <ErrorBoundary
         FallbackComponent= { ErrorFallback }
         // elaboration TBD
         onReset = { () => {} }
@@ -718,10 +719,9 @@ const InfiniteGridScroller = (props) => {
 
             </div>}
         </div>
-    </ErrorBoundary></ScrollerDndOptions.Provider>
+    </ErrorBoundary>
+    </ScrollerDndOptions.Provider>
 }
-
-// export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------
 
