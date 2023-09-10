@@ -115,6 +115,17 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
 // ===================================[ INITIALIZE ]===========================
 
+const RIGSWrapper = (props) => {
+
+    const dndContext = useContext(DndContext)
+    dndContext.dnd = false
+
+    return <InfiniteGridScroller {...props} />
+
+}
+
+export default RIGSWrapper
+
 const InfiniteGridScroller = (props) => {
 
     // state
@@ -174,6 +185,8 @@ const InfiniteGridScroller = (props) => {
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
 
     } = props
+
+    const dndContext = useContext(DndContext)
 
     let isMinimalPropsFail = false
     if (!(cellWidth && cellHeight && (getItem || getItemPack) )) {
@@ -708,7 +721,7 @@ const InfiniteGridScroller = (props) => {
     </ErrorBoundary></ScrollerDndOptions.Provider>
 }
 
-export default InfiniteGridScroller
+// export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------
 
