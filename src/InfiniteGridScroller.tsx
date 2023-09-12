@@ -29,18 +29,18 @@
 */
 
 // compile types
+// objects
 type GenericObject = {[prop:string]:any}
-
+// enums
 type Orientation = 'vertical' | 'horizontal'
-
 type Layout = 'uniform' | 'variable'
 type Cache = 'preload' | 'keepload' | 'cradle'
-
+// functions
 type GetItem = ((index:number, itemID:number) => null | undefined | Promise<any> | FC)
 type GetItemPack = ((index:number, itemID:number, context:GenericObject) => GenericObject)
 type GetExpansionCount = ((boundary:string, index:number) => number)
 
-// most values are initialized if undefined
+// most values are initialized if null or undefined
 type RIGS = {
     // required
     cellHeight:number,
@@ -87,7 +87,6 @@ type RIGS = {
 }
 
 // React support
-
 import React, { useEffect, useState, useCallback, useRef, useContext, FC } from 'react'
 
 // dnd support
@@ -115,7 +114,7 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
 export const DndContext = React.createContext({dnd:false}) // inform children
 export const ScrollerDndOptions = React.createContext(null)
 
-// wrapper for Dnd provider - export statement next to RigsWrapper export statement below
+// wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below
 const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
     const dndContext = useContext(DndContext)
@@ -173,7 +172,6 @@ import PortalCache from './PortalCache'
 let globalScrollerID = 0
 
 // RIGS
-
 const RIGSWrapper = (props) => { // default wrapper to set context.dnd false; RigsDnd set it to true
 
     const dndContext = useContext(DndContext)
@@ -274,7 +272,6 @@ const InfiniteGridScroller = (props) => {
     const dndContext = useContext(DndContext)
 
     // minimal constraints
-
     let isMinimalPropsFail = false
 
     if (!(cellWidth && cellHeight) || !(getItem || getItemPack)) {
@@ -494,7 +491,7 @@ const InfiniteGridScroller = (props) => {
         layout = 'uniform'
     }
 
-    // // type checks for runtime
+    // type checks for runtime
     if (typeof usePlaceholder !== 'boolean') usePlaceholder = true
     if (typeof useScrollTracker !== 'boolean') useScrollTracker = true
     if (typeof styles !== 'object') styles = {}
@@ -502,7 +499,7 @@ const InfiniteGridScroller = (props) => {
     if (typeof callbacks !== 'object') callbacks = {}
     if (typeof technical !== 'object') technical = {}
     if (typeof dndOptions !== 'object') dndOptions = {}
-    if (cacheAPI && (cacheAPI !== null) && (typeof cacheAPI !== 'object')) cacheAPI = null
+    if ((cacheAPI !== null) && (typeof cacheAPI !== 'object')) cacheAPI = null
 
     // package gridSpecs
     const gridSpecs = {
@@ -601,8 +598,6 @@ const InfiniteGridScroller = (props) => {
     // -------------------------[ Initialization ]-------------------------------
 
     const getCacheAPI = (cacheAPI) => {
-
-        // console.log('getCacheAPI',cacheAPI)
 
         cacheAPIRef.current = cacheAPI
 
