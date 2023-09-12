@@ -33,6 +33,7 @@
 type GenericObject = {[prop:string]:any}
 
 type Orientation = 'vertical' | 'horizontal'
+
 type Layout = 'uniform' | 'variable'
 type Cache = 'preload' | 'keepload' | 'cradle'
 
@@ -48,7 +49,7 @@ type RIGS = {
     // initialized
     cellMinHeight:number,
     cellMinWidth:number,
-    // optional
+    // optional, but initialized
     gap:number | Array<number>,
     padding:number | Array<number>,
     startingListSize:number,
@@ -71,7 +72,7 @@ type RIGS = {
     placeholderMessages:GenericObject,
     callbacks:GenericObject,
     technical:GenericObject,
-    cacheAPI:GenericObject,
+    cacheAPI:null | GenericObject,
     dndOptions:GenericObject,
 
     // isOwnProperty causes scrollerProperties to be set by system
@@ -100,7 +101,7 @@ const ismobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
 const DndBackend = ismobile?TouchBackend:HTML5Backend
 
-const hasNative =
+const hasNativeElementsFromPoint =
   document && (document['elementsFromPoint'] || document['msElementsFromPoint'])
 
 function getDropTargetElementsAtPoint(x, y, dropTargets) {
@@ -130,7 +131,7 @@ const RigsDnd = (props) => { // must be loaded as root scroller by host to set u
 
 // use custom function only if elementsFromPoint is not supported
 const backendOptions = {
-  getDropTargetElementsAtPoint: !hasNative && getDropTargetElementsAtPoint
+  getDropTargetElementsAtPoint: !hasNativeElementsFromPoint && getDropTargetElementsAtPoint
 }
 
 // idSafariIOS
@@ -203,57 +204,82 @@ const InfiniteGridScroller = (props) => {
             // max for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
-        startingListSize = 0, // the starting number of items in the virtual list. can be changed
-        startingListRange = [], // supercedes startingListSize if present
         getItem, // getItem or getItemPack required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
         getItemPack, // getItem or getItemPack. returns a simple object with item components: content, profile, options, dragText
         // grid specs:
-        orientation = 'vertical', // vertical or horizontal
-        gap = 0, // space between grid cells
-        padding = 0, // the padding around the Scrollblock
-        layout = 'uniform', // uniform, variable
-        cellMinHeight = 25, // for layout == 'variable' && orientation == 'vertical'
-        cellMinWidth = 25, // for layout == 'variable' && orientation == 'horizontal'
-
-        // scroller specs:
-        runwaySize = 3, // the number of rows outside the view of each side of the viewport 
-            // -- gives time to assemble cellFrames before display
-        startingIndex = 0, // the starting index of the list, when first loaded
+        // optional
         getExpansionCount, // optional, function provided by host, returns the number of indexes to add to
             // the virtual list when the scroller hits the start or end of the list
-
-        // system specs:
-        cache = 'cradle', // "preload", "keepload" or "cradle"
-        cacheMax = 0, // always minimum cradle content size; falsey means limited by listsize
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
-        usePlaceholder = true, // no placeholder rendered if false
-        useScrollTracker = true, // the internal component to give feedback for repositioning
+
+        // the following are initialized below if they are found to be null or undefined
+        startingListSize, // the starting number of items in the virtual list. can be changed
+        startingListRange, // supercedes startingListSize if present
+        orientation, // vertical or horizontal
+        gap, // space between grid cells
+        padding, // the padding around the Scrollblock
+        layout, // uniform, variable
+        cellMinHeight, // for layout == 'variable' && orientation == 'vertical'
+        cellMinWidth, // for layout == 'variable' && orientation == 'horizontal'
+
+        // scroller specs:
+        runwaySize, // the number of rows outside the view of each side of the viewport 
+            // -- gives time to assemble cellFrames before display
+        startingIndex, // the starting index of the list, when first loaded
+
+        // system specs:
+        cache, // "preload", "keepload" or "cradle"
+        cacheMax, // always minimum cradle content size; falsey means limited by listsize
+        usePlaceholder, // no placeholder rendered if false
+        useScrollTracker, // the internal component to give feedback for repositioning
 
         // advanced objects
-        styles = {}, // optional. passive style over-rides (eg. color, opacity); has 
+        styles, // optional. passive style over-rides (eg. color, opacity); has 
             // properties viewport, scrollblock, cradle, scrolltracker, placeholderframe, 
             // placeholdererrorframe, placeholderliner or placeholdererrorliner. Do not make structural changes!
         placeholderMessages = {}, // messages presented by default placeholder. See documentation
-        callbacks = {}, // optional. closures to get direct information streams of some component utilites
+        callbacks, // optional. closures to get direct information streams of some component utilites
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
-        technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
-        cacheAPI = null,
-        dndOptions = {},
+        technical, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
+        cacheAPI,
+        dndOptions,
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
 
     }:RIGS = props
 
+    // initialize with defaults
+    startingListSize = startingListSize ?? 0
+    startingListRange = startingListRange ?? []
+    orientation = orientation ?? 'vertical'
+    gap = gap ?? 0
+    padding = padding ?? 0
+    layout = layout ?? 'uniform'
+    cellMinHeight = cellMinHeight ?? 25
+    cellMinWidth = cellMinWidth ?? 25
+    runwaySize = runwaySize ?? 1
+    startingIndex = startingIndex ?? 0
+    cache = cache ?? 'cradle'
+    cacheMax = cacheMax ?? 0
+    usePlaceholder = usePlaceholder ?? true
+    useScrollTracker = useScrollTracker ?? true
+    styles = styles ?? {}
+    placeholderMessages = placeholderMessages ?? {}
+    callbacks = callbacks ?? {}
+    technical = technical ?? {}
+    cacheAPI = cacheAPI ?? null
+    dndOptions = dndOptions ?? {}
+
     const dndContext = useContext(DndContext)
 
     let isMinimalPropsFail = false
-    if (!(getItem || getItemPack)) {
-        console.log('RIGS: getItem or getItemPack are required')
+    if (!(cellWidth && cellHeight) || !(getItem || getItemPack)) {
+        console.log('RIGS: cellWidth, cellHeight, and getItem or getItemPack are required')
         isMinimalPropsFail = true
     }
 
@@ -270,8 +296,6 @@ const InfiniteGridScroller = (props) => {
         runwaySize,
         cacheMax,
     }
-
-    cacheMax = cacheMax ?? 0
 
     // initialize
     const paddingPropsRef = useRef({
@@ -507,9 +531,6 @@ const InfiniteGridScroller = (props) => {
     if (typeof showAxis != 'boolean') showAxis = false
 
     triggerlineOffset = triggerlineOffset ?? 10
-
-    usePlaceholder = usePlaceholder ?? true
-    useScrollTracker = useScrollTracker ?? true
 
     const 
         // for mount version
