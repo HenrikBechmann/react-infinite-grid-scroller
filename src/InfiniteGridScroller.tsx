@@ -28,8 +28,7 @@
     containing block should be styled accordingly.
 */
 
-// types
-
+// compile types
 type GenericObject = {[prop:string]:any}
 
 type Orientation = 'vertical' | 'horizontal'
@@ -49,7 +48,7 @@ type RIGS = {
     // initialized
     cellMinHeight:number,
     cellMinWidth:number,
-    // optional, but initialized
+    // optional, but initialized below
     gap:number | Array<number>,
     padding:number | Array<number>,
     startingListSize:number,
@@ -89,8 +88,6 @@ type RIGS = {
 
 // React support
 
-// import CacheAPI from './portalcache/cacheAPI'
-
 import React, { useEffect, useState, useCallback, useRef, useContext, FC } from 'react'
 
 // dnd support
@@ -118,7 +115,7 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
 export const DndContext = React.createContext({dnd:false}) // inform children
 export const ScrollerDndOptions = React.createContext(null)
 
-// wrapper for Dnd provider
+// wrapper for Dnd provider - export statement next to RigsWrapper export statement below
 const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
     const dndContext = useContext(DndContext)
@@ -173,7 +170,6 @@ import Cradle from './Cradle'
 import PortalCache from './PortalCache'
 
 // global session ID generator
-
 let globalScrollerID = 0
 
 // RIGS
@@ -277,7 +273,10 @@ const InfiniteGridScroller = (props) => {
 
     const dndContext = useContext(DndContext)
 
+    // minimal constraints
+
     let isMinimalPropsFail = false
+
     if (!(cellWidth && cellHeight) || !(getItem || getItemPack)) {
         console.log('RIGS: cellWidth, cellHeight, and getItem or getItemPack are required')
         isMinimalPropsFail = true
@@ -402,10 +401,8 @@ const InfiniteGridScroller = (props) => {
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
     }
 
-    // verify numbers for runtime
+    // verify unverified numbers for runtime
     const originalValues = {
-        // cellHeight,
-        // cellWidth,
         cellMinHeight,
         cellMinWidth,
         startingIndex,
@@ -415,8 +412,6 @@ const InfiniteGridScroller = (props) => {
     }
 
     const verifiedValues = {
-        // cellHeight,
-        // cellWidth,
         cellMinHeight,
         cellMinWidth,
         startingIndex,
@@ -499,8 +494,6 @@ const InfiniteGridScroller = (props) => {
         layout = 'uniform'
     }
 
-    // console.log('typeof cacheAPI', typeof cacheAPI, cacheAPI)
-
     // // type checks for runtime
     if (typeof usePlaceholder !== 'boolean') usePlaceholder = true
     if (typeof useScrollTracker !== 'boolean') useScrollTracker = true
@@ -510,8 +503,6 @@ const InfiniteGridScroller = (props) => {
     if (typeof technical !== 'object') technical = {}
     if (typeof dndOptions !== 'object') dndOptions = {}
     if (cacheAPI && (cacheAPI !== null) && (typeof cacheAPI !== 'object')) cacheAPI = null
-
-    // console.log('typeof cacheAPI 2', typeof cacheAPI, cacheAPI)
 
     // package gridSpecs
     const gridSpecs = {
@@ -588,11 +579,11 @@ const InfiniteGridScroller = (props) => {
         scrollerDndOptionsRef = useRef({scrollerID,dndOptions})
 
 
+    // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
         virtualListSpecsRef.current = virtualListSpecs
     }
 
-    // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(gridSpecs, gridSpecsRef.current)) {
         gridSpecsRef.current = gridSpecs
     }
@@ -624,8 +615,6 @@ const InfiniteGridScroller = (props) => {
     }
 
     const useLocalCache = !cacheAPI
-
-    // console.log('useLocalCache',useLocalCache, cacheAPI)
 
     const isMountedRef = useRef(true)
 
@@ -702,15 +691,11 @@ const InfiniteGridScroller = (props) => {
 
     useEffect(() => {
 
-        if (isMinimalPropsFail) return
-
-        // console.log('scrollerState, cacheAPIRef.current', scrollerState, cacheAPIRef.current)
+        if (isMinimalPropsFail || problemCount) return
 
         switch (scrollerState) {
 
             case 'setup':
-                // const cacheAPI = new CacheAPI(CACHE_PARTITION_SIZE)
-                // cacheAPIRef.current = cacheAPI
                 // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
@@ -740,10 +725,10 @@ const InfiniteGridScroller = (props) => {
 
     // --------------------[ Render ]---------------------
 
-    // console.log('RENDER scrollerState, useLocalCache, problemCount, getCacheAPI',scrollerState, useLocalCache, problemCount, getCacheAPI)
-
     if (problemCount || isMinimalPropsFail) {
-        return <div>error: see console.</div>        
+
+        return <div>error: see console.</div>
+
     }
 
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
