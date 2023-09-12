@@ -88,7 +88,7 @@ import StylesHandler from './cradle/styleshandler'
 // cacheAPI is imported as a property; instantiated at the root
 
 // called to choose between dnd or no dnd for CellFrame
-export const CradleController = props => {
+const CradleController = props => {
 
     const dndContext = useContext(DndContext)
 
@@ -103,6 +103,8 @@ export const CradleController = props => {
     }
 
 }
+
+export default CradleController
 
 // HoC for DnD functionality; requires frameRef
 const DndCradle = (props) => {

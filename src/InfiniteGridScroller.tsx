@@ -28,7 +28,67 @@
     containing block should be styled accordingly.
 */
 
-import React, { useEffect, useState, useCallback, useRef, useContext } from 'react'
+// types
+
+type GenericObject = {[prop:string]:any}
+
+type Orientation = undefined | 'vertical' | 'horizontal'
+type Layout = undefined | 'uniform' | 'variable'
+type Cache = undefined | 'preload' | 'keepload' | 'cradle'
+
+type GetItem = undefined | ((index:number, itemID:number) => null |undefined | Promise<any> | FC)
+type GetItemPack = undefined | ((index:number, itemID:number, context:object) => object)
+type GetExpansionCount = undefined | ((boundary:string, index:number) => number)
+
+type RIGS = {
+    // required
+    cellHeight:number,
+    cellWidth:number,
+    cellMinHeight:undefined | number,
+    cellMinWidth:undefined | number,
+    // optional
+    gap:undefined | number,
+    padding:undefined | number,
+    startingListSize:undefined | number,
+    startingIndex:undefined | number,
+    runwaySize:undefined | number,
+    cacheMax:undefined | null | number, // falsey means only limited by listsize
+    
+    startingListRange:undefined | Array<number>,
+
+    usePlaceholder:undefined | boolean,
+    useScrollTracker:undefined | boolean,
+
+    // enums
+    orientation:Orientation,
+    layout:Layout,
+    cache:Cache,
+
+    // objects
+    styles:undefined | GenericObject,
+    placeholderMessages:undefined | GenericObject,
+    callbacks:undefined | GenericObject,
+    technical:undefined | GenericObject,
+    cacheAPI:undefined | GenericObject,
+    dndOptions:undefined | GenericObject,
+
+    // isOwnProperty causes scrollerProperties to be set by system
+    scrollerProperties:null | undefined | GenericObject,
+
+    // functions
+    placeholder:undefined | FC
+    // one of getItem or getItemPack is required
+    getItem:GetItem,
+    getItemPack:GetItemPack,
+    // optional
+    getExpansionCount:GetExpansionCount,
+}
+
+// React support
+
+import React, { useEffect, useState, useCallback, useRef, useContext, FC } from 'react'
+
+// dnd support
 
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -50,13 +110,28 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
+export const DndContext = React.createContext({dnd:false}) // inform children
+export const ScrollerDndOptions = React.createContext(null)
+
+// wrapper for Dnd provider
+const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
+
+    const dndContext = useContext(DndContext)
+
+    if (!dndContext.dnd) dndContext.dnd = true
+
+    return <DndProvider backend={DndBackend} options = {backendOptions}>
+        <InfiniteGridScroller {...props} />
+    </DndProvider>
+
+}
+
 // use custom function only if elementsFromPoint is not supported
 const backendOptions = {
   getDropTargetElementsAtPoint: !hasNative && getDropTargetElementsAtPoint
 }
 
-// defensive
-import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
+// idSafariIOS
 
 const isSafariIOSFn = () => {
     const
@@ -66,6 +141,9 @@ const isSafariIOSFn = () => {
 }
 
 export const isSafariIOS = isSafariIOSFn()
+
+// defensive
+import { ErrorBoundary } from 'react-error-boundary' // www.npmjs.com/package/react-error-boundary
 
 // based on module template
 function ErrorFallback({error, resetErrorBoundary}) {
@@ -83,12 +161,10 @@ function ErrorFallback({error, resetErrorBoundary}) {
   )
 }
 
-// scroller components
+// import scroller components
 import Viewport from './Viewport'
 import Scrollblock from './Scrollblock'
-import { CradleController } from './Cradle'
-
-// loaded here to minimize redundant renders in Cradle
+import Cradle from './Cradle'
 import PortalCache from './PortalCache'
 
 // -------------------[ global session ID generator ]----------------
@@ -96,22 +172,6 @@ import PortalCache from './PortalCache'
 let globalScrollerID = 0
 
 // -----------------[ Drag and drop option support ]---------------------
-
-export const DndContext = React.createContext({dnd:false}) // inform children
-export const ScrollerDndOptions = React.createContext(null)
-
-// wrapper for Dnd provider
-export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
-
-    const dndContext = useContext(DndContext)
-
-    if (!dndContext.dnd) dndContext.dnd = true
-
-    return <DndProvider backend={DndBackend} options = {backendOptions}>
-        <InfiniteGridScroller {...props} />
-    </DndProvider>
-
-}
 
 // ===================================[ INITIALIZE ]===========================
 
@@ -125,6 +185,7 @@ const RIGSWrapper = (props) => { // default wrapper to set dnd context false
 }
 
 export default RIGSWrapper
+export { RigsDnd }
 
 const InfiniteGridScroller = (props) => {
 
@@ -140,12 +201,12 @@ const InfiniteGridScroller = (props) => {
             // max for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
-        startingListSize = 0, // the starging number of items in the virtual list. can be changed
+        startingListSize = 0, // the starting number of items in the virtual list. can be changed
         startingListRange = [], // supercedes startingListSize if present
-        getItem, // required. function provided by host - parameters set by system are index number
+        getItem, // getItem or getItemPack required. function provided by host - parameters set by system are index number
             // and session itemID for tracking and matching; 
             // return value is host-selected component or promise of a component, or null or undefined
-        getItemPack, // returns a simple object with item components: content, profile, options, dragText
+        getItemPack, // getItem or getItemPack. returns a simple object with item components: content, profile, options, dragText
         // grid specs:
         orientation = 'vertical', // vertical or horizontal
         gap = 0, // space between grid cells
@@ -163,7 +224,7 @@ const InfiniteGridScroller = (props) => {
 
         // system specs:
         cache = 'cradle', // "preload", "keepload" or "cradle"
-        cacheMax = null, // always minimum cradle content size; falsey means limited by listsize
+        cacheMax = 0, // always minimum cradle content size; falsey means limited by listsize
         placeholder, // optional. a sparse component to stand in for content until the content arrives; 
             // replaces default placeholder if present
         usePlaceholder = true, // no placeholder rendered if false
@@ -184,13 +245,13 @@ const InfiniteGridScroller = (props) => {
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
 
-    } = props
+    }:RIGS = props
 
     const dndContext = useContext(DndContext)
 
     let isMinimalPropsFail = false
-    if (!(cellWidth && cellHeight && (getItem || getItemPack) )) {
-        console.log('RIGS: cellWidth, cellHeight, and getItem are required')
+    if (!(getItem || getItemPack)) {
+        console.log('RIGS: getItem or getItemPack are required')
         isMinimalPropsFail = true
     }
 
@@ -209,23 +270,25 @@ const InfiniteGridScroller = (props) => {
     }
 
     // avoid null/undefined
-    styles = styles ?? {}
-    callbacks = callbacks ?? {}
-    technical = technical ?? {}
-    startingIndex = startingIndex ?? 0
-    startingListSize = startingListSize ?? 0
-    runwaySize = runwaySize ?? 3
-    usePlaceholder = usePlaceholder ?? true
-    useScrollTracker = useScrollTracker ?? true
-    cellMinHeight = cellMinHeight ?? 0
-    cellMinWidth = cellMinWidth ?? 0
+    // styles = styles ?? {}
+    // callbacks = callbacks ?? {}
+    // technical = technical ?? {}
+    // startingIndex = startingIndex ?? 0
+    // startingListSize = startingListSize ?? 0
+    // runwaySize = runwaySize ?? 3
+    // usePlaceholder = usePlaceholder ?? true
+    // useScrollTracker = useScrollTracker ?? true
+    // cellMinHeight = cellMinHeight ?? 0
+    // cellMinWidth = cellMinWidth ?? 0
+
     cacheMax = cacheMax ?? 0
 
-    cellHeight = +cellHeight
-    cellWidth = +cellWidth
-    cellMinHeight = +cellMinHeight
-    cellMinWidth = +cellMinWidth
+    // cellHeight = +cellHeight
+    // cellWidth = +cellWidth
+    // cellMinHeight = +cellMinHeight
+    // cellMinWidth = +cellMinWidth
     // gap = +gap
+
     const paddingPropsRef = useRef({
         top:null,
         right:null,
@@ -330,10 +393,11 @@ const InfiniteGridScroller = (props) => {
         Object.assign(gapProps,{column:+column,row:+row}) // assure numeric
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
     }
-    startingIndex = +startingIndex
-    startingListSize = +startingListSize
-    runwaySize = +runwaySize
-    cacheMax = +cacheMax
+
+    // startingIndex = +startingIndex
+    // startingListSize = +startingListSize
+    // runwaySize = +runwaySize
+    // cacheMax = +cacheMax
 
     const verifiedValues = {
         cellHeight,
@@ -462,8 +526,11 @@ const InfiniteGridScroller = (props) => {
 
     triggerlineOffset = triggerlineOffset ?? 10
 
-    if (typeof usePlaceholder != 'boolean') usePlaceholder = true
-    if (typeof useScrollTracker != 'boolean') useScrollTracker = true
+    // if (typeof usePlaceholder != 'boolean') usePlaceholder = true
+    // if (typeof useScrollTracker != 'boolean') useScrollTracker = true
+
+    usePlaceholder = usePlaceholder ?? true
+    useScrollTracker = useScrollTracker ?? true
 
     const 
         // for mount version
@@ -674,7 +741,7 @@ const InfiniteGridScroller = (props) => {
                 scrollerID = { scrollerID }
                 
             >
-                <CradleController 
+                <Cradle 
 
                     gridSpecs = { gridSpecsRef.current }
                     paddingProps = { paddingProps }
