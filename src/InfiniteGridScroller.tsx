@@ -75,7 +75,7 @@ type RIGS = {
     cacheAPI:null | GenericObject,
     dndOptions:GenericObject,
 
-    // isOwnProperty causes scrollerProperties to be set by system
+    // isOwnProperty causes scrollerProperties to be set by the system
     scrollerProperties:null | undefined | GenericObject,
 
     // functions
@@ -170,15 +170,13 @@ import Scrollblock from './Scrollblock'
 import Cradle from './Cradle'
 import PortalCache from './PortalCache'
 
-// -------------------[ global session ID generator ]----------------
+// global session ID generator
 
 let globalScrollerID = 0
 
-// -----------------[ Drag and drop option support ]---------------------
+// RIGS
 
-// ===================================[ INITIALIZE ]===========================
-
-const RIGSWrapper = (props) => { // default wrapper to set dnd context false
+const RIGSWrapper = (props) => { // default wrapper to set context.dnd false; RigsDnd set it to true
 
     const dndContext = useContext(DndContext)
     dndContext.dnd = false
@@ -253,7 +251,7 @@ const InfiniteGridScroller = (props) => {
 
     }:RIGS = props
 
-    // initialize with defaults
+    // initialize with defaults if values are empty
     startingListSize = startingListSize ?? 0
     startingListRange = startingListRange ?? []
     orientation = orientation ?? 'vertical'
@@ -272,8 +270,8 @@ const InfiniteGridScroller = (props) => {
     placeholderMessages = placeholderMessages ?? {}
     callbacks = callbacks ?? {}
     technical = technical ?? {}
-    cacheAPI = cacheAPI ?? null
     dndOptions = dndOptions ?? {}
+    cacheAPI = cacheAPI ?? null
 
     const dndContext = useContext(DndContext)
 
@@ -410,7 +408,6 @@ const InfiniteGridScroller = (props) => {
         cellWidth,
         cellMinHeight,
         cellMinWidth,
-        // gap,
         startingIndex,
         startingListSize,
         runwaySize,
@@ -428,20 +425,20 @@ const InfiniteGridScroller = (props) => {
     startingIndex = Math.max(0,startingIndex)
 
     // package
-    let problems = 0
+    let problemCount = 0
     for (const prop in verifiedValues) {
         if (isNaN(verifiedValues[prop])) {
-            problems++
+            problemCount++
         } 
     }
 
-    if (problems) {
+    if (problemCount) {
         console.error('Error: invalid number - compare originalValues and verifiedValues', 
             originalValues, verifiedValues)
     }
 
     // rationalize startingListsize and startingListRange
-    if (!problems && scrollerState == 'setup') {
+    if (!problemCount && scrollerState == 'setup') {
 
         let goodrange = true
         if (!startingListRange || 
@@ -477,15 +474,15 @@ const InfiniteGridScroller = (props) => {
     }
 
     // enums
-    if (!['horizontal','vertical'].includes(orientation)) { 
-        orientation = 'vertical'
-    }
-    if (!['preload','keepload','cradle'].includes(cache)) {
-        cache = 'cradle'
-    }
-    if (!['uniform', 'variable'].includes(layout)) {
-        layout = 'uniform'
-    }
+    // if (!['horizontal','vertical'].includes(orientation)) { 
+    //     orientation = 'vertical'
+    // }
+    // if (!['preload','keepload','cradle'].includes(cache)) {
+    //     cache = 'cradle'
+    // }
+    // if (!['uniform', 'variable'].includes(layout)) {
+    //     layout = 'uniform'
+    // }
 
     const gridSpecs = {
         orientation,
@@ -667,7 +664,7 @@ const InfiniteGridScroller = (props) => {
 
     // ---------------------[ State handling ]------------------------
 
-    const itemSetRef = useRef(null)
+    const itemSetRef = useRef(null) // used for unRegisterScroller
 
     useEffect(() => {
 
@@ -703,11 +700,9 @@ const InfiniteGridScroller = (props) => {
 
     // --------------------[ Render ]---------------------
 
-    if (problems || isMinimalPropsFail) {
+    if (problemCount || isMinimalPropsFail) {
         return <div>error: see console.</div>        
     }
-
-    // console.log('scrollerID', scrollerID)
 
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
     return <ScrollerDndOptions.Provider value = {scrollerDndOptionsRef.current} >
