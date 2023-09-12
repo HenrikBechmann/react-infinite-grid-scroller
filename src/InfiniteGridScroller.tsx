@@ -32,32 +32,34 @@
 
 type GenericObject = {[prop:string]:any}
 
-type Orientation = undefined | 'vertical' | 'horizontal'
-type Layout = undefined | 'uniform' | 'variable'
-type Cache = undefined | 'preload' | 'keepload' | 'cradle'
+type Orientation = 'vertical' | 'horizontal'
+type Layout = 'uniform' | 'variable'
+type Cache = 'preload' | 'keepload' | 'cradle'
 
-type GetItem = undefined | ((index:number, itemID:number) => null |undefined | Promise<any> | FC)
-type GetItemPack = undefined | ((index:number, itemID:number, context:object) => object)
-type GetExpansionCount = undefined | ((boundary:string, index:number) => number)
+type GetItem = ((index:number, itemID:number) => null | undefined | Promise<any> | FC)
+type GetItemPack = ((index:number, itemID:number, context:GenericObject) => GenericObject)
+type GetExpansionCount = ((boundary:string, index:number) => number)
 
+// most values are initialized if undefined
 type RIGS = {
     // required
     cellHeight:number,
     cellWidth:number,
-    cellMinHeight:undefined | number,
-    cellMinWidth:undefined | number,
+    // initialized
+    cellMinHeight:number,
+    cellMinWidth:number,
     // optional
-    gap:undefined | number,
-    padding:undefined | number,
-    startingListSize:undefined | number,
-    startingIndex:undefined | number,
-    runwaySize:undefined | number,
-    cacheMax:undefined | null | number, // falsey means only limited by listsize
+    gap:number | Array<number>,
+    padding:number | Array<number>,
+    startingListSize:number,
+    startingIndex:number,
+    runwaySize:number,
+    cacheMax:null | number, // falsey means only limited by listsize
     
-    startingListRange:undefined | Array<number>,
+    startingListRange:Array<number>,
 
-    usePlaceholder:undefined | boolean,
-    useScrollTracker:undefined | boolean,
+    usePlaceholder:boolean,
+    useScrollTracker:boolean,
 
     // enums
     orientation:Orientation,
@@ -65,12 +67,12 @@ type RIGS = {
     cache:Cache,
 
     // objects
-    styles:undefined | GenericObject,
-    placeholderMessages:undefined | GenericObject,
-    callbacks:undefined | GenericObject,
-    technical:undefined | GenericObject,
-    cacheAPI:undefined | GenericObject,
-    dndOptions:undefined | GenericObject,
+    styles:GenericObject,
+    placeholderMessages:GenericObject,
+    callbacks:GenericObject,
+    technical:GenericObject,
+    cacheAPI:GenericObject,
+    dndOptions:GenericObject,
 
     // isOwnProperty causes scrollerProperties to be set by system
     scrollerProperties:null | undefined | GenericObject,
@@ -78,10 +80,10 @@ type RIGS = {
     // functions
     placeholder:undefined | FC
     // one of getItem or getItemPack is required
-    getItem:GetItem,
-    getItemPack:GetItemPack,
+    getItem:undefined | GetItem,
+    getItemPack:undefined | GetItemPack,
     // optional
-    getExpansionCount:GetExpansionCount,
+    getExpansionCount:undefined | GetExpansionCount,
 }
 
 // React support
@@ -240,7 +242,7 @@ const InfiniteGridScroller = (props) => {
             //(mostly cache management)
         technical = {}, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI = null,
-        dndOptions = {}, // placeholder!
+        dndOptions = {},
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
@@ -269,26 +271,9 @@ const InfiniteGridScroller = (props) => {
         cacheMax,
     }
 
-    // avoid null/undefined
-    // styles = styles ?? {}
-    // callbacks = callbacks ?? {}
-    // technical = technical ?? {}
-    // startingIndex = startingIndex ?? 0
-    // startingListSize = startingListSize ?? 0
-    // runwaySize = runwaySize ?? 3
-    // usePlaceholder = usePlaceholder ?? true
-    // useScrollTracker = useScrollTracker ?? true
-    // cellMinHeight = cellMinHeight ?? 0
-    // cellMinWidth = cellMinWidth ?? 0
-
     cacheMax = cacheMax ?? 0
 
-    // cellHeight = +cellHeight
-    // cellWidth = +cellWidth
-    // cellMinHeight = +cellMinHeight
-    // cellMinWidth = +cellMinWidth
-    // gap = +gap
-
+    // initialize
     const paddingPropsRef = useRef({
         top:null,
         right:null,
@@ -346,6 +331,8 @@ const InfiniteGridScroller = (props) => {
         Object.assign(paddingProps,{top:+top,right:+right,bottom:+bottom,left:+left}) // assure numeric
         paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
     }
+
+    // initialize
     const gapPropsRef = useRef({
         column:null,
         row:null,
@@ -393,11 +380,6 @@ const InfiniteGridScroller = (props) => {
         Object.assign(gapProps,{column:+column,row:+row}) // assure numeric
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
     }
-
-    // startingIndex = +startingIndex
-    // startingListSize = +startingListSize
-    // runwaySize = +runwaySize
-    // cacheMax = +cacheMax
 
     const verifiedValues = {
         cellHeight,
@@ -525,9 +507,6 @@ const InfiniteGridScroller = (props) => {
     if (typeof showAxis != 'boolean') showAxis = false
 
     triggerlineOffset = triggerlineOffset ?? 10
-
-    // if (typeof usePlaceholder != 'boolean') usePlaceholder = true
-    // if (typeof useScrollTracker != 'boolean') useScrollTracker = true
 
     usePlaceholder = usePlaceholder ?? true
     useScrollTracker = useScrollTracker ?? true
