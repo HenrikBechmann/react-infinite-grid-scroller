@@ -89,6 +89,8 @@ type RIGS = {
 
 // React support
 
+// import CacheAPI from './portalcache/cacheAPI'
+
 import React, { useEffect, useState, useCallback, useRef, useContext, FC } from 'react'
 
 // dnd support
@@ -281,19 +283,16 @@ const InfiniteGridScroller = (props) => {
         isMinimalPropsFail = true
     }
 
-    // ---------------------[ Data setup ]----------------------
-
-    const originalValues = {
-        cellHeight,
-        cellWidth,
-        cellMinHeight,
-        cellMinWidth,
-        // gap,
-        startingIndex,
-        startingListSize,
-        runwaySize,
-        cacheMax,
+    if (!isMinimalPropsFail) {
+        cellWidth = +cellWidth
+        cellHeight = +cellHeight
+        if (isNaN(cellWidth) || isNaN(cellHeight) || !(typeof getItem == 'function' || typeof getItemPack == 'function')) {
+            console.log('RIGS: cellWidth and cellHeifht must be nunmbers; getItem or getItemPack must be functions')
+            isMinimalPropsFail = true
+        }
     }
+
+    // ---------------------[ Data setup ]----------------------
 
     // initialize
     const paddingPropsRef = useRef({
@@ -403,9 +402,21 @@ const InfiniteGridScroller = (props) => {
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
     }
 
+    // verify numbers for runtime
+    const originalValues = {
+        // cellHeight,
+        // cellWidth,
+        cellMinHeight,
+        cellMinWidth,
+        startingIndex,
+        startingListSize,
+        runwaySize,
+        cacheMax,
+    }
+
     const verifiedValues = {
-        cellHeight,
-        cellWidth,
+        // cellHeight,
+        // cellWidth,
         cellMinHeight,
         cellMinWidth,
         startingIndex,
@@ -414,17 +425,6 @@ const InfiniteGridScroller = (props) => {
         cacheMax,        
     }
 
-    cellMinHeight = Math.max(cellMinHeight, 25)
-    cellMinWidth = Math.max(cellMinWidth, 25)
-    cellMinHeight = Math.min(cellHeight, cellMinHeight)
-    cellMinWidth = Math.min(cellWidth, cellMinWidth)
-
-    // prop constraints - non-negative values
-    runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
-    startingListSize = Math.max(0,startingListSize)
-    startingIndex = Math.max(0,startingIndex)
-
-    // package
     let problemCount = 0
     for (const prop in verifiedValues) {
         if (isNaN(verifiedValues[prop])) {
@@ -435,6 +435,21 @@ const InfiniteGridScroller = (props) => {
     if (problemCount) {
         console.error('Error: invalid number - compare originalValues and verifiedValues', 
             originalValues, verifiedValues)
+    }
+
+    // apply constraints
+    if (!problemCount) {
+
+        cellMinHeight = Math.max(cellMinHeight, 25)
+        cellMinWidth = Math.max(cellMinWidth, 25)
+        cellMinHeight = Math.min(cellHeight, cellMinHeight)
+        cellMinWidth = Math.min(cellWidth, cellMinWidth)
+
+        // prop constraints - non-negative values
+        runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
+        startingListSize = Math.max(0,startingListSize)
+        startingIndex = Math.max(0,startingIndex)
+
     }
 
     // rationalize startingListsize and startingListRange
@@ -473,17 +488,32 @@ const InfiniteGridScroller = (props) => {
         }
     }
 
-    // enums
-    // if (!['horizontal','vertical'].includes(orientation)) { 
-    //     orientation = 'vertical'
-    // }
-    // if (!['preload','keepload','cradle'].includes(cache)) {
-    //     cache = 'cradle'
-    // }
-    // if (!['uniform', 'variable'].includes(layout)) {
-    //     layout = 'uniform'
-    // }
+    // check enums for runtime
+    if (!['horizontal','vertical'].includes(orientation)) { 
+        orientation = 'vertical'
+    }
+    if (!['preload','keepload','cradle'].includes(cache)) {
+        cache = 'cradle'
+    }
+    if (!['uniform', 'variable'].includes(layout)) {
+        layout = 'uniform'
+    }
 
+    // console.log('typeof cacheAPI', typeof cacheAPI, cacheAPI)
+
+    // // type checks for runtime
+    if (typeof usePlaceholder !== 'boolean') usePlaceholder = true
+    if (typeof useScrollTracker !== 'boolean') useScrollTracker = true
+    if (typeof styles !== 'object') styles = {}
+    if (typeof placeholderMessages !== 'object') placeholderMessages = {}
+    if (typeof callbacks !== 'object') callbacks = {}
+    if (typeof technical !== 'object') technical = {}
+    if (typeof dndOptions !== 'object') dndOptions = {}
+    if (cacheAPI && (cacheAPI !== null) && (typeof cacheAPI !== 'object')) cacheAPI = null
+
+    // console.log('typeof cacheAPI 2', typeof cacheAPI, cacheAPI)
+
+    // package gridSpecs
     const gridSpecs = {
         orientation,
         // gap,
@@ -581,6 +611,8 @@ const InfiniteGridScroller = (props) => {
 
     const getCacheAPI = (cacheAPI) => {
 
+        // console.log('getCacheAPI',cacheAPI)
+
         cacheAPIRef.current = cacheAPI
 
     }
@@ -592,6 +624,8 @@ const InfiniteGridScroller = (props) => {
     }
 
     const useLocalCache = !cacheAPI
+
+    // console.log('useLocalCache',useLocalCache, cacheAPI)
 
     const isMountedRef = useRef(true)
 
@@ -668,9 +702,15 @@ const InfiniteGridScroller = (props) => {
 
     useEffect(() => {
 
+        if (isMinimalPropsFail) return
+
+        // console.log('scrollerState, cacheAPIRef.current', scrollerState, cacheAPIRef.current)
+
         switch (scrollerState) {
 
             case 'setup':
+                // const cacheAPI = new CacheAPI(CACHE_PARTITION_SIZE)
+                // cacheAPIRef.current = cacheAPI
                 // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
@@ -699,6 +739,8 @@ const InfiniteGridScroller = (props) => {
     },[scrollerState])
 
     // --------------------[ Render ]---------------------
+
+    // console.log('RENDER scrollerState, useLocalCache, problemCount, getCacheAPI',scrollerState, useLocalCache, problemCount, getCacheAPI)
 
     if (problemCount || isMinimalPropsFail) {
         return <div>error: see console.</div>        
