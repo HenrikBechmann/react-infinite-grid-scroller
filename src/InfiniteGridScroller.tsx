@@ -716,7 +716,7 @@ const InfiniteGridScroller = (props) => {
 
         }
 
-    },[scrollerState])
+    },[scrollerState, isMinimalPropsFail, problemCount])
 
     // --------------------[ Render ]---------------------
 
