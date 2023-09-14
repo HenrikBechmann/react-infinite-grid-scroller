@@ -112,8 +112,8 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
-export const MasterDndContext = React.createContext({dnd:false, scrollerID:null, isActive:false}) // inform children
-export const ScrollerDndOptions = React.createContext(null)
+export const MasterDndContext = React.createContext({dnd:false, scrollerID:null, isActive:false}) // inform children; tree scope
+export const ScrollerDndOptions = React.createContext(null) // scroller scope
 
 // wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below
 const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
