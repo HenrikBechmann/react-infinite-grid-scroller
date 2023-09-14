@@ -23,6 +23,8 @@ import ScrollTracker from './cradle/ScrollTracker'
 
 export const ViewportContext = React.createContext(null) // for children
 
+import scrollicon from "../keyboard_double_arrow_right_FILL0_wght400_GRAD0_opsz24.png"
+
 const Viewport = ({
 
     children, 
