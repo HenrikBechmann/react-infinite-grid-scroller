@@ -84,6 +84,7 @@ type RIGS = {
     getItemPack:undefined | GetItemPack,
     // optional
     getExpansionCount:undefined | GetExpansionCount,
+    isDndMaster:boolean,
 }
 
 // React support
@@ -111,18 +112,20 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
-export const DndContext = React.createContext({dnd:false}) // inform children
+export const MasterDndContext = React.createContext({dnd:false, scrollerID:null, isActive:false}) // inform children
 export const ScrollerDndOptions = React.createContext(null)
 
 // wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below
 const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
-    const dndContext = useContext(DndContext)
+    const masterDndContext = useContext(MasterDndContext)
 
-    if (!dndContext.dnd) dndContext.dnd = true
+    if (!masterDndContext.dnd) masterDndContext.dnd = true
+
+    const enhancedProps = {...props, isDndMaster:true}
 
     return <DndProvider backend={DndBackend} options = {backendOptions}>
-        <InfiniteGridScroller {...props} />
+        <InfiniteGridScroller {...enhancedProps} />
     </DndProvider>
 
 }
@@ -174,8 +177,8 @@ let globalScrollerID = 0
 // RIGS
 const RIGSWrapper = (props) => { // default wrapper to set context.dnd false; RigsDnd set it to true
 
-    const dndContext = useContext(DndContext)
-    dndContext.dnd = false
+    const masterDndContext = useContext(MasterDndContext)
+    masterDndContext.dnd = false
 
     return <InfiniteGridScroller {...props} />
 
@@ -244,6 +247,7 @@ const InfiniteGridScroller = (props) => {
 
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
+        isDndMaster, // internal, set for root dnd only
 
     }:RIGS = props
 
@@ -269,7 +273,7 @@ const InfiniteGridScroller = (props) => {
     dndOptions = dndOptions ?? {}
     cacheAPI = cacheAPI ?? null
 
-    const dndContext = useContext(DndContext)
+    const masterDndContext = useContext(MasterDndContext)
 
     // minimal constraints
     let isMinimalPropsFail = false
@@ -629,6 +633,7 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerDndOptionsRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
+            masterDndContext.scrollerID = scrollerSessionIDRef.current
         }
 
     },[]);

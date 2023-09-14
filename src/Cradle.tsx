@@ -75,7 +75,7 @@ import { useDrop, DropTargetMonitor} from 'react-dnd'
 
 import { ViewportContext } from './Viewport'
 
-import { DndContext, ScrollerDndOptions } from './InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndOptions } from './InfiniteGridScroller'
 
 // support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
@@ -90,9 +90,9 @@ import StylesHandler from './cradle/styleshandler'
 // called to choose between dnd or no dnd for CellFrame
 const CradleController = props => {
 
-    const dndContext = useContext(DndContext)
+    const masterDndContext = useContext(MasterDndContext)
 
-    if (dndContext.dnd) {
+    if (masterDndContext.dnd) {
 
         return <DndCradle {...props}/>
 
@@ -200,7 +200,7 @@ const Cradle = ({
     // get viewport context
     const viewportContextProperties = useContext(ViewportContext)
 
-    const dndContext = useContext(DndContext)
+    const masterDndContext = useContext(MasterDndContext)
 
     const scrollerDndOptions = useContext(ScrollerDndOptions)
 
@@ -556,7 +556,7 @@ const Cradle = ({
         virtualListProps,
         cradleContentProps,
         cache,
-        dnd:dndContext.dnd,
+        dnd:masterDndContext.dnd,
         cacheMax,
         startingIndex,
         scrollerID,

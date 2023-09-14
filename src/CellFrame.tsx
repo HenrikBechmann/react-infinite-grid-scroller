@@ -55,7 +55,7 @@ import { ScrollerDndOptions } from './InfiniteGridScroller'
 import { useDrag, useDragLayer, useDrop, DragSourceMonitor, DragLayerMonitor, DropTargetMonitor} from 'react-dnd'
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
-import { DndContext } from './InfiniteGridScroller'
+import { MasterDndContext } from './InfiniteGridScroller'
 
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
@@ -66,9 +66,9 @@ import nodropicon from "../block_FILL0_wght400_GRAD0_opsz24.png"
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
 
-    const dndContext = useContext(DndContext)
+    const masterDndContext = useContext(MasterDndContext)
 
-    if (dndContext.dnd) {
+    if (masterDndContext.dnd) {
 
         return <DndCellFrame {...props}/>
 
