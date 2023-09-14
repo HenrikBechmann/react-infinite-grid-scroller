@@ -793,7 +793,7 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>
         </Viewport>}
-        <div>
+        <div data-type = 'cachewrapper'>
             {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
                 <PortalCache 
 

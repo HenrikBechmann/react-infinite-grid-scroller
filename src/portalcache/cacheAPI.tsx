@@ -1192,7 +1192,7 @@ export default class CacheAPI {
             portalNode = createPortalNode(index, itemID),
             partitionID = await this.findPartitionWithRoom(),
             portal = 
-                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index}>
+                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index} data-scrollerid = {scrollerID}>
                     <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
                 </div>
 
