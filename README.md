@@ -144,10 +144,11 @@ styles = {
   placeholderliner: {},
   placeholdererrorframe: {},
   placeholdererrorliner: {},
+  dndDragIcon: {},
 }
 ~~~
 
-You may want to add `overscrollBehavior:'none'` to the top level viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list.
+You may want to add `overscrollBehavior:'none'` to the top level viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list. Also note that dndDragIcon needs `zIndex` to be at least `1`.
 
 The scrolltracker is the small rectangular component that appears at the top left of the viewport when the list is being rapidly repositioned. The scrolltracker shows the user the current virtual position (index + 1) and total listsize during the repositioning process.
 
