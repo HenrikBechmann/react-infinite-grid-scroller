@@ -157,11 +157,13 @@ const DragIcon = props => {
     const dragiconstylesRef = useRef<CSSProperties>(
         {
             position:'absolute',
+            zIndex:'2',
             top:0,
             left:0,
-            border:'gray solid 1px',
-            borderRadius:'5px',
-            margin:'3px',
+            // border:'gray solid 1px',
+            // borderRadius:'5px',
+            // margin:'3px',
+            opacity:'0.6',
             height:'32px',
             width:'32px',
         })
