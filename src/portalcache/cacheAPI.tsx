@@ -1381,7 +1381,7 @@ const createPortalNode = (index, itemID) => {
         portalNode = createHtmlPortalNode(),
         container = portalNode.element
 
-    container.style.overflow = 'hidden'
+    // container.style.overflow = 'hidden'
 
     container.dataset.type = 'contentenvelope'
     container.dataset.index = index

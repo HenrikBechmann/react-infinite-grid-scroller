@@ -813,7 +813,7 @@ const getContentHolderStyles = (layout,orientation,cellMinWidth, cellMinHeight )
 // see also some base styles set in cacheAPI
 const setContainerStyles = (container, layout, orientation, cellWidth, cellHeight) => {
 
-    container.style.overflow = 'hidden'
+    // container.style.overflow = 'hidden'
 
     if (layout == 'uniform') {
 
