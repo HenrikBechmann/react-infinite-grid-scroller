@@ -120,7 +120,15 @@ const RigsDnd = (props) => { // must be loaded as root scroller by host to set u
 
     const masterDndContext = useContext(MasterDndContext)
 
-    if (!masterDndContext.dnd) masterDndContext.dnd = true
+    useEffect(()=>{
+
+        if (!masterDndContext.dnd) masterDndContext.dnd = true
+
+        return () => {
+            masterDndContext.dnd = false
+        }
+
+    },[masterDndContext])
 
     const enhancedProps = {...props, isDndMaster:true}
 
@@ -177,8 +185,8 @@ let globalScrollerID = 0
 // RIGS
 const RIGSWrapper = (props) => { // default wrapper to set context.dnd false; RigsDnd set it to true
 
-    const masterDndContext = useContext(MasterDndContext)
-    masterDndContext.dnd = false
+    // const masterDndContext = useContext(MasterDndContext)
+    // masterDndContext.dnd = false
 
     return <InfiniteGridScroller {...props} />
 
