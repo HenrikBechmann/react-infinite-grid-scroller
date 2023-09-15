@@ -868,6 +868,7 @@ export const getCellFrameComponentList = ({
                         placeholderLinerStyles:styles.placeholderliner,
                         placeholderErrorFrameStyles:styles.placeholdererrorframe,
                         placeholderErrorLinerStyles:styles.placeholdererrorliner,
+                        dndDragIconStyles:styles.dndDragIcon,
                         placeholderMessages,
                     }
                 )
@@ -907,6 +908,7 @@ export const getCellFrameComponentList = ({
                         placeholderErrorFrameStyles:styles.placeholdererrorframe,
                         placeholderErrorLinerStyles:styles.placeholdererrorliner,
                         placeholderMessages,
+                        dndDragIconStyles:styles.dndDragIcon,
                     }
                 )
             )
@@ -1019,6 +1021,7 @@ const createCellFrame = ({
     placeholderErrorFrameStyles,
     placeholderErrorLinerStyles,
     placeholderMessages,
+    dndDragIconStyles,
 }) => {
 
     const 
@@ -1068,6 +1071,7 @@ const createCellFrame = ({
             placeholderErrorFrameStyles,
             placeholderErrorLinerStyles,
             placeholderMessages,
+            dndDragIconStyles,
             gridstartstyle:null,
 
         }

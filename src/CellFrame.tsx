@@ -119,6 +119,10 @@ const DragIcon = props => {
 
     const { itemID, index } = props
 
+    let {dndDragIconStyles} = props
+
+    dndDragIconStyles = dndDragIconStyles ?? {}
+
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
@@ -155,7 +159,7 @@ const DragIcon = props => {
         })
 
     const dragiconstylesRef = useRef<CSSProperties>(
-        {
+        {...{
             position:'absolute',
             zIndex:'2',
             top:0,
@@ -166,7 +170,7 @@ const DragIcon = props => {
             opacity:'0.6',
             height:'32px',
             width:'32px',
-        })
+        },...dndDragIconStyles})
 
     return <div data-type = 'dragicon' ref = { sourceConnector } style = {dragiconstylesRef.current}>
 
@@ -296,6 +300,7 @@ const CellFrame = ({
     placeholderLinerStyles,
     placeholderErrorFrameStyles,
     placeholderErrorLinerStyles,
+    dndDragIconStyles,
     placeholderMessages,
     usePlaceholder,
     gridstartstyle,
@@ -719,7 +724,7 @@ const CellFrame = ({
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {isDnd && <DragIcon itemID = {itemID} index = {index} />}
+                {isDnd && <DragIcon itemID = {itemID} index = {index} dndDragIconStyles = {dndDragIconStyles}/>}
 
             </>
 
