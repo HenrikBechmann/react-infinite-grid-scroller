@@ -138,6 +138,8 @@ const RigsDnd = (props) => { // must be loaded as root scroller by host to set u
 
 }
 
+export { RigsDnd }
+
 // use custom function only if elementsFromPoint is not supported
 const backendOptions = {
   getDropTargetElementsAtPoint: !hasNativeElementsFromPoint && getDropTargetElementsAtPoint
@@ -183,17 +185,14 @@ import PortalCache from './PortalCache'
 let globalScrollerID = 0
 
 // RIGS
-const RIGSWrapper = (props) => { // default wrapper to set context.dnd false; RigsDnd set it to true
+// const RIGSWrapper = (props) => { // default wrapper to set context.dnd false; RigsDnd set it to true
 
-    // const masterDndContext = useContext(MasterDndContext)
-    // masterDndContext.dnd = false
+//     // const masterDndContext = useContext(MasterDndContext)
+//     // masterDndContext.dnd = false
 
-    return <InfiniteGridScroller {...props} />
+//     return <InfiniteGridScroller {...props} />
 
-}
-
-export default RIGSWrapper
-export { RigsDnd }
+// }
 
 const InfiniteGridScroller = (props) => {
 
@@ -819,6 +818,8 @@ const InfiniteGridScroller = (props) => {
     </ErrorBoundary>
     </ScrollerDndOptions.Provider>
 }
+
+export default InfiniteGridScroller // RIGSWrapper
 
 // ----------------------------[ Support ]------------------------------
 
