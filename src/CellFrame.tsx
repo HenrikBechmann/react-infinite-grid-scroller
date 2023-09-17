@@ -183,7 +183,7 @@ const DragIcon = props => {
             // border:'gray solid 1px',
             // borderRadius:'5px',
             // margin:'3px',
-            opacity:'0.6',
+            opacity:'0.8',
             height:'32px',
             width:'32px',
         },...dndDragIconStyles})
@@ -192,17 +192,17 @@ const DragIcon = props => {
 
         <img style = {iconstylesRef.current} src={dragicon} />
 
-        {isDragging && <DnDDragBar itemID = {itemID} index = {index}/>}
+        {isDragging && <DndDragBar itemID = {itemID} index = {index} dndOptions = {dndOptions}/>}
 
     </div>
 }
 
 // drag continues here
-const DnDDragBar = (props) => {
+const DndDragBar = (props) => {
 
-    const {itemID, index} = props
+    const {itemID, index, dndOptions} = props
 
-    const dragText = `Dragging itemID ${itemID}, index ${index}`
+    const dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
 
     const dragBarData = useDragLayer(
         (monitor: DragLayerMonitor) => {
@@ -257,7 +257,7 @@ const DnDDragBar = (props) => {
             left: 0,
             transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
             pointerEvents: 'none', 
-            opacity:0.75,
+            // opacity:0.75,
             backgroundColor:'whitesmoke',
             width: '200px',
             fontSize:'.75em',
