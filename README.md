@@ -296,7 +296,8 @@ The `cellFramePropertiesRef.current` object is instantiated only when a componen
 ~~~typescript
 {
   itemID, // session cache itemID
-  index // place in virtual list
+  index, // place in virtual list
+  updateDndOptions, // takes dndOptions as argument; updates internal values (notably `enabled`)
 }
 ~~~
 
