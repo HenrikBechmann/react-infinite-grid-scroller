@@ -643,7 +643,7 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerDndOptionsRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
-            isDndMaster && masterDndContext.scrollerID = scrollerSessionIDRef.current
+            isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
         }
 
     },[]);
