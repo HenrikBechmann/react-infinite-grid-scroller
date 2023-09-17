@@ -83,12 +83,10 @@ export const CellFrameController = props => {
 // HoC for DnD functionality; requires targetConnector
 const DndCellFrame = (props) => {
 
-    const {itemID, index} = props
+    const {itemID, index, dndOptions} = props
 
     const masterDndContext = useContext(MasterDndContext)
     const scrollerDndOptions = useContext(ScrollerDndOptions)
-
-    const isDnd = (masterDndContext.enabled && scrollerDndOptions.dndOptions.enabled)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:['Cell'],
@@ -102,7 +100,20 @@ const DndCellFrame = (props) => {
         }
     })
 
-    const enhancedProps = {...props, isDnd, targetConnector}
+    const isDndRef = useRef(true)
+
+    useEffect (() => {
+
+        const enabled = dndOptions?.enabled ?? true
+        const isDnd = (masterDndContext.enabled && scrollerDndOptions.dndOptions.enabled && enabled)
+
+        if (isDndRef.current !== isDnd) {
+            isDndRef.current = isDnd
+        }
+
+    },[dndOptions?.enabled, masterDndContext.enabled, scrollerDndOptions.dndOptions.enabled])
+
+    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector}
 
     return <CellFrame {...enhancedProps}/>
 
