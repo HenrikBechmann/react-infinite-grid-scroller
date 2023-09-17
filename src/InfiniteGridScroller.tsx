@@ -112,7 +112,7 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
-export const MasterDndContext = React.createContext({dnd:false, scrollerID:null, active:false}) // inform children; tree scope
+export const MasterDndContext = React.createContext({dnd:false, scrollerID:null, active:false, enabled:false}) // inform children; tree scope
 export const ScrollerDndOptions = React.createContext(null) // scroller scope
 
 // wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below
@@ -120,15 +120,27 @@ const RigsDnd = (props) => { // must be loaded as root scroller by host to set u
 
     const masterDndContext = useContext(MasterDndContext)
 
+    const { dndOptions } = props
+
     useEffect(()=>{
+
+        let isEnabled = dndOptions?.enabled
+
+        isEnabled = isEnabled ?? true
 
         if (!masterDndContext.dnd) masterDndContext.dnd = true
 
-        return () => {
-            masterDndContext.dnd = false
+        if (!(masterDndContext.enabled === isEnabled)) {
+            masterDndContext.enabled = isEnabled
         }
 
-    },[masterDndContext])
+        return () => {
+            masterDndContext.dnd = false
+            masterDndContext.active = false
+            masterDndContext.enabled = false
+        }
+
+    },[masterDndContext,dndOptions])
 
     const enhancedProps = {...props, isDndMaster:true}
 
@@ -183,16 +195,6 @@ import PortalCache from './PortalCache'
 
 // global session ID generator
 let globalScrollerID = 0
-
-// RIGS
-// const RIGSWrapper = (props) => { // default wrapper to set context.dnd false; RigsDnd set it to true
-
-//     // const masterDndContext = useContext(MasterDndContext)
-//     // masterDndContext.dnd = false
-
-//     return <InfiniteGridScroller {...props} />
-
-// }
 
 const InfiniteGridScroller = (props) => {
 

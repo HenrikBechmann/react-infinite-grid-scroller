@@ -557,6 +557,7 @@ const Cradle = ({
         cradleContentProps,
         cache,
         dnd:masterDndContext.dnd,
+        dndEnabled:masterDndContext.enabled,
         cacheMax,
         startingIndex,
         scrollerID,

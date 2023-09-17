@@ -85,6 +85,8 @@ const DndCellFrame = (props) => {
 
     const {itemID, index} = props
 
+    const masterDndContext = useContext(MasterDndContext)
+
     const [ targetData, targetConnector ] = useDrop({
         accept:['Cell'],
         collect:(monitor:DropTargetMonitor) => {
@@ -97,7 +99,7 @@ const DndCellFrame = (props) => {
         }
     })
 
-    const enhancedProps = {...props, isDnd:true, targetConnector}
+    const enhancedProps = {...props, isDnd:masterDndContext.enabled, targetConnector}
 
     return <CellFrame {...enhancedProps}/>
 
