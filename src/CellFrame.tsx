@@ -757,7 +757,7 @@ const CellFrame = ({
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {isDndRef.current && <DragIcon itemID = {itemID} index = {index} 
+                {(isDndRef.current && (frameState == 'ready')) && <DragIcon itemID = {itemID} index = {index} 
                     dndOptions = {dndOptionsRef.current} dndDragIconStyles = {dndDragIconStyles}/>}
 
             </>
