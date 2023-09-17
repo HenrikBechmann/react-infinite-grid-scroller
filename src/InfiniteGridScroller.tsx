@@ -648,6 +648,15 @@ const InfiniteGridScroller = (props) => {
 
     },[]);
 
+    useEffect (() => {
+
+        const enabled = scrollerDndOptionsRef.current.dndOptions.enabled ?? true
+        if (scrollerDndOptionsRef.current.dndOptions.enabled !== enabled) {
+            scrollerDndOptionsRef.current.dndOptions.enabled = enabled
+        }
+
+    },[scrollerDndOptionsRef.current.dndOptions.enabled])
+
     const setVirtualListRange = useCallback((listrange) =>{
 
         let listsize

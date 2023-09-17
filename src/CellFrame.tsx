@@ -86,6 +86,9 @@ const DndCellFrame = (props) => {
     const {itemID, index} = props
 
     const masterDndContext = useContext(MasterDndContext)
+    const scrollerDndOptions = useContext(ScrollerDndOptions)
+
+    const isDnd = (masterDndContext.enabled && scrollerDndOptions.dndOptions.enabled)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:['Cell'],
@@ -99,7 +102,7 @@ const DndCellFrame = (props) => {
         }
     })
 
-    const enhancedProps = {...props, isDnd:masterDndContext.enabled, targetConnector}
+    const enhancedProps = {...props, isDnd, targetConnector}
 
     return <CellFrame {...enhancedProps}/>
 
