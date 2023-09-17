@@ -71,19 +71,20 @@ type RIGS = {
     placeholderMessages:GenericObject,
     callbacks:GenericObject,
     technical:GenericObject,
-    cacheAPI:null | GenericObject,
     dndOptions:GenericObject,
 
-    // isOwnProperty causes scrollerProperties to be set by the system
+    // isOwnProperty causes scrollerProperties and cacheAPI to be set by the system
     scrollerProperties:null | undefined | GenericObject,
+    cacheAPI:null | undefined | GenericObject,
 
     // functions
-    placeholder:undefined | FC
+    placeholder:FC
     // one of getItem or getItemPack is required
-    getItem:undefined | GetItem,
-    getItemPack:undefined | GetItemPack,
+    getItem:GetItem,
+    getItemPack:GetItemPack,
     // optional
-    getExpansionCount:undefined | GetExpansionCount,
+    getExpansionCount:GetExpansionCount,
+    // internal use only
     isDndMaster:boolean,
 }
 
@@ -642,7 +643,7 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerDndOptionsRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
-            masterDndContext.scrollerID = scrollerSessionIDRef.current
+            isDndMaster && masterDndContext.scrollerID = scrollerSessionIDRef.current
         }
 
     },[]);
