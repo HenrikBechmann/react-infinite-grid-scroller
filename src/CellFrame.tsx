@@ -142,7 +142,7 @@ const DragIcon = props => {
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
-        type:dndOptions.type || 'Cell',
+        type:dndOptions.type || 'Cell', // must be defined
 
         item:{itemID,index},
 
