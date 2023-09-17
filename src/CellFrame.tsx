@@ -48,7 +48,7 @@ import { OutPortal } from 'react-reverse-portal' // fetch from cache
 import Placeholder from './cellframe/Placeholder' // default
 
 import { CradleContext } from './Cradle'
-import { ScrollerDndOptions } from './InfiniteGridScroller'
+import { ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
 
 // =====================[ dnd support ]====================
 
@@ -83,10 +83,10 @@ export const CellFrameController = props => {
 // HoC for DnD functionality; requires targetConnector
 const DndCellFrame = (props) => {
 
-    const {itemID, index, dndOptions} = props
+    const {itemID, index} = props
 
     const masterDndContext = useContext(MasterDndContext)
-    const scrollerDndOptions = useContext(ScrollerDndOptions)
+    const scrollerDndContext = useContext(ScrollerDndContext)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:['Cell'],
@@ -104,14 +104,13 @@ const DndCellFrame = (props) => {
 
     useEffect (() => {
 
-        const enabled = dndOptions?.enabled ?? true
-        const isDnd = (masterDndContext.enabled && scrollerDndOptions.dndOptions.enabled && enabled)
+        const isDnd = (masterDndContext.enabled && scrollerDndContext.dndOptions.enabled) // && enabled)
 
         if (isDndRef.current !== isDnd) {
             isDndRef.current = isDnd
         }
 
-    },[dndOptions?.enabled, masterDndContext.enabled, scrollerDndOptions.dndOptions.enabled])
+    },[masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
 
     const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector}
 
@@ -133,16 +132,17 @@ const CellFrameWrapper = (props) => {
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index } = props
+    const { itemID, index} = props
 
-    let {dndDragIconStyles} = props
+    let {dndDragIconStyles, dndOptions} = props
 
     dndDragIconStyles = dndDragIconStyles ?? {}
+    dndOptions = dndOptions ?? {}
 
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
-        type:'Cell',
+        type:dndOptions.type || 'Cell',
 
         item:{itemID,index},
 
@@ -158,7 +158,7 @@ const DragIcon = props => {
 
         canDrag:true,
 
-    }},[itemID])
+    }},[itemID, dndOptions])
 
     const { isDragging } = sourceData
 
@@ -325,9 +325,7 @@ const CellFrame = ({
     isDnd,
 }) => {
 
-    const scrollerDndOptions = useContext(ScrollerDndOptions)
-
-    // console.log('scrollerDndOptions',scrollerDndOptions)
+    const scrollerDndContext = useContext(ScrollerDndContext)
 
     const coreConfigRef = useRef(null)
     coreConfigRef.current = {
@@ -380,10 +378,26 @@ const CellFrame = ({
     // the session itemID to use; could be updated by parent
     const itemIDRef = useRef(null)
     itemIDRef.current = itemID
+    const dndOptionsRef = useRef<GenericObject>(null)
     const cellFramePropertiesRef = useRef(null)
+    const updateDndOptions = (dndOptions) => {
+        dndOptionsRef.current = dndOptions
+        setFrameState('updatedndoptions')
+    }
+    const isDndRef = useRef(isDnd)
+    useEffect( () => {
+
+        let enabled = dndOptionsRef.current?.enabled
+        enabled = enabled ?? true
+        const isLocalDnd = isDnd && enabled
+
+        isDndRef.current = isLocalDnd 
+    },[isDnd,dndOptionsRef.current?.enabled])
+
     cellFramePropertiesRef.current = {
         itemID,
-        index
+        index,
+        updateDndOptions,
     }
     // fetch error
     const errorRef = useRef(false)
@@ -560,6 +574,7 @@ const CellFrame = ({
                         portalMetadataRef.current.scrollerProperties.cellFramePropertiesRef = cellFramePropertiesRef
                         portalMetadataRef.current.scrollerProperties.scrollerPropertiesRef = scrollerPropertiesRef
                         // get OutPortal node
+                        dndOptionsRef.current = portalMetadataRef.current.dndOptions
                         portalNodeRef.current = portalMetadataRef.current.portalNode
                         setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
@@ -591,8 +606,9 @@ const CellFrame = ({
                                         profile
                                     }
                                 */
-                                const itempack = getItemPack(index, itemID, {accepts:scrollerDndOptions.dndOptions.accepts});
+                                const itempack = getItemPack(index, itemID, {accepts:scrollerDndContext.dndOptions.accepts});
                                 ({ dndOptions, profile} = itempack)
+                                dndOptionsRef.current = dndOptions
                                 usercontent = await itempack.content
 
                             } else {
@@ -707,6 +723,7 @@ const CellFrame = ({
             }
 
             case 'inserting':
+            case 'updatedndoptions':
             case 'retrieved': {
 
                 setFrameState('ready')
@@ -740,7 +757,8 @@ const CellFrame = ({
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {isDnd && <DragIcon itemID = {itemID} index = {index} dndDragIconStyles = {dndDragIconStyles}/>}
+                {isDndRef.current && <DragIcon itemID = {itemID} index = {index} 
+                    dndOptions = {dndOptionsRef.current} dndDragIconStyles = {dndDragIconStyles}/>}
 
             </>
 

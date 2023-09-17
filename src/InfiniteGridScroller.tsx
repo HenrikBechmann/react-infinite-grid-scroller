@@ -30,7 +30,7 @@
 
 // compile types
 // objects
-type GenericObject = {[prop:string]:any}
+export type GenericObject = {[prop:string]:any}
 // enums
 type Orientation = 'vertical' | 'horizontal'
 type Layout = 'uniform' | 'variable'
@@ -114,7 +114,7 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
 }
 
 export const MasterDndContext = React.createContext({dnd:false, scrollerID:null, active:false, enabled:false}) // inform children; tree scope
-export const ScrollerDndOptions = React.createContext(null) // scroller scope
+export const ScrollerDndContext = React.createContext(null) // scroller scope
 
 // wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below
 const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
@@ -751,7 +751,7 @@ const InfiniteGridScroller = (props) => {
     }
 
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
-    return <ScrollerDndOptions.Provider value = {scrollerDndOptionsRef.current} >
+    return <ScrollerDndContext.Provider value = {scrollerDndOptionsRef.current} >
     <ErrorBoundary
         FallbackComponent= { ErrorFallback }
         // elaboration TBD
@@ -828,7 +828,7 @@ const InfiniteGridScroller = (props) => {
             </div>}
         </div>
     </ErrorBoundary>
-    </ScrollerDndOptions.Provider>
+    </ScrollerDndContext.Provider>
 }
 
 export default InfiniteGridScroller // RIGSWrapper

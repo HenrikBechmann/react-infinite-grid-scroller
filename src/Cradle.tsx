@@ -75,7 +75,7 @@ import { useDrop, DropTargetMonitor} from 'react-dnd'
 
 import { ViewportContext } from './Viewport'
 
-import { MasterDndContext, ScrollerDndOptions } from './InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
 
 // support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
@@ -202,7 +202,7 @@ const Cradle = ({
 
     const masterDndContext = useContext(MasterDndContext)
 
-    const scrollerDndOptions = useContext(ScrollerDndOptions)
+    const scrollerDndContext = useContext(ScrollerDndContext)
 
     const viewportContextPropertiesRef = useRef(null)
     viewportContextPropertiesRef.current = viewportContextProperties // for closures
@@ -557,7 +557,7 @@ const Cradle = ({
         cradleContentProps,
         cache,
         dnd:masterDndContext.dnd,
-        dndEnabled:(masterDndContext.enabled && scrollerDndOptions.dndOptions.enabled),
+        dndEnabled:(masterDndContext.enabled && scrollerDndContext.dndOptions.enabled),
         cacheMax,
         startingIndex,
         scrollerID,
