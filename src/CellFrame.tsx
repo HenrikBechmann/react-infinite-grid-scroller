@@ -171,7 +171,7 @@ const DragIcon = props => {
     const iconstylesRef = useRef<CSSProperties>(
         {
             margin:'3px',
-            opacity:0.75
+            opacity:0.6
         })
 
     const dragiconstylesRef = useRef<CSSProperties>(
@@ -183,7 +183,7 @@ const DragIcon = props => {
             // border:'gray solid 1px',
             // borderRadius:'5px',
             // margin:'3px',
-            opacity:'0.8',
+            opacity:0.8,
             height:'32px',
             width:'32px',
         },...dndDragIconStyles})

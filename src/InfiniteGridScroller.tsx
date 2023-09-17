@@ -263,7 +263,7 @@ const InfiniteGridScroller = (props) => {
 
     // initialize with defaults if values are empty
     startingListSize = startingListSize ?? 0
-    startingListRange = startingListRange ?? []
+    // startingListRange = startingListRange ?? []
     orientation = orientation ?? 'vertical'
     gap = gap ?? 0
     padding = padding ?? 0
@@ -485,6 +485,7 @@ const InfiniteGridScroller = (props) => {
             }
         }
         if (!goodrange) {
+            startingListSize = +startingListSize
             if (startingListSize && (!isNaN(startingListSize))) {
                 startingListRange = [0,startingListSize - 1]
             } else {
