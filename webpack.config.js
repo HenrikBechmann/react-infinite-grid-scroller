@@ -25,7 +25,8 @@ module.exports = {
           test: /\.tsx?$/, 
           use:['babel-loader','ts-loader']
       },
-      {test: /\.(png|jpg|gif)$/i,
+      {
+        test: /\.(png|jpg|gif)$/i,
         use: [
           {
             loader: 'url-loader',
@@ -34,6 +35,10 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+          test: /\.css?$/,
+          use:['style-loader','css-loader']
       }
       ]
   },

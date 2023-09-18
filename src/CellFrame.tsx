@@ -46,6 +46,7 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // p
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
 
 import Placeholder from './cellframe/Placeholder' // default
+import './cellframe/cellframe.css'
 
 import { CradleContext } from './Cradle'
 import { ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
@@ -91,14 +92,21 @@ const DndCellFrame = (props) => {
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept,
         collect:(monitor:DropTargetMonitor) => {
-            item:monitor.getItem()
+            return {
+                item:monitor.getItem(),
+                type:monitor.getItemType(),
+                isOver:monitor.isOver(),
+                canDrop:monitor.canDrop(),
+            }
         },
-        hover:(item, monitor:DropTargetMonitor) => {
+        // hover:(item, monitor:DropTargetMonitor) => {
 
-            // console.log('hovering over item', item)
+        //     console.log('useDrop hover, item, canDrop', item, monitor.canDrop())
 
-        }
+        // }
     })
+
+    // console.log('useDrop index, itemID, targetData',index, itemID, targetData)
 
     const isDndRef = useRef(true)
 
@@ -132,7 +140,7 @@ const CellFrameWrapper = (props) => {
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index, profile} = props
+    const { itemID, index, profile, draghighlightRef, setFrameState} = props
 
     let {dndDragIconStyles, dndOptions} = props
 
@@ -142,18 +150,18 @@ const DragIcon = props => {
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
-            type:dndOptions.type || 'Cell', // must be defined
+            type:(dndOptions.type || 'Cell'), // must be defined
 
             item:{ 
                 itemID, 
                 index,
                 profile,
-        },
+            },
 
         collect: (monitor:DragSourceMonitor) => {
 
             return {
-
+                item:monitor.getItem(),
                 isDragging:!!monitor.isDragging()
 
             }
@@ -165,6 +173,16 @@ const DragIcon = props => {
     }},[itemID, dndOptions])
 
     const { isDragging } = sourceData
+
+    if (isDragging && !draghighlightRef.current) {
+        draghighlightRef.current = 'source-highlight'
+    }
+    if (!isDragging && draghighlightRef.current) {
+
+        draghighlightRef.current = null
+        setFrameState('clearclassname')
+
+    }
 
     useEffect(()=>{
 
@@ -721,6 +739,7 @@ const CellFrame = ({
 
             case 'inserting':
             case 'updatedndoptions':
+            case 'clearclassname':
             case 'retrieved': {
 
                 setFrameState('ready')
@@ -733,6 +752,10 @@ const CellFrame = ({
 
     }, [frameState])
 
+    const draghighlightRef = useRef(null)
+
+    // console.log('index, draghighlightRef','-'+ index + '-',draghighlightRef)
+
     return <div 
 
         ref = {(r) => {
@@ -744,18 +767,26 @@ const CellFrame = ({
         data-index = { index } 
         data-instanceid = { instanceID } 
         style = { stylesRef.current }
-
     >
         {(frameState != 'setup')
             ?<>
-                <div data-type = 'contentholder' style = {holderStylesRef.current}> 
+                <div data-type = 'contentholder' className = {draghighlightRef.current} style = {holderStylesRef.current}> 
                     {((frameState != 'ready')?
                     placeholderRef.current:
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {(isDndRef.current && (frameState == 'ready')) && <DragIcon itemID = {itemID} index = {index} 
-                    dndOptions = {dndOptionsRef.current} profile = {portalMetadataRef.current.profile} dndDragIconStyles = {dndDragIconStyles}/>}
+                {(isDndRef.current && (frameState == 'ready')) && 
+                    <DragIcon 
+                        draghighlightRef = {draghighlightRef} 
+                        itemID = {itemID} 
+                        index = {index} 
+                        dndOptions = {dndOptionsRef.current} 
+                        profile = {portalMetadataRef.current.profile} 
+                        dndDragIconStyles = {dndDragIconStyles}
+                        setFrameState = {setFrameState}
+                    />
+                }
 
             </>
 
