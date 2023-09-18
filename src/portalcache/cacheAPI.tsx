@@ -1294,7 +1294,7 @@ export default class CacheAPI {
     }
 
     // delete a portal list item
-    // accepts an array of indexes
+    // accept an array of indexes
     private deletePortalByIndex(scrollerID, index, deleteListCallback) {
 
         const

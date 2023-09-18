@@ -89,7 +89,7 @@ const DndCellFrame = (props) => {
     const scrollerDndContext = useContext(ScrollerDndContext)
 
     const [ targetData, targetConnector ] = useDrop({
-        accept:['Cell'],
+        accept:scrollerDndContext.dndOptions.accept,
         collect:(monitor:DropTargetMonitor) => {
             item:monitor.getItem()
         },
@@ -132,7 +132,7 @@ const CellFrameWrapper = (props) => {
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index} = props
+    const { itemID, index, profile} = props
 
     let {dndDragIconStyles, dndOptions} = props
 
@@ -142,9 +142,13 @@ const DragIcon = props => {
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
-        type:dndOptions.type || 'Cell', // must be defined
+            type:dndOptions.type || 'Cell', // must be defined
 
-        item:{itemID,index},
+            item:{ 
+                itemID, 
+                index,
+                profile,
+        },
 
         collect: (monitor:DragSourceMonitor) => {
 
@@ -599,14 +603,7 @@ const CellFrame = ({
 
                             if (getItemPack) {
 
-                                /*
-                                    itempack = {
-                                        content
-                                        dndOptions
-                                        profile
-                                    }
-                                */
-                                const itempack = getItemPack(index, itemID, {accepts:scrollerDndContext.dndOptions.accepts});
+                                const itempack = getItemPack(index, itemID, {accept:scrollerDndContext.dndOptions.accept});
                                 ({ dndOptions, profile} = itempack)
                                 dndOptionsRef.current = dndOptions
                                 usercontent = await itempack.content
@@ -758,7 +755,7 @@ const CellFrame = ({
                 </div>
 
                 {(isDndRef.current && (frameState == 'ready')) && <DragIcon itemID = {itemID} index = {index} 
-                    dndOptions = {dndOptionsRef.current} dndDragIconStyles = {dndDragIconStyles}/>}
+                    dndOptions = {dndOptionsRef.current} profile = {portalMetadataRef.current.profile} dndDragIconStyles = {dndDragIconStyles}/>}
 
             </>
 
