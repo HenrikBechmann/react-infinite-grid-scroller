@@ -140,7 +140,7 @@ const CellFrameWrapper = (props) => {
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index, profile, draghighlightRef, setFrameState} = props
+    const { itemID, index, profile, contentholderRef, setFrameState} = props
 
     let {dndDragIconStyles, dndOptions} = props
 
@@ -174,14 +174,13 @@ const DragIcon = props => {
 
     const { isDragging } = sourceData
 
-    if (isDragging && !draghighlightRef.current) {
-        draghighlightRef.current = 'source-highlight'
+    // TODO: use element.classList instead
+    if (isDragging && !contentholderRef.current.classList.contains('source-highlight')) {
+        contentholderRef.current.classList.add('source-highlight')
     }
-    if (!isDragging && draghighlightRef.current) {
-
-        draghighlightRef.current = null
-        setFrameState('clearclassname')
-
+    if (!isDragging && contentholderRef.current.classList.contains('source-highlight')) {
+        contentholderRef.current.classList.remove('source-highlight')
+        // setFrameState('setclassname')
     }
 
     useEffect(()=>{
@@ -739,7 +738,7 @@ const CellFrame = ({
 
             case 'inserting':
             case 'updatedndoptions':
-            case 'clearclassname':
+            // case 'setclassname':
             case 'retrieved': {
 
                 setFrameState('ready')
@@ -752,9 +751,9 @@ const CellFrame = ({
 
     }, [frameState])
 
-    const draghighlightRef = useRef(null)
+    const contentholderRef = useRef(null)
 
-    // console.log('index, draghighlightRef','-'+ index + '-',draghighlightRef)
+    // console.log('index, contentholderRef','-'+ index + '-',contentholderRef)
 
     return <div 
 
@@ -770,7 +769,7 @@ const CellFrame = ({
     >
         {(frameState != 'setup')
             ?<>
-                <div data-type = 'contentholder' className = {draghighlightRef.current} style = {holderStylesRef.current}> 
+                <div data-type = 'contentholder' ref = {contentholderRef} style = {holderStylesRef.current}> 
                     {((frameState != 'ready')?
                     placeholderRef.current:
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
@@ -778,7 +777,7 @@ const CellFrame = ({
 
                 {(isDndRef.current && (frameState == 'ready')) && 
                     <DragIcon 
-                        draghighlightRef = {draghighlightRef} 
+                        contentholderRef = {contentholderRef} 
                         itemID = {itemID} 
                         index = {index} 
                         dndOptions = {dndOptionsRef.current} 
