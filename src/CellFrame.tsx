@@ -86,14 +86,22 @@ const DndCellFrame = (props) => {
 
     const {itemID, index} = props
 
+    const cradleContext = useContext(CradleContext)
+
+    const { scrollerPropertiesRef } = cradleContext
+    const { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current
+    const {crosscount } = virtualListProps
+
     const masterDndContext = useContext(MasterDndContext)
     const scrollerDndContext = useContext(ScrollerDndContext)
+
+    const frameRef = useRef(null)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept,
         collect:(monitor:DropTargetMonitor) => {
             return {
-                item:monitor.getItem(),
+                item:monitor.getItem() as any,
                 type:monitor.getItemType(),
                 isOver:monitor.isOver(),
                 canDrop:monitor.canDrop(),
@@ -105,6 +113,28 @@ const DndCellFrame = (props) => {
 
         // }
     })
+
+    const sourceIndex = targetData.item?.index
+    const sourceScrollerID = targetData.item?.scrollerID
+
+    const isLocation = (scrollerID !== sourceScrollerID) || ((sourceIndex !== index) && (index !== sourceIndex + 1))
+
+    const isHorizontal = (orientation == 'horizontal' && crosscount > 1) || (orientation == 'vertical' && crosscount == 1)
+
+    const classname = 
+        isHorizontal?
+            'top-shadow':
+            'left-shadow'
+
+    if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(classname)) {
+
+        frameRef.current.classList.add(classname)
+
+    } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(classname)) {
+
+        frameRef.current.classList.remove(classname)
+
+    }
 
     // console.log('useDrop index, itemID, targetData',index, itemID, targetData)
 
@@ -120,7 +150,7 @@ const DndCellFrame = (props) => {
 
     },[masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
 
-    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector}
+    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef}
 
     return <CellFrame {...enhancedProps}/>
 
@@ -132,7 +162,9 @@ const CellFrameWrapper = (props) => {
     const targetConnector = (element) => {
         //no-op
     }
-    const enhancedProps = {...props, isDnd:false, targetConnector}
+    const frameRef = useRef(null)
+
+    const enhancedProps = {...props, isDnd:false, targetConnector, frameRef}
 
     return <CellFrame {...enhancedProps}/>
 } 
@@ -140,7 +172,7 @@ const CellFrameWrapper = (props) => {
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index, profile, contentholderRef, setFrameState} = props
+    const { itemID, index, profile, contentholderRef, scrollerID} = props
 
     let {dndDragIconStyles, dndOptions} = props
 
@@ -153,6 +185,7 @@ const DragIcon = props => {
             type:(dndOptions.type || 'Cell'), // must be defined
 
             item:{ 
+                scrollerID,
                 itemID, 
                 index,
                 profile,
@@ -344,6 +377,7 @@ const CellFrame = ({
     parentframeRef,
     targetConnector,
     isDnd,
+    frameRef,
 }) => {
 
     const scrollerDndContext = useContext(ScrollerDndContext)
@@ -356,7 +390,7 @@ const CellFrame = ({
         cellHeight
     }
 
-    const frameRef = useRef(null)
+    // const frameRef = useRef(null)
 
     // ----------------------[ setup ]----------------------
 
@@ -783,7 +817,7 @@ const CellFrame = ({
                         dndOptions = {dndOptionsRef.current} 
                         profile = {portalMetadataRef.current.profile} 
                         dndDragIconStyles = {dndDragIconStyles}
-                        setFrameState = {setFrameState}
+                        scrollerID = { scrollerID }
                     />
                 }
 
