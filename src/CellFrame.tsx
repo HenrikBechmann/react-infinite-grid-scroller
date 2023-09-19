@@ -210,7 +210,7 @@ const DragIcon = props => {
 
         previewConnector(getEmptyImage(),{ captureDraggingState: true })
 
-    }) // no dependency array here to prevent previewConnector from showing an image in list header
+    },[])
 
     const iconstylesRef = useRef<CSSProperties>(
         {
@@ -224,9 +224,6 @@ const DragIcon = props => {
             zIndex:'2',
             top:0,
             left:0,
-            // border:'gray solid 1px',
-            // borderRadius:'5px',
-            // margin:'3px',
             opacity:0.8,
             height:'32px',
             width:'32px',
