@@ -86,6 +86,7 @@ type RIGS = {
     getExpansionCount:GetExpansionCount,
     // internal use only
     isDndMaster:boolean,
+    staticComponent:FC,
 }
 
 // React support
@@ -272,6 +273,7 @@ const InfiniteGridScroller = (props) => {
         // information for host cell content
         scrollerProperties, // required for embedded scroller; shares scroller settings with content
         isDndMaster, // internal, set for root dnd only
+        staticComponent, // supercedies most other properties
 
     }:RIGS = props
 
