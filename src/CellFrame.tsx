@@ -84,47 +84,36 @@ export const CellFrameController = props => {
 // HoC for DnD functionality; requires targetConnector
 const DndCellFrame = (props) => {
 
-    const {itemID, index} = props
+    const 
+        {itemID, index} = props,
+        cradleContext = useContext(CradleContext),
+        { scrollerPropertiesRef } = cradleContext,
+        { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current,
+        {crosscount } = virtualListProps,
 
-    const cradleContext = useContext(CradleContext)
-
-    const { scrollerPropertiesRef } = cradleContext
-    const { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current
-    const {crosscount } = virtualListProps
-
-    const masterDndContext = useContext(MasterDndContext)
-    const scrollerDndContext = useContext(ScrollerDndContext)
-
-    const frameRef = useRef(null)
+        masterDndContext = useContext(MasterDndContext),
+        scrollerDndContext = useContext(ScrollerDndContext),
+        frameRef = useRef(null)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept,
         collect:(monitor:DropTargetMonitor) => {
             return {
                 item:monitor.getItem() as any,
-                type:monitor.getItemType(),
                 isOver:monitor.isOver(),
                 canDrop:monitor.canDrop(),
             }
         },
-        // hover:(item, monitor:DropTargetMonitor) => {
-
-        //     console.log('useDrop hover, item, canDrop', item, monitor.canDrop())
-
-        // }
     })
 
-    const sourceIndex = targetData.item?.index
-    const sourceScrollerID = targetData.item?.scrollerID
+    const 
+        sourceIndex = targetData.item?.index,
+        sourceScrollerID = targetData.item?.scrollerID,
 
-    const isLocation = (scrollerID !== sourceScrollerID) || ((sourceIndex !== index) && (index !== sourceIndex + 1))
+        isLocation = (scrollerID !== sourceScrollerID) || ((sourceIndex !== index) && (index !== sourceIndex + 1)),
+        isHorizontal = (orientation == 'horizontal' && crosscount > 1) || (orientation == 'vertical' && crosscount == 1),
 
-    const isHorizontal = (orientation == 'horizontal' && crosscount > 1) || (orientation == 'vertical' && crosscount == 1)
-
-    const classname = 'target-highlight'
-        // isHorizontal?
-        //     'top-shadow':
-        //     'left-shadow'
+        classname = 'target-highlight'
 
     if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(classname)) {
 
@@ -159,12 +148,11 @@ const DndCellFrame = (props) => {
 // provide targetConnector source when not required for DnD
 const CellFrameWrapper = (props) => {
 
-    const targetConnector = (element) => {
-        //no-op
-    }
-    const frameRef = useRef(null)
+    const 
+        targetConnector = (element) => {}, // no-op
+        frameRef = useRef(null),
 
-    const enhancedProps = {...props, isDnd:false, targetConnector, frameRef}
+        enhancedProps = {...props, isDnd:false, targetConnector, frameRef}
 
     return <CellFrame {...enhancedProps}/>
 } 
@@ -205,15 +193,17 @@ const DragIcon = props => {
 
     }},[itemID, dndOptions])
 
-    const { isDragging } = sourceData
+    const 
+        { isDragging } = sourceData,
+
+        classname = 'source-highlight'
 
     // TODO: use element.classList instead
-    if (isDragging && !contentholderRef.current.classList.contains('source-highlight')) {
-        contentholderRef.current.classList.add('source-highlight')
+    if (isDragging && !contentholderRef.current.classList.contains(classname)) {
+        contentholderRef.current.classList.add(classname)
     }
-    if (!isDragging && contentholderRef.current.classList.contains('source-highlight')) {
-        contentholderRef.current.classList.remove('source-highlight')
-        // setFrameState('setclassname')
+    if (!isDragging && contentholderRef.current.classList.contains(classname)) {
+        contentholderRef.current.classList.remove(classname)
     }
 
     useEffect(()=>{
@@ -254,9 +244,10 @@ const DragIcon = props => {
 // drag continues here
 const DndDragBar = (props) => {
 
-    const {itemID, index, dndOptions} = props
+    const 
+        {itemID, index, dndOptions} = props,
 
-    const dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
+        dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
 
     const dragBarData = useDragLayer(
         (monitor: DragLayerMonitor) => {
@@ -772,7 +763,6 @@ const CellFrame = ({
 
             case 'inserting':
             case 'updatedndoptions':
-            // case 'setclassname':
             case 'retrieved': {
 
                 setFrameState('ready')
