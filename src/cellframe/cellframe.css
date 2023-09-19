@@ -1,0 +1,11 @@
+/*cellframe.css*/
+.source-highlight {
+    box-shadow: 0px 0px 5px 5px darkorange;
+    border-radius: 8px;
+}
+
+.target-highlight {
+    box-shadow: 0 0 0 6px black;
+    border-radius: 8px;
+    opacity: 0.3;
+}

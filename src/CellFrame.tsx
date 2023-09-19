@@ -121,10 +121,10 @@ const DndCellFrame = (props) => {
 
     const isHorizontal = (orientation == 'horizontal' && crosscount > 1) || (orientation == 'vertical' && crosscount == 1)
 
-    const classname = 
-        isHorizontal?
-            'top-shadow':
-            'left-shadow'
+    const classname = 'target-highlight'
+        // isHorizontal?
+        //     'top-shadow':
+        //     'left-shadow'
 
     if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(classname)) {
 
