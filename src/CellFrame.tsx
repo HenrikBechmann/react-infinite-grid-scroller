@@ -50,19 +50,28 @@ import './cellframe/cellframe.css'
 
 import { CradleContext } from './Cradle'
 import { ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
+import { ViewportContext } from './Viewport'
 
 // =====================[ dnd support ]====================
 
-import { useDrag, useDragLayer, useDrop, DragSourceMonitor, DragLayerMonitor, DropTargetMonitor} from 'react-dnd'
+import { 
+    useDrag, 
+    useDragLayer, 
+    useDrop, 
+    DragSourceMonitor, 
+    DragLayerMonitor, 
+    DropTargetMonitor
+} from 'react-dnd'
+
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
 import { MasterDndContext } from './InfiniteGridScroller'
 
+// import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
+// import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
-import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
-import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
-import dropicon from "../task_alt_FILL0_wght400_GRAD0_opsz24.png"
-import nodropicon from "../block_FILL0_wght400_GRAD0_opsz24.png"
+// import dropicon from "../task_alt_FILL0_wght400_GRAD0_opsz24.png"
+// import nodropicon from "../block_FILL0_wght400_GRAD0_opsz24.png"
 
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
@@ -139,7 +148,7 @@ const DndCellFrame = (props) => {
 
     },[masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
 
-    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef}
+    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext}
 
     return <CellFrame {...enhancedProps}/>
 
@@ -161,6 +170,14 @@ const CellFrameWrapper = (props) => {
 const DragIcon = props => {
 
     const { itemID, index, profile, contentholderRef, scrollerID} = props
+
+    let { masterDndContext } = props
+
+    const viewportContext = useContext(ViewportContext)
+
+    masterDndContext = masterDndContext ?? {} 
+
+    const {dragData} = masterDndContext || {}
 
     let {dndDragIconStyles, dndOptions} = props
 
@@ -195,8 +212,15 @@ const DragIcon = props => {
 
     const 
         { isDragging } = sourceData,
-
         classname = 'source-highlight'
+
+    if (isDragging && !dragData.isDragging) {
+        dragData.isDragging = isDragging
+        dragData.itemID = itemID
+        dragData.index = index
+        dragData.dndOptions = dndOptions
+        viewportContext.setViewportState('startdragbar')
+    }
 
     // TODO: use element.classList instead
     if (isDragging && !contentholderRef.current.classList.contains(classname)) {
@@ -233,98 +257,7 @@ const DragIcon = props => {
 
         <img style = {iconstylesRef.current} src={dragicon} />
 
-        {isDragging && <DndDragBar itemID = {itemID} index = {index} dndOptions = {dndOptions}/>}
-
     </div>
-}
-
-// drag continues here
-const DndDragBar = (props) => {
-
-    const 
-        {itemID, index, dndOptions} = props,
-
-        dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
-
-    const dragBarData = useDragLayer(
-        (monitor: DragLayerMonitor) => {
-            return {
-                isDragging: monitor.isDragging(),
-                currentOffset: monitor.getSourceClientOffset(),
-                item: monitor.getItem()
-            }
-        })
-
-    const {isDragging, currentOffset, item} = dragBarData
-
-    // static
-    const dragiconholderstylesRef = useRef<CSSProperties>(
-        {
-            float:'left',
-            top:0,
-            left:0,
-            border:'gray solid 1px',
-            borderRadius:'5px',
-            margin:'3px',
-        })
-
-    // static
-    const modeiconholderstylesRef = useRef<CSSProperties>(
-        {
-            position:'absolute',
-            bottom:'-12px',
-            opacity:'!important 1',
-            right:0,
-            backgroundColor:'whitesmoke',
-            border:'gray solid 1px',
-            borderRadius:'3px',
-            padding:'2px',
-            margin:'3px',
-            height:'20px',
-            width:'20px'
-        })
-
-    // static
-    const iconstylesRef = useRef<CSSProperties>(
-        {
-            opacity:0.75
-        })
-
-    // dynamic
-    const dragbarstyles = 
-        {
-            zIndex:10,
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
-            pointerEvents: 'none', 
-            // opacity:0.75,
-            backgroundColor:'whitesmoke',
-            width: '200px',
-            fontSize:'.75em',
-            border: '1px solid black',
-            borderRadius:'5px',
-        } as CSSProperties
-
-    return (isDragging && currentOffset
-        ?<div data-type = 'dragbar' style={dragbarstyles}>
-
-            <div style = {dragiconholderstylesRef.current}>
-                <img style = {iconstylesRef.current} src={dragicon} />
-            </div>
-
-                {dragText}
-                
-            <div style = {modeiconholderstylesRef.current}>
-                <img style = {iconstylesRef.current} src={moveicon} />
-            </div>
-        </div>
-
-        : null
-
-    )
-
 }
 
 // =================[ end of dnd support ]=================
@@ -366,6 +299,7 @@ const CellFrame = ({
     targetConnector,
     isDnd,
     frameRef,
+    masterDndContext,
 }) => {
 
     const scrollerDndContext = useContext(ScrollerDndContext)
@@ -805,6 +739,7 @@ const CellFrame = ({
                         profile = {portalMetadataRef.current.profile} 
                         dndDragIconStyles = {dndDragIconStyles}
                         scrollerID = { scrollerID }
+                        masterDndContext = {masterDndContext}
                     />
                 }
 

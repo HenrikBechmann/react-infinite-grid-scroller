@@ -113,7 +113,21 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
-export const MasterDndContext = React.createContext({dnd:false, scrollerID:null, active:false, enabled:false}) // inform children; tree scope
+export const MasterDndContext = React.createContext(
+    {
+        dnd:false, 
+        scrollerID:null, 
+        active:false, 
+        enabled:false,
+
+        dragData:{
+            isDragging:false,
+            itemID:null,
+            index:null,
+            dndOptions:{} as GenericObject,
+        }
+    }) // inform children; tree scope
+
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 
 // wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below

@@ -14,9 +14,28 @@ import React, {
     useEffect, 
     useLayoutEffect, 
     useMemo, 
-    useCallback, 
+    useCallback,
+    useContext,
+    CSSProperties,
 
 } from 'react'
+
+import { 
+    // useDrag, 
+    useDragLayer, 
+    // useDrop, 
+    // DragSourceMonitor, 
+    DragLayerMonitor, 
+    // DropTargetMonitor
+} from 'react-dnd'
+
+import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
+import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
+import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
+import dropicon from "../task_alt_FILL0_wght400_GRAD0_opsz24.png"
+import nodropicon from "../block_FILL0_wght400_GRAD0_opsz24.png"
+
+import { MasterDndContext, GenericObject } from './InfiniteGridScroller'
 
 // popup position tracker for repositioning
 import ScrollTracker from './cradle/ScrollTracker'
@@ -24,6 +43,103 @@ import ScrollTracker from './cradle/ScrollTracker'
 export const ViewportContext = React.createContext(null) // for children
 
 import scrollicon from "../keyboard_double_arrow_right_FILL0_wght400_GRAD0_opsz24.png"
+
+// drag continues here
+const DndDragBar = (props) => {
+
+    const 
+        {itemID, index, dndOptions, dragData} = props,
+
+        dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
+
+    const dragBarData = useDragLayer(
+        (monitor: DragLayerMonitor) => {
+            return {
+                isDragging: monitor.isDragging(),
+                currentOffset: monitor.getSourceClientOffset(),
+                item: monitor.getItem()
+            }
+        })
+
+    const {isDragging, currentOffset, item} = dragBarData
+
+    if (!isDragging && dragData.isDragging) {
+        dragData.isDragging = false
+        dragData.itemID = null
+        dragData.index = null
+        dragData.dndOptions = {} as GenericObject
+    }
+
+    // static
+    const dragiconholderstylesRef = useRef<CSSProperties>(
+        {
+            float:'left',
+            top:0,
+            left:0,
+            border:'gray solid 1px',
+            borderRadius:'5px',
+            margin:'3px',
+        })
+
+    // static
+    const modeiconholderstylesRef = useRef<CSSProperties>(
+        {
+            position:'absolute',
+            bottom:'-12px',
+            opacity:'!important 1',
+            right:0,
+            backgroundColor:'whitesmoke',
+            border:'gray solid 1px',
+            borderRadius:'3px',
+            padding:'2px',
+            margin:'3px',
+            height:'20px',
+            width:'20px'
+        })
+
+    // static
+    const iconstylesRef = useRef<CSSProperties>(
+        {
+            opacity:0.75
+        })
+
+    // dynamic
+    let dragbarstyles
+    if (isDragging) {dragbarstyles = 
+        {
+            zIndex:10,
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+            pointerEvents: 'none', 
+            // opacity:0.75,
+            backgroundColor:'whitesmoke',
+            width: '200px',
+            fontSize:'.75em',
+            border: '1px solid black',
+            borderRadius:'5px',
+        } as CSSProperties}
+
+    return (isDragging && currentOffset
+        ?<div data-type = 'dragbar' style={dragbarstyles}>
+
+            <div style = {dragiconholderstylesRef.current}>
+                <img style = {iconstylesRef.current} src={dragicon} />
+            </div>
+
+                {dragText}
+                
+            <div style = {modeiconholderstylesRef.current}>
+                <img style = {iconstylesRef.current} src={moveicon} />
+            </div>
+        </div>
+
+        : null
+
+    )
+
+}
 
 const Viewport = ({
 
@@ -37,6 +153,10 @@ const Viewport = ({
 }) => {
 
     // -----------------------[ initialize ]------------------
+
+    const masterDndContext = useContext(MasterDndContext)
+
+    const { dragData } = masterDndContext
 
     const {
 
@@ -63,6 +183,7 @@ const Viewport = ({
             // viewportDimensions:null,
             elementRef:null,
             scrollTrackerAPIRef,
+            setViewportState,
 
         }
     )
@@ -202,6 +323,7 @@ const Viewport = ({
         switch (viewportState) {
 
             case 'resized':
+            case 'startdragbar':
             case 'setup': {
                 setViewportState('ready')
                 break
@@ -213,6 +335,15 @@ const Viewport = ({
     // ----------------------[ render ]--------------------------------
 
     return <ViewportContext.Provider value = { viewportContextPropertiesRef.current }>
+
+        { dragData.isDragging && <DndDragBar 
+            itemID = {dragData.itemID} 
+            index = {dragData.index} 
+            dndOptions = {dragData.dndOptions}
+            dragData = { dragData }
+        />
+        }
+
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }
