@@ -214,12 +214,13 @@ const DragIcon = props => {
         { isDragging } = sourceData,
         classname = 'source-highlight'
 
+    console.log('isDragging, dragData.isDragging',isDragging, dragData.isDragging)
     if (isDragging && !dragData.isDragging) {
         dragData.isDragging = isDragging
         dragData.itemID = itemID
         dragData.index = index
         dragData.dndOptions = dndOptions
-        viewportContext.setViewportState('startdragbar')
+        masterDndContext.setViewportState('startdragbar')
     }
 
     // TODO: use element.classList instead

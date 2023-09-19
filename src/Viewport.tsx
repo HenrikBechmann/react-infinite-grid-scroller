@@ -166,6 +166,10 @@ const Viewport = ({
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
+    if ((scrollerID == masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
+        masterDndContext.setViewportState = setViewportState
+    }
+
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
@@ -183,7 +187,6 @@ const Viewport = ({
             // viewportDimensions:null,
             elementRef:null,
             scrollTrackerAPIRef,
-            setViewportState,
 
         }
     )
@@ -334,9 +337,12 @@ const Viewport = ({
 
     // ----------------------[ render ]--------------------------------
 
+    console.log('dragData.isDragging, scrollerID, masterDndContext.scrollerID\n',
+        dragData.isDragging, scrollerID, masterDndContext.scrollerID)
+
     return <ViewportContext.Provider value = { viewportContextPropertiesRef.current }>
 
-        { dragData.isDragging && <DndDragBar 
+        { (dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && <DndDragBar 
             itemID = {dragData.itemID} 
             index = {dragData.index} 
             dndOptions = {dragData.dndOptions}

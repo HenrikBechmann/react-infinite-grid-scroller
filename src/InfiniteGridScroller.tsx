@@ -120,7 +120,7 @@ export const MasterDndContext = React.createContext(
         scrollerID:null, 
         active:false, 
         enabled:false,
-
+        setViewportState:null,
         dragData:{
             isDragging:false,
             itemID:null,
@@ -660,6 +660,7 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerDndOptionsRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
+            console.log('isDndMaster',isDndMaster)
             isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
         }
 
