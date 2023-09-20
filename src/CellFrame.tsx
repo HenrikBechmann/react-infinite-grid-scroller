@@ -246,7 +246,7 @@ const DragIcon = props => {
     const dragiconstylesRef = useRef<CSSProperties>(
         {...{
             position:'absolute',
-            zIndex:'2',
+            zIndex:'3',
             top:0,
             left:0,
             opacity:0.8,
