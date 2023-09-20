@@ -337,8 +337,8 @@ const Viewport = ({
 
     // ----------------------[ render ]--------------------------------
 
-    console.log('dragData.isDragging, scrollerID, masterDndContext.scrollerID\n',
-        dragData.isDragging, scrollerID, masterDndContext.scrollerID)
+    // console.log('dragData.isDragging, scrollerID, masterDndContext.scrollerID\n',
+    //     dragData.isDragging, scrollerID, masterDndContext.scrollerID)
 
     return <ViewportContext.Provider value = { viewportContextPropertiesRef.current }>
 

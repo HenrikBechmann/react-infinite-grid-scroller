@@ -214,7 +214,7 @@ const DragIcon = props => {
         { isDragging } = sourceData,
         classname = 'source-highlight'
 
-    console.log('isDragging, dragData.isDragging',isDragging, dragData.isDragging)
+    // console.log('isDragging, dragData.isDragging',isDragging, dragData.isDragging)
     if (isDragging && !dragData.isDragging) {
         dragData.isDragging = isDragging
         dragData.itemID = itemID

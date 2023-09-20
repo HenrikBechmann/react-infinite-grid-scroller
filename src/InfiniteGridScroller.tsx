@@ -117,9 +117,9 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
 export const MasterDndContext = React.createContext(
     {
         dnd:false, 
-        scrollerID:null, 
         active:false, 
         enabled:false,
+        scrollerID:null, 
         setViewportState:null,
         dragData:{
             isDragging:false,
@@ -151,9 +151,19 @@ const RigsDnd = (props) => { // must be loaded as root scroller by host to set u
         }
 
         return () => {
-            masterDndContext.dnd = false
-            masterDndContext.active = false
-            masterDndContext.enabled = false
+            Object.assign(masterDndContext,{
+                dnd:false,
+                active:false,
+                enabled:false,
+                scrollerID:null,
+                setViewportState:null,
+                dragData:{
+                    isDragging:false,
+                    itemID:null,
+                    index:null,
+                    dndOptions:{} as GenericObject,
+                }
+            })
         }
 
     },[masterDndContext,dndOptions])
@@ -660,7 +670,7 @@ const InfiniteGridScroller = (props) => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerDndOptionsRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
-            console.log('isDndMaster',isDndMaster)
+            // console.log('isDndMaster, setting scrollerID',isDndMaster, scrollerSessionIDRef.current)
             isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
         }
 
