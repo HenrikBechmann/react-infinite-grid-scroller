@@ -75,7 +75,7 @@ import { useDrop, DropTargetMonitor} from 'react-dnd'
 
 import { ViewportContext } from './Viewport'
 
-import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
 
 // support code; process handlers
 import ScrollHandler from './cradle/scrollhandler'
@@ -92,13 +92,17 @@ const CradleController = props => {
 
     const masterDndContext = useContext(MasterDndContext)
 
+    const serviceHandlerRef = useRef(null)
+
     if (masterDndContext.dnd) {
 
         return <DndCradle {...props}/>
 
     } else {
 
-        return <Cradle {...props} />
+        const enhancedProps = {...props, serviceHandlerRef}
+
+        return <Cradle {...enhancedProps} />
 
     }
 
@@ -110,27 +114,31 @@ export default CradleController
 const DndCradle = (props) => {
 
     const 
+        scrollerDndContext = useContext(ScrollerDndContext),
         viewportContextProperties = useContext(ViewportContext),
+        serviceHandlerRef = useRef(null),
         viewportElement = viewportContextProperties.elementRef.current,
         { scrollerID } = props
 
     const [ targetData, targetConnector ] = useDrop({
-        accept:['Cell'],
-        collect:(monitor:DropTargetMonitor) => {
-            item:monitor.getItem()
+        accept:scrollerDndContext.dndOptions.accept || ['Cell'],
+        drop:(item:GenericObject,monitor) => {
+            const dropResult:GenericObject = monitor.getDropResult()
+
+            if (item.scrollerID == dropResult.target.scrollerID) {
+                const 
+                    fromIndex = item.index,
+                    toIndex = dropResult.target.index
+                    serviceHandlerRef.current.moveIndex(toIndex, fromIndex)
+            }
         },
-        hover:(item, monitor:DropTargetMonitor) => {
-
-            // console.log('Cradle hovering over scrollerID, item\n', scrollerID, item)
-
-        }
     })
 
     targetConnector(viewportElement)
 
-    // const enhancedProps = {...props, isDnd:true, targetConnector}
+    const enhancedProps = {...props, serviceHandlerRef}
 
-    return <Cradle {...props}/>
+    return <Cradle {...enhancedProps}/>
 
 }
 
@@ -171,6 +179,7 @@ const Cradle = ({
         MAX_CACHE_OVER_RUN,
         VARIABLE_MEASUREMENTS_TIMEOUT,
         scrollerProperties,
+        serviceHandlerRef
 
     }) => {
 
@@ -620,6 +629,8 @@ const Cradle = ({
         serviceHandler,
         stylesHandler,
     } = handlersRef.current
+
+    serviceHandlerRef.current = serviceHandler // possibly for dnd
 
     // =======================[ INTERCEPT CACHING STATE CHANGE ]=========================
 
