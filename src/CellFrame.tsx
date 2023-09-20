@@ -146,12 +146,6 @@ const DndCellFrame = (props) => {
             if (cellCanDropRef.current) masterDndContext.dropCount--
 
             updateDragLayerIcon()
-            // const canDoDrop = !!masterDndContext.dropCount
-
-            // if (masterDndContext.dragData.canDrop !== canDoDrop) {
-            //     masterDndContext.dragData.canDrop = canDoDrop
-            //     masterDndContext.setDragState && masterDndContext.setDragState('updateicon')
-            // }
 
         }
 

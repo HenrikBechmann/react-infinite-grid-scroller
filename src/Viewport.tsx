@@ -154,7 +154,7 @@ const DndDragBar = (props) => {
             left: 0,
             transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
             pointerEvents: 'none', 
-            // opacity:0.75,
+            paddingRight: '20px',
             backgroundColor:'whitesmoke',
             width: '200px',
             fontSize:'.75em',
