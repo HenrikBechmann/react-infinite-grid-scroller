@@ -121,8 +121,11 @@ export const MasterDndContext = React.createContext(
         enabled:false,
         scrollerID:null, 
         setViewportState:null,
+        setDragState:null,
+        dropCount:0,
         dragData:{
             isDragging:false,
+            canDrop:false,
             itemID:null,
             index:null,
             dndOptions:{} as GenericObject,
@@ -157,6 +160,8 @@ const RigsDnd = (props) => { // must be loaded as root scroller by host to set u
                 enabled:false,
                 scrollerID:null,
                 setViewportState:null,
+                setDragState:null,
+                dropCount:0,
                 dragData:{
                     isDragging:false,
                     itemID:null,

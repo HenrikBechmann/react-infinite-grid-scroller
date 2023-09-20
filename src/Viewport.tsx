@@ -32,8 +32,8 @@ import {
 import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
 import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
-import dropicon from "../task_alt_FILL0_wght400_GRAD0_opsz24.png"
-import nodropicon from "../block_FILL0_wght400_GRAD0_opsz24.png"
+import dropicon from "../assets/task_alt_FILL0_wght400_GRAD0_opsz24.png"
+import nodropicon from "../assets/block_FILL0_wght400_GRAD0_opsz24.png"
 
 import { MasterDndContext, GenericObject } from './InfiniteGridScroller'
 
@@ -47,10 +47,19 @@ import scrollicon from "../keyboard_double_arrow_right_FILL0_wght400_GRAD0_opsz2
 // drag continues here
 const DndDragBar = (props) => {
 
+    const [dragState, setDragState] = useState('ready')
+
     const 
-        {itemID, index, dndOptions, dragData} = props,
+        masterDndContext = useContext(MasterDndContext),
+        canDrop = masterDndContext.dragData.canDrop,
+        {itemID, index, dndOptions, dragData, scrollerID} = props,
 
         dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
+
+    if ((scrollerID == masterDndContext.scrollerID) && !masterDndContext.setDragState) {
+        masterDndContext.setDragState = setDragState
+    }
+
 
     const dragBarData = useDragLayer(
         (monitor: DragLayerMonitor) => {
@@ -70,6 +79,22 @@ const DndDragBar = (props) => {
         dragData.dndOptions = {} as GenericObject
     }
 
+    const candropiconRef = useRef(null)
+
+    candropiconRef.current = 
+        canDrop?
+            dropicon:
+            nodropicon
+
+    useEffect (()=>{
+
+        switch (dragState) {
+            case 'updateicon':
+                setDragState('ready')
+        }
+
+    },[dragState])
+
     // static
     const dragiconholderstylesRef = useRef<CSSProperties>(
         {
@@ -86,6 +111,22 @@ const DndDragBar = (props) => {
         {
             position:'absolute',
             bottom:'-12px',
+            opacity:'!important 1',
+            right:0,
+            backgroundColor:'whitesmoke',
+            border:'gray solid 1px',
+            borderRadius:'3px',
+            padding:'2px',
+            margin:'3px',
+            height:'20px',
+            width:'20px'
+        })
+
+    // static
+    const candropiconholderstylesRef = useRef<CSSProperties>(
+        {
+            position:'absolute',
+            top:'-12px',
             opacity:'!important 1',
             right:0,
             backgroundColor:'whitesmoke',
@@ -123,6 +164,10 @@ const DndDragBar = (props) => {
 
     return (isDragging && currentOffset
         ?<div data-type = 'dragbar' style={dragbarstyles}>
+
+            <div style = {candropiconholderstylesRef.current}>
+                <img style = {iconstylesRef.current} src={candropiconRef.current} />
+            </div>
 
             <div style = {dragiconholderstylesRef.current}>
                 <img style = {iconstylesRef.current} src={dragicon} />
@@ -347,6 +392,7 @@ const Viewport = ({
             index = {dragData.index} 
             dndOptions = {dragData.dndOptions}
             dragData = { dragData }
+            scrollerID = { scrollerID }
         />
         }
 

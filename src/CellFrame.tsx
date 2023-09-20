@@ -115,26 +115,60 @@ const DndCellFrame = (props) => {
         },
     })
 
+    const cellCanDropRef = useRef(false)
+
     const 
         sourceIndex = targetData.item?.index,
         sourceScrollerID = targetData.item?.scrollerID,
 
         isLocation = (scrollerID !== sourceScrollerID) || ((sourceIndex !== index) && (index !== sourceIndex + 1)),
-        isHorizontal = (orientation == 'horizontal' && crosscount > 1) || (orientation == 'vertical' && crosscount == 1),
 
         classname = 'target-highlight'
 
     if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(classname)) {
 
+        cellCanDropRef.current = true
         frameRef.current.classList.add(classname)
+        masterDndContext.dropCount++
 
     } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(classname)) {
 
+        masterDndContext.dropCount--
         frameRef.current.classList.remove(classname)
+        cellCanDropRef.current = false
 
     }
 
-    // console.log('useDrop index, itemID, targetData',index, itemID, targetData)
+    useEffect(()=>{
+
+        return () => {
+            
+            if (cellCanDropRef.current) masterDndContext.dropCount--
+
+            updateDragLayerIcon()
+            // const canDoDrop = !!masterDndContext.dropCount
+
+            // if (masterDndContext.dragData.canDrop !== canDoDrop) {
+            //     masterDndContext.dragData.canDrop = canDoDrop
+            //     masterDndContext.setDragState && masterDndContext.setDragState('updateicon')
+            // }
+
+        }
+
+    },[])
+
+    const updateDragLayerIcon = () => {
+
+        const canDoDrop = !!masterDndContext.dropCount
+
+        if (masterDndContext.dragData.canDrop !== canDoDrop) {
+            masterDndContext.dragData.canDrop = canDoDrop
+            masterDndContext.setDragState && masterDndContext.setDragState('updateicon')
+        }
+
+    }
+
+    updateDragLayerIcon()
 
     const isDndRef = useRef(true)
 
@@ -200,7 +234,8 @@ const DragIcon = props => {
 
             return {
                 item:monitor.getItem(),
-                isDragging:!!monitor.isDragging()
+                isDragging:!!monitor.isDragging(),
+                // canDrop:monitor.canDrop()
 
             }
 
