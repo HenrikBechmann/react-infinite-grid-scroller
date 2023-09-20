@@ -79,9 +79,8 @@ const DndDragBar = (props) => {
         dragData.dndOptions = {} as GenericObject
     }
 
-    const candropiconRef = useRef(null)
 
-    candropiconRef.current = 
+    const candropicon = 
         canDrop?
             dropicon:
             nodropicon
@@ -166,7 +165,7 @@ const DndDragBar = (props) => {
         ?<div data-type = 'dragbar' style={dragbarstyles}>
 
             <div style = {candropiconholderstylesRef.current}>
-                <img style = {iconstylesRef.current} src={candropiconRef.current} />
+                <img style = {iconstylesRef.current} src={candropicon} />
             </div>
 
             <div style = {dragiconholderstylesRef.current}>
