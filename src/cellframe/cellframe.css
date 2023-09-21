@@ -13,8 +13,16 @@
 }
 
 .rigs-dropped-highlight {
-    box-shadow: 0 0 3px 6px green;
+
     border-radius: 8px;
     z-index: 1;
-    transition: box-shadow 2s ease-in-out;
+    animation: rigs-gradual-release .75s linear 0.05s;
+}
+
+@keyframes rigs-gradual-release {
+
+20% {box-shadow: 0 0 4px 4px green;}
+
+50% {box-shadow: 0 0 4px 4px transparent}
+
 }

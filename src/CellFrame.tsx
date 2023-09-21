@@ -432,13 +432,15 @@ const CellFrame = ({
 
     const setDroppedBorder = () => {
 
-        console.log('droppedIndex, index',scrollerDndContext.droppedIndex,index)
+        // console.log('droppedIndex, index',scrollerDndContext.droppedIndex,index)
         if (scrollerDndContext.droppedIndex == index) {
-            console.log('setting dropped', index)
+            // console.log('setting dropped class', index)
             scrollerDndContext.droppedIndex = null
-            frameRef.current.classList.add('rigs-dropped-highlight')
+            const classname = 'rigs-dropped-highlight'
+            contentholderRef.current.classList.add(classname)
             setTimeout(()=>{
-                if (frameRef.current) frameRef.current.classList.remove('rigs-dropped-highlight')
+                // console.log('removing class')
+                if (frameRef.current) contentholderRef.current.classList.remove(classname)
             },2000)
         }
 

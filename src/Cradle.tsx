@@ -141,7 +141,7 @@ const DndCradle = (props) => {
                 fromIndex = item.index,
                 toIndex = dropResult.target.index
 
-            console.log('fromIndex, toIndex',fromIndex, toIndex)
+            // console.log('fromIndex, toIndex',fromIndex, toIndex)
 
             if (item.scrollerID == dropResult.target.scrollerID) {
 
@@ -175,7 +175,7 @@ const DndCradle = (props) => {
                 // item.deleteCallback()
 
             }
-            console.log('setting droppedIndex',toIndex)
+            // console.log('setting droppedIndex',toIndex)
             scrollerDndContext.droppedIndex = toIndex
         },
     })
