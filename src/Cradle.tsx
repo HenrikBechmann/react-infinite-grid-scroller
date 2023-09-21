@@ -161,8 +161,10 @@ const DndCradle = (props) => {
 
                 const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = pendingChangesList
 
-                console.log('pendingChanges', pendingChangesList)
-                /*const portalMetadata =*/ cacheAPI.transferPortalMetadataFrom(item.itemID, toIndex, item.scrollerID)
+                // console.log('pendingChanges', pendingChangesList)
+                // const portalMetadata =
+                const fromScroller = item.scrollerID
+                cacheAPI.transferPortalMetadataFromScroller(item.itemID, toIndex, fromScroller)
                 contentHandler.synchronizeCradleItemIDsToCache(cacheIndexesShiftedList, rangeincrement, startChangeIndex)
                 serviceHandler.newListSize = listsize + rangeincrement // always +1
                 stateHandler.setCradleState('applyinsertremovechanges')

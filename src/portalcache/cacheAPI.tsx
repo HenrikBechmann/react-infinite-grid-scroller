@@ -210,8 +210,8 @@ export default class CacheAPI {
             getNewOrExistingItemID:(index) => {
                 return this.getNewOrExistingItemID(scrollerID, index)
             },
-            transferPortalMetadataFrom:(itemID,index, sourceScrollerID) => {
-                return this.transferPortalMetadataFrom(scrollerID,itemID,index, sourceScrollerID)
+            transferPortalMetadataFromScroller:(itemID,toIndex, fromScrollerID) => {
+                return this.transferPortalMetadataFromScroller(scrollerID,itemID,toIndex, fromScrollerID)
             },
             createPortal:(component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) => {
                 return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
@@ -1189,13 +1189,13 @@ export default class CacheAPI {
 
     }
 
-    private transferPortalMetadataFrom(scrollerID, itemID, toIndex, sourceScrollerID) {
+    private transferPortalMetadataFromScroller(scrollerID, itemID, toIndex, fromScrollerID) {
 
         const targetScrollerDataMap = this.scrollerDataMap.get(scrollerID)
 
         if (!targetScrollerDataMap) return null
 
-        const sourceScrollerDataMap = this.scrollerDataMap.get(sourceScrollerID)
+        const sourceScrollerDataMap = this.scrollerDataMap.get(fromScrollerID)
 
         if (!sourceScrollerDataMap) return null
 
