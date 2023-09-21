@@ -449,7 +449,7 @@ const CellFrame = ({
     // for unmount
     useEffect(()=>{
 
-        setDroppedBorder()
+        // setDroppedBorder()
         return () => {
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
@@ -460,6 +460,12 @@ const CellFrame = ({
 
     },[])
 
+    useEffect(()=>{
+
+        if (['inserting','retrieved'].includes(frameState)) setDroppedBorder()
+
+    },[frameState])
+
     // refresh content if itemID changes
     useLayoutEffect(()=>{
 
@@ -467,7 +473,7 @@ const CellFrame = ({
 
 
         if (isMountedRef.current) {
-            setDroppedBorder()
+            // setDroppedBorder()
             setFrameState('getusercontent')
         }
 

@@ -1619,7 +1619,7 @@ const Cradle = ({
                 const newlistsize = serviceHandler.newListSize
                 serviceHandler.newListSize = null
 
-                console.log('newlistsize', newlistsize)
+                // console.log('newlistsize', newlistsize)
                 setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention
