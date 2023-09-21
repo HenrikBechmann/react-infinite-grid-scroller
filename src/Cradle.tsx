@@ -1519,7 +1519,7 @@ const Cradle = ({
 
             case 'preparesetforvariability': {
 
-                setTimeout(() => { // give time for DOM to produce layout
+                // setTimeout(() => { // give time for DOM to produce layout
             
                     if (isMountedRef.current) {
 
@@ -1529,7 +1529,7 @@ const Cradle = ({
                         
                     }
 
-                }, VARIABLE_MEASUREMENTS_TIMEOUT)
+                // }, VARIABLE_MEASUREMENTS_TIMEOUT)
                 
                 break
 
