@@ -130,7 +130,7 @@ const DndCellFrame = (props) => {
 
         isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index), // && (index !== sourceIndex + 1)),
 
-        classname = 'target-highlight'
+        classname = 'rigs-target-highlight'
 
     if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(classname)) {
 
@@ -248,7 +248,7 @@ const DragIcon = props => {
 
     const 
         { isDragging } = sourceData,
-        classname = 'source-highlight'
+        classname = 'rigs-source-highlight'
 
     // console.log('isDragging, dragData.isDragging',isDragging, dragData.isDragging)
     if (isDragging && !dragData.isDragging) {
