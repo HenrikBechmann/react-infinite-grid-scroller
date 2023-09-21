@@ -210,6 +210,9 @@ export default class CacheAPI {
             getNewOrExistingItemID:(index) => {
                 return this.getNewOrExistingItemID(scrollerID, index)
             },
+            transferPortalMetadataFrom:(itemID,index, sourceScrollerID) => {
+                return this.transferPortalMetadataFrom(scrollerID,itemID,index, sourceScrollerID)
+            },
             createPortal:(component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) => {
                 return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
             },
@@ -895,7 +898,7 @@ export default class CacheAPI {
             emptyreturn = [null, null, [],[],[], []], // no action return value
 
             // cache resources
-            indexToItemIDMap:Map<number, number>  = this.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+            indexToItemIDMap:Map<number, number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap,
             { itemMetadataMap } = this,
             orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b), // ascending order
             itemSet = this.scrollerDataMap.get(scrollerID).itemSet
@@ -1135,7 +1138,14 @@ export default class CacheAPI {
         // --------------- returns ---------------
 
         // return values for caller to send to contenthandler for cradle synchronization
-        return [startChangeIndex, rangeincrement, cacheIndexesShiftedList, cacheIndexesRemovedList, cacheIndexesToReplaceList, portalPartitionItemsForDeleteList]
+        return [
+            startChangeIndex, 
+            rangeincrement, 
+            cacheIndexesShiftedList, 
+            cacheIndexesRemovedList, 
+            cacheIndexesToReplaceList, 
+            portalPartitionItemsForDeleteList
+        ]
 
     }
 
@@ -1179,6 +1189,32 @@ export default class CacheAPI {
 
     }
 
+    private transferPortalMetadataFrom(scrollerID, itemID, toIndex, sourceScrollerID) {
+
+        const targetScrollerDataMap = this.scrollerDataMap.get(scrollerID)
+
+        if (!targetScrollerDataMap) return null
+
+        const sourceScrollerDataMap = this.scrollerDataMap.get(sourceScrollerID)
+
+        if (!sourceScrollerDataMap) return null
+
+        const portalMetadata = this.itemMetadataMap.get(itemID)
+
+        const sourceIndex = portalMetadata.index
+        portalMetadata.scrollerID = scrollerID
+        portalMetadata.index = toIndex
+
+        targetScrollerDataMap.itemSet.add(itemID)
+        targetScrollerDataMap.indexToItemIDMap.set(toIndex, itemID)
+
+        sourceScrollerDataMap.itemSet.delete(itemID)
+        sourceScrollerDataMap.indexToItemIDMap.delete(sourceIndex)
+
+        return portalMetadata
+
+    }
+
      // create new portal
     private async createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) {
 
@@ -1192,7 +1228,7 @@ export default class CacheAPI {
             portalNode = createPortalNode(index, itemID),
             partitionID = await this.findPartitionWithRoom(),
             portal = 
-                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID} data-index = {index} data-scrollerid = {scrollerID}>
+                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID}>
                     <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
                 </div>
 

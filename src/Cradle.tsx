@@ -92,7 +92,8 @@ const CradleController = props => {
 
     const masterDndContext = useContext(MasterDndContext)
 
-    const serviceHandlerRef = useRef(null)
+    const handlersRef = useRef(null)
+    // const cacheAPIRef = useRef(null)
 
     if (masterDndContext.dnd) {
 
@@ -100,7 +101,7 @@ const CradleController = props => {
 
     } else {
 
-        const enhancedProps = {...props, serviceHandlerRef}
+        const enhancedProps = {...props, handlersRef}
 
         return <Cradle {...enhancedProps} />
 
@@ -116,27 +117,65 @@ const DndCradle = (props) => {
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
         viewportContextProperties = useContext(ViewportContext),
-        serviceHandlerRef = useRef(null),
+        handlerListRef = useRef(null),
+        // cacheAPIRef = useRef(null),
         viewportElement = viewportContextProperties.elementRef.current,
-        { scrollerID } = props
+        { scrollerID, virtualListSpecs } = props,
+        {size:listsize} = virtualListSpecs
+        // console.log('listsize, virtualListSpecs', listsize, virtualListSpecs)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Cell'],
+        // TODO: get callback from item for delete after insert for crosslist drop
         drop:(item:GenericObject,monitor) => {
             const dropResult:GenericObject = monitor.getDropResult()
 
+            const {
+                serviceHandler, 
+                cacheAPI, 
+                contentHandler,
+                stateHandler,
+            } = handlerListRef.current
+
+            const 
+                fromIndex = item.index,
+                toIndex = dropResult.target.index
+
+            // console.log('fromIndex, toIndex',fromIndex, toIndex)
+
             if (item.scrollerID == dropResult.target.scrollerID) {
-                const 
-                    fromIndex = item.index,
-                    toIndex = dropResult.target.index
-                    serviceHandlerRef.current.moveIndex(toIndex, fromIndex)
+
+                    serviceHandler.moveIndex(toIndex, fromIndex)
+
+            } else {
+
+                const pendingChangesList = cacheAPI.insertRemoveIndex(toIndex, toIndex, +1, listsize)
+                // pendingChangesList:
+
+                // startChangeIndex, 
+                // rangeincrement, 
+                // cacheIndexesShiftedList, 
+                // cacheIndexesRemovedList, 
+                // cacheIndexesToReplaceList, 
+                // portalPartitionItemsForDeleteList
+
+                const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = pendingChangesList
+
+                console.log('pendingChanges', pendingChangesList)
+                /*const portalMetadata =*/ cacheAPI.transferPortalMetadataFrom(item.itemID, toIndex, item.scrollerID)
+                contentHandler.synchronizeCradleItemIDsToCache(cacheIndexesShiftedList, rangeincrement, startChangeIndex)
+                serviceHandler.newListSize = listsize + rangeincrement // always +1
+                stateHandler.setCradleState('applyinsertremovechanges')
+
+                // item.deleteCallback(fromIndex)
+
             }
         },
     })
 
     targetConnector(viewportElement)
 
-    const enhancedProps = {...props, serviceHandlerRef}
+    const enhancedProps = {...props, handlerListRef}
 
     return <Cradle {...enhancedProps}/>
 
@@ -179,7 +218,7 @@ const Cradle = ({
         MAX_CACHE_OVER_RUN,
         VARIABLE_MEASUREMENTS_TIMEOUT,
         scrollerProperties,
-        serviceHandlerRef
+        handlerListRef,
 
     }) => {
 
@@ -630,7 +669,8 @@ const Cradle = ({
         stylesHandler,
     } = handlersRef.current
 
-    serviceHandlerRef.current = serviceHandler // possibly for dnd
+    // possibly for dnd
+    handlerListRef.current = handlersRef.current
 
     // =======================[ INTERCEPT CACHING STATE CHANGE ]=========================
 
@@ -1572,6 +1612,7 @@ const Cradle = ({
                 const newlistsize = serviceHandler.newListSize
                 serviceHandler.newListSize = null
 
+                console.log('newlistsize', newlistsize)
                 setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention

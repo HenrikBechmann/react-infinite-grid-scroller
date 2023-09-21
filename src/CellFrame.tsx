@@ -349,8 +349,6 @@ const CellFrame = ({
         cellHeight
     }
 
-    // const frameRef = useRef(null)
-
     // ----------------------[ setup ]----------------------
 
     const cradleContext = useContext(CradleContext)
@@ -394,11 +392,13 @@ const CellFrame = ({
     itemIDRef.current = itemID
     const dndOptionsRef = useRef<GenericObject>(null)
     const cellFramePropertiesRef = useRef(null)
+
     const updateDndOptions = (dndOptions) => {
         dndOptionsRef.current = dndOptions
         setFrameState('updatedndoptions')
     }
     const isDndRef = useRef(isDnd)
+
     useEffect( () => {
 
         let enabled = dndOptionsRef.current?.enabled
@@ -584,14 +584,27 @@ const CellFrame = ({
 
                         // get cache data
                         portalMetadataRef.current = cacheAPI.getPortalMetadata(itemID)
-                        // update cell and scroller properties ref in case of switch in either
-                        portalMetadataRef.current.scrollerProperties.cellFramePropertiesRef = cellFramePropertiesRef
-                        portalMetadataRef.current.scrollerProperties.scrollerPropertiesRef = scrollerPropertiesRef
-                        // get OutPortal node
-                        dndOptionsRef.current = portalMetadataRef.current.dndOptions
-                        portalNodeRef.current = portalMetadataRef.current.portalNode
-                        setContainerStyles(
-                            portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
+                        // if (portalMetadataRef.current.scrollerID != scrollerID) {
+                        //     portalMetadataRef.current = cacheAPI.transferPortalMetadataFrom(itemID, index, portalMetadataRef.current.scrollerID)
+                        // }
+
+                        // if (portalMetadataRef.current) { // else one of the scrollers has gone out of scope
+                            // update cell and scroller properties ref in case of switch in either
+                            Object.assign(portalMetadataRef.current.scrollerProperties,
+                                {
+                                    cellFramePropertiesRef,
+                                    scrollerPropertiesRef
+                                }
+                            )
+                            // portalMetadataRef.current.scrollerProperties.cellFramePropertiesRef = cellFramePropertiesRef
+                            // portalMetadataRef.current.scrollerProperties.scrollerPropertiesRef = scrollerPropertiesRef
+                            // get OutPortal node
+                            dndOptionsRef.current = portalMetadataRef.current.dndOptions
+                            portalNodeRef.current = portalMetadataRef.current.portalNode
+                            setContainerStyles(
+                                portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
+
+                        // }
 
                         setFrameState('retrieved')
 
@@ -613,7 +626,11 @@ const CellFrame = ({
 
                             if (getItemPack) {
 
-                                const itempack = getItemPack(index, itemID, {accept:scrollerDndContext.dndOptions.accept});
+                                const itempack = getItemPack(index, itemID, 
+                                    {
+                                        accept:scrollerDndContext.dndOptions.accept
+                                    }
+                                );
                                 ({ dndOptions, profile} = itempack)
                                 dndOptionsRef.current = dndOptions
                                 usercontent = await itempack.content
