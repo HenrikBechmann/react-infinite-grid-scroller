@@ -619,7 +619,7 @@ const InfiniteGridScroller = (props) => {
 
         virtualListSpecsRef = useRef(virtualListSpecs),
 
-        scrollerDndOptionsRef = useRef({scrollerID,dndOptions})
+        scrollerDndContextRef = useRef({scrollerID,dndOptions,droppedIndex:null})
 
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
@@ -674,7 +674,7 @@ const InfiniteGridScroller = (props) => {
     useEffect (() => {
 
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
-            scrollerDndOptionsRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
+            scrollerDndContextRef.current.scrollerID = scrollerSessionIDRef.current = globalScrollerID++
             // console.log('isDndMaster, setting scrollerID',isDndMaster, scrollerSessionIDRef.current)
             isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
         }
@@ -683,12 +683,12 @@ const InfiniteGridScroller = (props) => {
 
     useEffect (() => {
 
-        const enabled = scrollerDndOptionsRef.current.dndOptions.enabled ?? true
-        if (scrollerDndOptionsRef.current.dndOptions.enabled !== enabled) {
-            scrollerDndOptionsRef.current.dndOptions.enabled = enabled
+        const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? true
+        if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
+            scrollerDndContextRef.current.dndOptions.enabled = enabled
         }
 
-    },[scrollerDndOptionsRef.current.dndOptions.enabled])
+    },[scrollerDndContextRef.current.dndOptions.enabled])
 
     const setVirtualListRange = useCallback((listrange) =>{
 
@@ -784,7 +784,7 @@ const InfiniteGridScroller = (props) => {
     }
 
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
-    return <ScrollerDndContext.Provider value = {scrollerDndOptionsRef.current} >
+    return <ScrollerDndContext.Provider value = {scrollerDndContextRef.current} >
     <ErrorBoundary
         FallbackComponent= { ErrorFallback }
         // elaboration TBD

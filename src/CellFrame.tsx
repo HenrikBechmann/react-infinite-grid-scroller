@@ -430,9 +430,24 @@ const CellFrame = ({
 
     },[])
 
+    const setDroppedBorder = () => {
+
+        console.log('droppedIndex, index',scrollerDndContext.droppedIndex,index)
+        if (scrollerDndContext.droppedIndex == index) {
+            console.log('setting dropped', index)
+            scrollerDndContext.droppedIndex = null
+            frameRef.current.classList.add('rigs-dropped-highlight')
+            setTimeout(()=>{
+                if (frameRef.current) frameRef.current.classList.remove('rigs-dropped-highlight')
+            },2000)
+        }
+
+    }
+
     // for unmount
     useEffect(()=>{
 
+        setDroppedBorder()
         return () => {
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
@@ -448,7 +463,11 @@ const CellFrame = ({
 
         if (frameStateRef.current == 'setup') return
 
-        if (isMountedRef.current) setFrameState('getusercontent')
+
+        if (isMountedRef.current) {
+            setDroppedBorder()
+            setFrameState('getusercontent')
+        }
 
     },[itemID])
 

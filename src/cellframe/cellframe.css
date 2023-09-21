@@ -11,3 +11,10 @@
     opacity: 0.3;
     z-index: 1;
 }
+
+.rigs-dropped-highlight {
+    box-shadow: 0 0 3px 6px green;
+    border-radius: 8px;
+    z-index: 1;
+    transition: box-shadow 2s ease-in-out;
+}

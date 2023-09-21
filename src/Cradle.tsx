@@ -141,7 +141,7 @@ const DndCradle = (props) => {
                 fromIndex = item.index,
                 toIndex = dropResult.target.index
 
-            // console.log('fromIndex, toIndex',fromIndex, toIndex)
+            console.log('fromIndex, toIndex',fromIndex, toIndex)
 
             if (item.scrollerID == dropResult.target.scrollerID) {
 
@@ -149,7 +149,8 @@ const DndCradle = (props) => {
 
             } else {
 
-                const pendingChangesList = cacheAPI.insertRemoveIndex(toIndex, toIndex, +1, listsize)
+                const insert = +1
+                const pendingChangesList = cacheAPI.insertRemoveIndex(toIndex, toIndex, insert, listsize) // make space for insert
                 // pendingChangesList:
 
                 // startChangeIndex, 
@@ -164,14 +165,18 @@ const DndCradle = (props) => {
                 // console.log('pendingChanges', pendingChangesList)
                 // const portalMetadata =
                 const fromScroller = item.scrollerID
-                cacheAPI.transferPortalMetadataFromScroller(item.itemID, toIndex, fromScroller)
-                contentHandler.synchronizeCradleItemIDsToCache(cacheIndexesShiftedList, rangeincrement, startChangeIndex)
-                serviceHandler.newListSize = listsize + rangeincrement // always +1
-                stateHandler.setCradleState('applyinsertremovechanges')
+                cacheAPI.transferPortalMetadataFromScroller(
+                    item.itemID, toIndex, fromScroller) // move into space
+                contentHandler.synchronizeCradleItemIDsToCache(
+                    cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle
+                serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
+                stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
-                // item.deleteCallback(fromIndex)
+                // item.deleteCallback()
 
             }
+            console.log('setting droppedIndex',toIndex)
+            scrollerDndContext.droppedIndex = toIndex
         },
     })
 
