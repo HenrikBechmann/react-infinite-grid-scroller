@@ -1347,6 +1347,8 @@ export default class ContentHandler {
     // updates cradle contiguous items from startChangeIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
+        // console.log('updatedIndexList',updatedIndexList)
+
         // asssemble resources
         const 
             { cacheAPI } = this.cradleParameters.handlersRef.current,

@@ -172,7 +172,8 @@ const DndCradle = (props) => {
                 serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
                 stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
-                // item.deleteCallback()
+                // run changelistsizeafterinsertremove on source scroller
+                // dndDeleteCallback()
 
             }
             // console.log('setting droppedIndex',toIndex)

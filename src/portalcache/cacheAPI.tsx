@@ -56,10 +56,12 @@ export default class CacheAPI {
     private globalItemID = 0
     private globalPartitionID = 0
 
+    // itemMetadataMap holds itemID data, including association with scrollerID, scrollerID index, and partitionID
     private itemMetadataMap = new Map()
 
     private scrollerDataMap = new Map()
 
+    // partition holds itemID components
     private partitionProps = {
 
         partitionMetadataMap:new Map(),
@@ -85,10 +87,10 @@ export default class CacheAPI {
 
         this.scrollerDataMap.set(scrollerID, 
             {
-                cradleParameters:null,
                 indexToItemIDMap: new Map(), 
-                // some portals may have been requested by requestidlecallback, not yet created
                 itemSet: new Set(), // for scrollerID limited operations
+                cradleParameters:null,
+                // some portals may have been requested by requestidlecallback, not yet created
                 requestedSet:new Set(),
                 portalPartitionItemsForDeleteList:null,
             }
@@ -196,7 +198,7 @@ export default class CacheAPI {
                 return this.moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex)
             },
             insertRemoveIndex:(index, highrange, increment, listsize ) => {
-                return this.insertRemoveIndex(scrollerID, index, highrange, increment, listsize )
+                return this.insertRemoveIndex( scrollerID, index, highrange, increment, listsize )
             },
             registerPendingPortal:(index) => {
                 return this.registerPendingPortal(scrollerID, index)
@@ -1211,6 +1213,8 @@ export default class CacheAPI {
         sourceScrollerDataMap.itemSet.delete(itemID)
         sourceScrollerDataMap.indexToItemIDMap.delete(sourceIndex)
 
+        // compact sourceScrollerDataMap
+
         return portalMetadata
 
     }
@@ -1235,15 +1239,15 @@ export default class CacheAPI {
         this.addPartitionPortal(partitionID, itemID, portal)
 
         const portalMetadata = {
-            portalNode,
-            index,
             itemID,
             scrollerID,
+            index,
+            partitionID,
+            portalNode,
             scrollerProperties,
             component,
             dndOptions,
             profile,
-            partitionID,
         }
 
         this.itemMetadataMap.set(itemID, portalMetadata)

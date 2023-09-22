@@ -1232,8 +1232,8 @@ export default class ServiceHandler {
             shiftedList, 
             removedList, 
             replaceList, 
-            portalPartitionItemsForDeleteList] = 
-                cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
+            portalPartitionItemsForDeleteList
+        ] = cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 
@@ -1254,6 +1254,8 @@ export default class ServiceHandler {
 
             resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
                 (highCradleIndex >= (newlistsize - 1)))
+
+        // console.log('resetCradle', resetCradle)
 
         if (!resetCradle) { // synchronize cradle contents to changes
 
