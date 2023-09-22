@@ -47,7 +47,7 @@ import scrollicon from "../keyboard_double_arrow_right_FILL0_wght400_GRAD0_opsz2
 // drag continues here
 const DndDragBar = (props) => {
 
-    const [dragState, setDragState] = useState('ready')
+    const [dragState, setDragBarState] = useState('ready')
 
     const 
         masterDndContext = useContext(MasterDndContext),
@@ -56,8 +56,10 @@ const DndDragBar = (props) => {
 
         dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
 
-    if ((scrollerID == masterDndContext.scrollerID) && !masterDndContext.setDragState) {
-        masterDndContext.setDragState = setDragState
+    if ((scrollerID == masterDndContext.scrollerID) && !masterDndContext.setDragBarState) {
+
+        masterDndContext.setDragBarState = setDragBarState
+        
     }
 
 
@@ -89,7 +91,7 @@ const DndDragBar = (props) => {
 
         switch (dragState) {
             case 'updateicon':
-                setDragState('ready')
+                setDragBarState('ready')
         }
 
     },[dragState])

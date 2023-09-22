@@ -116,12 +116,13 @@ const DndCradle = (props) => {
 
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
+        masterDndContext = useContext(MasterDndContext),
         viewportContextProperties = useContext(ViewportContext),
         handlerListRef = useRef(null),
         // cacheAPIRef = useRef(null),
         viewportElement = viewportContextProperties.elementRef.current,
         { scrollerID, virtualListSpecs } = props,
-        {size:listsize} = virtualListSpecs
+        { size:listsize } = virtualListSpecs
         // console.log('listsize, virtualListSpecs', listsize, virtualListSpecs)
 
     const [ targetData, targetConnector ] = useDrop({
@@ -166,12 +167,21 @@ const DndCradle = (props) => {
                 // const portalMetadata =
                 const fromScroller = item.scrollerID
                 cacheAPI.transferPortalMetadataFromScroller(
-                    item.itemID, toIndex, fromScroller) // move into space
+                    item.itemID, toIndex) // move into space
                 contentHandler.synchronizeCradleItemIDsToCache(
                     cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle
                 serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
                 stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
+                const { dragData } = masterDndContext
+
+                const sourceProps = dragData.sourceServiceHandler.getPropertiesSnapshot()
+                const sourcelistsize = sourceProps.virtualListProps.size
+                const remove = -1
+
+                dragData.sourceCacheAPI.insertRemoveIndex(fromIndex, fromIndex, remove, sourcelistsize)
+                dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
+                dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
                 // run changelistsizeafterinsertremove on source scroller
                 // dndDeleteCallback()
 
@@ -670,7 +680,7 @@ const Cradle = ({
     const { // cacheAPI already available
         interruptHandler,
         scrollHandler,
-        // stateHandler, // not used
+        stateHandler, // available for scrollerDndContext
         contentHandler,
         layoutHandler,
         serviceHandler,
@@ -774,6 +784,15 @@ const Cradle = ({
             isMountedRef.current = false
 
         }
+
+    },[])
+
+    useEffect(()=>{
+
+        // available for source drop processing
+        scrollerDndContext.cacheAPI = cacheAPI
+        scrollerDndContext.stateHandler = stateHandler
+        scrollerDndContext.serviceHandler = serviceHandler
 
     },[])
 

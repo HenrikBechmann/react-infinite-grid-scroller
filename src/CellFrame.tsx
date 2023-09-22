@@ -164,7 +164,7 @@ const DndCellFrame = (props) => {
 
         if (masterDndContext.dragData.canDrop !== canDoDrop) {
             masterDndContext.dragData.canDrop = canDoDrop
-            masterDndContext.setDragState && masterDndContext.setDragState('updateicon')
+            masterDndContext.setDragBarState && masterDndContext.setDragBarState('updateicon')
         }
 
     }
@@ -210,6 +210,8 @@ const DragIcon = props => {
 
     const viewportContext = useContext(ViewportContext)
 
+    const scrollerDndContext = useContext(ScrollerDndContext)
+
     masterDndContext = masterDndContext ?? {} 
 
     const {dragData} = masterDndContext || {}
@@ -252,10 +254,17 @@ const DragIcon = props => {
 
     // console.log('isDragging, dragData.isDragging',isDragging, dragData.isDragging)
     if (isDragging && !dragData.isDragging) {
-        dragData.isDragging = isDragging
-        dragData.itemID = itemID
-        dragData.index = index
-        dragData.dndOptions = dndOptions
+        Object.assign(dragData,
+            {
+                isDragging,
+                itemID,
+                index,
+                dndOptions,
+                sourceCacheAPI:scrollerDndContext.cacheAPI,
+                sourceStateHandler:scrollerDndContext.stateHandler,
+                sourceServiceHandler:scrollerDndContext.serviceHandler,
+            }
+        )
         masterDndContext.setViewportState('startdragbar')
     }
 

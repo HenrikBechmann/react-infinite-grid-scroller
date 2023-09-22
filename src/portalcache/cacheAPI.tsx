@@ -212,8 +212,8 @@ export default class CacheAPI {
             getNewOrExistingItemID:(index) => {
                 return this.getNewOrExistingItemID(scrollerID, index)
             },
-            transferPortalMetadataFromScroller:(itemID,toIndex, fromScrollerID) => {
-                return this.transferPortalMetadataFromScroller(scrollerID,itemID,toIndex, fromScrollerID)
+            transferPortalMetadataFromScroller:(itemID,toIndex) => {
+                return this.transferPortalMetadataFromScroller(scrollerID,itemID,toIndex)
             },
             createPortal:(component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) => {
                 return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
@@ -918,6 +918,7 @@ export default class CacheAPI {
             if (highrangeindex > (listsize - 1)) {
 
                 highrangeindex = (listsize - 1)
+
                 if (highrangeindex < lowrangeindex) return emptyreturn
 
             }
@@ -945,19 +946,24 @@ export default class CacheAPI {
                     lowrangeindex:
                     highrangeindex + (rangeincrement + 1)
 
-        let toShiftStartIndex // start of indexes to shift up (insert) or down (remove)
+        let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
+
         if (isInserting) {
-            toShiftStartIndex = lowrangeindex
+
+            shiftStartIndex = lowrangeindex
+
         } else { // isRemoving
-            toShiftStartIndex = highrangeindex + 1
+
+            shiftStartIndex = highrangeindex + 1
+
         }
 
         // ---------- define range boundaries within ordered cache index list ------------
 
-        // obtain starptr for indexes to shift
-        const toShiftStartCachePtr = orderedCacheIndexList.findIndex(value => {
+        // obtain startptr for indexes to shift
+        const shiftStartCachePtr = orderedCacheIndexList.findIndex(value => {
 
-            return (value >= toShiftStartIndex)
+            return (value >= shiftStartIndex)
 
         })
 
@@ -969,8 +975,9 @@ export default class CacheAPI {
         })
 
         // obtain highCacheRangePtr...
-        const reverseCacheIndexList = Array.from(orderedCacheIndexList).reverse()
-        let highCacheRangePtr = reverseCacheIndexList.findIndex(value=> {
+        const reversedCacheIndexList = Array.from(orderedCacheIndexList).reverse()
+
+        let highCacheRangePtr = reversedCacheIndexList.findIndex(value=> {
 
             return (value <= highrangeindex) && (value >= lowrangeindex)
 
@@ -1006,13 +1013,13 @@ export default class CacheAPI {
 
             } else {
 
-                if (toShiftStartCachePtr == -1) {
+                if (shiftStartCachePtr == -1) {
 
                     cacheToShiftIndexesList = []
 
                 } else {
 
-                    cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
+                    cacheToShiftIndexesList = orderedCacheIndexList.slice(shiftStartCachePtr)
                     
                 }
 
@@ -1024,17 +1031,17 @@ export default class CacheAPI {
 
             if (isInserting) {
 
-                cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
+                cacheToShiftIndexesList = orderedCacheIndexList.slice(shiftStartCachePtr)
 
             } else {
 
-                if (toShiftStartCachePtr == -1) {
+                if (shiftStartCachePtr == -1) {
 
                     cacheToShiftIndexesList = []
 
                 } else {
 
-                    cacheToShiftIndexesList = orderedCacheIndexList.slice(toShiftStartCachePtr)
+                    cacheToShiftIndexesList = orderedCacheIndexList.slice(shiftStartCachePtr)
 
                 }
 
@@ -1191,15 +1198,15 @@ export default class CacheAPI {
 
     }
 
-    private transferPortalMetadataFromScroller(scrollerID, itemID, toIndex, fromScrollerID) {
+    private transferPortalMetadataFromScroller(scrollerID, itemID, toIndex) {
 
         const targetScrollerDataMap = this.scrollerDataMap.get(scrollerID)
 
         if (!targetScrollerDataMap) return null
 
-        const sourceScrollerDataMap = this.scrollerDataMap.get(fromScrollerID)
+        // const sourceScrollerDataMap = this.scrollerDataMap.get(fromScrollerID)
 
-        if (!sourceScrollerDataMap) return null
+        // if (!sourceScrollerDataMap) return null
 
         const portalMetadata = this.itemMetadataMap.get(itemID)
 
@@ -1210,8 +1217,8 @@ export default class CacheAPI {
         targetScrollerDataMap.itemSet.add(itemID)
         targetScrollerDataMap.indexToItemIDMap.set(toIndex, itemID)
 
-        sourceScrollerDataMap.itemSet.delete(itemID)
-        sourceScrollerDataMap.indexToItemIDMap.delete(sourceIndex)
+        // sourceScrollerDataMap.itemSet.delete(itemID)
+        // sourceScrollerDataMap.indexToItemIDMap.delete(sourceIndex)
 
         // compact sourceScrollerDataMap
 

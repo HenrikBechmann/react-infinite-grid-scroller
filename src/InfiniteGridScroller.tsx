@@ -120,8 +120,8 @@ export const MasterDndContext = React.createContext(
         active:false, 
         enabled:false,
         scrollerID:null, 
-        setViewportState:null,
-        setDragState:null,
+        setViewportState:null, // the master viewport, for rendering the dragbar
+        setDragBarState:null, // for master dragbar, to update icons
         dropCount:0,
         dragData:{
             isDragging:false,
@@ -129,6 +129,9 @@ export const MasterDndContext = React.createContext(
             itemID:null,
             index:null,
             dndOptions:{} as GenericObject,
+            sourceCacheAPI:null,
+            sourceStateHandler:null,
+            sourceServiceHandler:null,
         }
     }) // inform children; tree scope
 
@@ -160,13 +163,16 @@ const RigsDnd = (props) => { // must be loaded as root scroller by host to set u
                 enabled:false,
                 scrollerID:null,
                 setViewportState:null,
-                setDragState:null,
+                setDragBarState:null,
                 dropCount:0,
                 dragData:{
                     isDragging:false,
                     itemID:null,
                     index:null,
                     dndOptions:{} as GenericObject,
+                    sourceCacheAPI:null,
+                    sourceStateHandler:null,
+                    sourceServiceHandler:null,
                 }
             })
         }
@@ -619,7 +625,14 @@ const InfiniteGridScroller = (props) => {
 
         virtualListSpecsRef = useRef(virtualListSpecs),
 
-        scrollerDndContextRef = useRef({scrollerID,dndOptions,droppedIndex:null})
+        scrollerDndContextRef = useRef({
+            scrollerID,
+            dndOptions,
+            droppedIndex:null,
+            cacheAPI:null,
+            stateHandler:null,
+            serviceHandler:null,
+        })
 
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
