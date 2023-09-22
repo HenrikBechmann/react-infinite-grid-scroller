@@ -347,6 +347,69 @@ export default class PortalData {
 
     }
 
+    private preload = (scrollerID, finalCallback, nullItemSetMaxListsize) => {
+
+        const 
+            { cradleParameters } = this.scrollerData.scrollerDataMap.get(scrollerID),
+
+            { scrollerPropertiesRef } = cradleParameters,
+
+            { stateHandler, serviceHandler } = cradleParameters.handlersRef.current,
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { getItem, getItemPack } = cradleInheritedProperties,
+            {lowindex, highindex} = cradleInternalProperties.virtualListProps,
+
+            promises = [],
+
+            breakloop = {
+                current:false
+            }
+
+        const maxListsizeInterrupt = (index) => {
+            breakloop.current = true
+            nullItemSetMaxListsize(index)
+        }
+
+        if (stateHandler.isMountedRef.current) {
+            
+            const 
+                indexToItemIDMap = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+
+                { preloadIndexCallback, itemExceptionCallback } = serviceHandler.callbacks
+
+            for (let index = lowindex; index <= highindex; index++) {
+
+                preloadIndexCallback && preloadIndexCallback(index)
+                if (!indexToItemIDMap.has(index)) {
+
+                    const promise = this.preloadItem(
+                        scrollerID,
+                        index, 
+                        getItem, 
+                        getItemPack,
+                        scrollerPropertiesRef,
+                        itemExceptionCallback,
+                        maxListsizeInterrupt
+                    )
+                    promises.push(promise)
+
+                }
+
+                if (breakloop.current) break
+            }
+        }
+
+        Promise.allSettled(promises).then(
+            ()=>{
+                this.renderPortalLists()
+                finalCallback()
+            }
+        )
+
+    }
+
     // used for preloading new item
     private async preloadItem(
         scrollerID,
