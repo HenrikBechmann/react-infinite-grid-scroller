@@ -197,8 +197,8 @@ export default class CacheAPI {
             moveIndex:(tolowindex, fromlowindex, fromhighindex ) => {
                 return this.moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex)
             },
-            insertRemoveIndex:(index, highrange, increment, listsize ) => {
-                return this.insertRemoveIndex( scrollerID, index, highrange, increment, listsize )
+            insertRemoveIndex:(index, highrange, increment, listsize, removeItems ) => {
+                return this.insertRemoveIndex( scrollerID, index, highrange, increment, listsize, removeItems )
             },
             registerPendingPortal:(index) => {
                 return this.registerPendingPortal(scrollerID, index)
@@ -212,8 +212,8 @@ export default class CacheAPI {
             getNewOrExistingItemID:(index) => {
                 return this.getNewOrExistingItemID(scrollerID, index)
             },
-            transferPortalMetadataFromScroller:(itemID,toIndex) => {
-                return this.transferPortalMetadataFromScroller(scrollerID,itemID,toIndex)
+            transferPortalMetadataToScroller:(itemID,toIndex) => {
+                return this.transferPortalMetadataToScroller(scrollerID,itemID,toIndex)
             },
             createPortal:(component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) => {
                 return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
@@ -890,7 +890,7 @@ export default class CacheAPI {
     // ----------------------------[ insert/remove indexes ]------------------------------
 
     // insert or remove indexes: much of this deals with the fact that the cache is sparse.
-    private insertRemoveIndex(scrollerID, index, highrange, increment, listsize ) { // increment is +1 or -1
+    private insertRemoveIndex(scrollerID, index, highrange, increment, listsize, removeItems = true ) { // increment is +1 or -1
 
         const 
             // clarity
@@ -1122,9 +1122,11 @@ export default class CacheAPI {
 
             for (const itemID of cacheItemsToRemoveList) {
 
+                if (removeItems) {
                 const { partitionID } = itemMetadataMap.get(itemID)
-                portalPartitionItemsForDeleteList.push({itemID, partitionID})
-                itemMetadataMap.delete(itemID)
+                    portalPartitionItemsForDeleteList.push({itemID, partitionID})
+                    itemMetadataMap.delete(itemID)
+                }
                 itemSet.delete(itemID)
 
             }
@@ -1198,19 +1200,15 @@ export default class CacheAPI {
 
     }
 
-    private transferPortalMetadataFromScroller(scrollerID, itemID, toIndex) {
+    private transferPortalMetadataToScroller(scrollerID, itemID, toIndex) {
 
         const targetScrollerDataMap = this.scrollerDataMap.get(scrollerID)
 
         if (!targetScrollerDataMap) return null
 
-        // const sourceScrollerDataMap = this.scrollerDataMap.get(fromScrollerID)
-
-        // if (!sourceScrollerDataMap) return null
-
         const portalMetadata = this.itemMetadataMap.get(itemID)
 
-        const sourceIndex = portalMetadata.index
+        // const sourceIndex = portalMetadata.index
         portalMetadata.scrollerID = scrollerID
         portalMetadata.index = toIndex
 
@@ -1219,8 +1217,6 @@ export default class CacheAPI {
 
         // sourceScrollerDataMap.itemSet.delete(itemID)
         // sourceScrollerDataMap.indexToItemIDMap.delete(sourceIndex)
-
-        // compact sourceScrollerDataMap
 
         return portalMetadata
 

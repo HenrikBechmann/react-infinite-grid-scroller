@@ -131,6 +131,8 @@ const DndCradle = (props) => {
         drop:(item:GenericObject,monitor) => {
             const dropResult:GenericObject = monitor.getDropResult()
 
+            if (!dropResult) return // TODO: check for drop on empty list
+
             const {
                 serviceHandler, 
                 cacheAPI, 
@@ -150,6 +152,15 @@ const DndCradle = (props) => {
 
             } else {
 
+                const { dragData } = masterDndContext
+                const sourceProps = dragData.sourceServiceHandler.getPropertiesSnapshot()
+                const sourcelistsize = sourceProps.virtualListProps.size
+                const remove = -1
+
+                dragData.sourceCacheAPI.insertRemoveIndex(fromIndex, fromIndex, remove, sourcelistsize, false) // false = removeItems (not)
+                dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
+                dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
+
                 const insert = +1
                 const pendingChangesList = cacheAPI.insertRemoveIndex(toIndex, toIndex, insert, listsize) // make space for insert
                 // pendingChangesList:
@@ -166,24 +177,12 @@ const DndCradle = (props) => {
                 // console.log('pendingChanges', pendingChangesList)
                 // const portalMetadata =
                 const fromScroller = item.scrollerID
-                cacheAPI.transferPortalMetadataFromScroller(
+                cacheAPI.transferPortalMetadataToScroller(
                     item.itemID, toIndex) // move into space
                 contentHandler.synchronizeCradleItemIDsToCache(
                     cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle
                 serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
                 stateHandler.setCradleState('applyinsertremovechanges') // re-render
-
-                const { dragData } = masterDndContext
-
-                const sourceProps = dragData.sourceServiceHandler.getPropertiesSnapshot()
-                const sourcelistsize = sourceProps.virtualListProps.size
-                const remove = -1
-
-                dragData.sourceCacheAPI.insertRemoveIndex(fromIndex, fromIndex, remove, sourcelistsize)
-                dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
-                dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
-                // run changelistsizeafterinsertremove on source scroller
-                // dndDeleteCallback()
 
             }
             // console.log('setting droppedIndex',toIndex)
