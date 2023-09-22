@@ -244,4 +244,236 @@ export default class PortalData {
 
     }
 
+    // ==========================[ INDIVIDUAL PORTAL MANAGEMENT ]============================
+
+    // used for size calculation in pareCacheToMax
+    // registers indexes when requested but before retrieved and entered into cache
+    private registerPendingPortal(scrollerID, index) {
+
+        this.scrollerData.scrollerDataMap.get(scrollerID).requestedSet.add(index)
+
+    }
+
+    private unregisterPendingPortal(scrollerID, index) {
+
+        const scrollerDataMap = this.scrollerData.scrollerDataMap.get(scrollerID)
+
+        if (scrollerDataMap) { // otherwise scroller has been deleted
+            scrollerDataMap.requestedSet.delete(index)
+        }
+
+    }
+
+    private getNewItemID() {
+
+        return this.globalItemID++
+
+    }
+
+    // get new or existing itemID for contentfunctions.createCellFrame
+    private getNewOrExistingItemID(scrollerID, index) {
+
+        const { indexToItemIDMap } = this.scrollerData.scrollerDataMap.get(scrollerID)
+
+        const itemID = 
+            (indexToItemIDMap.has(index))?
+                indexToItemIDMap.get(index):
+                (this.getNewItemID())
+
+        return itemID
+
+    }
+
+    private transferPortalMetadataToScroller(scrollerID, itemID, toIndex) {
+
+        const targetScrollerDataMap = this.scrollerData.scrollerDataMap.get(scrollerID)
+
+        if (!targetScrollerDataMap) return null
+
+        const portalMetadata = this.itemMetadataMap.get(itemID)
+
+        // const sourceIndex = portalMetadata.index
+        portalMetadata.scrollerID = scrollerID
+        portalMetadata.index = toIndex
+
+        targetScrollerDataMap.itemSet.add(itemID)
+        targetScrollerDataMap.indexToItemIDMap.set(toIndex, itemID)
+
+        // sourceScrollerDataMap.itemSet.delete(itemID)
+        // sourceScrollerDataMap.indexToItemIDMap.delete(sourceIndex)
+
+        return portalMetadata
+
+    }
+
+     // create new portal
+    private async createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) {
+
+        this.unregisterPendingPortal(scrollerID, index)
+
+        const scrollerDataMap = this.scrollerData.scrollerDataMap.get(scrollerID)
+
+        if (!scrollerDataMap) return null
+
+        const 
+            portalNode = createPortalNode(index, itemID),
+            partitionID = await this.findPartitionWithRoom(),
+            portal = 
+                <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID}>
+                    <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
+                </div>
+
+        this.addPartitionPortal(partitionID, itemID, portal)
+
+        const portalMetadata = {
+            itemID,
+            scrollerID,
+            index,
+            partitionID,
+            portalNode,
+            scrollerProperties,
+            component,
+            dndOptions,
+            profile,
+        }
+
+        this.itemMetadataMap.set(itemID, portalMetadata)
+        scrollerDataMap.itemSet.add(itemID)
+        scrollerDataMap.indexToItemIDMap.set(index, itemID)
+
+        if (!isPreload) this.renderPortalLists()
+
+        return portalMetadata
+
+    }
+
+    // used for preloading new item
+    private async preloadItem(
+        scrollerID,
+        index, 
+        getItem, 
+        getItemPack,
+        scrollerPropertiesRef, 
+        itemExceptionCallback,
+        maxListsizeInterrupt
+    ) {
+
+        const itemID = this.getNewItemID()
+
+        let returnvalue, usercontent, error, dndOptions, profile
+
+        try {
+
+            usercontent = await getItem(index, itemID)
+            if (usercontent === null) returnvalue = usercontent
+
+        } catch(e) {
+
+            returnvalue = usercontent = undefined
+            error = e
+
+        }
+
+        if ((usercontent !== null) && (usercontent !== undefined)) {
+
+            if (!React.isValidElement(usercontent)) {
+                returnvalue = usercontent
+                usercontent = undefined
+                error = new Error('invalid React element')
+            }
+
+        }
+
+        if ((usercontent !== null) && (usercontent !== undefined)) {
+
+            let content 
+            const scrollerProperties = {
+                scrollerPropertiesRef,
+                cellFramePropertiesRef:{current:{index,itemID}}
+            }
+            if (usercontent.props.hasOwnProperty('scrollerProperties')) {
+                content = React.cloneElement(usercontent, {scrollerProperties})
+            } else {
+                content = usercontent
+            }
+
+            // const portalData = 
+                await this.createPortal(scrollerID,content, index, itemID, scrollerProperties, dndOptions, profile, true) // true = isPreload
+
+        } else {
+
+            if (usercontent === undefined) {
+
+                itemExceptionCallback && 
+                    itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
+
+            } else { // usercontent === null; last item in list
+
+                itemExceptionCallback && 
+                    itemExceptionCallback(index, itemID, returnvalue, 'preload', new Error('end of list'))
+
+                maxListsizeInterrupt(index)
+
+            }
+
+        }
+
+    }
+
+    private applyPortalPartitionItemsForDeleteList = (scrollerID) => {
+
+        const { portalPartitionItemsForDeleteList } = this.scrollerData.scrollerDataMap.get(scrollerID)
+
+        if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
+
+            for (const item of portalPartitionItemsForDeleteList) {
+
+                this.removePartitionPortal(item.partitionID, item.itemID)
+                
+            }
+
+            this.scrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = []                    
+
+            this.renderPortalLists()
+
+        }
+
+    }
+
+    // query existence of a portal list item
+    private hasPortal(itemID) {
+
+        return this.itemMetadataMap.has(itemID)
+
+    }
+
+    private getPortalMetadata(itemID) {
+
+        if (this.hasPortal(itemID)) {
+            return this.itemMetadataMap.get(itemID)
+        }
+
+    }
+
 }
+
+// ==========================[ Utility function ]============================
+
+// get a react-reverse-portal InPortal component, with its metadata
+// with user content and container
+// see also some styles set in CellFrame
+const createPortalNode = (index, itemID) => {
+
+    const 
+        portalNode = createHtmlPortalNode(),
+        container = portalNode.element
+
+    // container.style.overflow = 'hidden'
+
+    container.dataset.type = 'contentenvelope'
+    container.dataset.index = index
+    container.dataset.cacheitemid = itemID
+
+    return portalNode
+
+}     
