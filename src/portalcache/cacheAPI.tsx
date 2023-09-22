@@ -43,8 +43,7 @@ import React from 'react'
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 import ScrollerData from './scrollerdata'
-import ItemData from './itemdata'
-import PartitionData from './partitiondata'
+import PortalData from './portaldata'
 
 // import CachePartition from './CachePartition'
 
@@ -56,18 +55,15 @@ export default class CacheAPI {
         // this.CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE
 
         this.scrollerData = new ScrollerData()
-        this.itemData = new ItemData()
-        this.partitionData = new PartitionData(CACHE_PARTITION_SIZE)
+        this.portalData = new PortalData(CACHE_PARTITION_SIZE)
 
-        this.scrollerData.linkSupport({itemData:this.itemData, partitionData:this.partitionData})
-        this.itemData.linkSupport({scrollerData:this.scrollerData, partitionData:this.partitionData})
-        this.partitionData.linkSupport({scrollerData:this.scrollerData, itemData:this.itemData})
+        this.scrollerData.linkSupport({portalData:this.portalData})
+        this.portalData.linkSupport({scrollerData:this.scrollerData})
 
     }
 
     private scrollerData
-    private itemData
-    private partitionData
+    private portalData
 
     private globalItemID = 0
     private globalPartitionID = 0
@@ -114,7 +110,7 @@ export default class CacheAPI {
             getItemSet:() => {
                 return  this.scrollerData.scrollerDataMap.get(scrollerID).itemSet
             },
-            itemMetadataMap:this.itemData.itemMetadataMap,
+            itemMetadataMap:this.portalData.itemMetadataMap,
             get requestedSet() {
                 return this.getRequestedSet()
             },
@@ -125,7 +121,7 @@ export default class CacheAPI {
                 this.setPartitionRepoForceUpdate(fn)
             },
             setPartitionRepoForceUpdate:(fn) => {
-                this.partitionData.partitionProps.partitionRepoForceUpdate = fn
+                this.portalData.partitionProps.partitionRepoForceUpdate = fn
             },
             set cradleParameters(parms){
                 this.setCradleParameters(parms)
@@ -151,10 +147,10 @@ export default class CacheAPI {
                 return this.scrollerData.unRegisterScroller(scrollerID, itemSet)
             },
             renderPartitionRepo:() => {
-                return this.partitionData.renderPartitionRepo()
+                return this.portalData.renderPartitionRepo()
             },
             renderPortalLists:() => {
-                return this.partitionData.renderPortalLists()
+                return this.portalData.renderPortalLists()
             },
             clearCache:() => {
                 return this.scrollerData.clearCache(scrollerID)
@@ -211,7 +207,7 @@ export default class CacheAPI {
                 return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
             },
             deletePortalByIndex:(index, deleteListCallback) => {
-                return this.partitionData.deletePortalByIndex(scrollerID, index, deleteListCallback)
+                return this.portalData.deletePortalByIndex(scrollerID, index, deleteListCallback)
             },
             applyPortalPartitionItemsForDeleteList:() => {
                 return this.applyPortalPartitionItemsForDeleteList(scrollerID)
@@ -239,7 +235,7 @@ export default class CacheAPI {
 
         if (delkeys.length) {
 
-            this.partitionData.deletePortalByIndex(scrollerID, delkeys, deleteListCallback)
+            this.portalData.deletePortalByIndex(scrollerID, delkeys, deleteListCallback)
             return true
 
         } else {
@@ -296,7 +292,7 @@ export default class CacheAPI {
 
             delList = [...headlist,...taillist]
 
-        this.partitionData.deletePortalByIndex(scrollerID, delList, deleteListCallback)
+        this.portalData.deletePortalByIndex(scrollerID, delList, deleteListCallback)
 
         return true
 
@@ -380,7 +376,7 @@ export default class CacheAPI {
 
         Promise.allSettled(promises).then(
             ()=>{
-                this.partitionData.renderPortalLists()
+                this.portalData.renderPortalLists()
                 finalCallback()
             }
         )
@@ -415,7 +411,7 @@ export default class CacheAPI {
         const 
             cachelist = new Map(),
             { itemSet } = this.scrollerData.scrollerDataMap.get(scrollerID),
-            { itemMetadataMap } = this.itemData
+            { itemMetadataMap } = this.portalData
 
         // for (const [key, value] of this.itemMetadataMap) {
         for (const itemID of itemSet) {
@@ -448,7 +444,7 @@ export default class CacheAPI {
 
         const 
             indexToItemIDMap:Map<number, number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            { itemMetadataMap } = this.itemData,
+            { itemMetadataMap } = this.portalData,
 
             // ----------- define parameters ---------------
 
@@ -603,7 +599,7 @@ export default class CacheAPI {
 
             // cache resources
             indexToItemIDMap:Map<number, number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            { itemMetadataMap } = this.itemData,
+            { itemMetadataMap } = this.portalData,
             orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b), // ascending order
             itemSet = this.scrollerData.scrollerDataMap.get(scrollerID).itemSet
 
@@ -908,7 +904,7 @@ export default class CacheAPI {
 
         if (!targetScrollerDataMap) return null
 
-        const portalMetadata = this.itemData.itemMetadataMap.get(itemID)
+        const portalMetadata = this.portalData.itemMetadataMap.get(itemID)
 
         // const sourceIndex = portalMetadata.index
         portalMetadata.scrollerID = scrollerID
@@ -935,13 +931,13 @@ export default class CacheAPI {
 
         const 
             portalNode = createPortalNode(index, itemID),
-            partitionID = await this.partitionData.findPartitionWithRoom(),
+            partitionID = await this.portalData.findPartitionWithRoom(),
             portal = 
                 <div data-type = 'portalwrapper' key = {itemID} data-itemid = {itemID}>
                     <InPortal key = {itemID} node = {portalNode} > { component } </InPortal>
                 </div>
 
-        this.partitionData.addPartitionPortal(partitionID, itemID, portal)
+        this.portalData.addPartitionPortal(partitionID, itemID, portal)
 
         const portalMetadata = {
             itemID,
@@ -955,11 +951,11 @@ export default class CacheAPI {
             profile,
         }
 
-        this.itemData.itemMetadataMap.set(itemID, portalMetadata)
+        this.portalData.itemMetadataMap.set(itemID, portalMetadata)
         scrollerDataMap.itemSet.add(itemID)
         scrollerDataMap.indexToItemIDMap.set(index, itemID)
 
-        if (!isPreload) this.partitionData.renderPortalLists()
+        if (!isPreload) this.portalData.renderPortalLists()
 
         return portalMetadata
 
@@ -1052,7 +1048,7 @@ export default class CacheAPI {
 
     //         { itemMetadataMap } = this,
 
-    //         { removePartitionPortal } = this.partitionData,
+    //         { removePartitionPortal } = this.portalData,
 
     //         deleteList = []
 
@@ -1085,13 +1081,13 @@ export default class CacheAPI {
 
             for (const item of portalPartitionItemsForDeleteList) {
 
-                this.partitionData.removePartitionPortal(item.partitionID, item.itemID)
+                this.portalData.removePartitionPortal(item.partitionID, item.itemID)
                 
             }
 
             this.scrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = []                    
 
-            this.partitionData.renderPortalLists()
+            this.portalData.renderPortalLists()
 
         }
 
@@ -1100,14 +1096,14 @@ export default class CacheAPI {
     // query existence of a portal list item
     private hasPortal(itemID) {
 
-        return this.itemData.itemMetadataMap.has(itemID)
+        return this.portalData.itemMetadataMap.has(itemID)
 
     }
 
     private getPortalMetadata(itemID) {
 
         if (this.hasPortal(itemID)) {
-            return this.itemData.itemMetadataMap.get(itemID)
+            return this.portalData.itemMetadataMap.get(itemID)
         }
 
     }

@@ -6,7 +6,7 @@ import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
 import CachePartition from './CachePartition'
 
-export default class PartitionData {
+export default class PortalData {
 
     constructor(CACHE_PARTITION_SIZE) {
 
@@ -14,9 +14,11 @@ export default class PartitionData {
 
     }
 
-    private linkSupport = ({itemData, scrollerData}) => {
+    private globalItemID = 0
+    private itemMetadataMap = new Map()
 
-        this.itemData = itemData
+    private linkSupport = ({scrollerData}) => {
+
         this.scrollerData = scrollerData
 
     }
@@ -24,7 +26,6 @@ export default class PartitionData {
     private globalPartitionID = 0
     private CACHE_PARTITION_SIZE
 
-    private itemData
     private scrollerData
 
     // partition holds itemID components
@@ -216,7 +217,7 @@ export default class PartitionData {
 
             { indexToItemIDMap, itemSet } = this.scrollerData.scrollerDataMap.get(scrollerID),
 
-            { itemMetadataMap } = this.itemData,
+            { itemMetadataMap } = this,
 
             { removePartitionPortal } = this,
 
