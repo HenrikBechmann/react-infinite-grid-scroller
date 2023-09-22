@@ -17,6 +17,7 @@ export default class PartitionData {
     private globalPartitionID = 0
     private CACHE_PARTITION_SIZE
 
+    // partition holds itemID components
     private partitionProps = {
 
         partitionMetadataMap:new Map(),
@@ -182,6 +183,17 @@ export default class PartitionData {
             this.partitionProps.partitionModifiedSet.clear()
 
         }
+
+    }
+
+    private clearCachePartitions = () => {
+
+        this.partitionProps.partitionMetadataMap.clear()
+        this.partitionProps.partitionMap.clear()
+        this.partitionProps.partitionRenderList = []
+        this.partitionProps.partitionModifiedSet.clear()
+        this.partitionProps.partitionPtr = null
+        this.partitionProps.partitionRepoForceUpdate(null)
 
     }
 
