@@ -14,8 +14,18 @@ export default class PartitionData {
 
     }
 
+    private linkSupport = ({itemData, scrollerData}) => {
+
+        this.itemData = itemData
+        this.scrollerData = scrollerData
+
+    }
+
     private globalPartitionID = 0
     private CACHE_PARTITION_SIZE
+
+    private itemData
+    private scrollerData
 
     // partition holds itemID components
     private partitionProps = {
@@ -29,7 +39,6 @@ export default class PartitionData {
         partitionPtr:null, // active partition, for followup
 
     }
-
 
     // ===========================[ CACHE PARTITION MANAGEMENT ]===============================
 
