@@ -73,7 +73,7 @@ export default class CacheAPI {
     private globalPartitionID = 0
 
     // itemMetadataMap holds itemID data, including association with scrollerID, scrollerID index, and partitionID
-    private itemMetadataMap = new Map()
+    // private itemMetadataMap = new Map()
 
     // private scrollerDataMap = new Map()
 
@@ -114,7 +114,7 @@ export default class CacheAPI {
             getItemSet:() => {
                 return  this.scrollerData.scrollerDataMap.get(scrollerID).itemSet
             },
-            itemMetadataMap:this.itemMetadataMap,
+            itemMetadataMap:this.itemData.itemMetadataMap,
             get requestedSet() {
                 return this.getRequestedSet()
             },
@@ -160,10 +160,10 @@ export default class CacheAPI {
                 return this.scrollerData.clearCache(scrollerID)
             },
             changeCacheListSize:(newlistsize, deleteListCallback) => {
-                return this.changeCacheListSize(scrollerID, newlistsize, deleteListCallback) 
+                return this.scrollerData.changeCacheListSize(scrollerID, newlistsize, deleteListCallback) 
             },
             changeCacheListRange:(newlistrange, deleteListCallback) => { 
-                return this.changeCacheListRange(scrollerID, newlistrange, deleteListCallback)
+                return this.scrollerData.changeCacheListRange(scrollerID, newlistrange, deleteListCallback)
             },
             matchCacheToCradle:(cradleIndexList, deleteListCallback) => {
                 return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallback)
@@ -211,7 +211,7 @@ export default class CacheAPI {
                 return this.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
             },
             deletePortalByIndex:(index, deleteListCallback) => {
-                return this.deletePortalByIndex(scrollerID, index, deleteListCallback)
+                return this.partitionData.deletePortalByIndex(scrollerID, index, deleteListCallback)
             },
             applyPortalPartitionItemsForDeleteList:() => {
                 return this.applyPortalPartitionItemsForDeleteList(scrollerID)
@@ -227,90 +227,8 @@ export default class CacheAPI {
         return facade
     }
 
-    //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
+    // //===========================[ REPOSITORY AND LIST MANAGEMENT ]==================================
 
-    // ----------------------------[ basic operations ]--------------------------
-
-    // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListSize
-    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback) => {
-
-        if (newlistsize.length == 0) {
-            this.scrollerData.clearCache(scrollerID) 
-            return
-        }
-
-        // match cache to newlistsize
-        const 
-            portalIndexMap:Map<number,number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            mapkeysList = Array.from(portalIndexMap.keys())
-
-        mapkeysList.sort((a,b) => a - b) // ascending
-
-        const 
-            { cradleParameters } = this.scrollerData.scrollerDataMap.get(scrollerID),
-
-            { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current,
-
-            { lowindex } = virtualListProps,
-
-            highestindex = mapkeysList.at(-1)
-
-        if (highestindex > ((newlistsize + lowindex) -1)) { // pare the cache
-
-            const parelist = mapkeysList.filter((index)=>{
-                const comparehighindex = newlistsize + lowindex - 1
-                return index > (comparehighindex)
-            })
-
-            this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
-
-        }
-
-    }
-
-    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback) => { 
-
-
-        if (newlistrange.length == 0) {
-            this.scrollerData.clearCache(scrollerID) 
-            return
-        }
-        // match cache to newlistsize
-        const 
-            portalIndexMap:Map<number,number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            mapkeysList = Array.from(portalIndexMap.keys())
-
-        mapkeysList.sort((a,b) => a - b) // ascending
-
-        const 
-            [ lownewindex, highnewindex ] = newlistrange,
-
-            highestindex = mapkeysList.at(-1),
-            lowestindex = mapkeysList.at(0)
-
-        if (highestindex > highnewindex) { // pare the cache
-
-            const compareindex = highnewindex
-            const parelist = mapkeysList.filter((index)=>{
-                return index > (compareindex)
-            })
-
-            this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
-
-        }
-
-        if (lowestindex < lownewindex) { // pare the cache
-
-            const compareindex = lownewindex
-            const parelist = mapkeysList.filter((index)=>{
-                return index < (compareindex)
-            })
-
-            this.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
-
-        }
-
-    }
     // ----------------------[ cache size limit enforceent ]------------------
 
     private matchCacheToCradle = (scrollerID, cradleIndexList, deleteListCallback) => {
@@ -321,7 +239,7 @@ export default class CacheAPI {
 
         if (delkeys.length) {
 
-            this.deletePortalByIndex(scrollerID, delkeys, deleteListCallback)
+            this.partitionData.deletePortalByIndex(scrollerID, delkeys, deleteListCallback)
             return true
 
         } else {
@@ -378,7 +296,7 @@ export default class CacheAPI {
 
             delList = [...headlist,...taillist]
 
-        this.deletePortalByIndex(scrollerID, delList, deleteListCallback)
+        this.partitionData.deletePortalByIndex(scrollerID, delList, deleteListCallback)
 
         return true
 
@@ -497,7 +415,7 @@ export default class CacheAPI {
         const 
             cachelist = new Map(),
             { itemSet } = this.scrollerData.scrollerDataMap.get(scrollerID),
-            { itemMetadataMap } = this
+            { itemMetadataMap } = this.itemData
 
         // for (const [key, value] of this.itemMetadataMap) {
         for (const itemID of itemSet) {
@@ -530,7 +448,7 @@ export default class CacheAPI {
 
         const 
             indexToItemIDMap:Map<number, number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            { itemMetadataMap } = this,
+            { itemMetadataMap } = this.itemData,
 
             // ----------- define parameters ---------------
 
@@ -685,7 +603,7 @@ export default class CacheAPI {
 
             // cache resources
             indexToItemIDMap:Map<number, number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            { itemMetadataMap } = this,
+            { itemMetadataMap } = this.itemData,
             orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b), // ascending order
             itemSet = this.scrollerData.scrollerDataMap.get(scrollerID).itemSet
 
@@ -990,7 +908,7 @@ export default class CacheAPI {
 
         if (!targetScrollerDataMap) return null
 
-        const portalMetadata = this.itemMetadataMap.get(itemID)
+        const portalMetadata = this.itemData.itemMetadataMap.get(itemID)
 
         // const sourceIndex = portalMetadata.index
         portalMetadata.scrollerID = scrollerID
@@ -1037,7 +955,7 @@ export default class CacheAPI {
             profile,
         }
 
-        this.itemMetadataMap.set(itemID, portalMetadata)
+        this.itemData.itemMetadataMap.set(itemID, portalMetadata)
         scrollerDataMap.itemSet.add(itemID)
         scrollerDataMap.indexToItemIDMap.set(index, itemID)
 
@@ -1122,42 +1040,42 @@ export default class CacheAPI {
 
     // delete a portal list item
     // accept an array of indexes
-    private deletePortalByIndex(scrollerID, index, deleteListCallback) {
+    // private deletePortalByIndex(scrollerID, index, deleteListCallback) {
 
-        const
-            indexArray = 
-                (!Array.isArray(index))?
-                    [index]:
-                    index,
+    //     const
+    //         indexArray = 
+    //             (!Array.isArray(index))?
+    //                 [index]:
+    //                 index,
 
-            { indexToItemIDMap, itemSet } = this.scrollerData.scrollerDataMap.get(scrollerID),
+    //         { indexToItemIDMap, itemSet } = this.scrollerData.scrollerDataMap.get(scrollerID),
 
-            { itemMetadataMap } = this,
+    //         { itemMetadataMap } = this,
 
-            { removePartitionPortal } = this.partitionData,
+    //         { removePartitionPortal } = this.partitionData,
 
-            deleteList = []
+    //         deleteList = []
 
-        for (const index of indexArray) {
+    //     for (const index of indexArray) {
 
-            const itemID = indexToItemIDMap.get(index)
+    //         const itemID = indexToItemIDMap.get(index)
 
-            if (itemID === undefined) continue // async mismatch
+    //         if (itemID === undefined) continue // async mismatch
 
-            deleteList.push({index,itemID})
-            const { partitionID } = itemMetadataMap.get(itemID)
+    //         deleteList.push({index,itemID})
+    //         const { partitionID } = itemMetadataMap.get(itemID)
 
-            removePartitionPortal(partitionID,itemID)
+    //         removePartitionPortal(partitionID,itemID)
 
-            itemMetadataMap.delete(itemID)
-            itemSet.delete(itemID)
-            indexToItemIDMap.delete(index)
+    //         itemMetadataMap.delete(itemID)
+    //         itemSet.delete(itemID)
+    //         indexToItemIDMap.delete(index)
 
-        }
+    //     }
 
-        deleteListCallback && deleteListCallback(deleteList)
+    //     deleteListCallback && deleteListCallback(deleteList)
 
-    }
+    // }
 
     private applyPortalPartitionItemsForDeleteList = (scrollerID) => {
 
@@ -1182,14 +1100,14 @@ export default class CacheAPI {
     // query existence of a portal list item
     private hasPortal(itemID) {
 
-        return this.itemMetadataMap.has(itemID)
+        return this.itemData.itemMetadataMap.has(itemID)
 
     }
 
     private getPortalMetadata(itemID) {
 
         if (this.hasPortal(itemID)) {
-            return this.itemMetadataMap.get(itemID)
+            return this.itemData.itemMetadataMap.get(itemID)
         }
 
     }

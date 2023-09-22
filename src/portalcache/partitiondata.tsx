@@ -206,4 +206,41 @@ export default class PartitionData {
 
     }
 
+    private deletePortalByIndex(scrollerID, index, deleteListCallback) {
+
+        const
+            indexArray = 
+                (!Array.isArray(index))?
+                    [index]:
+                    index,
+
+            { indexToItemIDMap, itemSet } = this.scrollerData.scrollerDataMap.get(scrollerID),
+
+            { itemMetadataMap } = this.itemData,
+
+            { removePartitionPortal } = this,
+
+            deleteList = []
+
+        for (const index of indexArray) {
+
+            const itemID = indexToItemIDMap.get(index)
+
+            if (itemID === undefined) continue // async mismatch
+
+            deleteList.push({index,itemID})
+            const { partitionID } = itemMetadataMap.get(itemID)
+
+            removePartitionPortal(partitionID,itemID)
+
+            itemMetadataMap.delete(itemID)
+            itemSet.delete(itemID)
+            indexToItemIDMap.delete(index)
+
+        }
+
+        deleteListCallback && deleteListCallback(deleteList)
+
+    }
+
 }
