@@ -148,7 +148,8 @@ const DndCradle = (props) => {
 
             if (item.scrollerID == dropResult.target.scrollerID) {
 
-                    serviceHandler.moveIndex(toIndex, fromIndex)
+                serviceHandler.moveIndex(toIndex, fromIndex)
+                scrollerDndContext.displacedIndex = (fromIndex > toIndex)? toIndex + 1:toIndex - 1
 
             } else {
 
@@ -183,6 +184,7 @@ const DndCradle = (props) => {
                     cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle
                 serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
                 stateHandler.setCradleState('applyinsertremovechanges') // re-render
+                scrollerDndContext.displacedIndex = toIndex + 1
 
             }
             // console.log('setting droppedIndex',toIndex)

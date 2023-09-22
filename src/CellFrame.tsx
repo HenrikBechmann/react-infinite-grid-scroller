@@ -448,7 +448,21 @@ const CellFrame = ({
             const classname = 'rigs-dropped-highlight'
             contentholderRef.current.classList.add(classname)
             setTimeout(()=>{
-                // console.log('removing class')
+                if (frameRef.current) contentholderRef.current.classList.remove(classname)
+            },2000)
+        }
+
+    }
+
+    const setDisplacedBorder = () => {
+
+        // console.log('droppedIndex, index',scrollerDndContext.droppedIndex,index)
+        if (scrollerDndContext.displacedIndex == index) {
+            // console.log('setting dropped class', index)
+            scrollerDndContext.displacedIndex = null
+            const classname = 'rigs-target-finish'
+            contentholderRef.current.classList.add(classname)
+            setTimeout(()=>{
                 if (frameRef.current) contentholderRef.current.classList.remove(classname)
             },2000)
         }
@@ -471,7 +485,10 @@ const CellFrame = ({
 
     useEffect(()=>{
 
-        if (['inserting','retrieved'].includes(frameState)) setDroppedBorder()
+        if (['inserting','retrieved'].includes(frameState)) {
+            setDroppedBorder()
+            setDisplacedBorder()
+        }
 
     },[frameState])
 
@@ -482,7 +499,6 @@ const CellFrame = ({
 
 
         if (isMountedRef.current) {
-            // setDroppedBorder()
             setFrameState('getusercontent')
         }
 

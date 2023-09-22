@@ -629,6 +629,7 @@ const InfiniteGridScroller = (props) => {
             scrollerID,
             dndOptions,
             droppedIndex:null,
+            displacedIndex:null,
             cacheAPI:null,
             stateHandler:null,
             serviceHandler:null,

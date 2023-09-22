@@ -1,6 +1,6 @@
 /*cellframe.css*/
 .rigs-source-highlight {
-    box-shadow: 0px 0px 5px 5px darkorange;
+    box-shadow: 0px 0px 6px 6px darkorange;
     border-radius: 8px;
     z-index: 1;
 }
@@ -16,13 +16,33 @@
 
     border-radius: 8px;
     z-index: 1;
-    animation: rigs-gradual-release .75s linear 0.05s;
+    animation: rigs-gradual-release 1s /*linear 0.05s*/;
 }
 
 @keyframes rigs-gradual-release {
 
-20% {box-shadow: 0 0 4px 4px green;}
+    20% {box-shadow: 0 0 6px 6px darkorange;}
 
-50% {box-shadow: 0 0 4px 4px transparent}
+    50% {box-shadow: 0 0 6px 6px transparent}
+
+}
+
+.rigs-target-finish {
+    border-radius: 8px;
+    z-index: 1;
+    animation: rigs-target-fade .5s;
+}
+
+@keyframes rigs-target-fade {
+
+    0%  { 
+        box-shadow: 0 0 0 6px black;
+        opacity: 0.3;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+        opacity: 1;
+    }
 
 }
