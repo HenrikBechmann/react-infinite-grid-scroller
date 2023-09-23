@@ -3,7 +3,7 @@
 ## 1.5.0 October, 2023
 
 Added:
-- drag and drop capability
+- intra-list and inter-list drag and drop capability
 
 Renamed:
 - `scrollerProperties` renamed to `scrollerContext`
