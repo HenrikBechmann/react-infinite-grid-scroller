@@ -48,30 +48,14 @@ import { OutPortal } from 'react-reverse-portal' // fetch from cache
 import Placeholder from './cellframe/Placeholder' // default
 import './cellframe/cellframe.css'
 
-import { CradleContext } from './Cradle'
-import { ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
-import { ViewportContext } from './Viewport'
+// import { ViewportContext } from './Viewport'
+import DndCellFrame from './cellframe/DndCellFrame'
 
+import { CradleContext } from './Cradle'
+import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
 // =====================[ dnd support ]====================
 
-import { 
-    useDrag, 
-    useDragLayer, 
-    useDrop, 
-    DragSourceMonitor, 
-    DragLayerMonitor, 
-    DropTargetMonitor
-} from 'react-dnd'
-
-import { getEmptyImage } from 'react-dnd-html5-backend'
-
-import { MasterDndContext } from './InfiniteGridScroller'
-
-// import moveicon from "../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
-// import copyicon from "../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
-import dragicon from "../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
-// import dropicon from "../task_alt_FILL0_wght400_GRAD0_opsz24.png"
-// import nodropicon from "../block_FILL0_wght400_GRAD0_opsz24.png"
+import DragIcon from './cellframe/DragIcon'
 
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
@@ -90,105 +74,6 @@ export const CellFrameController = props => {
 
 }
 
-// HoC for DnD functionality; requires targetConnector
-const DndCellFrame = (props) => {
-
-    const 
-        {itemID, index} = props,
-        cradleContext = useContext(CradleContext),
-        { scrollerPropertiesRef } = cradleContext,
-        { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current,
-        {crosscount } = virtualListProps,
-
-        masterDndContext = useContext(MasterDndContext),
-        scrollerDndContext = useContext(ScrollerDndContext),
-        frameRef = useRef(null)
-
-    const [ targetData, targetConnector ] = useDrop({
-        accept:scrollerDndContext.dndOptions.accept,
-        drop:(item,monitor) => {
-            return {target:{
-                scrollerID,
-                itemID,
-                index,
-            }}
-        },
-        collect:(monitor:DropTargetMonitor) => {
-            return {
-                item:monitor.getItem() as any,
-                isOver:monitor.isOver(),
-                canDrop:monitor.canDrop(),
-            }
-        },
-    })
-
-    const cellCanDropRef = useRef(false)
-
-    const 
-        sourceIndex = targetData.item?.index,
-        sourceScrollerID = targetData.item?.scrollerID,
-
-        isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index), // && (index !== sourceIndex + 1)),
-
-        classname = 'rigs-target-highlight'
-
-    if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(classname)) {
-
-        cellCanDropRef.current = true
-        frameRef.current.classList.add(classname)
-        masterDndContext.dropCount++
-
-    } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(classname)) {
-
-        masterDndContext.dropCount--
-        frameRef.current.classList.remove(classname)
-        cellCanDropRef.current = false
-
-    }
-
-    useEffect(()=>{
-
-        return () => {
-            
-            if (cellCanDropRef.current) masterDndContext.dropCount--
-
-            updateDragLayerIcon()
-
-        }
-
-    },[])
-
-    const updateDragLayerIcon = () => {
-
-        const canDoDrop = !!masterDndContext.dropCount
-
-        if (masterDndContext.dragData.canDrop !== canDoDrop) {
-            masterDndContext.dragData.canDrop = canDoDrop
-            masterDndContext.setDragBarState && masterDndContext.setDragBarState('updateicon')
-        }
-
-    }
-
-    updateDragLayerIcon()
-
-    const isDndRef = useRef(true)
-
-    useEffect (() => {
-
-        const isDnd = (masterDndContext.enabled && scrollerDndContext.dndOptions.enabled) // && enabled)
-
-        if (isDndRef.current !== isDnd) {
-            isDndRef.current = isDnd
-        }
-
-    },[masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
-
-    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext}
-
-    return <CellFrame {...enhancedProps}/>
-
-}
-
 // provide targetConnector source when not required for DnD
 const CellFrameWrapper = (props) => {
 
@@ -201,111 +86,6 @@ const CellFrameWrapper = (props) => {
     return <CellFrame {...enhancedProps}/>
 } 
 
-// drag starts here
-const DragIcon = props => {
-
-    const { itemID, index, profile, contentholderRef, scrollerID} = props
-
-    let { masterDndContext } = props
-
-    const viewportContext = useContext(ViewportContext)
-
-    const scrollerDndContext = useContext(ScrollerDndContext)
-
-    masterDndContext = masterDndContext ?? {} 
-
-    const {dragData} = masterDndContext || {}
-
-    let {dndDragIconStyles, dndOptions} = props
-
-    dndDragIconStyles = dndDragIconStyles ?? {}
-    dndOptions = dndOptions ?? {}
-
-    const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
-
-        return {
-            type:(dndOptions.type || 'Cell'), // must be defined
-
-            item:{ 
-                scrollerID,
-                itemID, 
-                index,
-                profile,
-            },
-
-        collect: (monitor:DragSourceMonitor) => {
-
-            return {
-                item:monitor.getItem(),
-                isDragging:!!monitor.isDragging(),
-                // canDrop:monitor.canDrop()
-
-            }
-
-        },
-
-        canDrag:true,
-
-    }},[itemID, dndOptions])
-
-    const 
-        { isDragging } = sourceData,
-        classname = 'rigs-source-highlight'
-
-    // console.log('isDragging, dragData.isDragging',isDragging, dragData.isDragging)
-    if (isDragging && !dragData.isDragging) {
-        Object.assign(dragData,
-            {
-                isDragging,
-                itemID,
-                index,
-                dndOptions,
-                sourceCacheAPI:scrollerDndContext.cacheAPI,
-                sourceStateHandler:scrollerDndContext.stateHandler,
-                sourceServiceHandler:scrollerDndContext.serviceHandler,
-            }
-        )
-        masterDndContext.setViewportState('startdragbar')
-    }
-
-    // TODO: use element.classList instead
-    if (isDragging && !contentholderRef.current.classList.contains(classname)) {
-        contentholderRef.current.classList.add(classname)
-    }
-    if (!isDragging && contentholderRef.current.classList.contains(classname)) {
-        contentholderRef.current.classList.remove(classname)
-    }
-
-    useEffect(()=>{
-
-        previewConnector(getEmptyImage(),{ captureDraggingState: true })
-
-    },[])
-
-    const iconstylesRef = useRef<CSSProperties>(
-        {
-            margin:'3px',
-            opacity:0.6
-        })
-
-    const dragiconstylesRef = useRef<CSSProperties>(
-        {...{
-            position:'absolute',
-            zIndex:'3',
-            top:0,
-            left:0,
-            opacity:0.8,
-            height:'32px',
-            width:'32px',
-        },...dndDragIconStyles})
-
-    return <div data-type = 'dragicon' ref = { sourceConnector } style = {dragiconstylesRef.current}>
-
-        <img style = {iconstylesRef.current} src={dragicon} />
-
-    </div>
-}
-
 // =================[ end of dnd support ]=================
 
 const defaultPlaceholderMessages = {
@@ -317,7 +97,7 @@ const defaultPlaceholderMessages = {
 }
 
 // core component
-const CellFrame = ({
+export const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
