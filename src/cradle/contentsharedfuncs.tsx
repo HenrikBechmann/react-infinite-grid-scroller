@@ -1,11 +1,9 @@
-// contentfunctions.tsx
+// contentsharedfuncs.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module, and updatefunctions, supports the contenthandler module. The functions in this module perform
     the detailed calculations and processes required by the contenthandler.
-
-    calculateContentParameters is called by the contenthandler's setCradleContent function.
 
     getCellFrameComponentList, allocateContentList, and deletePortals functions are shared by both. 
 
@@ -15,119 +13,6 @@
 import React from 'react'
 
 import { CellFrameController } from '../CellFrame'
-
-// ======================[ for setCradleContent ]===========================
-
-export const calculateContentParameters = ({ // called from setCradleContent only
-
-        // index
-        targetAxisReferenceIndex, // from user, or from pivot
-        // pixels
-        baseRowPixelLength,
-        targetPixelOffsetAxisFromViewport,
-        // resources
-        cradleInheritedProperties,
-        cradleInternalProperties,
-
-    }) => {
-
-    const 
-        { 
-
-            orientation,
-
-        } = cradleInheritedProperties,
-
-        {
-
-            cradleContentProps,
-            virtualListProps,
-            paddingProps,
-
-        } = cradleInternalProperties,
-
-        {
-
-            cradleRowcount,
-            runwayRowcount,
-
-        } = cradleContentProps,
-
-        {
-
-            lowindex:listlowindex, 
-            highindex:listhighindex, 
-            // size:listsize, 
-            crosscount, 
-            rowcount:listRowcount,
-            baserowblanks,
-            endrowblanks,
-            rowshift:rangerowshift,
-
-        } = virtualListProps
-
-    // align axis reference to list scope
-    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
-    targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
-
-    // derive target row
-    const targetAxisReferenceRow = Math.floor(targetAxisReferenceIndex/crosscount)
-
-    // -----------------------[ calc cradleReferenceRow & Index ]------------------------
-
-    // leading edge
-    let 
-        targetCradleReferenceRow = Math.max(rangerowshift,targetAxisReferenceRow - runwayRowcount),
-        // trailing edge
-        targetCradleEndRow = targetCradleReferenceRow + (cradleRowcount - 1)
-
-    const listEndRowOffset = (listRowcount - 1) + rangerowshift
-
-    if (targetCradleEndRow > (listEndRowOffset)) {
-        const diff = (targetCradleEndRow - listEndRowOffset)
-        targetCradleReferenceRow -= diff
-        targetCradleEndRow -= diff
-    }
-
-    let targetCradleReferenceIndex = (targetCradleReferenceRow * crosscount)
-    targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
-
-    // ---------------------[ calc cradle content count ]---------------------
-
-    let newCradleContentCount = cradleRowcount * crosscount
-    if (targetCradleEndRow == listEndRowOffset) {
-        if (endrowblanks) {
-            newCradleContentCount -= endrowblanks// endRowRemainderCount)
-        }
-    }
-    if (targetCradleReferenceRow == rangerowshift) { // first row
-        if (baserowblanks) {
-            newCradleContentCount -= baserowblanks
-        }
-    }
-
-    // --------------------[ calc css positioning ]-----------------------
-
-    const 
-        paddingOffset = 
-            orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left,
-
-        targetPixelOffsetViewportFromScrollblock = 
-            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset
-                - targetPixelOffsetAxisFromViewport
-
-    // ----------------------[ return required values ]---------------------
-
-    return {
-        targetCradleReferenceIndex, 
-        targetAxisReferenceIndex,
-        targetPixelOffsetViewportFromScrollblock, 
-        newCradleContentCount, 
-    } 
-
-}
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
 

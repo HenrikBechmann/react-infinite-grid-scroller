@@ -5,11 +5,11 @@ import React from 'react'
 
 import { 
 
-    calculateContentParameters,
+    // calculateContentParameters,
     allocateContentList,
     getCellFrameComponentList, 
 
-} from './contentfunctions'
+} from './contentsharedfuncs'
 
 export const contentSet = ( cradleState, cradleParameters, cradleContent, instanceIdCounterRef ) => { // cradleState influences some behaviour
 
@@ -371,3 +371,115 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
     }
 
 }
+
+export const calculateContentParameters = ({ // called from setCradleContent only
+
+        // index
+        targetAxisReferenceIndex, // from user, or from pivot
+        // pixels
+        baseRowPixelLength,
+        targetPixelOffsetAxisFromViewport,
+        // resources
+        cradleInheritedProperties,
+        cradleInternalProperties,
+
+    }) => {
+
+    const 
+        { 
+
+            orientation,
+
+        } = cradleInheritedProperties,
+
+        {
+
+            cradleContentProps,
+            virtualListProps,
+            paddingProps,
+
+        } = cradleInternalProperties,
+
+        {
+
+            cradleRowcount,
+            runwayRowcount,
+
+        } = cradleContentProps,
+
+        {
+
+            lowindex:listlowindex, 
+            highindex:listhighindex, 
+            // size:listsize, 
+            crosscount, 
+            rowcount:listRowcount,
+            baserowblanks,
+            endrowblanks,
+            rowshift:rangerowshift,
+
+        } = virtualListProps
+
+    // align axis reference to list scope
+    targetAxisReferenceIndex = Math.min(targetAxisReferenceIndex, listhighindex)
+    targetAxisReferenceIndex = Math.max(targetAxisReferenceIndex, listlowindex)
+
+    // derive target row
+    const targetAxisReferenceRow = Math.floor(targetAxisReferenceIndex/crosscount)
+
+    // -----------------------[ calc cradleReferenceRow & Index ]------------------------
+
+    // leading edge
+    let 
+        targetCradleReferenceRow = Math.max(rangerowshift,targetAxisReferenceRow - runwayRowcount),
+        // trailing edge
+        targetCradleEndRow = targetCradleReferenceRow + (cradleRowcount - 1)
+
+    const listEndRowOffset = (listRowcount - 1) + rangerowshift
+
+    if (targetCradleEndRow > (listEndRowOffset)) {
+        const diff = (targetCradleEndRow - listEndRowOffset)
+        targetCradleReferenceRow -= diff
+        targetCradleEndRow -= diff
+    }
+
+    let targetCradleReferenceIndex = (targetCradleReferenceRow * crosscount)
+    targetCradleReferenceIndex = Math.max(targetCradleReferenceIndex,listlowindex)
+
+    // ---------------------[ calc cradle content count ]---------------------
+
+    let newCradleContentCount = cradleRowcount * crosscount
+    if (targetCradleEndRow == listEndRowOffset) {
+        if (endrowblanks) {
+            newCradleContentCount -= endrowblanks// endRowRemainderCount)
+        }
+    }
+    if (targetCradleReferenceRow == rangerowshift) { // first row
+        if (baserowblanks) {
+            newCradleContentCount -= baserowblanks
+        }
+    }
+
+    // --------------------[ calc css positioning ]-----------------------
+
+    const 
+        paddingOffset = 
+            orientation == 'vertical'?
+                paddingProps.top:
+                paddingProps.left,
+
+        targetPixelOffsetViewportFromScrollblock = 
+            ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset
+                - targetPixelOffsetAxisFromViewport
+
+    // ----------------------[ return required values ]---------------------
+
+    return {
+        targetCradleReferenceIndex, 
+        targetAxisReferenceIndex,
+        targetPixelOffsetViewportFromScrollblock, 
+        newCradleContentCount, 
+    } 
+
+}
+

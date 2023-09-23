@@ -15,7 +15,7 @@ import {
     deletePortals,
     getCellFrameComponentList, 
 
-} from './contentfunctions'
+} from './contentsharedfuncs'
 
 export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounterRef) => {
 
