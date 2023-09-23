@@ -16,7 +16,7 @@ import {
 
 } from './contentfunctions'
 
-export const updateCradleContentCall = (cradleParameters, cradleContent, instanceIdCounterRef) => {
+export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounterRef) => {
 
     // ----------------------[ 1. initialize ]-------------------------
 

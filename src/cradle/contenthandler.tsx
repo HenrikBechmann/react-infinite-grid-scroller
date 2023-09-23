@@ -38,7 +38,7 @@ import {
 
 } from './contentfunctions'
 
-import { updateCradleContentCall } from './updatecradlecontentcall'
+import { contentUpdate } from './contentupdate'
 
 // import {
 
@@ -583,7 +583,7 @@ export default class ContentHandler {
 
             } = this
 
-        updateCradleContentCall(cradleParameters, cradleContent, this.instanceIdCounterRef)
+        contentUpdate(cradleParameters, cradleContent, this.instanceIdCounterRef)
 
     }
 
@@ -602,7 +602,7 @@ export default class ContentHandler {
     to get closer to natural proportions
 */
 
-    private latestAxisReferenceIndex
+    // private latestAxisReferenceIndex
 
     public adjustScrollblockForVariability = (source) => {
 
@@ -739,7 +739,7 @@ export default class ContentHandler {
             totalPreAxisScrollblockPixelLength = 
                 ((preCradleRowCount + headRowCount) * baseCellLength) + paddingHeadOffset
 
-        this.latestAxisReferenceIndex = axisReferenceIndex
+        // this.latestAxisReferenceIndex = axisReferenceIndex
 
         // ------------------------[ layout adjustments ]----------------------
 
