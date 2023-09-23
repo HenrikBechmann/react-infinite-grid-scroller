@@ -636,7 +636,7 @@ const CellFrame = ({
 
                         // get cache data
                         portalMetadataRef.current = cacheAPI.getPortalMetadata(itemID)
-                        Object.assign(portalMetadataRef.current.scrollerProperties,
+                        Object.assign(portalMetadataRef.current.scrollerContext,
                             {
                                 cellFramePropertiesRef,
                                 scrollerPropertiesRef
@@ -716,14 +716,14 @@ const CellFrame = ({
 
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
-                                const scrollerProperties = {
-                                    cellFramePropertiesRef,
-                                    scrollerPropertiesRef,
+                                const scrollerContext = {
+                                    cell:cellFramePropertiesRef,
+                                    scroller:scrollerPropertiesRef,
                                 }
                                 let addinCount = 0
-                                const addinProps:{scrollerProperties?:object, cacheAPI?:object} = {}
-                                if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
-                                    addinProps.scrollerProperties = scrollerProperties
+                                const addinProps:{scrollerContext?:object, cacheAPI?:object} = {}
+                                if (usercontent.props?.hasOwnProperty('scrollerContext')) {
+                                    addinProps.scrollerContext = scrollerContext
                                     addinCount++
                                 }
                                 if (usercontent.props?.hasOwnProperty('cacheAPI')) {
@@ -737,7 +737,7 @@ const CellFrame = ({
                                 }
 
                                 const retval = portalMetadataRef.current = 
-                                    await cacheAPI.createPortal(content, index, itemID, scrollerProperties, dndOptions, profile)
+                                    await cacheAPI.createPortal(content, index, itemID, scrollerContext, dndOptions, profile)
 
                                 if (retval) {
                                 

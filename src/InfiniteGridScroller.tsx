@@ -73,8 +73,8 @@ type RIGS = {
     technical:GenericObject,
     dndOptions:GenericObject,
 
-    // isOwnProperty causes scrollerProperties and cacheAPI to be set by the system
-    scrollerProperties:null | undefined | GenericObject,
+    // isOwnProperty causes scrollerContext and cacheAPI to be set by the system
+    scrollerContext:null | undefined | GenericObject,
     cacheAPI:null | undefined | GenericObject,
 
     // functions
@@ -292,7 +292,7 @@ const InfiniteGridScroller = (props) => {
         dndOptions,
 
         // information for host cell content
-        scrollerProperties, // required for embedded scroller; shares scroller settings with content
+        scrollerContext, // required for embedded scroller; shares scroller settings with content
         isDndMaster, // internal, set for root dnd only
         staticComponent, // supercedies most other properties
 
@@ -849,7 +849,7 @@ const InfiniteGridScroller = (props) => {
                     placeholderMessages = { placeholderMessagesRef.current }
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
-                    scrollerProperties = { scrollerProperties }
+                    scrollerContext = { scrollerContext }
 
                     cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }

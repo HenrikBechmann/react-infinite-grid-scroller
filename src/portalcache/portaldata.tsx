@@ -307,7 +307,7 @@ export default class PortalData {
     }
 
      // create new portal
-    private async createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) {
+    private async createPortal(scrollerID, component, index, itemID, scrollerContext, dndOptions, profile, isPreload = false) {
 
         this.unregisterPendingPortal(scrollerID, index)
 
@@ -331,7 +331,7 @@ export default class PortalData {
             index,
             partitionID,
             portalNode,
-            scrollerProperties,
+            scrollerContext,
             component,
             dndOptions,
             profile,
@@ -450,18 +450,18 @@ export default class PortalData {
         if ((usercontent !== null) && (usercontent !== undefined)) {
 
             let content 
-            const scrollerProperties = {
-                scrollerPropertiesRef,
-                cellFramePropertiesRef:{current:{index,itemID}}
+            const scrollerContext = {
+                scroller:scrollerPropertiesRef,
+                cell:{current:{index,itemID}}
             }
-            if (usercontent.props.hasOwnProperty('scrollerProperties')) {
-                content = React.cloneElement(usercontent, {scrollerProperties})
+            if (usercontent.props.hasOwnProperty('scrollerContext')) {
+                content = React.cloneElement(usercontent, {scrollerContext})
             } else {
                 content = usercontent
             }
 
             // const portalData = 
-                await this.createPortal(scrollerID,content, index, itemID, scrollerProperties, dndOptions, profile, true) // true = isPreload
+                await this.createPortal(scrollerID,content, index, itemID, scrollerContext, dndOptions, profile, true) // true = isPreload
 
         } else {
 

@@ -31,7 +31,7 @@
     Tips:
         - your component is in cache when both width and height = 0
         - your component is out of cache when both width and height are back to normal
-        - if you create an empty 'scrollerProperties' property for your component, CellFrame will
+        - if you create an empty 'scrollerContext' property for your component, CellFrame will
             set it to an object containing scrollerPropertiesRef and cellFramePropertiesRef
         - if your component does not scroll, there should be no issues.
 
@@ -207,8 +207,8 @@ export default class CacheAPI {
             transferPortalMetadataToScroller:(itemID,toIndex) => {
                 return this.portalData.transferPortalMetadataToScroller(scrollerID,itemID,toIndex)
             },
-            createPortal:(component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false) => {
-                return this.portalData.createPortal(scrollerID, component, index, itemID, scrollerProperties, dndOptions, profile, isPreload = false)
+            createPortal:(component, index, itemID, scrollerContext, dndOptions, profile, isPreload = false) => {
+                return this.portalData.createPortal(scrollerID, component, index, itemID, scrollerContext, dndOptions, profile, isPreload = false)
             },
             deletePortalByIndex:(index, deleteListCallback) => {
                 return this.portalData.deletePortalByIndex(scrollerID, index, deleteListCallback)

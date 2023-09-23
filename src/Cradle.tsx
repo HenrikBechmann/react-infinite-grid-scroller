@@ -151,7 +151,7 @@ export const Cradle = ({
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
         VARIABLE_MEASUREMENTS_TIMEOUT,
-        scrollerProperties,
+        scrollerContext,
         handlerListRef,
 
     }) => {
@@ -228,10 +228,10 @@ export const Cradle = ({
         cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // if (!scrollerProperties) { // root scroller
+    // if (!scrollerContext) { // root scroller
         // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
-        // console.log('-- index','~'+scrollerProperties?.cellFramePropertiesRef.current.index+'~')
-        // console.log('-- itemID','+'+scrollerProperties?.cellFramePropertiesRef.current.itemID+'+')
+        // console.log('-- index','~'+scrollerContext?.cellFramePropertiesRef.current.index+'~')
+        // console.log('-- itemID','+'+scrollerContext?.cellFramePropertiesRef.current.itemID+'+')
     // }
 
     // cradle scaffold element refs
@@ -526,7 +526,7 @@ export const Cradle = ({
         userCallbacks, styles, cacheAPI,
         // control values
         ONAFTERSCROLL_TIMEOUT, MAX_CACHE_OVER_RUN, 
-        scrollerProperties,
+        scrollerContext,
 
     }
 
