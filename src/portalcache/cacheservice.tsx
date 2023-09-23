@@ -1,4 +1,5 @@
 // cacheservice.tsx
+// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 import React from 'react'
 
