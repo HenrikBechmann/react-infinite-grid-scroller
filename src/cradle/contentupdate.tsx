@@ -7,7 +7,7 @@ import {
 
     calculateShiftSpecs,
 
-} from './contentupdatefunctions'
+} from './contentupdatefuncs'
 
 import { 
 
