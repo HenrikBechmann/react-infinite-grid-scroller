@@ -1,6 +1,12 @@
 // servicecache.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    This module contains clearCache, moveIndex, insertIndex, removeIndex
+
+*/
+
 import {
     isBlank,
     isNumber,
