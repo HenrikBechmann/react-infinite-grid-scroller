@@ -32,14 +32,17 @@ import React from 'react'
 
 import { 
     calculateContentParameters,
-    calculateShiftSpecs,
     allocateContentList,
     deletePortals,
     getCellFrameComponentList, 
 
 } from './contentfunctions'
 
-// import { isSafariIOS } from '../InfiniteGridScroller'
+import {
+
+    calculateShiftSpecs,
+
+} from './updatefunctions'
 
 export default class ContentHandler {
 
