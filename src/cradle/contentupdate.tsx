@@ -1,4 +1,4 @@
-// updatecradlecontentcall.tsx
+// contentupdate.tsx
 
 import React from 'react'
 
@@ -6,7 +6,7 @@ import {
 
     calculateShiftSpecs,
 
-} from './updatefunctions'
+} from './contentupdatefunctions'
 
 import { 
     // calculateContentParameters,

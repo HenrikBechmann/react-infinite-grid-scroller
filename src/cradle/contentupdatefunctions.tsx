@@ -1,4 +1,4 @@
-// updatefunctions.tsx
+// contentupdatefunctions.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 import { isSafariIOS } from '../InfiniteGridScroller'
