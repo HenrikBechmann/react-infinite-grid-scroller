@@ -29,7 +29,7 @@
         insertIndex,
         removeIndex,
         moveIndex,
-        remapIndexes,
+//        remapIndexes,
     
     The functions listed are defined in this module.
 
@@ -650,312 +650,312 @@ export default class ServiceHandler {
     // itemID set to undefined replaces the indexed item
     // the main purpose is to allow itemsIDs to be remapped to new indexes
     // operations are on existing cache items only
-    public remapIndexes = (changeMap) => { // index => itemID
+    // public remapIndexes = (changeMap) => { // index => itemID
 
-        if (changeMap.size == 0) return [] // nothing to do
+    //     if (changeMap.size == 0) return [] // nothing to do
 
-        const 
-            { cacheAPI, contentHandler, stateHandler } = 
-                this.cradleParameters.handlersRef.current,
+    //     const 
+    //         { cacheAPI, contentHandler, stateHandler } = 
+    //             this.cradleParameters.handlersRef.current,
 
-            { 
+    //         { 
 
-                itemMetadataMap, // itemID to component data, including index
-                indexToItemIDMap, // index to itemID
-                itemSet,
+    //             itemMetadataMap, // itemID to component data, including index
+    //             indexToItemIDMap, // index to itemID
+    //             itemSet,
 
-            } = cacheAPI,
+    //         } = cacheAPI,
 
-            indexesToDeleteList = [],
-            indexesToReplaceItemIDList = [],
-            partitionItemsToReplaceList = [],
-            changeIndexToItemIDMap = new Map(),
-            errorEntriesMap = new Map()
+    //         indexesToDeleteList = [],
+    //         indexesToReplaceItemIDList = [],
+    //         partitionItemsToReplaceList = [],
+    //         changeIndexToItemIDMap = new Map(),
+    //         errorEntriesMap = new Map()
 
-        // =====================[ PREPARE ]======================
+    //     // =====================[ PREPARE ]======================
 
-        // -----------------------[ isolate indexes for which items should be replaced ]--------------
+    //     // -----------------------[ isolate indexes for which items should be replaced ]--------------
 
-        const workingChangeMap = new Map()
-        changeMap.forEach((itemID, index) => {
-            if (itemID === undefined) {
-                if (indexToItemIDMap.has(index)) {
-                    const cacheItemID = indexToItemIDMap.get(index)
+    //     const workingChangeMap = new Map()
+    //     changeMap.forEach((itemID, index) => {
+    //         if (itemID === undefined) {
+    //             if (indexToItemIDMap.has(index)) {
+    //                 const cacheItemID = indexToItemIDMap.get(index)
 
-                    indexesToReplaceItemIDList.push(index)
+    //                 indexesToReplaceItemIDList.push(index)
 
-                    if (!(cacheItemID === undefined)) { // ignore non-existent indexes
+    //                 if (!(cacheItemID === undefined)) { // ignore non-existent indexes
 
-                        const { partitionID } = itemMetadataMap.get(cacheItemID)
+    //                     const { partitionID } = itemMetadataMap.get(cacheItemID)
 
-                        partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
-                    }
-                } else {
+    //                     partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
+    //                 }
+    //             } else {
 
-                    errorEntriesMap.set(index, 'index to replace is not in cache')
+    //                 errorEntriesMap.set(index, 'index to replace is not in cache')
 
-                }
-            } else {
+    //             }
+    //         } else {
 
-                workingChangeMap.set(index, itemID)
+    //             workingChangeMap.set(index, itemID)
 
-            }
-        })
+    //         }
+    //     })
 
-        indexesToReplaceItemIDList.forEach((index) => {
-            indexToItemIDMap.delete(index)
-        })
+    //     indexesToReplaceItemIDList.forEach((index) => {
+    //         indexToItemIDMap.delete(index)
+    //     })
 
-        // ------------ filter out inoperable indexes and itemIDs ------------
+    //     // ------------ filter out inoperable indexes and itemIDs ------------
 
-        const itemsToReplaceSet = new Set()
-        partitionItemsToReplaceList.forEach((obj) => {
-            itemsToReplaceSet.add(obj.itemID)
-        })
+    //     const itemsToReplaceSet = new Set()
+    //     partitionItemsToReplaceList.forEach((obj) => {
+    //         itemsToReplaceSet.add(obj.itemID)
+    //     })
 
-        // const itemsToReplaceList = Array.from(itemsToReplaceSet)
+    //     // const itemsToReplaceList = Array.from(itemsToReplaceSet)
 
-        workingChangeMap.forEach((itemID, index) =>{
+    //     workingChangeMap.forEach((itemID, index) =>{
 
-            if ((itemID === null) || (itemID === undefined)) {
+    //         if ((itemID === null) || (itemID === undefined)) {
 
-                indexesToDeleteList.push(index)
+    //             indexesToDeleteList.push(index)
 
-            } else {
+    //         } else {
 
-                if ((typeof itemID) == 'string') {
+    //             if ((typeof itemID) == 'string') {
 
-                    errorEntriesMap.set(index,'itemID is a string')
+    //                 errorEntriesMap.set(index,'itemID is a string')
 
-                } else if (!Number.isInteger(itemID)) {
+    //             } else if (!Number.isInteger(itemID)) {
 
-                    errorEntriesMap.set(index,'itemID is not an integer')
+    //                 errorEntriesMap.set(index,'itemID is not an integer')
 
-                } else if (!indexToItemIDMap.has(index)) {
+    //             } else if (!indexToItemIDMap.has(index)) {
 
-                    errorEntriesMap.set(index, 'index not in cache')
+    //                 errorEntriesMap.set(index, 'index not in cache')
 
-                } else if (indexToItemIDMap.get(index) == itemID) {
+    //             } else if (indexToItemIDMap.get(index) == itemID) {
 
-                    errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
+    //                 errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
 
-                } else if (!itemMetadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
+    //             } else if (!itemMetadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
 
-                    errorEntriesMap.set(index, `target itemID ${itemID} not in cache, or has been removed`)
+    //                 errorEntriesMap.set(index, `target itemID ${itemID} not in cache, or has been removed`)
 
-                } else {
+    //             } else {
 
-                    changeIndexToItemIDMap.set(index, itemID)
+    //                 changeIndexToItemIDMap.set(index, itemID)
 
-                }
+    //             }
 
-            }
+    //         }
 
-        })
+    //     })
 
-        // -------------- filter out duplicate itemIDs ------------
+    //     // -------------- filter out duplicate itemIDs ------------
 
-        const 
-            mapsize = changeIndexToItemIDMap.size,
+    //     const 
+    //         mapsize = changeIndexToItemIDMap.size,
 
-            itemIDSet = new Set(changeIndexToItemIDMap.values()),
+    //         itemIDSet = new Set(changeIndexToItemIDMap.values()),
 
-            itemsetsize = itemIDSet.size
+    //         itemsetsize = itemIDSet.size
 
-        if (mapsize != itemsetsize) { // there must be duplicate itemIDs
+    //     if (mapsize != itemsetsize) { // there must be duplicate itemIDs
 
-            const itemIDCountMap = new Map()
+    //         const itemIDCountMap = new Map()
 
-            changeIndexToItemIDMap.forEach((itemID) => {
+    //         changeIndexToItemIDMap.forEach((itemID) => {
 
-                if (!itemIDCountMap.has(itemID)) {
+    //             if (!itemIDCountMap.has(itemID)) {
 
-                    itemIDCountMap.set(itemID, 1)
+    //                 itemIDCountMap.set(itemID, 1)
 
-                } else {
+    //             } else {
 
-                    let count = itemIDCountMap.get(itemID)
-                    itemIDCountMap.set(itemID, ++count )
+    //                 let count = itemIDCountMap.get(itemID)
+    //                 itemIDCountMap.set(itemID, ++count )
 
-                }
-            })
+    //             }
+    //         })
 
-            const duplicateItemsMap = new Map()
-            itemIDCountMap.forEach((count,itemID)=>{
+    //         const duplicateItemsMap = new Map()
+    //         itemIDCountMap.forEach((count,itemID)=>{
 
-                if (count > 1) {
+    //             if (count > 1) {
 
-                    duplicateItemsMap.set(itemID, count)
+    //                 duplicateItemsMap.set(itemID, count)
                     
-                }
+    //             }
 
-            })
+    //         })
 
-            const duplicatesToRemoveList = []
-            changeIndexToItemIDMap.forEach((itemID, index) => {
+    //         const duplicatesToRemoveList = []
+    //         changeIndexToItemIDMap.forEach((itemID, index) => {
 
-                if (duplicateItemsMap.has(itemID)) {
-                    duplicatesToRemoveList.push(index)
-                }
+    //             if (duplicateItemsMap.has(itemID)) {
+    //                 duplicatesToRemoveList.push(index)
+    //             }
 
-            })
+    //         })
 
-            duplicatesToRemoveList.forEach((index)=>{
+    //         duplicatesToRemoveList.forEach((index)=>{
 
-                const 
-                    itemID = changeIndexToItemIDMap.get(index),
-                    count = duplicateItemsMap.get(itemID)
+    //             const 
+    //                 itemID = changeIndexToItemIDMap.get(index),
+    //                 count = duplicateItemsMap.get(itemID)
 
-                errorEntriesMap.set(index, `target itemID ${itemID} has duplicates (${count})`)
-                changeIndexToItemIDMap.delete(index)
+    //             errorEntriesMap.set(index, `target itemID ${itemID} has duplicates (${count})`)
+    //             changeIndexToItemIDMap.delete(index)
 
-            })
+    //         })
 
-        }
+    //     }
 
-        // ------------ capture map before changes ----------
-        // ... this map is used later to identify orphaned item and index cache records for deletion
+    //     // ------------ capture map before changes ----------
+    //     // ... this map is used later to identify orphaned item and index cache records for deletion
 
-        // from the list of changes
-        // both sides of change map...
-        const originalMap = new Map() // index => itemID; before change
-        changeIndexToItemIDMap.forEach((itemID, index)=>{
+    //     // from the list of changes
+    //     // both sides of change map...
+    //     const originalMap = new Map() // index => itemID; before change
+    //     changeIndexToItemIDMap.forEach((itemID, index)=>{
 
-            originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
-            originalMap.set(itemMetadataMap.get(itemID).index,itemID) // target itemID
+    //         originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
+    //         originalMap.set(itemMetadataMap.get(itemID).index,itemID) // target itemID
 
-        })
+    //     })
 
-        // ... and from the list of indexes to be deleted
-        indexesToDeleteList.forEach((index) => {
+    //     // ... and from the list of indexes to be deleted
+    //     indexesToDeleteList.forEach((index) => {
 
-            originalMap.set(index, indexToItemIDMap.get(index))
+    //         originalMap.set(index, indexToItemIDMap.get(index))
 
-        })
+    //     })
 
-        // ======================[ CACHE OPERATIONS ]================
+    //     // ======================[ CACHE OPERATIONS ]================
 
-        // --------------- delete listed indexes ---------
-        // for indexes set to null or undefined
-        // associated itemID's will be orphaned, but could be remapped.
-        // orphans are resolved below
+    //     // --------------- delete listed indexes ---------
+    //     // for indexes set to null or undefined
+    //     // associated itemID's will be orphaned, but could be remapped.
+    //     // orphans are resolved below
 
-        if (indexesToDeleteList.length) {
+    //     if (indexesToDeleteList.length) {
 
-            indexesToDeleteList.forEach((index) => {
+    //         indexesToDeleteList.forEach((index) => {
 
-                indexToItemIDMap.delete(index)
+    //             indexToItemIDMap.delete(index)
 
-            })
+    //         })
 
-        }
+    //     }
 
-        // ----------- apply filtered changes to cache index map and itemID map ----------
-        // at this point every remaining index listed will change its mapping
+    //     // ----------- apply filtered changes to cache index map and itemID map ----------
+    //     // at this point every remaining index listed will change its mapping
 
-        // const processedMap = new Map() // index => itemID; change has been applied
-        const processedIndexList = []
+    //     // const processedMap = new Map() // index => itemID; change has been applied
+    //     const processedIndexList = []
 
-        // make changes
-        changeIndexToItemIDMap.forEach((itemID,index) => {
+    //     // make changes
+    //     changeIndexToItemIDMap.forEach((itemID,index) => {
 
-            indexToItemIDMap.set(index,itemID) // modiication applied, part 1
-            const itemdata = itemMetadataMap.get(itemID)
+    //         indexToItemIDMap.set(index,itemID) // modiication applied, part 1
+    //         const itemdata = itemMetadataMap.get(itemID)
 
-            itemdata.index = index // modification applied, part 2
+    //         itemdata.index = index // modification applied, part 2
 
-            // processedMap.set(index,itemID)
-            processedIndexList.push(index)
+    //         // processedMap.set(index,itemID)
+    //         processedIndexList.push(index)
 
-        })
+    //     })
 
-        // -------------- look for and delete item and index orphans --------------------
-        // if the original item's index has not changed, then it has not been remapped, 
-        //     it is orphaned, and the item is deleted
-        // if the item's index has changed, but the original item index map still points to the item,
-        //     then the index is orphaned (duplicate), and deleted
+    //     // -------------- look for and delete item and index orphans --------------------
+    //     // if the original item's index has not changed, then it has not been remapped, 
+    //     //     it is orphaned, and the item is deleted
+    //     // if the item's index has changed, but the original item index map still points to the item,
+    //     //     then the index is orphaned (duplicate), and deleted
 
-        const 
-            deletedItemIDToIndexMap = new Map(), // index => itemID; orphaned index
-            deletedIndexToItemIDMap = new Map(),
+    //     const 
+    //         deletedItemIDToIndexMap = new Map(), // index => itemID; orphaned index
+    //         deletedIndexToItemIDMap = new Map(),
 
-            portalPartitionItemsForDeleteList = [] // hold deleted portals for deletion until after cradle synch
+    //         portalPartitionItemsForDeleteList = [] // hold deleted portals for deletion until after cradle synch
 
-        originalMap.forEach((originalItemID, originalItemIDIndex) => {
+    //     originalMap.forEach((originalItemID, originalItemIDIndex) => {
 
-            const finalItemIDIndex = itemMetadataMap.get(originalItemID).index
+    //         const finalItemIDIndex = itemMetadataMap.get(originalItemID).index
 
-            if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
+    //         if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
 
-                deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
+    //             deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
 
-                const { partitionID } = itemMetadataMap.get(originalItemID)
-                portalPartitionItemsForDeleteList.push({itemID:originalItemID, partitionID})
-                itemMetadataMap.delete(originalItemID)
-                itemSet.delete(originalItemID)
+    //             const { partitionID } = itemMetadataMap.get(originalItemID)
+    //             portalPartitionItemsForDeleteList.push({itemID:originalItemID, partitionID})
+    //             itemMetadataMap.delete(originalItemID)
+    //             itemSet.delete(originalItemID)
 
-            } else { // remapped, check for orphaned index
+    //         } else { // remapped, check for orphaned index
 
-                if (indexToItemIDMap.has(originalItemIDIndex)) {
+    //             if (indexToItemIDMap.has(originalItemIDIndex)) {
 
-                    const finalItemID = indexToItemIDMap.get(originalItemIDIndex)
+    //                 const finalItemID = indexToItemIDMap.get(originalItemIDIndex)
 
-                    if (finalItemID == originalItemID) { // the index has not been remapped, therefore orphaned
+    //                 if (finalItemID == originalItemID) { // the index has not been remapped, therefore orphaned
 
-                        deletedIndexToItemIDMap.set(originalItemIDIndex, originalItemID)
+    //                     deletedIndexToItemIDMap.set(originalItemIDIndex, originalItemID)
 
-                        indexToItemIDMap.delete(originalItemIDIndex)
+    //                     indexToItemIDMap.delete(originalItemIDIndex)
 
-                    }
-                }
-            }
-        })
+    //                 }
+    //             }
+    //         }
+    //     })
 
-        // ------------- apply changes to extant cellFrames ------------
+    //     // ------------- apply changes to extant cellFrames ------------
 
-        // these are used to reconcile cradle cellFrames, and also for return information
-        // const processedIndexList = Array.from(processedMap.keys())
-        const 
-            deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values()),
-            deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys()),
-            // for return information...
-            deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
+    //     // these are used to reconcile cradle cellFrames, and also for return information
+    //     // const processedIndexList = Array.from(processedMap.keys())
+    //     const 
+    //         deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values()),
+    //         deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys()),
+    //         // for return information...
+    //         deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
 
-        let modifiedIndexList = [
-            ...processedIndexList,
-            ...indexesToDeleteList, 
-            ...deletedOrphanedItemIndexList, 
-            ...deletedOrphanedIndexList
-        ]
+    //     let modifiedIndexList = [
+    //         ...processedIndexList,
+    //         ...indexesToDeleteList, 
+    //         ...deletedOrphanedItemIndexList, 
+    //         ...deletedOrphanedIndexList
+    //     ]
 
-        modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
+    //     modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
 
-        contentHandler.createNewItemIDs(indexesToReplaceItemIDList)
+    //     contentHandler.createNewItemIDs(indexesToReplaceItemIDList)
 
-        contentHandler.reconcileCellFrames(modifiedIndexList)
+    //     contentHandler.reconcileCellFrames(modifiedIndexList)
 
-        modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
+    //     modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
 
-        cacheAPI.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList.concat(partitionItemsToReplaceList)
+    //     cacheAPI.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList.concat(partitionItemsToReplaceList)
 
-        stateHandler.setCradleState('applyremapchanges')
+    //     stateHandler.setCradleState('applyremapchanges')
 
-        // ---------- returns for user information --------------------
+    //     // ---------- returns for user information --------------------
 
-        return [
+    //     return [
 
-            modifiedIndexList, 
-            processedIndexList, 
-            indexesToDeleteList, 
-            indexesToReplaceItemIDList,
-            deletedOrphanedItemIDList, 
-            deletedOrphanedIndexList,
-            errorEntriesMap, 
-            changeMap
+    //         modifiedIndexList, 
+    //         processedIndexList, 
+    //         indexesToDeleteList, 
+    //         indexesToReplaceItemIDList,
+    //         deletedOrphanedItemIDList, 
+    //         deletedOrphanedIndexList,
+    //         errorEntriesMap, 
+    //         changeMap
 
-        ]
+    //     ]
 
-    }
+    // }
 
     // move must be entirely within list bounds
     // returns list of processed indexes

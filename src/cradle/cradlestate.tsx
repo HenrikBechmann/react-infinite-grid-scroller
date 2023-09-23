@@ -408,7 +408,7 @@ const handleCradleState = ({
 
         // support for various host service requests; syncs cradle content with cache changes
         case 'applyinsertremovechanges':
-        case 'applyremapchanges':
+        // case 'applyremapchanges':
         case 'applymovechanges': {
 
             cradleContent.headDisplayComponents = cradleContent.headModelComponents

@@ -1439,68 +1439,68 @@ export default class ContentHandler {
     }
 
     // supports remapIndexes
-    public createNewItemIDs(newList) {
+    // public createNewItemIDs(newList) {
 
-        if (!newList.length) return
+    //     if (!newList.length) return
 
-        const 
-            { cacheAPI } = this.cradleParameters.handlersRef.current,
-            { cradleModelComponents } = this.content,
-            { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
+    //     const 
+    //         { cacheAPI } = this.cradleParameters.handlersRef.current,
+    //         { cradleModelComponents } = this.content,
+    //         { cradleContentProps } = this.cradleParameters.cradleInternalPropertiesRef.current
 
-        if (cradleContentProps.size == 0) return
+    //     if (cradleContentProps.size == 0) return
 
-        const { lowindex:lowSpan, highindex:highSpan } = cradleContentProps
+    //     const { lowindex:lowSpan, highindex:highSpan } = cradleContentProps
 
-        function processcomponentFn(newlistindex) {
+    //     function processcomponentFn(newlistindex) {
 
-            if (newlistindex < lowSpan || newlistindex > highSpan) return // defensive
+    //         if (newlistindex < lowSpan || newlistindex > highSpan) return // defensive
 
-            const 
-                cradlePtr = newlistindex - lowSpan,
-                component = cradleModelComponents[cradlePtr],
-                newItemID = cacheAPI.getNewItemID()
+    //         const 
+    //             cradlePtr = newlistindex - lowSpan,
+    //             component = cradleModelComponents[cradlePtr],
+    //             newItemID = cacheAPI.getNewItemID()
 
-            cradleModelComponents[cradlePtr] = React.cloneElement(component, {itemID:newItemID})
+    //         cradleModelComponents[cradlePtr] = React.cloneElement(component, {itemID:newItemID})
 
-        }
+    //     }
 
-        newList.forEach(processcomponentFn)
+    //     newList.forEach(processcomponentFn)
 
-    }
+    // }
 
     // called from service handler's remapIndexes, as last step
-    public reconcileCellFrames(modifiedIndexesList) {
+    // public reconcileCellFrames(modifiedIndexesList) {
 
-        if (!modifiedIndexesList.length) return
+    //     if (!modifiedIndexesList.length) return
 
-        const 
-            { cradleModelComponents } = this.content,
-            { cacheAPI } = this.cradleParameters.handlersRef.current,
-            { indexToItemIDMap } = cacheAPI
+    //     const 
+    //         { cradleModelComponents } = this.content,
+    //         { cacheAPI } = this.cradleParameters.handlersRef.current,
+    //         { indexToItemIDMap } = cacheAPI
 
-        function processComponentFn (component, i, array ) {
-            const { index, itemID } = component.props
-            if (modifiedIndexesList.includes(index)) {
+    //     function processComponentFn (component, i, array ) {
+    //         const { index, itemID } = component.props
+    //         if (modifiedIndexesList.includes(index)) {
 
-                const newItemID = 
-                    indexToItemIDMap.has(index)?
-                        indexToItemIDMap.get(index):
-                        cacheAPI.getNewItemID()
+    //             const newItemID = 
+    //                 indexToItemIDMap.has(index)?
+    //                     indexToItemIDMap.get(index):
+    //                     cacheAPI.getNewItemID()
 
-                if (newItemID != itemID) { // defensive; shouldn't happen
+    //             if (newItemID != itemID) { // defensive; shouldn't happen
 
-                    array[i] = React.cloneElement(component, {itemID:newItemID})
+    //                 array[i] = React.cloneElement(component, {itemID:newItemID})
 
-                }
-            }
-        }
+    //             }
+    //         }
+    //     }
 
-        cradleModelComponents.forEach(processComponentFn)
+    //     cradleModelComponents.forEach(processComponentFn)
 
-        this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
-        this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
+    //     this.content.headModelComponents = cradleModelComponents.slice(0,this.content.headModelComponents.length)
+    //     this.content.tailModelComponents = cradleModelComponents.slice(this.content.headModelComponents.length)
 
-    }
+    // }
 
 }

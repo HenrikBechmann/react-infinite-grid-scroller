@@ -735,7 +735,7 @@ export const Cradle = ({
             getCradleIndexMap,
             getPropertiesSnapshot,
 
-            remapIndexes,
+            // remapIndexes,
             moveIndex,
             insertIndex,
             removeIndex,
@@ -760,7 +760,7 @@ export const Cradle = ({
             getCradleIndexMap,
             getPropertiesSnapshot,
 
-            remapIndexes,
+            // remapIndexes,
             moveIndex,
             insertIndex,
             removeIndex,
