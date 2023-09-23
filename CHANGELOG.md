@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.0 October, 2023
+
+Renamed:
+- `scrollerProperties` renamed to `scrollerContext`
+- `scrollerContext` properties renamed from `cellFramePropertiesRef` to `cell`, and from `scrollerPropertiesRef` to `scroller`. Both follow the react `ref` pattern, with data held in the `current` property
+
 ## 1.4.2 August 24, 2023
 
 fix debug error
