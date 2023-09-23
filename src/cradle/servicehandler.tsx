@@ -37,12 +37,16 @@
     often invoked by service functions to change Cradle state upon servicing requests.
 */
 
-const isBlank = (value:any) => {
+import Snapshots from './servicesnapshots'
+import ServiceCache from './servicecache'
+import ServiceGeneral from './servicegeneral'
+
+export const isBlank = (value:any) => {
     const testvalue = value ?? ''
     return testvalue === ''
 }
 
-const isNumber = (value:any) => {
+export const isNumber = (value:any) => {
 
     return ( 
         (!isNaN(Number(value))) && 
@@ -51,7 +55,7 @@ const isNumber = (value:any) => {
 
 }
 
-const isInteger = (value:any) => {
+export const isInteger = (value:any) => {
 
     const test = +value
 
@@ -60,7 +64,7 @@ const isInteger = (value:any) => {
 
 }
 
-const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:any) => {
+export const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:any) => {
 
     if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
@@ -71,7 +75,7 @@ const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:any) => 
 
 }
 
-const isValueLessThanToOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
+export const isValueLessThanToOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
 
     if (!isInteger(compareValue) || !isInteger(maxValue)) return false
 
@@ -82,7 +86,7 @@ const isValueLessThanToOrEqualToMaxValue = (compareValue:any, maxValue:any) => {
 
 }
 
-const errorMessages = {
+export const errorMessages = {
     scrollToIndex:'integer: required, greater than or equal to low index',
     setListSize:'integer: required, greater than or equal to 0',
     setListRange:'array[lowindex,highindex]: required, both integers, highindex greater than or equal to lowindex',
@@ -131,12 +135,22 @@ export default class ServiceHandler {
 
        this.callbacks = callbacks
 
+       this.snapshots = new Snapshots(cradleParameters)
+
+       this.servicegeneral = new ServiceGeneral(cradleParameters, this.callbacks)
+
+       this.servicecache = new ServiceCache(cradleParameters, this.setListRange)
+
     }
 
     private cradleParameters
 
     // see above for list
     public callbacks
+
+    private snapshots
+    private servicecache
+    private servicegeneral
 
     // =======================[ BOUNDARY TRIGGERS ]===================
 
@@ -196,219 +210,26 @@ export default class ServiceHandler {
 
     public reload = () => {
 
-        const { stateHandler } = this.cradleParameters.handlersRef.current
-
-        const { interruptHandler } = this.cradleParameters.handlersRef.current
-
-        interruptHandler.pauseInterrupts()
-
-        stateHandler.setCradleState('reload')
+        this.servicegeneral.reload()
 
     }
 
     public scrollToIndex = (index) => {
 
-        const 
-
-            { cradleParameters } = this,
-
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
-            { virtualListProps } = cradleInternalProperties,
-
-            { lowindex, size } = virtualListProps
-
-        if (!size) return
-
-        const isInvalid = (!isInteger(index)) //|| 
-
-        if (!isInvalid) {
-
-            if (!isValueGreaterThanOrEqualToMinValue(index, lowindex)) {
-                index = lowindex
-            }
-
-        }
-
-        index = +index
-
-        if (isInvalid) {
-
-            console.log('RIGS ERROR scrollToIndex(index)):', index, errorMessages.scrollToIndex)
-            return
-
-        }
-
-        const
-
-            handlers = cradleParameters.handlersRef.current,
-
-            {
-
-                interruptHandler,
-                layoutHandler,
-                stateHandler
-
-            } = handlers,
-
-            { signals } = interruptHandler
-
-        signals.pauseScrollingEffects = true
-
-        layoutHandler.cradlePositionData.targetAxisReferencePosition = index - lowindex
-
-        stateHandler.setCradleState('scrollto')
+        this.servicegeneral.scrollToIndex(index)
 
     }
 
     public scrollToPixel = (pixel, behavior = 'smooth') => {
 
-        if (!['smooth','instant','auto'].includes(behavior)) {
-            behavior = 'smooth'
-        }
-
-        if (!(isInteger(pixel) && isValueGreaterThanOrEqualToMinValue(pixel,0))) {
-
-            return
-
-        }
-
-        pixel = +pixel
-
-        const
-
-            { cradleParameters } = this,
-
-            viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
-
-            scrollblockElement = viewportElement.firstChild,
-
-            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
-
-            { orientation } = cradleInheritedProperties,
-
-            scrollblockLength = 
-                orientation == 'vertical'?
-                    scrollblockElement.offsetHeight:
-                    scrollblockElement.offsetWidth,
-
-            viewportLength = 
-                orientation == 'vertical'?
-                    viewportElement.offsetHeight:
-                    viewportElement.offsetWidth,
-
-            pixeltarget = Math.max(Math.min(pixel, scrollblockLength - viewportLength),0)
-
-        let top, left
-
-        if (orientation == 'vertical') {
-
-            top = pixeltarget
-            left = viewportElement.scrollLeft
-
-        } else {
-
-            left = pixeltarget
-            top = viewportElement.scrollTop
-        }
-
-        const options = {
-            top:top,
-            left:left,
-            behavior:behavior,
-        }
-
-        viewportElement.scroll(options)
+        this.servicegeneral.scrollToPixel(pixel, behavior)
 
     }
 
     public scrollByPixel = (pixel, behavior = 'smooth') => {
 
-        if (!['smooth','instant','auto'].includes(behavior)) {
-            behavior = 'smooth'
-        }
+        this.servicegeneral.scrollByPixel(pixel, behavior)
 
-        if (!isInteger(pixel)) {
-
-            return
-
-        }
-
-        pixel = +pixel
-
-        if (pixel == 0) return // nothing to do
-
-        const
-
-            { cradleParameters } = this,
-
-            viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
-
-            scrollblockElement = viewportElement.firstChild,
-
-            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
-
-            { orientation } = cradleInheritedProperties,
-
-            scrollblockLength = 
-                orientation == 'vertical'?
-                    scrollblockElement.offsetHeight:
-                    scrollblockElement.offsetWidth,
-
-            viewportLength = 
-                orientation == 'vertical'?
-                    viewportElement.offsetHeight:
-                    viewportElement.offsetWidth,
-
-            scrollOffset = 
-                orientation == 'vertical'?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
-
-        // console.log('scrollblockLength, viewportLength, scrollOffset\n',
-        //     scrollblockLength, viewportLength, scrollOffset)
-
-        let pixelmovement, 
-            pixelmax, pixelovershoot, 
-            pixelundershoot
-
-        if (pixel > 0) { // scroll down (increase scrollOffset)
-
-            pixelmax = scrollblockLength - viewportLength
-            pixelovershoot = Math.max((pixel + scrollOffset) - pixelmax,0)
-            pixelmovement = pixel - pixelovershoot
-
-        } else { // scroll up (decrease scrollOffset)
-
-            pixelundershoot = Math.min(pixel + scrollOffset,0)
-            pixelmovement = pixel - pixelundershoot
-
-        }
-
-        // console.log('pixelmovement :: pixelmax, pixelovershoot :: pixelundershoot\n',
-        //     pixelmovement, pixelmax, pixelovershoot, pixelundershoot)
-
-        let top, left
-
-        if (orientation == 'vertical') {
-
-            top = pixelmovement
-            left = 0
-
-        } else {
-
-            left = pixelmovement
-            top = 0
-        }
-
-        const options = {
-            top,
-            left,
-            behavior,
-        }
-
-        viewportElement.scrollBy(options)
-        
     }
 
     // deprecated (camel case)
@@ -420,876 +241,64 @@ export default class ServiceHandler {
 
     public setListSize = (newlistsize) => {
 
-        newlistsize = +newlistsize
-
-        const isInvalid = (!isInteger(newlistsize) || !isValueGreaterThanOrEqualToMinValue(newlistsize, 0))
-
-        if (isInvalid) {
-
-            console.log('RIGS ERROR setListSize(newlistsize)', newlistsize, errorMessages.setListSize)
-            return
-
-        }
-
-        const 
-            { 
-
-                cacheAPI, 
-                contentHandler, 
-                stateHandler 
-
-            } = this.cradleParameters.handlersRef.current,
-
-            { 
-
-                deleteListCallback, 
-
-            } = this.callbacks,
-
-            currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size,
-
-            { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
-
-        let dListCallback
-        if (deleteListCallback) {
-            dListCallback = (deleteList) => {
-
-                deleteListCallback('change list size intervention',deleteList)
-
-            }
-
-        }
-
-        contentHandler.updateVirtualListSize(newlistsize)
-        cacheAPI.changeCacheListSize(newlistsize, dListCallback)
-
-        cacheAPI.renderPortalLists()
-
-        if ((cache == 'preload') && (newlistsize > currentlistsize)) {
-
-            stateHandler.setCradleState('startpreload')
-
-        }
+        this.servicegeneral.setListSize(newlistsize)
 
     }
 
     public setListRange = (newlistrange) => {
 
-        let isInvalid = !Array.isArray(newlistrange)
-
-        if (!isInvalid) {
-
-            isInvalid = !(newlistrange.length == 0 || newlistrange.length == 2)
-
-            if (!isInvalid && (newlistrange.length == 2)) {
-
-                let [lowindex,highindex] = newlistrange
-
-                lowindex = +lowindex
-                highindex = +highindex
-
-                isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!isValueGreaterThanOrEqualToMinValue(highindex, lowindex)))
-
-                if (!isInvalid) newlistrange = [lowindex,highindex]
-
-            }
-
-        }
-
-        if (isInvalid) {
-
-            console.log('RIGS ERROR setListRange(newlistrange)', newlistrange, errorMessages.setListRange)
-            return
-
-        }
-
-        const 
-            { 
-
-                cacheAPI, 
-                contentHandler, 
-                stateHandler 
-
-            } = this.cradleParameters.handlersRef.current,
-
-            { 
-
-                deleteListCallback, 
-
-            } = this.callbacks,
-
-            currentlistrange = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.range,
-
-            { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
-
-        let dListCallback
-        if (deleteListCallback) {
-            dListCallback = (deleteList) => {
-
-                deleteListCallback('change list range intervention',deleteList)
-
-            }
-
-        }
-
-        contentHandler.updateVirtualListRange(newlistrange)
-        cacheAPI.changeCacheListRange(newlistrange, dListCallback)
-
-        cacheAPI.renderPortalLists()
-
-
-        if ((cache == 'preload') && 
-            (newlistrange.length == 2) &&
-            (newlistrange[0] < currentlistrange[0] || newlistrange[1] > currentlistrange[1])) {
-
-            stateHandler.setCradleState('startpreload')
-
-        }
+        this.servicegeneral.setListRange(newlistrange)
 
     }
 
     public prependIndexCount = (prependCount) => {
-        prependCount = +prependCount
-        const isInvalid = ((!isInteger(prependCount)) || (!isValueGreaterThanOrEqualToMinValue(prependCount, 0)))
-        if (isInvalid) {
-            console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
-            return
-        }
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex] = virtualListProps.range
-        const { size } = virtualListProps
-
-        let newlistrange
-        if (size) {
-
-            newlistrange = [lowindex - prependCount,highindex]
-
-        } else {
-
-            newlistrange = [-prependCount + 1,0]
-
-        }
-
-        this.setListRange(newlistrange)
+        this.servicegeneral.prependIndexCount(prependCount)
     }
 
     public appendIndexCount = (appendCount) => {
-        appendCount = +appendCount
-        const isInvalid = ((!isInteger(appendCount)) || (!isValueGreaterThanOrEqualToMinValue(appendCount, 0)))
-        if (isInvalid) {
-            console.log('RIGS ERROR, appendIndexCount must be an integer >= 0')
-            return
-        }
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex] = virtualListProps.range
-        const { size } = virtualListProps
-
-        let newlistrange
-        if (size) {
-
-            newlistrange = [lowindex,highindex + appendCount] 
-
-        } else {
-
-            newlistrange = [0,appendCount - 1]
-
-        }
-
-        this.setListRange(newlistrange)
-
+        this.servicegeneral.appendIndexCount(appendCount)
     }
 
     // ======================[ GET SNAPSHOTS ]========================
 
     public getCacheIndexMap = () => {
 
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-
-        return cacheAPI.getCacheIndexMap()
+        return this.snapshots.getCacheIndexMap()
 
     }
 
     public getCacheItemMap = () => {
-
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-
-        return cacheAPI.getCacheItemMap()
-
+        return this.snapshots.getCacheItemMap()
     }
 
     public getCradleIndexMap = () => {
-
-        const { cacheAPI, contentHandler } = this.cradleParameters.handlersRef.current
-
-        const modelIndexList = contentHandler.getModelIndexList()
-        return cacheAPI.getCradleIndexMap(modelIndexList)
+        return this.snapshots.getCradleIndexMap()
     }
 
     public getPropertiesSnapshot = () => {
-
-        const props = {...this.cradleParameters.scrollerPropertiesRef.current}
-        
-        props.virtualListProps = {...props.virtualListProps}
-        props.cradleContentProps = {...props.cradleContentProps}
-
-        return props
-
+        return this.snapshots.getPropertiesSnapshot()
     }
 
     // =================[ CACHE MANAGEMENT REQUESTS ]==================
 
     public clearCache = () => {
-
-        const { stateHandler } = this.cradleParameters.handlersRef.current
-
-        stateHandler.setCradleState('clearcache')
-
+        this.servicecache.clearCache()
     }
 
-    // itemID set to null deletes the indexed item
-    // itemID set to undefined replaces the indexed item
-    // the main purpose is to allow itemsIDs to be remapped to new indexes
-    // operations are on existing cache items only
-    // public remapIndexes = (changeMap) => { // index => itemID
-
-    //     if (changeMap.size == 0) return [] // nothing to do
-
-    //     const 
-    //         { cacheAPI, contentHandler, stateHandler } = 
-    //             this.cradleParameters.handlersRef.current,
-
-    //         { 
-
-    //             itemMetadataMap, // itemID to component data, including index
-    //             indexToItemIDMap, // index to itemID
-    //             itemSet,
-
-    //         } = cacheAPI,
-
-    //         indexesToDeleteList = [],
-    //         indexesToReplaceItemIDList = [],
-    //         partitionItemsToReplaceList = [],
-    //         changeIndexToItemIDMap = new Map(),
-    //         errorEntriesMap = new Map()
-
-    //     // =====================[ PREPARE ]======================
-
-    //     // -----------------------[ isolate indexes for which items should be replaced ]--------------
-
-    //     const workingChangeMap = new Map()
-    //     changeMap.forEach((itemID, index) => {
-    //         if (itemID === undefined) {
-    //             if (indexToItemIDMap.has(index)) {
-    //                 const cacheItemID = indexToItemIDMap.get(index)
-
-    //                 indexesToReplaceItemIDList.push(index)
-
-    //                 if (!(cacheItemID === undefined)) { // ignore non-existent indexes
-
-    //                     const { partitionID } = itemMetadataMap.get(cacheItemID)
-
-    //                     partitionItemsToReplaceList.push({partitionID, itemID:cacheItemID})
-    //                 }
-    //             } else {
-
-    //                 errorEntriesMap.set(index, 'index to replace is not in cache')
-
-    //             }
-    //         } else {
-
-    //             workingChangeMap.set(index, itemID)
-
-    //         }
-    //     })
-
-    //     indexesToReplaceItemIDList.forEach((index) => {
-    //         indexToItemIDMap.delete(index)
-    //     })
-
-    //     // ------------ filter out inoperable indexes and itemIDs ------------
-
-    //     const itemsToReplaceSet = new Set()
-    //     partitionItemsToReplaceList.forEach((obj) => {
-    //         itemsToReplaceSet.add(obj.itemID)
-    //     })
-
-    //     // const itemsToReplaceList = Array.from(itemsToReplaceSet)
-
-    //     workingChangeMap.forEach((itemID, index) =>{
-
-    //         if ((itemID === null) || (itemID === undefined)) {
-
-    //             indexesToDeleteList.push(index)
-
-    //         } else {
-
-    //             if ((typeof itemID) == 'string') {
-
-    //                 errorEntriesMap.set(index,'itemID is a string')
-
-    //             } else if (!Number.isInteger(itemID)) {
-
-    //                 errorEntriesMap.set(index,'itemID is not an integer')
-
-    //             } else if (!indexToItemIDMap.has(index)) {
-
-    //                 errorEntriesMap.set(index, 'index not in cache')
-
-    //             } else if (indexToItemIDMap.get(index) == itemID) {
-
-    //                 errorEntriesMap.set(index, `target itemID ${itemID} has not changed`)
-
-    //             } else if (!itemMetadataMap.has(itemID) || itemsToReplaceSet.has(itemID)) {
-
-    //                 errorEntriesMap.set(index, `target itemID ${itemID} not in cache, or has been removed`)
-
-    //             } else {
-
-    //                 changeIndexToItemIDMap.set(index, itemID)
-
-    //             }
-
-    //         }
-
-    //     })
-
-    //     // -------------- filter out duplicate itemIDs ------------
-
-    //     const 
-    //         mapsize = changeIndexToItemIDMap.size,
-
-    //         itemIDSet = new Set(changeIndexToItemIDMap.values()),
-
-    //         itemsetsize = itemIDSet.size
-
-    //     if (mapsize != itemsetsize) { // there must be duplicate itemIDs
-
-    //         const itemIDCountMap = new Map()
-
-    //         changeIndexToItemIDMap.forEach((itemID) => {
-
-    //             if (!itemIDCountMap.has(itemID)) {
-
-    //                 itemIDCountMap.set(itemID, 1)
-
-    //             } else {
-
-    //                 let count = itemIDCountMap.get(itemID)
-    //                 itemIDCountMap.set(itemID, ++count )
-
-    //             }
-    //         })
-
-    //         const duplicateItemsMap = new Map()
-    //         itemIDCountMap.forEach((count,itemID)=>{
-
-    //             if (count > 1) {
-
-    //                 duplicateItemsMap.set(itemID, count)
-                    
-    //             }
-
-    //         })
-
-    //         const duplicatesToRemoveList = []
-    //         changeIndexToItemIDMap.forEach((itemID, index) => {
-
-    //             if (duplicateItemsMap.has(itemID)) {
-    //                 duplicatesToRemoveList.push(index)
-    //             }
-
-    //         })
-
-    //         duplicatesToRemoveList.forEach((index)=>{
-
-    //             const 
-    //                 itemID = changeIndexToItemIDMap.get(index),
-    //                 count = duplicateItemsMap.get(itemID)
-
-    //             errorEntriesMap.set(index, `target itemID ${itemID} has duplicates (${count})`)
-    //             changeIndexToItemIDMap.delete(index)
-
-    //         })
-
-    //     }
-
-    //     // ------------ capture map before changes ----------
-    //     // ... this map is used later to identify orphaned item and index cache records for deletion
-
-    //     // from the list of changes
-    //     // both sides of change map...
-    //     const originalMap = new Map() // index => itemID; before change
-    //     changeIndexToItemIDMap.forEach((itemID, index)=>{
-
-    //         originalMap.set(index,indexToItemIDMap.get(index)) // index to be mapped
-    //         originalMap.set(itemMetadataMap.get(itemID).index,itemID) // target itemID
-
-    //     })
-
-    //     // ... and from the list of indexes to be deleted
-    //     indexesToDeleteList.forEach((index) => {
-
-    //         originalMap.set(index, indexToItemIDMap.get(index))
-
-    //     })
-
-    //     // ======================[ CACHE OPERATIONS ]================
-
-    //     // --------------- delete listed indexes ---------
-    //     // for indexes set to null or undefined
-    //     // associated itemID's will be orphaned, but could be remapped.
-    //     // orphans are resolved below
-
-    //     if (indexesToDeleteList.length) {
-
-    //         indexesToDeleteList.forEach((index) => {
-
-    //             indexToItemIDMap.delete(index)
-
-    //         })
-
-    //     }
-
-    //     // ----------- apply filtered changes to cache index map and itemID map ----------
-    //     // at this point every remaining index listed will change its mapping
-
-    //     // const processedMap = new Map() // index => itemID; change has been applied
-    //     const processedIndexList = []
-
-    //     // make changes
-    //     changeIndexToItemIDMap.forEach((itemID,index) => {
-
-    //         indexToItemIDMap.set(index,itemID) // modiication applied, part 1
-    //         const itemdata = itemMetadataMap.get(itemID)
-
-    //         itemdata.index = index // modification applied, part 2
-
-    //         // processedMap.set(index,itemID)
-    //         processedIndexList.push(index)
-
-    //     })
-
-    //     // -------------- look for and delete item and index orphans --------------------
-    //     // if the original item's index has not changed, then it has not been remapped, 
-    //     //     it is orphaned, and the item is deleted
-    //     // if the item's index has changed, but the original item index map still points to the item,
-    //     //     then the index is orphaned (duplicate), and deleted
-
-    //     const 
-    //         deletedItemIDToIndexMap = new Map(), // index => itemID; orphaned index
-    //         deletedIndexToItemIDMap = new Map(),
-
-    //         portalPartitionItemsForDeleteList = [] // hold deleted portals for deletion until after cradle synch
-
-    //     originalMap.forEach((originalItemID, originalItemIDIndex) => {
-
-    //         const finalItemIDIndex = itemMetadataMap.get(originalItemID).index
-
-    //         if (originalItemIDIndex == finalItemIDIndex) { // not remapped, therefore orphaned
-
-    //             deletedItemIDToIndexMap.set(originalItemID, originalItemIDIndex)
-
-    //             const { partitionID } = itemMetadataMap.get(originalItemID)
-    //             portalPartitionItemsForDeleteList.push({itemID:originalItemID, partitionID})
-    //             itemMetadataMap.delete(originalItemID)
-    //             itemSet.delete(originalItemID)
-
-    //         } else { // remapped, check for orphaned index
-
-    //             if (indexToItemIDMap.has(originalItemIDIndex)) {
-
-    //                 const finalItemID = indexToItemIDMap.get(originalItemIDIndex)
-
-    //                 if (finalItemID == originalItemID) { // the index has not been remapped, therefore orphaned
-
-    //                     deletedIndexToItemIDMap.set(originalItemIDIndex, originalItemID)
-
-    //                     indexToItemIDMap.delete(originalItemIDIndex)
-
-    //                 }
-    //             }
-    //         }
-    //     })
-
-    //     // ------------- apply changes to extant cellFrames ------------
-
-    //     // these are used to reconcile cradle cellFrames, and also for return information
-    //     // const processedIndexList = Array.from(processedMap.keys())
-    //     const 
-    //         deletedOrphanedItemIndexList = Array.from(deletedItemIDToIndexMap.values()),
-    //         deletedOrphanedIndexList = Array.from(deletedIndexToItemIDMap.keys()),
-    //         // for return information...
-    //         deletedOrphanedItemIDList = Array.from(deletedItemIDToIndexMap.keys()) 
-
-    //     let modifiedIndexList = [
-    //         ...processedIndexList,
-    //         ...indexesToDeleteList, 
-    //         ...deletedOrphanedItemIndexList, 
-    //         ...deletedOrphanedIndexList
-    //     ]
-
-    //     modifiedIndexList = Array.from(new Set(modifiedIndexList.values())) // remove duplicates
-
-    //     contentHandler.createNewItemIDs(indexesToReplaceItemIDList)
-
-    //     contentHandler.reconcileCellFrames(modifiedIndexList)
-
-    //     modifiedIndexList = modifiedIndexList.concat(indexesToReplaceItemIDList)
-
-    //     cacheAPI.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList.concat(partitionItemsToReplaceList)
-
-    //     stateHandler.setCradleState('applyremapchanges')
-
-    //     // ---------- returns for user information --------------------
-
-    //     return [
-
-    //         modifiedIndexList, 
-    //         processedIndexList, 
-    //         indexesToDeleteList, 
-    //         indexesToReplaceItemIDList,
-    //         deletedOrphanedItemIDList, 
-    //         deletedOrphanedIndexList,
-    //         errorEntriesMap, 
-    //         changeMap
-
-    //     ]
-
-    // }
-
-    // move must be entirely within list bounds
-    // returns list of processed indexes
+    // // move must be entirely within list bounds
+    // // returns list of processed indexes
     public moveIndex = (tolowindex, fromlowindex, fromhighindex = null) => {
-
-        const 
-
-            { cradleParameters } = this,
-
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
-            { virtualListProps } = cradleInternalProperties,
-
-            { lowindex:listlowindex, size } = virtualListProps
-
-        if (!size) return
-
-        // ------------ confirm validity of arguments -------------
-
-        const 
-            isToindexInvalid = (!isInteger(tolowindex) || !isValueGreaterThanOrEqualToMinValue(tolowindex, listlowindex)),
-            isFromindexInvalid = (!isInteger(fromlowindex) || !isValueGreaterThanOrEqualToMinValue(fromlowindex, listlowindex))
-
-        let isHighrangeInvalid = false
-
-        if ((!isFromindexInvalid)) {
-            if (!isBlank(fromhighindex)) {
-                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(fromhighindex, fromlowindex)
-            } else {
-                fromhighindex = fromlowindex
-            }
-        }
-
-
-        tolowindex = +tolowindex
-        fromlowindex = +fromlowindex
-        fromhighindex = +fromhighindex
-
-        // TODO return error array instead
-        if (isToindexInvalid || isFromindexInvalid || isHighrangeInvalid) {
-            console.log('RIGS ERROR moveIndex(toindex, fromindex, fromhighrange)')
-            isToindexInvalid && console.log(tolowindex, errorMessages.moveTo)
-            isFromindexInvalid && console.log(fromlowindex, errorMessages.moveFrom)
-            isHighrangeInvalid && console.log(fromhighindex, errorMessages.moveRange)
-            return []
-        }
-
-        tolowindex = Math.max(listlowindex,tolowindex)
-        fromlowindex = Math.max(listlowindex,fromlowindex)
-        fromhighindex = Math.max(listlowindex,fromhighindex)
-
-        const fromspan = fromhighindex - fromlowindex + 1
-
-        let tohighindex = tolowindex + fromspan - 1
-
-        // ------------- coerce parameters to list bounds ---------------
-
-        const listsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size
-
-        // keep within current list size
-        const listhighindex = listsize - 1
-
-        if (tohighindex > listhighindex) {
-
-            const diff = tohighindex - listhighindex
-            tohighindex = Math.max(listlowindex,tohighindex - diff)
-            tolowindex = Math.max(listlowindex,tolowindex - diff)
-
-        }
-
-        if (fromhighindex > listhighindex) {
-
-            const diff = fromhighindex - listhighindex
-            fromhighindex = Math.max(listlowindex,fromhighindex - diff)
-            fromlowindex = Math.max(listlowindex,fromlowindex - diff)
-
-        }
-
-        // ---------- constrain parameters --------------
-
-        // nothing to do; no displacement
-        if (fromlowindex == tolowindex) return [] 
-
-        // ----------- perform cache and cradle operations -----------
-
-        const 
-            { cacheAPI, contentHandler, stateHandler } = 
-                this.cradleParameters.handlersRef.current,
-
-            processedIndexList = // both displaced and moved indexes
-                cacheAPI.moveIndex(tolowindex, fromlowindex, fromhighindex)
-
-        if (processedIndexList.length) {
-
-            contentHandler.synchronizeCradleItemIDsToCache(processedIndexList)
-
-            const { content } = contentHandler
-
-            content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
-            content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
-
-            stateHandler.setCradleState('applymovechanges')
-            
-        }
-
-        return processedIndexList
-
+        return this.servicecache.moveIndex(tolowindex, fromlowindex, fromhighindex)
     }
 
     public insertIndex = (index, rangehighindex = null) => {
-
-        const 
-
-            { cradleParameters } = this,
-
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
-            { virtualListProps } = cradleInternalProperties,
-
-            { lowindex:listlowindex, size } = virtualListProps
-
-        let isIndexInvalid = !isInteger(index)
-
-        if (!isIndexInvalid) {
-
-            if (size) {
-                isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
-            } else {
-                isIndexInvalid = false
-            }
-
-        }
-
-        let isHighrangeInvalid = false
-
-        if ((!isIndexInvalid)) {
-            if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
-            } else {
-                rangehighindex = index
-            }
-        }
-
-        index = +index
-
-        rangehighindex = +rangehighindex
-
-        if (isIndexInvalid || isHighrangeInvalid) {
-            console.log('RIGS ERROR insertIndex(index, rangehighindex)')
-            isIndexInvalid && console.log(index, errorMessages.insertFrom)
-            isHighrangeInvalid && console.log(rangehighindex, errorMessages.insertRange)
-            return null
-        }
-
-        return this.insertRemoveIndex(index, rangehighindex, +1)
-
+        return this.servicecache.insertIndex(index, rangehighindex)
     }
 
     public removeIndex = (index, rangehighindex = null) => {
-
-        const 
-
-            { cradleParameters } = this,
-
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
-            { virtualListProps } = cradleInternalProperties,
-
-            { lowindex:listlowindex, size } = virtualListProps
-
-        if (!size) return
-
-        const isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex))
-        let isHighrangeInvalid = false
-
-        if ((!isIndexInvalid)) {
-            if (!isBlank(rangehighindex)) {
-                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
-            } else {
-                rangehighindex = index
-            }
-        }
-
-        index = +index
-        rangehighindex = +rangehighindex
-
-        if (isIndexInvalid || isHighrangeInvalid) {
-            console.log('RIGS ERROR moveIndex(index, rangehighindex)')
-            isIndexInvalid && console.log(index, errorMessages.removeFrom)
-            isHighrangeInvalid && console.log(rangehighindex, errorMessages.removeRange)
-            return null
-        }
-
-        return this.insertRemoveIndex(index, rangehighindex, -1)
-
+        return this.servicecache.removeIndex(index, rangehighindex = null)
     }
 
     public newListSize // accessed by changelistsizeafterinsertremove event from Cradle
-
-    // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
-    // this operation changes the listsize
-    private insertRemoveIndex = (index, rangehighindex, increment) => {
-
-        const 
-
-            { cradleParameters } = this,
-
-            { 
-                
-                cacheAPI, 
-                contentHandler, 
-                stateHandler, 
-            
-            } = this.cradleParameters.handlersRef.current,
-
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
-            { 
-            
-                cradleContentProps, 
-                virtualListProps,
-
-            } = cradleInternalProperties,
-
-            { 
-            
-                lowindex:listlowindex, 
-                crosscount, 
-                size:listsize,
-
-            } = virtualListProps,
-
-            { 
-            
-                lowindex:lowCradleIndex, 
-                highindex:highCradleIndex, 
-                size:cradleSize, 
-                runwayRowcount:runwaySize,
-                viewportRowcount,
-            
-            } = cradleContentProps
-
-        // basic assertions
-        if (listsize) index = Math.max(listlowindex,index)
-
-        // if (!rangehighindex) rangehighindex = index
-        // rangehighindex = Math.max(rangehighindex, index)
-
-        // ------------------- process cache ----------------
-
-        if (listsize == 0) {
-            
-            if (increment > 0) {
-
-                this.setListRange([index,rangehighindex])
-
-                const replaceList = []
-
-                for (let i = index; i<=rangehighindex; i++) {
-                    replaceList.push(i)
-                }
-
-                return [[],replaceList,[]]
-
-            } else {
-    
-                return [[],[],[]]
-            }
-        }
-
-        const [
-            startChangeIndex, 
-            rangeincrement, 
-            shiftedList, 
-            removedList, 
-            replaceList, 
-            portalPartitionItemsForDeleteList
-        ] = cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
-
-        if (rangeincrement === null) return [[],[],[]] // no action
-
-        // partitionItems to delete with followup state changes - must happen after cradle update
-        cacheAPI.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
-
-        // ------------- synchronize cradle to cache changes -------------
-
-        // determine if cradle must be reset or simply adjusted
-        const 
-            changecount = rangeincrement, // semantics
-            newlistsize = this.newListSize = listsize + changecount,
-
-            calculatedCradleRowcount = viewportRowcount + (runwaySize * 2),
-            calculatedCradleItemcount = calculatedCradleRowcount * crosscount,
-
-            measuredCradleItemCount = (cradleSize == 0)?0:highCradleIndex - lowCradleIndex + 1,
-
-            resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
-                (highCradleIndex >= (newlistsize - 1)))
-
-        // console.log('resetCradle', resetCradle)
-
-        if (!resetCradle) { // synchronize cradle contents to changes
-
-            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
-
-            const 
-                { content } = contentHandler,
-
-                requestedSet = cacheAPI.requestedSet
-
-            const timeout = setInterval(() => { // wait until changed cache entries update the cradle
-
-                if(!requestedSet.size) { // finished collecting new cache entries
-
-                    clearInterval(timeout); 
-
-                    content.headModelComponents = content.cradleModelComponents.slice(0,content.headModelComponents.length)
-                    content.tailModelComponents = content.cradleModelComponents.slice(content.headModelComponents.length)
-
-                    stateHandler.setCradleState('applyinsertremovechanges')
-
-                }
-            }, 100)
-
-        } else { // cradle to be completely reset if listsize change encroaches on cradle
-
-            stateHandler.setCradleState('channelcradleresetafterinsertremove')
-
-        }
-
-        const replacedList = replaceList // semantics
-
-        return [shiftedList, replacedList, removedList] // inform caller
-
-    }
 
 }
