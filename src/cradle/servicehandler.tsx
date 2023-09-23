@@ -252,11 +252,15 @@ export default class ServiceHandler {
     }
 
     public prependIndexCount = (prependCount) => {
+
         this.servicegeneral.prependIndexCount(prependCount)
+
     }
 
     public appendIndexCount = (appendCount) => {
+
         this.servicegeneral.appendIndexCount(appendCount)
+
     }
 
     // ======================[ GET SNAPSHOTS ]========================
@@ -268,35 +272,49 @@ export default class ServiceHandler {
     }
 
     public getCacheItemMap = () => {
+
         return this.snapshots.getCacheItemMap()
+
     }
 
     public getCradleIndexMap = () => {
+
         return this.snapshots.getCradleIndexMap()
+
     }
 
     public getPropertiesSnapshot = () => {
+
         return this.snapshots.getPropertiesSnapshot()
+
     }
 
     // =================[ CACHE MANAGEMENT REQUESTS ]==================
 
     public clearCache = () => {
+
         this.servicecache.clearCache()
+
     }
 
     // // move must be entirely within list bounds
     // // returns list of processed indexes
     public moveIndex = (tolowindex, fromlowindex, fromhighindex = null) => {
+
         return this.servicecache.moveIndex(tolowindex, fromlowindex, fromhighindex)
+
     }
 
     public insertIndex = (index, rangehighindex = null) => {
+
         return this.servicecache.insertIndex(index, rangehighindex)
+
     }
 
     public removeIndex = (index, rangehighindex = null) => {
+
         return this.servicecache.removeIndex(index, rangehighindex = null)
+        
     }
 
     public newListSize // accessed by changelistsizeafterinsertremove event from Cradle
