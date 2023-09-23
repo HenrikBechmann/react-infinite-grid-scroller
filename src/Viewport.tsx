@@ -38,7 +38,7 @@ import nodropicon from "../assets/block_FILL0_wght400_GRAD0_opsz24.png"
 import { MasterDndContext, GenericObject } from './InfiniteGridScroller'
 
 // popup position tracker for repositioning
-import ScrollTracker from './cradle/ScrollTracker'
+import ScrollTracker from './viewport/ScrollTracker'
 
 export const ViewportContext = React.createContext(null) // for children
 
