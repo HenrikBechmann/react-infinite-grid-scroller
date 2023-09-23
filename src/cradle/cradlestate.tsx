@@ -6,10 +6,9 @@ const handleCradleState = ({
         cradleState,
         cradleParameters, 
         isCachedRef, 
-        cacheMax,
-        nullItemSetMaxListsize,
         wasCachedRef,
-        hasBeenRenderedRef
+        hasBeenRenderedRef,
+        nullItemSetMaxListsize,
     }
 ) => {
 
@@ -62,6 +61,7 @@ const handleCradleState = ({
 
                 }
 
+                const {cacheMax} = cradleInheritedPropertiesRef.current
                 if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
 
                     cacheAPI.renderPortalLists()
