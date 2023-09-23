@@ -71,7 +71,7 @@ export const contentAdjust = (source, cradleParameters) => {
 
         } = virtualListProps
 
-    // console.log('var cradlePositionData', {...cradlePositionData})
+    // resize observer embedded to provide access to variables
     let gridResizeObserver
 
     let gridResizeTimeoutID
@@ -89,8 +89,6 @@ export const contentAdjust = (source, cradleParameters) => {
             if (!stateHandler.isMountedRef.current) return
 
             const
-                // { cradleParameters } = this,
-                // cradleHandlers = cradleParameters.handlersRef.current,
                 viewportContextProperties = cradleParameters.viewportContextPropertiesRef.current,
                 // { serviceHandler } = cradleHandlers,
                 viewportElement = viewportContextProperties.elementRef.current,
