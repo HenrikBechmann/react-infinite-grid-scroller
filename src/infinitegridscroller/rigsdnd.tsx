@@ -9,6 +9,23 @@
 
     Global communication is supported by MasterDndContext, and Scroller-scoped communication is provided by 
     ScrollerDndContext (see InfiniteGridScroller for details)
+
+    components dedicated to dnd are
+    - RigsDnd - master
+    - DndCellFrame - for drag, and drop location
+    - DndCradle - for drop handling
+    - DndDragBar - for drag layer
+
+    MasterDndContext is used by
+    - CellFrame
+    - Cradle
+    - InfiniteGridScroller
+    - Viewport
+    - DndCellFrame
+    - DndCradle
+    - RigsDnd
+    - DndDragBar
+
 */
 
 import React, { 
