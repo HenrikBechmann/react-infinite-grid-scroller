@@ -25,6 +25,8 @@ import {
     DragLayerMonitor, 
 } from 'react-dnd'
 
+import DndViewport from './Viewport/DndViewport'
+
 import DndDragBar from './Viewport/DndDragBar'
 
 import { MasterDndContext } from './InfiniteGridScroller'
@@ -36,7 +38,25 @@ export const ViewportContext = React.createContext(null) // for children
 
 import scrollicon from "../keyboard_double_arrow_right_FILL0_wght400_GRAD0_opsz24.png"
 
-const Viewport = ({
+const ViewportController = (props) => {
+
+    const masterDndContext = useContext(MasterDndContext)
+
+    if (masterDndContext.installed) {
+
+        return <DndViewport {...props}/>
+
+    } else {
+
+        return <Viewport {...props} />
+
+    }
+
+}
+
+export default ViewportController
+
+export const Viewport = ({
 
     children, 
     gridSpecs,
@@ -263,5 +283,3 @@ const Viewport = ({
     </ViewportContext.Provider>
     
 } // Viewport
-
-export default Viewport

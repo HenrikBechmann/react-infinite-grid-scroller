@@ -11,7 +11,7 @@ import { Cradle } from '../Cradle'
 
 import { ViewportContext } from '../Viewport'
 
-// HoC for DnD functionality; requires frameRef
+// HoC for DnD functionality
 const DndCradle = (props) => {
 
     const 
@@ -19,15 +19,12 @@ const DndCradle = (props) => {
         masterDndContext = useContext(MasterDndContext),
         viewportContext = useContext(ViewportContext),
         handlerListRef = useRef(null),
-        // cacheAPIRef = useRef(null),
         viewportElement = viewportContext.elementRef.current,
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
-        // console.log('listsize, virtualListSpecs', listsize, virtualListSpecs)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Cell'],
-        // TODO: get callback from item for delete after insert for crosslist drop
         drop:(item:GenericObject,monitor) => {
             const dropResult:GenericObject = monitor.getDropResult()
 
@@ -43,8 +40,6 @@ const DndCradle = (props) => {
             const 
                 fromIndex = item.index,
                 toIndex = dropResult.target.index
-
-            // console.log('fromIndex, toIndex',fromIndex, toIndex)
 
             if (item.scrollerID == dropResult.target.scrollerID) {
 
