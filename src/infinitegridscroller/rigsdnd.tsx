@@ -73,55 +73,62 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     const masterDndContext = useContext(MasterDndContext)
 
+    const initializationRef = useRef(true)
+    const wasInitializedRef = useRef(false)
+
+    // global context requires special attention
+    const resetMasterDndContext = () => {
+
+        wasInitializedRef.current = true
+        Object.assign(masterDndContext,{
+            enabled:false,
+            installed:false,
+            scrollerID:null,
+            setViewportState:null, // loaded by Viewport if scrollerID compares, refresh render
+            setDragBarState:null, // loaded by DragBar if scrollerID compares, refresh render
+            dropCount:0,
+            dragData:{
+                isDragging:false,
+                itemID:null,
+                index:null,
+                dndOptions:{} as GenericObject,
+                // the following for inter-list drops to process drag source
+                sourceCacheAPI:null,
+                sourceStateHandler:null,
+                sourceServiceHandler:null,
+            }
+        })
+    }
+
+    if (initializationRef.current) {
+
+        initializationRef.current = false
+
+        resetMasterDndContext()
+
+    }
+
+    useEffect(()=>{
+
+        return () => {
+            if (!wasInitializedRef.current) {
+                resetMasterDndContext()
+            }
+        }
+
+    },[])
+
     if (!masterDndContext.installed) masterDndContext.installed = true
 
     const { dndOptions } = props
 
-    const isMountedRef = useRef(true)
-
-    useEffect(() =>{
-
-        isMountedRef.current = true
-
-        return () => {
-
-            isMountedRef.current = false
-
-        }
-    },[])
-
     useEffect(()=>{
-
         let isEnabled = dndOptions?.master?.enabled
 
         isEnabled = isEnabled ?? true
 
         if (!(masterDndContext.enabled === isEnabled)) {
             masterDndContext.enabled = isEnabled
-        }
-
-        return () => {
-            if (!isMountedRef.current) {
-                console.log('resetting masterDndContext, scrollerID',masterDndContext.scrollerID)
-                Object.assign(masterDndContext,{
-                    enabled:false,
-                    installed:false,
-                    scrollerID:null,
-                    setViewportState:null, // loaded by Viewport if scrollerID compares, refresh render
-                    setDragBarState:null, // loaded by DragBar if scrollerID compares, refresh render
-                    dropCount:0,
-                    dragData:{
-                        isDragging:false,
-                        itemID:null,
-                        index:null,
-                        dndOptions:{} as GenericObject,
-                        // the following for inter-list drops to process drag source
-                        sourceCacheAPI:null,
-                        sourceStateHandler:null,
-                        sourceServiceHandler:null,
-                    }
-                })
-            }
         }
 
     },[dndOptions])

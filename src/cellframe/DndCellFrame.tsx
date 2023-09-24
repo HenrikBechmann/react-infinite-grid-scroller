@@ -101,7 +101,7 @@ const DndCellFrame = (props) => {
 
     useEffect (() => {
 
-        const isDnd = (masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions?.enabled) // && enabled)
+        const isDnd = (masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled) // && enabled)
 
         if (isDndRef.current !== isDnd) {
             isDndRef.current = isDnd
