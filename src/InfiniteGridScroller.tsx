@@ -136,9 +136,8 @@ let globalScrollerID = 0
 
 export const MasterDndContext = React.createContext(
     {
-        dnd:false, 
-        active:false, 
-        enabled:false,
+        enabled:false, 
+        installed:false,
         scrollerID:null, 
         setViewportState:null, // the master viewport, for rendering the dragbar
         setDragBarState:null, // for master dragbar, to update icons

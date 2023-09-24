@@ -64,7 +64,7 @@ export const CellFrameController = props => {
 
     const masterDndContext = useContext(MasterDndContext)
 
-    if (masterDndContext.dnd) {
+    if (masterDndContext.installed) {
 
         return <DndCellFrame {...props}/>
 

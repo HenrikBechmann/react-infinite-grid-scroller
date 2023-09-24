@@ -11,20 +11,25 @@
     ScrollerDndContext (see InfiniteGridScroller for details)
 
     components dedicated to dnd are
-    - RigsDnd - master
-    - DndCellFrame - for drag, and drop location
-    - DndCradle - for drop handling
-    - DndDragBar - for drag layer
+    - RigsDnd - HoC for InfiniteGridScroller, master
+    - DndDragBar - conditionally rendered by Viewport, for drag layer
+    - DndCradle - HoC for Cradle, useDrop for drop handling
+    - DndCellFrame - HoC for CellFrame, useDrop, for location
+    - DragIcon - useDrag, conditionally rendered by CellFrame for drag
 
-    MasterDndContext is used by
-    - CellFrame
-    - Cradle
+    MasterDndContext (global namespace) is used by
+    - RigsDnd
     - InfiniteGridScroller
     - Viewport
-    - DndCellFrame
-    - DndCradle
-    - RigsDnd
     - DndDragBar
+    - DndCradle
+    - Cradle
+    - DndCellFrame
+    - CellFrame
+
+    ScrollerDndContext (scroller scoped namespace) is used by the same modules except
+    - also DragIcon
+    - not Viewport
 
 */
 
@@ -70,7 +75,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         isEnabled = isEnabled ?? true
 
-        if (!masterDndContext.dnd) masterDndContext.dnd = true
+        if (!masterDndContext.installed) masterDndContext.installed = true
 
         if (!(masterDndContext.enabled === isEnabled)) {
             masterDndContext.enabled = isEnabled
@@ -78,9 +83,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         return () => {
             Object.assign(masterDndContext,{
-                dnd:false,
-                active:false,
                 enabled:false,
+                installed:false,
                 scrollerID:null,
                 setViewportState:null,
                 setDragBarState:null,

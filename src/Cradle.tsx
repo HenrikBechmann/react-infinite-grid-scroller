@@ -99,7 +99,7 @@ const CradleController = props => {
     const handlersRef = useRef(null)
     // const cacheAPIRef = useRef(null)
 
-    if (masterDndContext.dnd) {
+    if (masterDndContext.installed) {
 
         return <DndCradle {...props}/>
 
@@ -538,8 +538,8 @@ export const Cradle = ({
         virtualListProps,
         cradleContentProps,
         cache,
-        dnd:masterDndContext.dnd,
-        dndEnabled:(masterDndContext.enabled && scrollerDndContext.dndOptions.enabled),
+        dnd:masterDndContext.installed,
+        dndEnabled:(masterDndContext.installed && scrollerDndContext.dndOptions.enabled),
         cacheMax,
         startingIndex,
         scrollerID,
