@@ -36,6 +36,7 @@
 import React, { 
     useEffect, 
     useContext, 
+    useRef,
 } from 'react'
 
 import InfiniteGridScroller, { MasterDndContext, GenericObject } from '../InfiniteGridScroller'
@@ -69,6 +70,19 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     const { dndOptions } = props
 
+    const isMountedRef = useRef(true)
+
+    useEffect(() =>{
+
+        isMountedRef.current = true
+
+        return () => {
+
+            isMountedRef.current = false
+
+        }
+    },[])
+
     useEffect(()=>{
 
         let isEnabled = dndOptions?.enabled
@@ -82,27 +96,29 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         }
 
         return () => {
-            Object.assign(masterDndContext,{
-                enabled:false,
-                installed:false,
-                scrollerID:null,
-                setViewportState:null, // loaded by Viewport if scrollerID compares, refresh render
-                setDragBarState:null, // loaded by DragBar if scrollerID compares, refresh render
-                dropCount:0,
-                dragData:{
-                    isDragging:false,
-                    itemID:null,
-                    index:null,
-                    dndOptions:{} as GenericObject,
-                    // the following for inter-list drops to process drag source
-                    sourceCacheAPI:null,
-                    sourceStateHandler:null,
-                    sourceServiceHandler:null,
-                }
-            })
+            if (!isMountedRef.current) {
+                Object.assign(masterDndContext,{
+                    enabled:false,
+                    installed:false,
+                    scrollerID:null,
+                    setViewportState:null, // loaded by Viewport if scrollerID compares, refresh render
+                    setDragBarState:null, // loaded by DragBar if scrollerID compares, refresh render
+                    dropCount:0,
+                    dragData:{
+                        isDragging:false,
+                        itemID:null,
+                        index:null,
+                        dndOptions:{} as GenericObject,
+                        // the following for inter-list drops to process drag source
+                        sourceCacheAPI:null,
+                        sourceStateHandler:null,
+                        sourceServiceHandler:null,
+                    }
+                })
+            }
         }
 
-    },[masterDndContext,dndOptions])
+    },[dndOptions])
 
     const enhancedProps = {...props, isDndMaster:true}
 

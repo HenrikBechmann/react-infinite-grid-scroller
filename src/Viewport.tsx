@@ -62,7 +62,9 @@ const Viewport = ({
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
 
     if ((scrollerID == masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
+
         masterDndContext.setViewportState = setViewportState
+
     }
 
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
