@@ -624,7 +624,9 @@ const InfiniteGridScroller = (props) => { // exported to
 
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? true
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
+            console.log('infiniteGridScroller: setting scrollerDndContextRef.current.dndOptions.enabled', enabled)
             scrollerDndContextRef.current.dndOptions.enabled = enabled
+            scrollerDndContextRef.current = {...scrollerDndContextRef.current}
         }
 
     },[scrollerDndContextRef.current.dndOptions.enabled])

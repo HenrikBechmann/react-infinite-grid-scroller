@@ -102,6 +102,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         return () => {
             if (!isMountedRef.current) {
+                console.log('resetting masterDndContext, scrollerID',masterDndContext.scrollerID)
                 Object.assign(masterDndContext,{
                     enabled:false,
                     installed:false,

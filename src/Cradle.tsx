@@ -96,8 +96,7 @@ const CradleController = props => {
 
     const masterDndContext = useContext(MasterDndContext)
 
-    const handlersRef = useRef(null)
-    // const cacheAPIRef = useRef(null)
+    const handlerListRef = useRef(null)
 
     if (masterDndContext.installed) {
 
@@ -105,7 +104,7 @@ const CradleController = props => {
 
     } else {
 
-        const enhancedProps = {...props, handlersRef}
+        const enhancedProps = {...props, handlerListRef}
 
         return <Cradle {...enhancedProps} />
 
@@ -530,6 +529,9 @@ export const Cradle = ({
 
     }
 
+    console.log('scrollerID, masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled',
+        scrollerID, masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled)
+
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
     scrollerPropertiesRef.current = {
@@ -539,7 +541,7 @@ export const Cradle = ({
         cradleContentProps,
         cache,
         dndInstalled:masterDndContext.installed,
-        dndEnabled:(masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions?.enabled),
+        dndEnabled:(masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled),
         cacheMax,
         startingIndex,
         scrollerID,
