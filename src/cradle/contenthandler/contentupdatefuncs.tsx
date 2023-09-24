@@ -1,7 +1,7 @@
 // contentupdatefunctions.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
-import { isSafariIOS } from '../InfiniteGridScroller'
+import { isSafariIOS } from '../../InfiniteGridScroller'
 
 /*
     getShiftInstruction is called by interruptHandler, and calcContentShift is called by contentHandler's updateCradleContent

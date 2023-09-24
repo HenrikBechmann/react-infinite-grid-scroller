@@ -10,7 +10,7 @@ import {
     isValueLessThanToOrEqualToMaxValue,
     errorMessages,
 
-} from './servicehandler'
+} from '../servicehandler'
 
 export default class ServiceGeneral {
 

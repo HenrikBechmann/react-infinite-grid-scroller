@@ -38,11 +38,11 @@ import React from 'react'
 
 // } from './contentfunctions'
 
-import { contentSet } from './contentset'
+import { contentSet } from './contenthandler/contentset'
 
-import { contentUpdate } from './contentupdate'
+import { contentUpdate } from './contenthandler/contentupdate'
 
-import { contentAdjust } from './contentadjust'
+import { contentAdjust } from './contenthandler/contentadjust'
 
 // import {
 

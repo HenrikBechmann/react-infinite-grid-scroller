@@ -14,7 +14,7 @@ import {
     isValueGreaterThanOrEqualToMinValue,
     isValueLessThanToOrEqualToMaxValue,
     errorMessages,
-} from './servicehandler'
+} from '../servicehandler'
 
 export default class ServiceCache {
 

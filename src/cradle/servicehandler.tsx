@@ -37,9 +37,9 @@
     often invoked by service functions to change Cradle state upon servicing requests.
 */
 
-import Snapshots from './servicesnapshots'
-import ServiceCache from './servicecache'
-import ServiceGeneral from './servicegeneral'
+import Snapshots from './servicehandler/servicesnapshots'
+import ServiceCache from './servicehandler/servicecache'
+import ServiceGeneral from './servicehandler/servicegeneral'
 
 export const isBlank = (value:any) => {
     const testvalue = value ?? ''

@@ -11,7 +11,7 @@
     viewportResizing interrupts are handled by viewport
 */
 
-import { getShiftInstruction } from './contentupdatefuncs'
+import { getShiftInstruction } from './contenthandler/contentupdatefuncs'
 
 export default class InterruptHandler {
 

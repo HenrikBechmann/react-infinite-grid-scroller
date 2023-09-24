@@ -12,7 +12,7 @@
 
 import React from 'react'
 
-import { CellFrameController } from '../CellFrame'
+import { CellFrameController } from '../../CellFrame'
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
 
