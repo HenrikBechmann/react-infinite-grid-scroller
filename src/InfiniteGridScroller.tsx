@@ -92,7 +92,7 @@ type RIGS = {
 // React support
 import React, { useEffect, useState, useCallback, useRef, useContext, FC } from 'react'
 
-import { RigsDnd } from './infinitegridscroller/RigsDnd'
+import { RigsDnd } from './InfiniteGridScroller/RigsDnd'
 
 export { RigsDnd } // RigsDnd is called as root instead of InfiniteGridScroller if dnd is being invoked
 

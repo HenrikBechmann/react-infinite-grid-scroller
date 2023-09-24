@@ -10,7 +10,7 @@
 
 import React, {FC, useState, useEffect, useRef, useCallback} from 'react'
 
-import CacheAPI from './portalcache/cacheAPI'
+import CacheAPI from './PortalCache/cacheAPI'
 
 const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getUpdateFunction }) => {
 

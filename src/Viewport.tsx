@@ -25,12 +25,12 @@ import {
     DragLayerMonitor, 
 } from 'react-dnd'
 
-import DndDragBar from './viewport/DndDragBar'
+import DndDragBar from './Viewport/DndDragBar'
 
 import { MasterDndContext } from './InfiniteGridScroller'
 
 // popup position tracker for repositioning
-import ScrollTracker from './viewport/ScrollTracker'
+import ScrollTracker from './Viewport/ScrollTracker'
 
 export const ViewportContext = React.createContext(null) // for children
 

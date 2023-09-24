@@ -45,19 +45,19 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // p
 
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
 
-import Placeholder from './cellframe/Placeholder' // default
+import Placeholder from './CellFrame/Placeholder' // default
 import './cellframe/cellframe.css'
 
 // import { ViewportContext } from './Viewport'
-import DndCellFrame from './cellframe/DndCellFrame'
+import DndCellFrame from './CellFrame/DndCellFrame'
 
-import { getFrameStyles, getContentHolderStyles, setContainerStyles } from './cellframe/cellfunctions'
+import { getFrameStyles, getContentHolderStyles, setContainerStyles } from './CellFrame/cellfunctions'
 
 import { CradleContext } from './Cradle'
 import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
 // =====================[ dnd support ]====================
 
-import DragIcon from './cellframe/DragIcon'
+import DragIcon from './CellFrame/DragIcon'
 
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {

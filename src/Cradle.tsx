@@ -73,22 +73,22 @@ import React, {
 
 import { useDrop, DropTargetMonitor} from 'react-dnd'
 
-import DndCradle from './cradle/DndCradle'
+import DndCradle from './Cradle/DndCradle'
 
 import { ViewportContext } from './Viewport'
 
 import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
 
-import handleCradleState from './cradle/cradlestate'
+import handleCradleState from './Cradle/cradlestate'
 
 // support code; process handlers
-import ScrollHandler from './cradle/scrollhandler'
-import StateHandler from './cradle/statehandler'
-import ContentHandler from './cradle/contenthandler'
-import LayoutHandler from './cradle/layouthandler'
-import InterruptHandler from './cradle/interrupthandler'
-import ServiceHandler from './cradle/servicehandler'
-import StylesHandler from './cradle/styleshandler'
+import ScrollHandler from './Cradle/scrollhandler'
+import StateHandler from './Cradle/statehandler'
+import ContentHandler from './Cradle/contenthandler'
+import LayoutHandler from './Cradle/layouthandler'
+import InterruptHandler from './Cradle/interrupthandler'
+import ServiceHandler from './Cradle/servicehandler'
+import StylesHandler from './Cradle/styleshandler'
 // cacheAPI is imported as a property; instantiated at the root
 
 // called to choose between dnd or no dnd for CellFrame
