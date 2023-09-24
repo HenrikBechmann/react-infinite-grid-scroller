@@ -5,7 +5,7 @@ import React from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-import CachePartition from './CachePartition'
+import CachePartition from '../CachePartition'
 
 export default class PortalData {
 
