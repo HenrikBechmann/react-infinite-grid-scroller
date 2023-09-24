@@ -42,13 +42,17 @@ const ViewportController = (props) => {
 
     const masterDndContext = useContext(MasterDndContext)
 
+    const viewportElementRef = useRef(null)
+
     if (masterDndContext.installed) {
 
         return <DndViewport {...props}/>
 
     } else {
 
-        return <Viewport {...props} />
+        const enhancedProps = {...props,viewportElementRef}
+
+        return <Viewport {...enhancedProps} />
 
     }
 
@@ -64,6 +68,7 @@ export const Viewport = ({
     scrollerID,
     VIEWPORT_RESIZE_TIMEOUT,
     useScrollTracker,
+    viewportElementRef,
     
 }) => {
 
@@ -92,7 +97,7 @@ export const Viewport = ({
 
     const isMountedRef = useRef(true)
 
-    const viewportElementRef = useRef(null)
+    // const viewportElementRef = useRef(null)
 
     const scrollTrackerAPIRef = useRef(null)
 

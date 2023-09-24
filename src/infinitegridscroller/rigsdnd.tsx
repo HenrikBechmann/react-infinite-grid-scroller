@@ -15,6 +15,7 @@
 
     components dedicated to dnd are
     - RigsDnd - HoC for InfiniteGridScroller, master
+    - DndViewport - HoC for Viewport, show scroll areas
     - DndDragBar - conditionally rendered by Viewport, for drag layer
     - DndCradle - HoC for Cradle, useDrop for drop handling
     - DndCellFrame - HoC for CellFrame, useDrop for location
@@ -23,6 +24,7 @@
     MasterDndContext (global scoped namespace) is used by
     - RigsDnd
     - InfiniteGridScroller
+    - DndViewport
     - Viewport
     - DndDragBar
     - DndCradle
