@@ -4,7 +4,7 @@
 /*
     Dnd is powered by react-dnd. The HTML or Touch backends are installed depending on the ismobile test.
 
-    RigsDnd must be installed as host scroller to support dnd as it installs the dnd Provicer. Only on RigsDnd
+    RigsDnd must be installed as host scroller to install the DndProvicer. Only one RigsDnd
     can be installed per environment.
 
     Global communication is supported by MasterDndContext, and Scroller-scoped communication is provided by 
@@ -14,7 +14,7 @@
     - RigsDnd - HoC for InfiniteGridScroller, master
     - DndDragBar - conditionally rendered by Viewport, for drag layer
     - DndCradle - HoC for Cradle, useDrop for drop handling
-    - DndCellFrame - HoC for CellFrame, useDrop, for location
+    - DndCellFrame - HoC for CellFrame, useDrop for location
     - DragIcon - useDrag, conditionally rendered by CellFrame for drag
 
     MasterDndContext (global scoped namespace) is used by
@@ -27,7 +27,7 @@
     - DndCellFrame
     - CellFrame
 
-    ScrollerDndContext (scroller scoped namespace) is used by the same modules except
+    ScrollerDndContext (scroller scoped namespace) is used by the same modules as MasterDndContext except
     - also DragIcon
     - not Viewport
 
@@ -68,6 +68,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     const masterDndContext = useContext(MasterDndContext)
 
+    if (!masterDndContext.installed) masterDndContext.installed = true
+
     const { dndOptions } = props
 
     const isMountedRef = useRef(true)
@@ -89,7 +91,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         isEnabled = isEnabled ?? true
 
-        if (!masterDndContext.installed) masterDndContext.installed = true
+        // if (!masterDndContext.installed) masterDndContext.installed = true
 
         if (!(masterDndContext.enabled === isEnabled)) {
             masterDndContext.enabled = isEnabled
