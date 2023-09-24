@@ -17,10 +17,10 @@ const DndCradle = (props) => {
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext),
-        viewportContextProperties = useContext(ViewportContext),
+        viewportContext = useContext(ViewportContext),
         handlerListRef = useRef(null),
         // cacheAPIRef = useRef(null),
-        viewportElement = viewportContextProperties.elementRef.current,
+        viewportElement = viewportContext.elementRef.current,
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
         // console.log('listsize, virtualListSpecs', listsize, virtualListSpecs)

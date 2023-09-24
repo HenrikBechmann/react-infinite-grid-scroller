@@ -21,12 +21,8 @@ import React, {
 } from 'react'
 
 import { 
-    // useDrag, 
     useDragLayer, 
-    // useDrop, 
-    // DragSourceMonitor, 
     DragLayerMonitor, 
-    // DropTargetMonitor
 } from 'react-dnd'
 
 import DndDragBar from './viewport/DndDragBar'
@@ -78,8 +74,8 @@ const Viewport = ({
 
     const scrollTrackerAPIRef = useRef(null)
 
-    // viewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
-    const viewportContextPropertiesRef = useRef(
+    // viewportContextRef is passed as a resizing interrupt (through context) to children
+    const viewportContextRef = useRef(
         {
 
             isResizing:false, 
@@ -143,10 +139,10 @@ const Viewport = ({
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
 
-            viewportContextPropertiesRef.current.isResizing = isResizingRef.current = true 
+            viewportContextRef.current.isResizing = isResizingRef.current = true 
 
             // new object creation triggers a realtime interrupt message to cradle through context
-            viewportContextPropertiesRef.current = {...viewportContextPropertiesRef.current}
+            viewportContextRef.current = {...viewportContextRef.current}
 
             if (isMountedRef.current) setViewportState('resizing')
 
@@ -202,10 +198,10 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // update viewportContextPropertiesRef
-    viewportContextPropertiesRef.current = useMemo(() => {
+    // update viewportContextRef
+    viewportContextRef.current = useMemo(() => {
 
-        if (viewportState == 'setup') return viewportContextPropertiesRef.current
+        if (viewportState == 'setup') return viewportContextRef.current
 
         const localViewportData = {
             elementRef:viewportElementRef,
@@ -213,7 +209,7 @@ const Viewport = ({
         }
 
         // trigger context change with new object
-        const viewportdataobject = {...viewportContextPropertiesRef.current, ...localViewportData}
+        const viewportdataobject = {...viewportContextRef.current, ...localViewportData}
 
         return  viewportdataobject
 
@@ -239,7 +235,7 @@ const Viewport = ({
     // console.log('dragData.isDragging, scrollerID, masterDndContext.scrollerID\n',
     //     dragData.isDragging, scrollerID, masterDndContext.scrollerID)
 
-    return <ViewportContext.Provider value = { viewportContextPropertiesRef.current }>
+    return <ViewportContext.Provider value = { viewportContextRef.current }>
 
         { (dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && <DndDragBar 
             itemID = {dragData.itemID} 

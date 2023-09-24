@@ -28,7 +28,7 @@ const DragIcon = props => {
 
     let { masterDndContext } = props
 
-    const viewportContext = useContext(ViewportContext)
+    // const viewportContext = useContext(ViewportContext)
 
     const scrollerDndContext = useContext(ScrollerDndContext)
 

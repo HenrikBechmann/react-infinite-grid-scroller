@@ -1,6 +1,16 @@
 // rigsdnd.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+    Dnd is powered by react-dnd. The HTML or Touch backends are installed depending on the ismobile test.
+
+    RigsDnd must be installed as host scroller to support dnd as it installs the dnd Provicer. Only on RigsDnd
+    can be installed per environment.
+
+    Global communication is supported by MasterDndContext, and Scroller-scoped communication is provided by 
+    ScrollerDndContext (see InfiniteGridScroller for details)
+*/
+
 import React, { 
     useEffect, 
     useContext, 

@@ -13,7 +13,7 @@ const handleCradleState = ({
     }
 ) => {
 
-    const { cradleInheritedPropertiesRef, handlersRef, cradleInternalPropertiesRef, viewportContextPropertiesRef } = cradleParameters
+    const { cradleInheritedPropertiesRef, handlersRef, cradleInternalPropertiesRef, viewportContextRef } = cradleParameters
 
     const { stateHandler, contentHandler, serviceHandler, cacheAPI, interruptHandler, scrollHandler, layoutHandler } = handlersRef.current
     const {setCradleState } = stateHandler
@@ -119,7 +119,7 @@ const handleCradleState = ({
 
                 const {lowindex, size:listsize } = cradleInternalPropertiesRef.current.virtualListProps
 
-                viewportContextPropertiesRef.current.scrollTrackerAPIRef.current.startReposition(
+                viewportContextRef.current.scrollTrackerAPIRef.current.startReposition(
                     layoutHandler.cradlePositionData.targetAxisReferencePosition, 
                     lowindex, listsize
                 )
@@ -188,7 +188,7 @@ const handleCradleState = ({
 
             if (cradleState == 'finishreposition') {
 
-                viewportContextPropertiesRef.current.scrollTrackerAPIRef.current.finishReposition()
+                viewportContextRef.current.scrollTrackerAPIRef.current.finishReposition()
                 scrollHandler.calcImpliedRepositioningData('finishreposition')
                 
             }

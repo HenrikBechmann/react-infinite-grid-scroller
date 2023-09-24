@@ -17,12 +17,12 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
     const 
 
-        viewportContextProperties = cradleParameters.viewportContextPropertiesRef.current,
+        viewportContext = cradleParameters.viewportContextRef.current,
         cradleHandlers = cradleParameters.handlersRef.current,
         cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
         cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-        viewportElement = viewportContextProperties.elementRef.current,
+        viewportElement = viewportContext.elementRef.current,
 
         {
 

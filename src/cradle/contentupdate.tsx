@@ -22,7 +22,7 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
     // ----------------------[ 1. initialize ]-------------------------
 
     const
-        viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
+        viewportElement = cradleParameters.viewportContextRef.current.elementRef.current,
         cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
         cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
         cradleHandlers = cradleParameters.handlersRef.current,

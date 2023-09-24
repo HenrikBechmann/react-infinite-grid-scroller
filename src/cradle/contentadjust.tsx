@@ -9,7 +9,7 @@ export const contentAdjust = (source, cradleParameters) => {
     const
         // acquire repositories
         cradleHandlers = cradleParameters.handlersRef.current,
-        viewportContextProperties = cradleParameters.viewportContextPropertiesRef.current,
+        viewportContext = cradleParameters.viewportContextRef.current,
         cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
         cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
@@ -38,7 +38,7 @@ export const contentAdjust = (source, cradleParameters) => {
         } = cradlePositionData,
 
         // element references...
-        viewportElement = viewportContextProperties.elementRef.current,
+        viewportElement = viewportContext.elementRef.current,
         scrollblockElement = viewportElement.firstChild,
         headGridElement = cradleElements.headRef.current,
         tailGridElement = cradleElements.tailRef.current,
@@ -89,9 +89,9 @@ export const contentAdjust = (source, cradleParameters) => {
             if (!stateHandler.isMountedRef.current) return
 
             const
-                viewportContextProperties = cradleParameters.viewportContextPropertiesRef.current,
+                viewportContext = cradleParameters.viewportContextRef.current,
                 // { serviceHandler } = cradleHandlers,
-                viewportElement = viewportContextProperties.elementRef.current,
+                viewportElement = viewportContext.elementRef.current,
                 scrollblockElement = viewportElement.firstChild,
                 cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
 

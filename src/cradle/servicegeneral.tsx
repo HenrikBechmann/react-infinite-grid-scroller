@@ -108,7 +108,7 @@ export default class ServiceGeneral {
 
             { cradleParameters } = this,
 
-            viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
+            viewportElement = cradleParameters.viewportContextRef.current.elementRef.current,
 
             scrollblockElement = viewportElement.firstChild,
 
@@ -171,7 +171,7 @@ export default class ServiceGeneral {
 
             { cradleParameters } = this,
 
-            viewportElement = cradleParameters.viewportContextPropertiesRef.current.elementRef.current,
+            viewportElement = cradleParameters.viewportContextRef.current.elementRef.current,
 
             scrollblockElement = viewportElement.firstChild,
 

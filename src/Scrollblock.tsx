@@ -37,7 +37,7 @@ const Scrollblock = ({
 
         // -------------------------[ context and state ]-------------------------
 
-        viewportContextProperties = useContext(ViewportContext),
+        viewportContext = useContext(ViewportContext),
 
         [blockState,setBlockState] = useState('setup'), // to trigger render
 
@@ -58,7 +58,7 @@ const Scrollblock = ({
         divlinerstyleRef = useRef(linerStyle)
 
     const getViewportDimensions = () => {
-        const viewportElement = viewportContextProperties.elementRef.current
+        const viewportElement = viewportContext.elementRef.current
         return {
             width:viewportElement.offsetWidth,
             height:viewportElement.offsetHeight
