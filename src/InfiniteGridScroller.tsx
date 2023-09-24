@@ -550,9 +550,9 @@ const InfiniteGridScroller = (props) => { // exported to
 
         scrollerDndContextRef = useRef({
             scrollerID,
-            dndOptions,
-            droppedIndex:null,
-            displacedIndex:null,
+            dndOptions, // scroller scoped
+            droppedIndex:null, // polled by CellFrames
+            displacedIndex:null, // polled by CellFrames
             cacheAPI:null,
             stateHandler:null,
             serviceHandler:null,

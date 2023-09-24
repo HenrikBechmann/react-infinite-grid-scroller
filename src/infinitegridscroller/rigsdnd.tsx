@@ -17,7 +17,7 @@
     - DndCellFrame - HoC for CellFrame, useDrop, for location
     - DragIcon - useDrag, conditionally rendered by CellFrame for drag
 
-    MasterDndContext (global namespace) is used by
+    MasterDndContext (global scoped namespace) is used by
     - RigsDnd
     - InfiniteGridScroller
     - Viewport
@@ -86,14 +86,15 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                 enabled:false,
                 installed:false,
                 scrollerID:null,
-                setViewportState:null,
-                setDragBarState:null,
+                setViewportState:null, // loaded by Viewport if scrollerID compares, refresh render
+                setDragBarState:null, // loaded by DragBar if scrollerID compares, refresh render
                 dropCount:0,
                 dragData:{
                     isDragging:false,
                     itemID:null,
                     index:null,
                     dndOptions:{} as GenericObject,
+                    // the following for inter-list drops to process drag source
                     sourceCacheAPI:null,
                     sourceStateHandler:null,
                     sourceServiceHandler:null,
