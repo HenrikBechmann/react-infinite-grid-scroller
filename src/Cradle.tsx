@@ -79,7 +79,7 @@ import { ViewportContext } from './Viewport'
 
 import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
 
-import handleCradleState from './Cradle/cradlestate'
+import handleCradleStateChanges from './Cradle/cradlestatechanges'
 
 // support code; process handlers
 import ScrollHandler from './Cradle/scrollhandler'
@@ -1139,7 +1139,7 @@ export const Cradle = ({
     // this is the core state engine (about 32 states), using named states
     // useLayoutEffect for suppressing flashes
     useLayoutEffect(()=>{
-        handleCradleState({ // delegated to a very long switch statement
+        handleCradleStateChanges({ // delegated to a very long switch statement
             cradleState,
             cradleParameters, 
             isCachedRef, 
