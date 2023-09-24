@@ -7,6 +7,9 @@
     RigsDnd must be installed as host scroller to install the DndProvicer. Only one RigsDnd
     can be installed per environment.
 
+    RigsDnd sets MasterDndContext.installed to true.
+    dndOptions.master.enabled for the root scroller sets global enabled condition; true by default
+
     Global communication is supported by MasterDndContext, and Scroller-scoped communication is provided by 
     ScrollerDndContext (see InfiniteGridScroller for details)
 
@@ -87,11 +90,9 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     useEffect(()=>{
 
-        let isEnabled = dndOptions?.enabled
+        let isEnabled = dndOptions?.master?.enabled
 
         isEnabled = isEnabled ?? true
-
-        // if (!masterDndContext.installed) masterDndContext.installed = true
 
         if (!(masterDndContext.enabled === isEnabled)) {
             masterDndContext.enabled = isEnabled
