@@ -613,7 +613,6 @@ const InfiniteGridScroller = (props) => { // exported to
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
             if (masterDndContext.installed) scrollerDndContextRef.current.scrollerID = scrollerSessionIDRef.current
-            // console.log('isDndMaster, setting scrollerID',isDndMaster, scrollerSessionIDRef.current)
             isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
         }
 
