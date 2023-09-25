@@ -422,7 +422,17 @@ export const useNullItemCallback = ({listsize, serviceHandler, contentHandler, c
 
 }
 
-export const useCachingChangeEffect = ({cradleStateRef, cache, cacheMax, contentHandler, serviceHandler, cacheAPI, setCradleState}) => {
+export const useCachingChangeEffect = ({
+
+    cradleStateRef, 
+    cache, 
+    cacheMax, 
+    contentHandler, 
+    serviceHandler, 
+    cacheAPI, 
+    setCradleState
+
+}) => {
 
     // caching change
     useEffect(()=> {
@@ -498,5 +508,45 @@ export const useCachingChangeEffect = ({cradleStateRef, cache, cacheMax, content
         }
 
     },[cache, cacheMax])
+
+}
+
+export const useResizingEffect = ({
+    cradleStateRef, 
+    isCachedRef, 
+    wasCachedRef,
+    isResizing, 
+    interruptHandler, 
+    setCradleState
+}) => {
+
+    useEffect(()=>{
+
+        if (cradleStateRef.current == 'setup') return
+
+        // movement to and from cache is independent of ui viewportresizing
+        if (isCachedRef.current || wasCachedRef.current) {
+
+            return
+
+        }
+
+        if ((isResizing) && 
+                (cradleStateRef.current != 'viewportresizing')) {
+
+            interruptHandler.pauseInterrupts()
+ 
+            setCradleState('viewportresizing')
+
+        }
+
+        // complete viewportresizing mode
+        if (!isResizing && (cradleStateRef.current == 'viewportresizing')) {
+
+            setCradleState('finishviewportresize')
+
+        }
+
+    },[isResizing])
 
 }

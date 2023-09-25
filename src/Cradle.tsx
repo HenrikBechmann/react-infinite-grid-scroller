@@ -93,6 +93,7 @@ import {
     useObserverEffect,
     useNullItemCallback,
     useCachingChangeEffect,
+    useResizingEffect,
 
 } from './Cradle/cradlehooks'
 
@@ -550,34 +551,14 @@ export const Cradle = ({
     })
 
     // trigger viewportresizing response based on viewport state
-    useEffect(()=>{
-
-        if (cradleStateRef.current == 'setup') return
-
-        // movement to and from cache is independent of ui viewportresizing
-        if (isCachedRef.current || wasCachedRef.current) {
-
-            return
-
-        }
-
-        if ((viewportContextRef.current.isResizing) && 
-                (cradleStateRef.current != 'viewportresizing')) {
-
-            interruptHandler.pauseInterrupts()
- 
-            setCradleState('viewportresizing')
-
-        }
-
-        // complete viewportresizing mode
-        if (!viewportContextRef.current.isResizing && (cradleStateRef.current == 'viewportresizing')) {
-
-            setCradleState('finishviewportresize')
-
-        }
-
-    },[viewportContextRef.current.isResizing])
+    useResizingEffect({
+        cradleStateRef, 
+        isCachedRef, 
+        wasCachedRef,
+        isResizing:viewportContextRef.current.isResizing, 
+        interruptHandler, 
+        setCradleState
+    })
 
     // reconfigure for changed size parameters
     useEffect(()=>{
