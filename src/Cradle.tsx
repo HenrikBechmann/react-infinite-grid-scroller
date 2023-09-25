@@ -66,17 +66,15 @@ import React, {
     useRef, 
     useContext, 
     useEffect, 
-    useLayoutEffect, 
     useMemo,
-    useCallback, 
 } from 'react'
 
 // option for CradleController
 import DndCradle from './Cradle/DndCradle'
 
 // contexts
-import { ViewportContext } from './Viewport'
 import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
+import { ViewportContext } from './Viewport'
 
 // main state change machine
 import { useCradleStateLayoutEffects } from './Cradle/cradlelayouteffects'
