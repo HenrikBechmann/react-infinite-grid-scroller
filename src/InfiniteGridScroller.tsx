@@ -242,6 +242,7 @@ const InfiniteGridScroller = (props) => { // exported to
     technical = technical ?? {}
     dndOptions = dndOptions ?? {}
     cacheAPI = cacheAPI ?? null
+    isDndMaster = isDndMaster ?? false
 
     const masterDndContext = useContext(MasterDndContext)
 
@@ -618,8 +619,6 @@ const InfiniteGridScroller = (props) => { // exported to
     },[]);
 
     useEffect (() => {
-
-        // if (!masterDndContext.installed) return
 
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? true
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {

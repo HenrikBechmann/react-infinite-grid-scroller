@@ -86,7 +86,7 @@ export const Viewport = ({
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
     
-    if ((scrollerID === masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
+    if (masterDndContext.installed && (scrollerID === masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
         masterDndContext.setViewportState = setViewportState
 
     }
@@ -260,7 +260,7 @@ export const Viewport = ({
 
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
-        { (dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && <DndDragBar 
+        { (masterDndContext.installed && dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && <DndDragBar 
             itemID = {dragData.itemID} 
             index = {dragData.index} 
             dndOptions = {dragData.dndOptions}
