@@ -12,7 +12,7 @@ import { Viewport } from '../Viewport'
 // HoC for DnD functionality
 const DndViewport = (props) => {
 
-    console.log('running DndViewport')
+    // console.log('running DndViewport')
 
     const { scrollerID } = props
     const scrollerDndContext = useContext(ScrollerDndContext)

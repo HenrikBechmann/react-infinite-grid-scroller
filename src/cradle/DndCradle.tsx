@@ -32,7 +32,7 @@ const DndCradle = (props) => {
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Cell'],
         collect:(monitor:DropTargetMonitor) => {
-            console.log('collecting from DndCradle')
+            // console.log('collecting from DndCradle')
             return {
                 item:monitor.getItem() as any,
                 isOver:monitor.isOver(),
@@ -42,7 +42,7 @@ const DndCradle = (props) => {
         drop:(item:GenericObject,monitor) => {
             const dropResult:GenericObject = monitor.getDropResult()
 
-            console.log('DndCradle: dropResult', dropResult)
+            // console.log('DndCradle: dropResult', dropResult)
             if (!dropResult) return // TODO: check for drop on empty list
 
             const {
@@ -56,8 +56,8 @@ const DndCradle = (props) => {
                 fromIndex = item.index,
                 toIndex = dropResult.target.index
 
-            console.log('DndCradle drop: item.scrollerID, dropResult.target.scrollerID',
-                item.scrollerID, dropResult.target.scrollerID)
+            // console.log('DndCradle drop: item.scrollerID, dropResult.target.scrollerID',
+            //     item.scrollerID, dropResult.target.scrollerID)
             if (item.scrollerID == dropResult.target.scrollerID) {
 
                  serviceHandler.moveIndex(toIndex, fromIndex)
@@ -104,7 +104,7 @@ const DndCradle = (props) => {
         },
     })
 
-    console.log('DndCradle: canDrop',targetData.canDrop)
+    // console.log('DndCradle: canDrop',targetData.canDrop)
 
     useEffect(()=>{
 

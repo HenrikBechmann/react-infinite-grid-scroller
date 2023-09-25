@@ -72,7 +72,7 @@ export const Viewport = ({
     
 }) => {
 
-    console.log('running Viewport')
+    // console.log('running Viewport')
 
     // -----------------------[ initialize ]------------------
 

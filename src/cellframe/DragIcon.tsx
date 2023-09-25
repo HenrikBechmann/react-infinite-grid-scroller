@@ -62,7 +62,7 @@ const DragIcon = props => {
 
         end:(item, monitor)=>{
 
-            console.log('DragIcon: endDrag item', item)
+            // console.log('DragIcon: endDrag item', item)
 
         },
 

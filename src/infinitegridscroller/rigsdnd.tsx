@@ -73,13 +73,11 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     const masterDndContext = useContext(MasterDndContext)
 
-    const initializationRef = useRef(true)
     const wasInitializedRef = useRef(false)
 
     // global context requires special attention
     const resetMasterDndContext = () => {
 
-        wasInitializedRef.current = true
         Object.assign(masterDndContext,{
             enabled:false,
             installed:false,
@@ -98,27 +96,21 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                 sourceServiceHandler:null,
             }
         })
+
+        // console.log('RESET masterDndContext',{...masterDndContext})
     }
 
-    if (initializationRef.current) {
+     if (!wasInitializedRef.current) {
 
-        initializationRef.current = false
+        wasInitializedRef.current = true
 
         resetMasterDndContext()
 
     }
 
-    useEffect(()=>{
-
-        return () => {
-            if (!wasInitializedRef.current) {
-                resetMasterDndContext()
-            }
-        }
-
-    },[])
-
     if (!masterDndContext.installed) masterDndContext.installed = true
+
+    // console.log('set masterDndContext.installed',{...masterDndContext})
 
     const { dndOptions } = props
 
@@ -130,6 +122,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         if (!(masterDndContext.enabled === isEnabled)) {
             masterDndContext.enabled = isEnabled
         }
+
+        // console.log('set masterDndContext.enabled',{...masterDndContext})
 
     },[dndOptions])
 
