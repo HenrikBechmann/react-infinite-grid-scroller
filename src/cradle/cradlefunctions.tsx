@@ -72,3 +72,11 @@ export const getCradleHandlers = (cradleParameters) => {
     }
 
 }
+
+export const getViewportDimensions = ({viewportElement}) => {
+    return {
+        width:viewportElement.offsetWidth,
+        height:viewportElement.offsetHeight
+    }
+}
+

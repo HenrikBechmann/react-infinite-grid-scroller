@@ -82,24 +82,33 @@ import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteG
 import handleCradleStateChanges from './Cradle/cradlestatechanges'
 
 import { // custom hooks
-
+    // calculations
     useCrosscount, 
     useRowblanks, 
     useRowcounts, 
-    useRangerowshift, 
+    useRangerowshift,
+    // configuration
     useCachedEffect,
     useFunctionsCallback,
     useEventListenerEffect,
     useObserverEffect,
+    // reconfiguration
     useNullItemCallback,
     useCachingChangeEffect,
     useResizingEffect,
     useReconfigureEffect,
     useListRangeEffect,
+    useItemPackEffect,
+    usePivotEffect,
+    // style
 
 } from './Cradle/cradlehooks'
 
-import { restoreScrollPos, getCradleHandlers } from './Cradle/cradlefunctions'
+import { 
+    restoreScrollPos, 
+    getCradleHandlers, 
+    getViewportDimensions 
+} from './Cradle/cradlefunctions'
 
 // called to choose between dnd or no dnd for CellFrame
 const CradleController = props => {
@@ -165,6 +174,7 @@ export const Cradle = ({
 
     }) => {
 
+    // unpack core list specs
     const { 
 
         size:listsize,
@@ -208,18 +218,13 @@ export const Cradle = ({
             previousTriggerNameAtBorder:null,
         })
 
-    //  viewport dimensions and cached state
-    const getViewportDimensions = () => {
-        const viewportElement = viewportContext.elementRef.current
-        return {
-            width:viewportElement.offsetWidth,
-            height:viewportElement.offsetHeight
-        }
-    }
+    //  viewport dimensions for cached state determination
+    const { height:viewportheight,width:viewportwidth } = getViewportDimensions({
+        viewportElement:viewportContext.elementRef.current
+    })
 
-    const { height:viewportheight,width:viewportwidth } = getViewportDimensions()
+    // --------------------[ cache test ]----------------------
 
-    // cache test
     // zero width and height means the component must be in portal (cache) state
     const 
         isInPortal = ((viewportwidth == 0) && (viewportheight == 0)),
@@ -230,7 +235,7 @@ export const Cradle = ({
         isCachedRef.current = isInPortal
     }
 
-    // cradle state
+    // ----------------------[ cradle state ]--------------------
     const 
         [cradleState, setCradleState] = useState('setup'),
         cradleStateRef = useRef(null) // access by closures
@@ -267,20 +272,16 @@ export const Cradle = ({
 
     // various rowcounts
     const [
-
         cradleRowcount, 
         viewportRowcount,
         listRowcount,
         runwayRowcount,
-
     ] = useRowcounts({
-
         orientation, 
         cellWidth, cellHeight, cellMinWidth, cellMinHeight, 
         viewportheight, viewportwidth,
         listsize, baserowblanks, endrowblanks, runwaySize, crosscount,
         gapProps, layout,
-
     })
 
     // used to calculate content config
@@ -290,14 +291,12 @@ export const Cradle = ({
 
     const virtualListProps = 
         {
-
             ...virtualListSpecs,
             baserowblanks,
             endrowblanks,
             crosscount,
             rowcount:listRowcount,
             rowshift:rangerowshift,
-
         }
 
     const cradleContentPropsRef = useRef({
@@ -516,7 +515,10 @@ export const Cradle = ({
     })
 
     // initialize window scroll listeners
-    useEventListenerEffect({viewportElement:viewportContextRef.current.elementRef.current, scrollHandler})
+    useEventListenerEffect({
+        viewportElement:viewportContextRef.current.elementRef.current, 
+        scrollHandler
+    })
 
     // observer support
     useObserverEffect({interruptHandler})
@@ -554,6 +556,7 @@ export const Cradle = ({
         setCradleState
     })
 
+    // reconfigure dimensions
     useReconfigureEffect({
         // reconfiguration
         cellHeight,
@@ -570,6 +573,7 @@ export const Cradle = ({
         setCradleState,        
     })
 
+    // change list range
     useListRangeEffect({
         // list range
         lowindex,
@@ -582,103 +586,30 @@ export const Cradle = ({
     })
 
     // a new getItem function implies the need to reload
-    useEffect(() => {
-
-        if (cradleStateRef.current == 'setup') return
-
-        interruptHandler.pauseInterrupts()
-
-        setCradleState('reload')
-
-    },[getItem, getItemPack])
+    useItemPackEffect({
+        getItem, 
+        getItemPack,
+        cradleStateRef,
+        interruptHandler,
+        setCradleState,
+    })
 
     // pivot triggered on change of orientation
-    useEffect(()=> {
+    usePivotEffect({
+        // pivot
+        orientation, 
+        layout,
+        // support
+        gapProps,
+        isCachedRef,
+        hasBeenRenderedRef,
+        cradleInheritedPropertiesRef,
+        cradleStateRef,
+        layoutHandler,
+        interruptHandler,
+        setCradleState,
 
-        layoutHandler.cradlePositionData.blockScrollProperty = 
-            (orientation == "vertical")?
-                "scrollTop":
-                "scrollLeft"
-
-        layoutHandler.cradlePositionData.blockXScrollProperty = 
-            (orientation == "horizontal")?
-                "scrollTop":
-                "scrollLeft"
-
-        if (cradleStateRef.current == 'setup') {
-            layoutHandler.cradlePositionData.trackingBlockScrollPos = 0
-            layoutHandler.cradlePositionData.trackingXBlockScrollPos = 0
-            return
-
-        }
-
-        interruptHandler.pauseInterrupts()
-        // interruptHandler.triggerlinesIntersect.disconnect()
-        
-        if (isCachedRef.current) {
-            // cacheAPI.measureMemory('pivot cached')
-            // interruptHandler.pauseInterrupts() // suppress triggerline callbacks; will render for first render from cache
-            // setCradleState('cached')
-            hasBeenRenderedRef.current = false
-            return
-        }
-
-        // cacheAPI.measureMemory('pivot')
-
-        const 
-            { layout } = cradleInheritedPropertiesRef.current,
-            { cradlePositionData } = layoutHandler,
-
-            gaplength = 
-                (orientation == 'vertical')?
-                    gapProps.column:
-                    gapProps.row,
-
-            gapxlength = 
-                (orientation == 'vertical')?
-                    gapProps.row:
-                    gapProps.column
-
-        if (layout == 'uniform') {
-
-            const 
-                { 
-                    cellWidth,
-                    cellHeight,
-                    gapProps,
-                } = cradleInheritedPropertiesRef.current,
-
-            // get previous ratio
-                previousCellPixelLength = 
-                    ((orientation == 'vertical')?
-                        cellWidth:
-                        cellHeight)
-                    + gapxlength,
-
-                previousPixelOffsetAxisFromViewport = 
-                    layoutHandler.cradlePositionData.targetPixelOffsetAxisFromViewport,
-
-                previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength,
-
-                pivotCellPixelLength = 
-                    ((orientation == 'vertical')?
-                        cellHeight:
-                        cellWidth)
-                + gaplength,
-
-                pivotAxisOffset = previousratio * pivotCellPixelLength
-
-            cradlePositionData.targetPixelOffsetAxisFromViewport = Math.round(pivotAxisOffset)
-
-        } else {
-
-            cradlePositionData.targetPixelOffsetAxisFromViewport = gapxlength
-
-        }
-
-        setCradleState('pivot')
-
-    },[orientation, layout]) // TODO: check for side-effects of layout-only change
+    })
 
     // =====================[ STYLES ]===========================
 

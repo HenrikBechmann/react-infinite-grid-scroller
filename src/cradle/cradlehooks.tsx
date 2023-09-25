@@ -614,3 +614,120 @@ export const useListRangeEffect = ({
     ])
 }
 
+export const useItemPackEffect = ({
+    getItem, 
+    getItemPack,
+    cradleStateRef,
+    interruptHandler,
+    setCradleState,
+}) => {
+    useEffect(() => {
+
+        if (cradleStateRef.current == 'setup') return
+
+        interruptHandler.pauseInterrupts()
+
+        setCradleState('reload')
+
+    },[getItem, getItemPack])
+}
+
+export const usePivotEffect = ({
+    orientation, 
+    layout,
+    gapProps,
+    isCachedRef,
+    hasBeenRenderedRef,
+    cradleInheritedPropertiesRef,
+    cradleStateRef,
+    layoutHandler,
+    interruptHandler,
+    setCradleState,
+}) => {
+    useEffect(()=> {
+
+        layoutHandler.cradlePositionData.blockScrollProperty = 
+            (orientation == "vertical")?
+                "scrollTop":
+                "scrollLeft"
+
+        layoutHandler.cradlePositionData.blockXScrollProperty = 
+            (orientation == "horizontal")?
+                "scrollTop":
+                "scrollLeft"
+
+        if (cradleStateRef.current == 'setup') {
+            layoutHandler.cradlePositionData.trackingBlockScrollPos = 0
+            layoutHandler.cradlePositionData.trackingXBlockScrollPos = 0
+            return
+
+        }
+
+        interruptHandler.pauseInterrupts()
+        // interruptHandler.triggerlinesIntersect.disconnect()
+        
+        if (isCachedRef.current) {
+            // cacheAPI.measureMemory('pivot cached')
+            // interruptHandler.pauseInterrupts() // suppress triggerline callbacks; will render for first render from cache
+            // setCradleState('cached')
+            hasBeenRenderedRef.current = false
+            return
+        }
+
+        // cacheAPI.measureMemory('pivot')
+
+        const 
+            // { layout } = cradleInheritedPropertiesRef.current,
+            { cradlePositionData } = layoutHandler,
+
+            gaplength = 
+                (orientation == 'vertical')?
+                    gapProps.column:
+                    gapProps.row,
+
+            gapxlength = 
+                (orientation == 'vertical')?
+                    gapProps.row:
+                    gapProps.column
+
+        if (layout == 'uniform') {
+
+            const 
+                { 
+                    cellWidth,
+                    cellHeight,
+                    gapProps,
+                } = cradleInheritedPropertiesRef.current,
+
+            // get previous ratio
+                previousCellPixelLength = 
+                    ((orientation == 'vertical')?
+                        cellWidth:
+                        cellHeight)
+                    + gapxlength,
+
+                previousPixelOffsetAxisFromViewport = 
+                    layoutHandler.cradlePositionData.targetPixelOffsetAxisFromViewport,
+
+                previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength,
+
+                pivotCellPixelLength = 
+                    ((orientation == 'vertical')?
+                        cellHeight:
+                        cellWidth)
+                + gaplength,
+
+                pivotAxisOffset = previousratio * pivotCellPixelLength
+
+            cradlePositionData.targetPixelOffsetAxisFromViewport = Math.round(pivotAxisOffset)
+
+        } else {
+
+            cradlePositionData.targetPixelOffsetAxisFromViewport = gapxlength
+
+        }
+
+        setCradleState('pivot')
+
+    },[orientation, layout]) // TODO: check for side-effects of layout-only change
+}
