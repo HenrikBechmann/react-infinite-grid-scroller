@@ -94,19 +94,20 @@ import {
     useNullItemCallback,
     useCachingChangeEffect,
     useResizingEffect,
+    useReconfigureEffect,
 
 } from './Cradle/cradlehooks'
 
-import { restoreScrollPos } from './Cradle/cradlefunctions'
+import { restoreScrollPos, getCradleHandlers } from './Cradle/cradlefunctions'
 
 // support code; process handlers
-import ScrollHandler from './Cradle/scrollhandler'
-import StateHandler from './Cradle/statehandler'
-import ContentHandler from './Cradle/contenthandler'
-import LayoutHandler from './Cradle/layouthandler'
-import InterruptHandler from './Cradle/interrupthandler'
-import ServiceHandler from './Cradle/servicehandler'
-import StylesHandler from './Cradle/styleshandler'
+// import ScrollHandler from './Cradle/scrollhandler'
+// import StateHandler from './Cradle/statehandler'
+// import ContentHandler from './Cradle/contenthandler'
+// import LayoutHandler from './Cradle/layouthandler'
+// import InterruptHandler from './Cradle/interrupthandler'
+// import ServiceHandler from './Cradle/servicehandler'
+// import StylesHandler from './Cradle/styleshandler'
 // cacheAPI is imported as a property; instantiated at the root
 
 // called to choose between dnd or no dnd for CellFrame
@@ -283,6 +284,7 @@ export const Cradle = ({
         isCachedRef,        
     })
 
+    // used to configure the start and end of cradle cell displays
     const [ baserowblanks, endrowblanks ] = useRowblanks({
         crosscount, 
         listsize, 
@@ -290,6 +292,7 @@ export const Cradle = ({
         highindex
     })
 
+    // various rowcounts
     const [
 
         cradleRowcount, 
@@ -307,6 +310,7 @@ export const Cradle = ({
 
     })
 
+    // used to calculate content
     const rangerowshift = useRangerowshift({crosscount,lowindex, listsize})
 
     // =========================[ bundles ]===================
@@ -504,6 +508,7 @@ export const Cradle = ({
 
     },[])
 
+    // instantiate some properties of scrollerDndContext
     useEffect(()=>{
 
         if (!masterDndContext.installed) return
@@ -515,6 +520,7 @@ export const Cradle = ({
 
     },[])
 
+    // return functions to host
     useFunctionsCallback({
         functionsCallback:userCallbacks.functionsCallback, 
         serviceHandler
@@ -560,18 +566,8 @@ export const Cradle = ({
         setCradleState
     })
 
-    // reconfigure for changed size parameters
-    useEffect(()=>{
-
-        if (cradleStateRef.current == 'setup') return
-
-        if (isCachedRef.current) return
-
-        interruptHandler.pauseInterrupts()
-
-        setCradleState('reconfigure')
-
-    },[
+    useReconfigureEffect({
+        // reconfiguration
         cellHeight,
         cellWidth,
         gapProps,
@@ -579,7 +575,12 @@ export const Cradle = ({
         triggerlineOffset,
         layout,
         runwaySize,
-    ])
+        // support
+        cradleStateRef,
+        isCachedRef,
+        interruptHandler,
+        setCradleState,        
+    })
 
     useEffect(()=>{ // change of list range
 
@@ -870,28 +871,3 @@ export const Cradle = ({
     </CradleContext.Provider>
 
 } // Cradle
-
-// utility
-
-const getCradleHandlers = (cradleParameters) => {
-
-    const createHandler = handler => new handler(cradleParameters)
-
-    const { cacheAPI } = cradleParameters.cradleInheritedPropertiesRef.current
-
-    cacheAPI.cradleParameters = cradleParameters
-
-    return {
-
-        cacheAPI,
-        interruptHandler:createHandler(InterruptHandler),
-        scrollHandler:createHandler(ScrollHandler),
-        stateHandler:createHandler(StateHandler),
-        contentHandler:createHandler(ContentHandler),
-        layoutHandler:createHandler(LayoutHandler),
-        serviceHandler:createHandler(ServiceHandler),
-        stylesHandler:createHandler(StylesHandler),
-
-    }
-
-}

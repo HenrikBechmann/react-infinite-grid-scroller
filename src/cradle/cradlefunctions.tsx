@@ -1,6 +1,14 @@
 // cradlefunctions.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+import ScrollHandler from './scrollhandler'
+import StateHandler from './statehandler'
+import ContentHandler from './contenthandler'
+import LayoutHandler from './layouthandler'
+import InterruptHandler from './interrupthandler'
+import ServiceHandler from './servicehandler'
+import StylesHandler from './styleshandler'
+
 export const restoreScrollPos = (layoutHandler, viewportContext) => {
 
     const 
@@ -28,6 +36,29 @@ export const restoreScrollPos = (layoutHandler, viewportContext) => {
         }
 
         viewportElement.scroll(scrollOptions)
+
+    }
+
+}
+
+export const getCradleHandlers = (cradleParameters) => {
+
+    const createHandler = handler => new handler(cradleParameters)
+
+    const { cacheAPI } = cradleParameters.cradleInheritedPropertiesRef.current
+
+    cacheAPI.cradleParameters = cradleParameters
+
+    return {
+
+        cacheAPI,
+        interruptHandler:createHandler(InterruptHandler),
+        scrollHandler:createHandler(ScrollHandler),
+        stateHandler:createHandler(StateHandler),
+        contentHandler:createHandler(ContentHandler),
+        layoutHandler:createHandler(LayoutHandler),
+        serviceHandler:createHandler(ServiceHandler),
+        stylesHandler:createHandler(StylesHandler),
 
     }
 

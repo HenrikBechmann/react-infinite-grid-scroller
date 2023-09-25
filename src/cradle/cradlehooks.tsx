@@ -550,3 +550,43 @@ export const useResizingEffect = ({
     },[isResizing])
 
 }
+
+export const useReconfigureEffect = ({
+
+    cellHeight,
+    cellWidth,
+    gapProps,
+    paddingProps,
+    triggerlineOffset,
+    layout,
+    runwaySize,
+    cradleStateRef,
+    isCachedRef,
+    interruptHandler,
+    setCradleState,        
+
+}) => {
+
+    // reconfigure for changed size parameters
+    useEffect(()=>{
+
+        if (cradleStateRef.current == 'setup') return
+
+        if (isCachedRef.current) return
+
+        interruptHandler.pauseInterrupts()
+
+        setCradleState('reconfigure')
+
+    },[
+        cellHeight,
+        cellWidth,
+        gapProps,
+        paddingProps,
+        triggerlineOffset,
+        layout,
+        runwaySize,
+    ])
+
+}
+
