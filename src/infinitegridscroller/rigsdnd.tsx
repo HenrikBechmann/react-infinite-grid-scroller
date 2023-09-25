@@ -39,6 +39,7 @@
 */
 
 import React, { 
+    useState,
     useEffect, 
     useContext, 
     useRef,
@@ -71,42 +72,9 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
 // wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
+    const [rigsdndState, setRigsdndState] = useState('setup')
+
     const masterDndContext = useContext(MasterDndContext)
-
-    const wasInitializedRef = useRef(false)
-
-    // global context requires special attention
-    // CHANGE const resetMasterDndContext = () => {
-
-    //     Object.assign(masterDndContext,{
-    //         enabled:false,
-    //         installed:false,
-    //         scrollerID:null,
-    //         setViewportState:null, // loaded by Viewport if scrollerID compares, refresh render
-    //         setDragBarState:null, // loaded by DragBar if scrollerID compares, refresh render
-    //         dropCount:0,
-    //         dragData:{
-    //             isDragging:false,
-    //             itemID:null,
-    //             index:null,
-    //             dndOptions:{} as GenericObject,
-    //             // the following for inter-list drops to process drag source
-    //             sourceCacheAPI:null,
-    //             sourceStateHandler:null,
-    //             sourceServiceHandler:null,
-    //         }
-    //     })
-
-        // console.log('RESET masterDndContext',{...masterDndContext})
-    // }
-
-    //  if (!wasInitializedRef.current) {
-
-    //     wasInitializedRef.current = true
-
-    //     resetMasterDndContext()
-
-    // }
 
     if (!masterDndContext.installed) masterDndContext.installed = true
 
@@ -146,12 +114,25 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         }
         // console.log('set masterDndContext.enabled',{...masterDndContext})
 
-    },[masterDndContext,dndOptions]) // CHANGE adding masterDndContext
+    },[/*masterDndContext,*/dndOptions]) // CHANGE adding masterDndContext
 
     const enhancedProps = {...props, isDndMaster:true}
 
+    useEffect(()=>{
+
+        switch (rigsdndState) {
+            case 'setup': { // give reset of masterDndContext as chance to reset
+
+                setRigsdndState('ready')
+
+                break
+            }
+        }
+
+    },[rigsdndState])
+
     return <DndProvider backend={DndBackend} options = {backendOptions}>
-        <InfiniteGridScroller {...enhancedProps} />
+        {(rigsdndState !== 'setup') && <InfiniteGridScroller {...enhancedProps} />}
     </DndProvider>
 
 }
