@@ -94,8 +94,6 @@ import StylesHandler from './Cradle/styleshandler'
 // called to choose between dnd or no dnd for CellFrame
 const CradleController = props => {
 
-    // console.log('running CradleController')
-
     const masterDndContext = useContext(MasterDndContext)
 
     const handlerListRef = useRef(null)
@@ -156,8 +154,6 @@ export const Cradle = ({
         handlerListRef,
 
     }) => {
-
-    // console.log('running Cradle')
 
     const { 
 
@@ -532,9 +528,6 @@ export const Cradle = ({
         scrollerContext,
 
     }
-
-    // console.log('scrollerID, masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled',
-    //     scrollerID, masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled)
 
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested

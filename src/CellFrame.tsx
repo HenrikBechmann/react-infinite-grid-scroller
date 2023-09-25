@@ -223,9 +223,7 @@ export const CellFrame = ({
 
     const setDroppedBorder = () => {
 
-        // console.log('droppedIndex, index',scrollerDndContext.droppedIndex,index)
         if (scrollerDndContext.droppedIndex == index) {
-            // console.log('setting dropped class', index)
             scrollerDndContext.droppedIndex = null
             const classname = 'rigs-dropped-highlight'
             contentholderRef.current.classList.add(classname)
@@ -238,9 +236,7 @@ export const CellFrame = ({
 
     const setDisplacedBorder = () => {
 
-        // console.log('droppedIndex, index',scrollerDndContext.droppedIndex,index)
         if (scrollerDndContext.displacedIndex == index) {
-            // console.log('setting dropped class', index)
             scrollerDndContext.displacedIndex = null
             const classname = 'rigs-target-finish'
             contentholderRef.current.classList.add(classname)
@@ -584,8 +580,6 @@ export const CellFrame = ({
     }, [frameState])
 
     const contentholderRef = useRef(null)
-
-    // console.log('index, contentholderRef','-'+ index + '-',contentholderRef)
 
     return <div 
 

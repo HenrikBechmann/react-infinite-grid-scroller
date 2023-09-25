@@ -14,8 +14,6 @@ import CacheAPI from './PortalCache/cacheAPI'
 
 const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getUpdateFunction }) => {
 
-    // console.log('running PortalCache')
-
     const cacheAPIRef = useRef(null)
 
     const partitionArrayRef = useRef(null)
@@ -29,8 +27,6 @@ const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getUpdateFuncti
     },[])
 
     useEffect(() => {
-
-        // console.log('PortalCache running useEffect for cacheAPI')
 
         if (cacheAPIRef.current) return
 

@@ -194,9 +194,6 @@ export default class ServiceGeneral {
                     viewportElement.scrollTop:
                     viewportElement.scrollLeft
 
-        // console.log('scrollblockLength, viewportLength, scrollOffset\n',
-        //     scrollblockLength, viewportLength, scrollOffset)
-
         let pixelmovement, 
             pixelmax, pixelovershoot, 
             pixelundershoot
@@ -213,9 +210,6 @@ export default class ServiceGeneral {
             pixelmovement = pixel - pixelundershoot
 
         }
-
-        // console.log('pixelmovement :: pixelmax, pixelovershoot :: pixelundershoot\n',
-        //     pixelmovement, pixelmax, pixelovershoot, pixelundershoot)
 
         let top, left
 

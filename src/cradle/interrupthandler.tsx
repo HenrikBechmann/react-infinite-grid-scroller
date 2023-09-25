@@ -195,8 +195,6 @@ export default class InterruptHandler {
 
         this.signals.repositioningRequired = (!(this.isHeadCradleInView) && !(this.isTailCradleInView))
 
-        // console.log('repositioningRequired',this.signals.repositioningRequired)
-
         const viewportContext = this.cradleParameters.viewportContextRef.current
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway

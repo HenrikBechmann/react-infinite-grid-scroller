@@ -336,8 +336,6 @@ export default class ServiceCache {
             resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
                 (highCradleIndex >= (newlistsize - 1)))
 
-        // console.log('resetCradle', resetCradle)
-
         if (!resetCradle) { // synchronize cradle contents to changes
 
             contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove

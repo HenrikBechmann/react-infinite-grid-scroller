@@ -12,8 +12,6 @@ import { Viewport } from '../Viewport'
 // HoC for DnD functionality
 const DndViewport = (props) => {
 
-    // console.log('running DndViewport')
-
     const { scrollerID } = props
     const scrollerDndContext = useContext(ScrollerDndContext)
 
@@ -31,8 +29,6 @@ const DndViewport = (props) => {
     })
 
     useEffect(()=>{
-
-        // console.log('DndViewport targetData.isOver, scrollerID',targetData.isOver, scrollerID)
 
     },[targetData.isOver])
 

@@ -14,8 +14,6 @@ import { ViewportContext } from '../Viewport'
 // HoC for DnD functionality
 const DndCradle = (props) => {
 
-    // console.log('running DndCradle')
-
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext),
@@ -25,14 +23,9 @@ const DndCradle = (props) => {
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
 
-
-    // console.log('scrollerDndContext.dndOptions.accept',
-    //     scrollerDndContext.dndOptions.accept)
-
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Cell'],
         collect:(monitor:DropTargetMonitor) => {
-            // console.log('collecting from DndCradle')
             return {
                 item:monitor.getItem() as any,
                 isOver:monitor.isOver(),
@@ -42,7 +35,6 @@ const DndCradle = (props) => {
         drop:(item:GenericObject,monitor) => {
             const dropResult:GenericObject = monitor.getDropResult()
 
-            // console.log('DndCradle: dropResult', dropResult)
             if (!dropResult) return // TODO: check for drop on empty list
 
             const {
@@ -56,8 +48,6 @@ const DndCradle = (props) => {
                 fromIndex = item.index,
                 toIndex = dropResult.target.index
 
-            // console.log('DndCradle drop: item.scrollerID, dropResult.target.scrollerID',
-            //     item.scrollerID, dropResult.target.scrollerID)
             if (item.scrollerID == dropResult.target.scrollerID) {
 
                 serviceHandler.moveIndex(toIndex, fromIndex)
@@ -87,8 +77,6 @@ const DndCradle = (props) => {
 
                 const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = pendingChangesList
 
-                // console.log('pendingChanges', pendingChangesList)
-                // const portalMetadata =
                 const fromScroller = item.scrollerID
                 cacheAPI.transferPortalMetadataToScroller(
                     item.itemID, toIndex) // move into space
@@ -99,16 +87,12 @@ const DndCradle = (props) => {
                 scrollerDndContext.displacedIndex = toIndex + 1
 
             }
-            // console.log('setting droppedIndex',toIndex)
             scrollerDndContext.droppedIndex = toIndex
         },
     })
 
-    // console.log('DndCradle: canDrop',targetData.canDrop)
-
     useEffect(()=>{
 
-        // console.log('DndCradle viewportElement for targetConnector',viewportElement)
         targetConnector(viewportElement)
 
     },[])

@@ -78,8 +78,6 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     if (!masterDndContext.installed) masterDndContext.installed = true
 
-    // console.log('set masterDndContext.installed',{...masterDndContext})
-
     const { dndOptions } = props
 
     useEffect(()=>{
@@ -112,9 +110,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
             })
 
         }
-        // console.log('set masterDndContext.enabled',{...masterDndContext})
 
-    },[/*masterDndContext,*/dndOptions]) // CHANGE adding masterDndContext
+    },[dndOptions])
 
     const enhancedProps = {...props, isDndMaster:true}
 

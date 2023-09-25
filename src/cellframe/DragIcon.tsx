@@ -74,7 +74,6 @@ const DragIcon = props => {
         { isDragging } = sourceData,
         classname = 'rigs-source-highlight'
 
-    // console.log('isDragging, dragData.isDragging',isDragging, dragData.isDragging)
     if (isDragging && !dragData.isDragging) {
         Object.assign(dragData,
             {
