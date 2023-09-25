@@ -72,6 +72,8 @@ export const Viewport = ({
     
 }) => {
 
+    console.log('running Viewport')
+
     // -----------------------[ initialize ]------------------
 
     const masterDndContext = useContext(MasterDndContext)

@@ -33,6 +33,7 @@ const DndCellFrame = (props) => {
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept,
         drop:(item,monitor) => {
+            console.log('dropping to scrollerID, itemID, index',scrollerID, itemID, index)
             return {target:{
                 scrollerID,
                 itemID,
@@ -47,6 +48,8 @@ const DndCellFrame = (props) => {
             }
         },
     })
+
+    console.log('DndCellFrame: canDrop',targetData.canDrop)
 
     const cellCanDropRef = useRef(false)
 

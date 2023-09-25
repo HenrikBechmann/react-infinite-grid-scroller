@@ -3,7 +3,7 @@
 
 import React, {useEffect, useContext, useRef } from 'react'
 
-import { useDrop } from 'react-dnd'
+import { useDrop, DropTargetMonitor } from 'react-dnd'
 
 import { MasterDndContext, ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
 
@@ -14,6 +14,8 @@ import { ViewportContext } from '../Viewport'
 // HoC for DnD functionality
 const DndCradle = (props) => {
 
+    // console.log('running DndCradle')
+
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext),
@@ -23,11 +25,24 @@ const DndCradle = (props) => {
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
 
+
+    // console.log('scrollerDndContext.dndOptions.accept',
+    //     scrollerDndContext.dndOptions.accept)
+
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Cell'],
+        collect:(monitor:DropTargetMonitor) => {
+            console.log('collecting from DndCradle')
+            return {
+                item:monitor.getItem() as any,
+                isOver:monitor.isOver(),
+                canDrop:monitor.canDrop(),
+            }
+        },
         drop:(item:GenericObject,monitor) => {
             const dropResult:GenericObject = monitor.getDropResult()
 
+            console.log('DndCradle: dropResult', dropResult)
             if (!dropResult) return // TODO: check for drop on empty list
 
             const {
@@ -41,9 +56,11 @@ const DndCradle = (props) => {
                 fromIndex = item.index,
                 toIndex = dropResult.target.index
 
+            console.log('DndCradle drop: item.scrollerID, dropResult.target.scrollerID',
+                item.scrollerID, dropResult.target.scrollerID)
             if (item.scrollerID == dropResult.target.scrollerID) {
 
-                serviceHandler.moveIndex(toIndex, fromIndex)
+                 serviceHandler.moveIndex(toIndex, fromIndex)
                 scrollerDndContext.displacedIndex = (fromIndex > toIndex)? toIndex + 1:toIndex - 1
 
             } else {
@@ -87,8 +104,11 @@ const DndCradle = (props) => {
         },
     })
 
+    console.log('DndCradle: canDrop',targetData.canDrop)
+
     useEffect(()=>{
 
+        // console.log('DndCradle viewportElement for targetConnector',viewportElement)
         targetConnector(viewportElement)
 
     },[])

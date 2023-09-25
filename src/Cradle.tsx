@@ -529,8 +529,8 @@ export const Cradle = ({
 
     }
 
-    console.log('scrollerID, masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled',
-        scrollerID, masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled)
+    // console.log('scrollerID, masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled',
+    //     scrollerID, masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled)
 
     const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested

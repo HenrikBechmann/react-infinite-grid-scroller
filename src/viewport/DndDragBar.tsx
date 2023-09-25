@@ -15,12 +15,8 @@ import React, {
 } from 'react'
 
 import { 
-    // useDrag, 
     useDragLayer, 
-    // useDrop, 
-    // DragSourceMonitor, 
     DragLayerMonitor, 
-    // DropTargetMonitor
 } from 'react-dnd'
 
 import { MasterDndContext, GenericObject } from '../InfiniteGridScroller'

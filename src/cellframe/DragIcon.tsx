@@ -56,9 +56,13 @@ const DragIcon = props => {
             return {
                 item:monitor.getItem(),
                 isDragging:!!monitor.isDragging(),
-                // canDrop:monitor.canDrop()
-
             }
+
+        },
+
+        end:(item, monitor)=>{
+
+            console.log('DragIcon: endDrag item', item)
 
         },
 
