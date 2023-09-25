@@ -590,3 +590,27 @@ export const useReconfigureEffect = ({
 
 }
 
+export const useListRangeEffect = ({
+    lowindex,
+    highindex,
+    cradleStateRef,
+    isCachedRef,
+    interruptHandler,
+    setCradleState,
+}) => {
+    useEffect(()=>{ // change of list range
+
+        if (cradleStateRef.current == 'setup') return
+
+        if (isCachedRef.current) return // TODO: ??
+
+        interruptHandler.pauseInterrupts()
+
+        setCradleState('reconfigureforlistrange')
+
+    },[
+        lowindex,
+        highindex,
+    ])
+}
+

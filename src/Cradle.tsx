@@ -81,7 +81,7 @@ import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteG
 
 import handleCradleStateChanges from './Cradle/cradlestatechanges'
 
-import { 
+import { // custom hooks
 
     useCrosscount, 
     useRowblanks, 
@@ -95,20 +95,11 @@ import {
     useCachingChangeEffect,
     useResizingEffect,
     useReconfigureEffect,
+    useListRangeEffect,
 
 } from './Cradle/cradlehooks'
 
 import { restoreScrollPos, getCradleHandlers } from './Cradle/cradlefunctions'
-
-// support code; process handlers
-// import ScrollHandler from './Cradle/scrollhandler'
-// import StateHandler from './Cradle/statehandler'
-// import ContentHandler from './Cradle/contenthandler'
-// import LayoutHandler from './Cradle/layouthandler'
-// import InterruptHandler from './Cradle/interrupthandler'
-// import ServiceHandler from './Cradle/servicehandler'
-// import StylesHandler from './Cradle/styleshandler'
-// cacheAPI is imported as a property; instantiated at the root
 
 // called to choose between dnd or no dnd for CellFrame
 const CradleController = props => {
@@ -251,24 +242,6 @@ export const Cradle = ({
         // console.log('-- itemID','+'+scrollerContext?.cellFramePropertiesRef.current.itemID+'+')
     // }
 
-    // cradle scaffold element refs
-    const 
-        headCradleElementRef = useRef(null),
-        tailCradleElementRef = useRef(null),
-        axisCradleElementRef = useRef(null),
-        triggercellTriggerlineHeadElementRef = useRef(null),
-        triggercellTriggerlineTailElementRef = useRef(null),
-        // layout bundle
-        cradleElementsRef = useRef(
-            {
-                headRef:headCradleElementRef, 
-                tailRef:tailCradleElementRef, 
-                axisRef:axisCradleElementRef,
-                triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
-                triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
-            }
-        )
-
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
 
@@ -310,7 +283,7 @@ export const Cradle = ({
 
     })
 
-    // used to calculate content
+    // used to calculate content config
     const rangerowshift = useRangerowshift({crosscount,lowindex, listsize})
 
     // =========================[ bundles ]===================
@@ -364,9 +337,25 @@ export const Cradle = ({
         }
     )
 
-    // -----------------[ bundle properties for handlers ]-------------------
-
     // bundle all cradle props to pass to handlers - ultimately cradleParametersRef
+
+    // cradle scaffold element refs
+    const 
+        headCradleElementRef = useRef(null),
+        tailCradleElementRef = useRef(null),
+        axisCradleElementRef = useRef(null),
+        triggercellTriggerlineHeadElementRef = useRef(null),
+        triggercellTriggerlineTailElementRef = useRef(null),
+        // layout bundle
+        cradleElementsRef = useRef(
+            {
+                headRef:headCradleElementRef, 
+                tailRef:tailCradleElementRef, 
+                axisRef:axisCradleElementRef,
+                triggercellTriggerlineHeadRef:triggercellTriggerlineHeadElementRef,
+                triggercellTriggerlineTailRef:triggercellTriggerlineTailElementRef,
+            }
+        )
 
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support callbacks
     // up to date values
@@ -508,7 +497,7 @@ export const Cradle = ({
 
     },[])
 
-    // instantiate some properties of scrollerDndContext
+    // instantiate some properties of scrollerDndContext if needed
     useEffect(()=>{
 
         if (!masterDndContext.installed) return
@@ -537,7 +526,6 @@ export const Cradle = ({
 
     // inernal callback: the new list size will always be less than current listsize
     // invoked if getItem returns null
-
     const nullItemSetMaxListsize = useNullItemCallback({
         listsize:cradleInternalPropertiesRef.current.virtualListProps.size,
         serviceHandler,
@@ -558,10 +546,10 @@ export const Cradle = ({
 
     // trigger viewportresizing response based on viewport state
     useResizingEffect({
+        isResizing:viewportContextRef.current.isResizing,
         cradleStateRef, 
         isCachedRef, 
         wasCachedRef,
-        isResizing:viewportContextRef.current.isResizing, 
         interruptHandler, 
         setCradleState
     })
@@ -582,20 +570,16 @@ export const Cradle = ({
         setCradleState,        
     })
 
-    useEffect(()=>{ // change of list range
-
-        if (cradleStateRef.current == 'setup') return
-
-        if (isCachedRef.current) return // TODO: ??
-
-        interruptHandler.pauseInterrupts()
-
-        setCradleState('reconfigureforlistrange')
-
-    },[
+    useListRangeEffect({
+        // list range
         lowindex,
         highindex,
-    ])
+        // support
+        cradleStateRef,
+        isCachedRef,
+        interruptHandler,
+        setCradleState,
+    })
 
     // a new getItem function implies the need to reload
     useEffect(() => {

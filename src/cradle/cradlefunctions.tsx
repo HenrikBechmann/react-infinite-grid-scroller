@@ -1,6 +1,15 @@
 // cradlefunctions.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+// support code; process handlers
+// import ScrollHandler from './Cradle/scrollhandler'
+// import StateHandler from './Cradle/statehandler'
+// import ContentHandler from './Cradle/contenthandler'
+// import LayoutHandler from './Cradle/layouthandler'
+// import InterruptHandler from './Cradle/interrupthandler'
+// import ServiceHandler from './Cradle/servicehandler'
+// import StylesHandler from './Cradle/styleshandler'
+// cacheAPI is imported as a property; instantiated at the root
 import ScrollHandler from './scrollhandler'
 import StateHandler from './statehandler'
 import ContentHandler from './contenthandler'
