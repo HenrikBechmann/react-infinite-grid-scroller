@@ -91,6 +91,8 @@ import {
     useFunctionsCallback,
     useEventListenerEffect,
     useObserverEffect,
+    useNullItemCallback,
+    useCachingChangeEffect,
 
 } from './Cradle/cradlehooks'
 
@@ -528,105 +530,24 @@ export const Cradle = ({
 
     // inernal callback: the new list size will always be less than current listsize
     // invoked if getItem returns null
-    const nullItemSetMaxListsize = useCallback((maxListsize) => {
-        const listsize = cradleInternalPropertiesRef.current.virtualListProps.size
 
-        if (maxListsize < listsize) {
+    const nullItemSetMaxListsize = useNullItemCallback({
+        listsize:cradleInternalPropertiesRef.current.virtualListProps.size,
+        serviceHandler,
+        contentHandler,
+        cacheAPI,
+    })
 
-            const { deleteListCallback, changeListSizeCallback } = serviceHandler.callbacks
-
-            let dListCallback
-            if (deleteListCallback) {
-                dListCallback = (deleteList) => {
-
-                    deleteListCallback('getItem returned null',deleteList)
-
-                }
-
-            }
-
-            contentHandler.updateVirtualListSize(maxListsize)
-            cacheAPI.changeCacheListSize(maxListsize, 
-                dListCallback,
-                changeListSizeCallback)
-
-        }
-    },[])
-
-    // caching change
-    useEffect(()=> {
-
-        if (cache == 'preload') {
-
-            setCradleState('startpreload')
-
-            return
-
-        }
-
-        if (cradleStateRef.current == 'setup') return
-
-        switch (cache) {
-
-            case 'keepload': {
-
-                const modelIndexList = contentHandler.getModelIndexList()
-
-                const { deleteListCallback } = serviceHandler.callbacks
-
-                let dListCallback
-                if (deleteListCallback) {
-                    dListCallback = (deleteList) => {
-
-                        deleteListCallback('pare cache to cacheMax',deleteList)
-
-                    }
-
-                }
-
-                const { cacheMax } = cradleParameters.cradleInheritedPropertiesRef.current
-
-                if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
-
-                    cacheAPI.renderPortalLists()
-                    
-                }
-
-                setCradleState('changecaching')
-
-                break
-            }
-
-            case 'cradle': {
-
-                const modelIndexList = contentHandler.getModelIndexList()
-
-                const { deleteListCallback } = serviceHandler.callbacks
-
-                let dListCallback
-                if (deleteListCallback) {
-                    dListCallback = (deleteList) => {
-
-                        deleteListCallback('match cache to cradle',deleteList)
-
-                    }
-
-                }
-
-                if (cacheAPI.matchCacheToCradle(modelIndexList, dListCallback)) {
-
-                    cacheAPI.renderPortalLists()
-
-                }
-
-                setCradleState('changecaching')
-
-                break
-            }
-
-        }
-
-    },[cache, cacheMax])
+    // change cache or cacheMax
+    useCachingChangeEffect({
+        cache, 
+        cacheMax, 
+        cradleStateRef, 
+        contentHandler, 
+        serviceHandler, 
+        cacheAPI, 
+        setCradleState
+    })
 
     // trigger viewportresizing response based on viewport state
     useEffect(()=>{
