@@ -283,7 +283,7 @@ export const useCachedEffect = ({isCachedRef, wasCachedRef, hasBeenRenderedRef, 
 }
 
 export const useFunctionsCallback = ({functionsCallback, serviceHandler}) => {
-    
+
     useEffect(()=>{
 
         if (!functionsCallback) return
@@ -339,6 +339,56 @@ export const useFunctionsCallback = ({functionsCallback, serviceHandler}) => {
         }
 
         functionsCallback(functions)
+
+    },[])
+
+}
+
+export const useEventListenerEffect = ({viewportElement, scrollHandler}) => {
+
+    useEffect(() => {
+
+        viewportElement.addEventListener('scroll',scrollHandler.onScroll)
+
+        return () => {
+
+            viewportElement && 
+                viewportElement.removeEventListener('scroll',scrollHandler.onScroll)
+
+        }
+
+    },[])
+
+}
+
+// There are two interection observers: one for the two cradle grids, and another for triggerlines; 
+// both against the viewport.
+export const useObserverEffect = ({interruptHandler}) => {
+
+    useEffect(()=>{
+
+        const {
+            cradleIntersect,
+            triggerlinesIntersect,
+        } = interruptHandler
+
+        // intersection observer for cradle body
+        // this sets up an IntersectionObserver of the cradle against the viewport. When the
+        // cradle goes out of the observer scope, the 'repositioningRender' cradle state is triggered.
+        const cradleintersectobserver = cradleIntersect.createObserver()
+        cradleIntersect.connectElements()
+
+        // triggerobserver triggers cradle content updates 
+        //     when triggerlines pass the edge of the viewport
+        // defer connectElements until triggercell triggerlines have been assigned
+        const triggerobserver = triggerlinesIntersect.createObserver()
+
+        return () => {
+
+            cradleintersectobserver.disconnect()
+            triggerobserver.disconnect()
+
+        }
 
     },[])
 

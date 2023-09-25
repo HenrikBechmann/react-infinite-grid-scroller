@@ -89,6 +89,8 @@ import {
     useRangerowshift, 
     useCachedEffect,
     useFunctionsCallback,
+    useEventListenerEffect,
+    useObserverEffect,
 
 } from './Cradle/cradlehooks'
 
@@ -295,20 +297,10 @@ export const Cradle = ({
     ] = useRowcounts({
 
         orientation, 
-        gapProps, 
-        cellWidth, 
-        cellHeight,
-        cellMinWidth,
-        cellMinHeight, 
-        viewportheight, 
-        viewportwidth,
-
-        listsize,
-        baserowblanks, 
-        endrowblanks,
-        runwaySize,
-        crosscount,
-        layout,
+        cellWidth, cellHeight, cellMinWidth, cellMinHeight, 
+        viewportheight, viewportwidth,
+        listsize, baserowblanks, endrowblanks, runwaySize, crosscount,
+        gapProps, layout,
 
     })
 
@@ -524,111 +516,12 @@ export const Cradle = ({
         functionsCallback:userCallbacks.functionsCallback, 
         serviceHandler
     })
-    //send call-in functions to host
-    // useEffect(()=>{
-
-    //     if (!userCallbacks.functionsCallback) return
-
-    //     const {
-
-    //         scrollToIndex, 
-    //         scrollToPixel,
-    //         scrollByPixel,
-    //         reload, 
-    //         setListsize, // deprecated
-    //         setListSize,
-    //         setListRange,
-    //         prependIndexCount,
-    //         appendIndexCount,
-    //         clearCache, 
-
-    //         getCacheIndexMap, 
-    //         getCacheItemMap,
-    //         getCradleIndexMap,
-    //         getPropertiesSnapshot,
-
-    //         // remapIndexes,
-    //         moveIndex,
-    //         insertIndex,
-    //         removeIndex,
-
-    //     } = serviceHandler
-
-    //     const functions = {
-
-    //         scrollToIndex,
-    //         scrollToPixel,
-    //         scrollByPixel,
-    //         reload,
-    //         setListsize, // deprecated
-    //         setListSize,
-    //         setListRange,
-    //         prependIndexCount,
-    //         appendIndexCount,
-    //         clearCache,
-            
-    //         getCacheIndexMap,
-    //         getCacheItemMap,
-    //         getCradleIndexMap,
-    //         getPropertiesSnapshot,
-
-    //         // remapIndexes,
-    //         moveIndex,
-    //         insertIndex,
-    //         removeIndex,
-
-    //     }
-
-    //     userCallbacks.functionsCallback(functions)
-
-    // },[])
 
     // initialize window scroll listeners
-    useEffect(() => {
-
-        const viewportElement = viewportContextRef.current.elementRef.current
-        viewportElement.addEventListener('scroll',scrollHandler.onScroll)
-
-        return () => {
-
-            viewportElement && 
-                viewportElement.removeEventListener('scroll',scrollHandler.onScroll)
-
-        }
-
-    },[])
+    useEventListenerEffect({viewportElement:viewportContextRef.current.elementRef.current, scrollHandler})
 
     // observer support
-    /*
-        There are two interection observers: one for the two cradle grids, and another for triggerlines; 
-            both against the viewport.
-    */    
-    useEffect(()=>{
-
-        const {
-            cradleIntersect,
-            triggerlinesIntersect,
-        } = interruptHandler
-
-        // intersection observer for cradle body
-        // this sets up an IntersectionObserver of the cradle against the viewport. When the
-        // cradle goes out of the observer scope, the 'repositioningRender' cradle state is triggered.
-        const cradleintersectobserver = cradleIntersect.createObserver()
-        cradleIntersect.connectElements()
-
-        // triggerobserver triggers cradle content updates 
-        //     when triggerlines pass the edge of the viewport
-        // defer connectElements until triggercell triggerlines have been assigned
-        const triggerobserver = triggerlinesIntersect.createObserver()
-
-        return () => {
-
-            cradleintersectobserver.disconnect()
-            triggerobserver.disconnect()
-
-        }
-
-    },[])
+    useObserverEffect({interruptHandler})
 
     // =====================[ RECONFIGURATION effects ]======================
     // change listsize, caching, resize (UI resize of the viewport), reconfigure, or pivot
