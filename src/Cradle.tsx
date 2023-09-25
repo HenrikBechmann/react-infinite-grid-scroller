@@ -101,7 +101,7 @@ import { // custom hooks
     useItemPackEffect,
     usePivotEffect,
     // style
-
+    useCradleStyles,
 } from './Cradle/cradlehooks'
 
 import { 
@@ -174,6 +174,8 @@ export const Cradle = ({
 
     }) => {
 
+    // ========================[ DATA SETUP ]========================
+
     // unpack core list specs
     const { 
 
@@ -182,8 +184,6 @@ export const Cradle = ({
         highindex,
 
     } = virtualListSpecs
-
-    // ========================[ DATA SETUP ]========================
 
     // unpack gridSpecs
     const {
@@ -380,8 +380,8 @@ export const Cradle = ({
 
     }
 
-    const scrollerPropertiesRef = useRef(null)
     // passed to cellFrame content (user content) if requested
+    const scrollerPropertiesRef = useRef(null)
     scrollerPropertiesRef.current = {
         orientation, gapProps, paddingProps, layout,
         cellHeight, cellWidth, cellMinHeight, cellMinWidth,
@@ -621,27 +621,7 @@ export const Cradle = ({
         cradleDividerStyle,
         triggercellTriggerlineHeadStyle,
         triggercellTriggerlineTailStyle,
-    ] = useMemo(()=> {
-
-        return stylesHandler.getCradleStyles({
-
-            orientation, 
-            cellHeight, 
-            cellWidth, 
-            cellMinHeight,
-            cellMinWidth,
-            gapProps,
-            viewportheight, 
-            viewportwidth,
-            crosscount, 
-            userstyles:styles,
-            triggerlineOffset,
-            layout,
-
-        })
-
-    },[
-
+    ] = useCradleStyles({
         orientation,
         cellHeight,
         cellWidth,
@@ -654,8 +634,8 @@ export const Cradle = ({
         styles,
         triggerlineOffset,
         layout,
-
-      ])
+        stylesHandler,
+    })
 
     // =====================[ STATE MANAGEMENT ]==========================
 

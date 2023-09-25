@@ -731,3 +731,71 @@ export const usePivotEffect = ({
 
     },[orientation, layout]) // TODO: check for side-effects of layout-only change
 }
+
+export const useCradleStyles = ({
+    orientation,
+    cellHeight,
+    cellWidth,
+    cellMinHeight,
+    cellMinWidth,
+    gapProps,
+    viewportheight,
+    viewportwidth,
+    crosscount,
+    styles,
+    triggerlineOffset,
+    layout,
+    stylesHandler,
+}) => {
+
+    const [
+        cradleHeadStyle,
+        cradleTailStyle,
+        cradleAxisStyle,
+        cradleDividerStyle,
+        triggercellTriggerlineHeadStyle,
+        triggercellTriggerlineTailStyle,
+    ] = useMemo(()=> {
+
+        return stylesHandler.getCradleStyles({
+
+            orientation, 
+            cellHeight, 
+            cellWidth, 
+            cellMinHeight,
+            cellMinWidth,
+            gapProps,
+            viewportheight, 
+            viewportwidth,
+            crosscount, 
+            userstyles:styles,
+            triggerlineOffset,
+            layout,
+
+        })
+
+    },[
+
+        orientation,
+        cellHeight,
+        cellWidth,
+        cellMinHeight,
+        cellMinWidth,
+        gapProps,
+        viewportheight,
+        viewportwidth,
+        crosscount,
+        styles,
+        triggerlineOffset,
+        layout,
+
+      ])
+    return [
+        cradleHeadStyle,
+        cradleTailStyle,
+        cradleAxisStyle,
+        cradleDividerStyle,
+        triggercellTriggerlineHeadStyle,
+        triggercellTriggerlineTailStyle,
+    ]
+}
