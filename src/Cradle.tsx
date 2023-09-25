@@ -81,6 +81,19 @@ import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteG
 
 import handleCradleStateChanges from './Cradle/cradlestatechanges'
 
+import { 
+
+    useCrosscount, 
+    useRowblanks, 
+    useRowcounts, 
+    useRangerowshift, 
+    useCachedEffect,
+    useFunctionsCallback,
+
+} from './Cradle/cradlehooks'
+
+import { restoreScrollPos } from './Cradle/cradlefunctions'
+
 // support code; process handlers
 import ScrollHandler from './Cradle/scrollhandler'
 import StateHandler from './Cradle/statehandler'
@@ -178,14 +191,13 @@ export const Cradle = ({
 
     } = gridSpecs
 
-    // get viewport context
-    const viewportContext = useContext(ViewportContext)
+    // get contexts
+    const 
+        viewportContext = useContext(ViewportContext),
+        masterDndContext = useContext(MasterDndContext),
+        scrollerDndContext = useContext(ScrollerDndContext),
+        viewportContextRef = useRef(null)
 
-    const masterDndContext = useContext(MasterDndContext)
-
-    const scrollerDndContext = useContext(ScrollerDndContext)
-
-    const viewportContextRef = useRef(null)
     viewportContextRef.current = viewportContext // for closures
 
     // flags
@@ -208,7 +220,7 @@ export const Cradle = ({
         }
     }
 
-    const { height:viewportheight,width:viewportwidth } = getViewportDimensions() // viewportDimensions
+    const { height:viewportheight,width:viewportwidth } = getViewportDimensions()
 
     // cache test
     // zero width and height means the component must be in portal (cache) state
@@ -255,43 +267,7 @@ export const Cradle = ({
     // configuration calculations
 
     // crosscount (also calculated by Scrollblock for deriving Scrollblock length)
-    const crosscount = useMemo(() => { // the number of cells crossing orientation
-
-        if (isCachedRef.current) return 0
-
-        const 
-            viewportcrosslength = 
-                (orientation == 'vertical')?
-                    viewportwidth:
-                    viewportheight,
-
-            crosspadding = 
-                (orientation == 'vertical')?
-                    paddingProps.left + paddingProps.right:
-                    paddingProps.top + paddingProps.bottom,
-
-            crossgap = 
-                (orientation == 'vertical')?
-                    gapProps.column:
-                    gapProps.row,
-
-            // cross length of viewport (gap to match crossLength)
-            viewportcrosslengthforcalc = viewportcrosslength - crosspadding + crossgap,
-
-            cellcrosslength = 
-                ((orientation == 'vertical')?
-                    cellWidth:
-                    cellHeight) 
-                + crossgap,
-
-            cellcrosslengthforcalc = 
-                Math.min(cellcrosslength,viewportcrosslengthforcalc), // result cannot be less than 1
-
-            crosscount = Math.floor(viewportcrosslengthforcalc/cellcrosslengthforcalc)
-
-        return crosscount
-
-    },[
+    const crosscount = useCrosscount({
         orientation, 
         gapProps, 
         paddingProps,
@@ -299,44 +275,16 @@ export const Cradle = ({
         cellHeight, 
         viewportheight, 
         viewportwidth,
-    ])
+        isCachedRef,        
+    })
 
-    const [ baserowblanks, endrowblanks ] = useMemo(()=> {
+    const [ baserowblanks, endrowblanks ] = useRowblanks({
+        crosscount, 
+        listsize, 
+        lowindex, 
+        highindex
+    })
 
-        if (listsize == 0) {
-            return [undefined, undefined]
-        }
-        // add position adjustment for 0
-        const endadjustment =
-            (highindex < 0)?
-                -1:
-                1
-
-        // get initial values
-        let baserowblanks = Math.abs(lowindex) % crosscount
-        let endrowblanks = (Math.abs(highindex) + endadjustment) % crosscount
-
-        // take inverse depending on direction
-        if (lowindex < 0) {
-            baserowblanks =
-                (baserowblanks == 0)? 
-                0:
-                crosscount - baserowblanks
-        }
-
-        if (highindex >= 0) {
-            endrowblanks =
-                (endrowblanks == 0)? 
-                0:
-                crosscount - endrowblanks
-        }
-
-        return [baserowblanks, endrowblanks]
-
-    },[crosscount, listsize, lowindex, highindex])
-
-
-    // various row counts
     const [
 
         cradleRowcount, 
@@ -344,89 +292,8 @@ export const Cradle = ({
         listRowcount,
         runwayRowcount,
 
-    ] = useMemo(()=> {
+    ] = useRowcounts({
 
-        const 
-            viewportLength = 
-                (orientation == 'vertical')?
-                    viewportheight:
-                    viewportwidth,
-
-            gaplength = 
-                (orientation == 'vertical')?
-                    gapProps.column:
-                    gapProps.row
-
-        let baseRowLength
-        if (layout == 'uniform') {
-
-            if (orientation == 'vertical') {
-
-                baseRowLength = cellHeight
-
-            } else {
-
-                baseRowLength = cellWidth
-
-            }
-
-        } else { // layout == 'variable'
-
-            if (orientation == 'vertical') {
-
-                baseRowLength = cellMinHeight
-
-            } else {
-
-                baseRowLength = cellMinWidth
-
-            }
-
-        }
-
-        baseRowLength += gaplength
-
-        const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
-
-        const listRowcount = 
-            listsize == 0?
-            0:
-            Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount)
-
-        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
-
-        let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
-
-        let runwayRowcount
-        if (cradleRowcount == calculatedCradleRowcount) {
-
-            runwayRowcount = runwaySize
-
-        } else { // cradleRowcount is less than calculatedCradleRowCount
-
-            const diff = (calculatedCradleRowcount - cradleRowcount)
-            runwayRowcount = runwaySize - Math.floor(diff/2)
-            runwayRowcount = Math.max(0,runwayRowcount)
-
-        }
-
-        let itemcount = cradleRowcount * crosscount
-        if (itemcount > listsize) {
-
-            itemcount = listsize
-            cradleRowcount = Math.ceil((itemcount + baserowblanks + endrowblanks)/crosscount)
-
-        }
-
-        return [
-            cradleRowcount, 
-            viewportRowcount, 
-            listRowcount,
-            runwayRowcount,
-            layout,
-        ]
-
-    },[
         orientation, 
         gapProps, 
         cellWidth, 
@@ -442,15 +309,12 @@ export const Cradle = ({
         runwaySize,
         crosscount,
         layout,
-    ])
 
-    const rangerowshift = useMemo(() => {
+    })
 
-        return listsize == 0?
-            undefined:
-            Math.floor(lowindex/crosscount)
+    const rangerowshift = useRangerowshift({crosscount,lowindex, listsize})
 
-    },[crosscount,lowindex, listsize])
+    // =========================[ bundles ]===================
 
     const virtualListProps = 
         {
@@ -621,70 +485,13 @@ export const Cradle = ({
     from the user.
 */
     
-    const restoreScrollPos = () => {
-
-        const 
-            { cradlePositionData } = layoutHandler,
-            trackingBlockScrollPos = cradlePositionData.trackingBlockScrollPos,
-            trackingXBlockScrollPos = cradlePositionData.trackingXBlockScrollPos
-
-        if (trackingBlockScrollPos !== null) {
-
-            const viewportElement = viewportContextRef.current.elementRef.current
-
-            let scrollOptions
-            if (cradlePositionData.blockScrollProperty == 'scrollTop') {
-                scrollOptions = {
-                    top:trackingBlockScrollPos,
-                    left:trackingXBlockScrollPos,
-                    behavior:'instant',
-                }
-            } else {
-                scrollOptions = {
-                    left:trackingBlockScrollPos,
-                    top:trackingXBlockScrollPos,
-                    behavior:'instant',
-                }            
-            }
-
-            viewportElement.scroll(scrollOptions)
-
-        }
-
-    }
-
     if (isCacheChange && !isCachedRef.current) {
 
-        restoreScrollPos()        
+        restoreScrollPos(layoutHandler, viewportContext)        
 
     }
 
-    // change state for entering or leaving cache
-    useEffect(()=>{
-
-        if (cradleStateRef.current == 'setup') return // nothing to do
-
-        if (isCachedRef.current && !wasCachedRef.current) { // into cache
-
-            setCradleState('cached')
-
-        } else if (!isCachedRef.current && wasCachedRef.current) { // out of cache
-
-            wasCachedRef.current = false
-
-            if (hasBeenRenderedRef.current) {
-
-                setCradleState('rerenderfromcache')
-
-            } else {
-
-                setCradleState('firstrenderfromcache')
-
-            }
-
-        }
-
-    },[isCachedRef.current, wasCachedRef.current])
+    useCachedEffect({isCachedRef, wasCachedRef, hasBeenRenderedRef, cradleState, setCradleState})
 
     // ===================[ INITIALIZATION effects ]=========================
     // initialization effects are independent of caching
@@ -704,6 +511,8 @@ export const Cradle = ({
 
     useEffect(()=>{
 
+        if (!masterDndContext.installed) return
+
         // available for source drop processing
         scrollerDndContext.cacheAPI = cacheAPI
         scrollerDndContext.stateHandler = stateHandler
@@ -711,64 +520,68 @@ export const Cradle = ({
 
     },[])
 
+    useFunctionsCallback({
+        functionsCallback:userCallbacks.functionsCallback, 
+        serviceHandler
+    })
     //send call-in functions to host
-    useEffect(()=>{
+    // useEffect(()=>{
 
-        if (!userCallbacks.functionsCallback) return
+    //     if (!userCallbacks.functionsCallback) return
 
-        const {
+    //     const {
 
-            scrollToIndex, 
-            scrollToPixel,
-            scrollByPixel,
-            reload, 
-            setListsize, // deprecated
-            setListSize,
-            setListRange,
-            prependIndexCount,
-            appendIndexCount,
-            clearCache, 
+    //         scrollToIndex, 
+    //         scrollToPixel,
+    //         scrollByPixel,
+    //         reload, 
+    //         setListsize, // deprecated
+    //         setListSize,
+    //         setListRange,
+    //         prependIndexCount,
+    //         appendIndexCount,
+    //         clearCache, 
 
-            getCacheIndexMap, 
-            getCacheItemMap,
-            getCradleIndexMap,
-            getPropertiesSnapshot,
+    //         getCacheIndexMap, 
+    //         getCacheItemMap,
+    //         getCradleIndexMap,
+    //         getPropertiesSnapshot,
 
-            // remapIndexes,
-            moveIndex,
-            insertIndex,
-            removeIndex,
+    //         // remapIndexes,
+    //         moveIndex,
+    //         insertIndex,
+    //         removeIndex,
 
-        } = serviceHandler
+    //     } = serviceHandler
 
-        const functions = {
+    //     const functions = {
 
-            scrollToIndex,
-            scrollToPixel,
-            scrollByPixel,
-            reload,
-            setListsize, // deprecated
-            setListSize,
-            setListRange,
-            prependIndexCount,
-            appendIndexCount,
-            clearCache,
+    //         scrollToIndex,
+    //         scrollToPixel,
+    //         scrollByPixel,
+    //         reload,
+    //         setListsize, // deprecated
+    //         setListSize,
+    //         setListRange,
+    //         prependIndexCount,
+    //         appendIndexCount,
+    //         clearCache,
             
-            getCacheIndexMap,
-            getCacheItemMap,
-            getCradleIndexMap,
-            getPropertiesSnapshot,
+    //         getCacheIndexMap,
+    //         getCacheItemMap,
+    //         getCradleIndexMap,
+    //         getPropertiesSnapshot,
 
-            // remapIndexes,
-            moveIndex,
-            insertIndex,
-            removeIndex,
+    //         // remapIndexes,
+    //         moveIndex,
+    //         insertIndex,
+    //         removeIndex,
 
-        }
+    //     }
 
-        userCallbacks.functionsCallback(functions)
+    //     userCallbacks.functionsCallback(functions)
 
-    },[])
+    // },[])
 
     // initialize window scroll listeners
     useEffect(() => {
