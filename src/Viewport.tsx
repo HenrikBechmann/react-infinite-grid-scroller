@@ -44,6 +44,8 @@ const ViewportController = (props) => {
 
     const viewportElementRef = useRef(null)
 
+    // console.log('running ViewportController')
+
     if (masterDndContext.installed) {
 
         return <DndViewport {...props}/>
@@ -87,9 +89,12 @@ export const Viewport = ({
     } = gridSpecs
 
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
+    
+    // console.log('scrollerID, masterDndContext.scrollerID, masterDndContext.setViewportState',
+    //     scrollerID,masterDndContext.scrollerID, !!masterDndContext.setViewportState)
 
-    if ((scrollerID == masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
-
+    if ((scrollerID === masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
+        // console.log('setting setViewportState')
         masterDndContext.setViewportState = setViewportState
 
     }

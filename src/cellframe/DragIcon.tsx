@@ -66,7 +66,7 @@ const DragIcon = props => {
 
         },
 
-        canDrag:true,
+        // canDrag:true,
 
     }},[itemID, dndOptions])
 

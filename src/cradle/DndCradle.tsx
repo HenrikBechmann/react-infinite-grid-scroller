@@ -60,7 +60,7 @@ const DndCradle = (props) => {
             //     item.scrollerID, dropResult.target.scrollerID)
             if (item.scrollerID == dropResult.target.scrollerID) {
 
-                 serviceHandler.moveIndex(toIndex, fromIndex)
+                serviceHandler.moveIndex(toIndex, fromIndex)
                 scrollerDndContext.displacedIndex = (fromIndex > toIndex)? toIndex + 1:toIndex - 1
 
             } else {
