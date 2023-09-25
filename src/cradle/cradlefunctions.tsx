@@ -18,7 +18,7 @@ import InterruptHandler from './interrupthandler'
 import ServiceHandler from './servicehandler'
 import StylesHandler from './styleshandler'
 
-export const restoreScrollPos = (layoutHandler, viewportContext) => {
+export const restoreScrollPos = ({layoutHandler, viewportElement}) => {
 
     const 
         { cradlePositionData } = layoutHandler,
@@ -26,8 +26,6 @@ export const restoreScrollPos = (layoutHandler, viewportContext) => {
         trackingXBlockScrollPos = cradlePositionData.trackingXBlockScrollPos
 
     if (trackingBlockScrollPos !== null) {
-
-        const viewportElement = viewportContext.current.elementRef.current
 
         let scrollOptions
         if (cradlePositionData.blockScrollProperty == 'scrollTop') {

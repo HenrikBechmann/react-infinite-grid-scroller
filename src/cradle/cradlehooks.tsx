@@ -799,3 +799,33 @@ export const useCradleStyles = ({
         triggercellTriggerlineTailStyle,
     ]
 }
+
+export const useCradleStateStandardEffects = ({
+    cradleState,
+    layoutHandler,
+    setCradleState
+}) => {
+    useEffect(()=> { 
+
+        switch (cradleState) {
+
+            // repositioningRender and repositioningContinuation are toggled to generate continuous 
+            // repositioning renders
+            case 'repositioningRender': // no-op
+                break
+
+            case 'ready':
+
+                if (layoutHandler.boundaryNotificationsRequired()) {
+
+                    setCradleState('triggerboundarynotications')
+
+                }
+
+                break
+
+        }
+
+    },[cradleState])
+}
+

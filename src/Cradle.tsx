@@ -71,15 +71,15 @@ import React, {
     useCallback, 
 } from 'react'
 
-import { useDrop, DropTargetMonitor} from 'react-dnd'
-
+// option for CradleController
 import DndCradle from './Cradle/DndCradle'
 
+// contexts
 import { ViewportContext } from './Viewport'
+import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
 
-import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
-
-import handleCradleStateChanges from './Cradle/cradlestatechanges'
+// main state change machine
+import { useCradleStateLayoutEffects } from './Cradle/cradlelayouteffects'
 
 import { // custom hooks
     // calculations
@@ -102,15 +102,18 @@ import { // custom hooks
     usePivotEffect,
     // style
     useCradleStyles,
+    // standard state changes
+    useCradleStateStandardEffects,
 } from './Cradle/cradlehooks'
 
+// support utilities
 import { 
     restoreScrollPos, 
     getCradleHandlers, 
     getViewportDimensions 
 } from './Cradle/cradlefunctions'
 
-// called to choose between dnd or no dnd for CellFrame
+// called to choose between dnd or no dnd for Cradle
 const CradleController = props => {
 
     const masterDndContext = useContext(MasterDndContext)
@@ -136,7 +139,7 @@ export default CradleController
 // for children
 export const CradleContext = React.createContext(null)
 
-// component
+// main component
 export const Cradle = ({ 
         gridSpecs,
         paddingProps,
@@ -203,12 +206,13 @@ export const Cradle = ({
         viewportContext = useContext(ViewportContext),
         masterDndContext = useContext(MasterDndContext),
         scrollerDndContext = useContext(ScrollerDndContext),
+        // for closures
         viewportContextRef = useRef(null)
 
     viewportContextRef.current = viewportContext // for closures
 
-    // flags
     const 
+        // flags
         isMountedRef = useRef(true),
         isCachedRef = useRef(false),
         wasCachedRef = useRef(false),
@@ -223,7 +227,7 @@ export const Cradle = ({
         viewportElement:viewportContext.elementRef.current
     })
 
-    // --------------------[ cache test ]----------------------
+    // --------------------[ in-cache test ]----------------------
 
     // zero width and height means the component must be in portal (cache) state
     const 
@@ -287,7 +291,7 @@ export const Cradle = ({
     // used to calculate content config
     const rangerowshift = useRangerowshift({crosscount,lowindex, listsize})
 
-    // =========================[ bundles ]===================
+    // =========================[ resource bundles ]===================
 
     const virtualListProps = 
         {
@@ -337,9 +341,8 @@ export const Cradle = ({
     )
 
     // bundle all cradle props to pass to handlers - ultimately cradleParametersRef
-
-    // cradle scaffold element refs
     const 
+        // cradle scaffold element refs
         headCradleElementRef = useRef(null),
         tailCradleElementRef = useRef(null),
         axisCradleElementRef = useRef(null),
@@ -357,7 +360,7 @@ export const Cradle = ({
         )
 
     const cradleInheritedPropertiesRef = useRef(null) // access by closures and support callbacks
-    // up to date values
+    // up to date values for handlers
     cradleInheritedPropertiesRef.current = {
         // gridSpecs
         orientation, layout,
@@ -378,21 +381,6 @@ export const Cradle = ({
         ONAFTERSCROLL_TIMEOUT, MAX_CACHE_OVER_RUN, 
         scrollerContext,
 
-    }
-
-    // passed to cellFrame content (user content) if requested
-    const scrollerPropertiesRef = useRef(null)
-    scrollerPropertiesRef.current = {
-        orientation, gapProps, paddingProps, layout,
-        cellHeight, cellWidth, cellMinHeight, cellMinWidth,
-        virtualListProps,
-        cradleContentProps,
-        cache,
-        dndInstalled:masterDndContext.installed,
-        dndEnabled:(masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled),
-        cacheMax,
-        startingIndex,
-        scrollerID,
     }
 
     // configuration properties to share with handlers
@@ -417,6 +405,21 @@ export const Cradle = ({
         // for stateHandler
         cradleStateRef,
         setCradleState,
+    }
+
+    // passed to cellFrame content (user content) if requested
+    const scrollerPropertiesRef = useRef(null)
+    scrollerPropertiesRef.current = {
+        orientation, gapProps, paddingProps, layout,
+        cellHeight, cellWidth, cellMinHeight, cellMinWidth,
+        virtualListProps,
+        cradleContentProps,
+        cache,
+        dndInstalled:masterDndContext.installed,
+        dndEnabled:(masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled),
+        cacheMax,
+        startingIndex,
+        scrollerID,
     }
 
     // placeholder in cradleParameters to make available individual handlers
@@ -474,10 +477,14 @@ export const Cradle = ({
     
     if (isCacheChange && !isCachedRef.current) {
 
-        restoreScrollPos(layoutHandler, viewportContext)        
+        restoreScrollPos({
+            viewportElement:viewportContext.current.elementRef.current,
+            layoutHandler
+        })
 
     }
 
+    // respond to change of scroller caching state 
     useCachedEffect({isCachedRef, wasCachedRef, hasBeenRenderedRef, cradleState, setCradleState})
 
     // ===================[ INITIALIZATION effects ]=========================
@@ -527,7 +534,7 @@ export const Cradle = ({
     // change listsize, caching, resize (UI resize of the viewport), reconfigure, or pivot
 
     // inernal callback: the new list size will always be less than current listsize
-    // invoked if getItem returns null
+    // invoked if getItem returns null (deprecated)
     const nullItemSetMaxListsize = useNullItemCallback({
         listsize:cradleInternalPropertiesRef.current.virtualListProps.size,
         serviceHandler,
@@ -535,7 +542,7 @@ export const Cradle = ({
         cacheAPI,
     })
 
-    // change cache or cacheMax
+    // change cache or cacheMax properties
     useCachingChangeEffect({
         cache, 
         cacheMax, 
@@ -585,7 +592,7 @@ export const Cradle = ({
         setCradleState,
     })
 
-    // a new getItem function implies the need to reload
+    // a new getItemPack function implies the need to reload
     useItemPackEffect({
         getItem, 
         getItemPack,
@@ -639,43 +646,25 @@ export const Cradle = ({
 
     // =====================[ STATE MANAGEMENT ]==========================
 
-    // this is the core state engine (about 32 states), using named states
+    // this is the core state engine (over 30 states), using named states
     // useLayoutEffect for suppressing flashes
-    useLayoutEffect(()=>{
-        handleCradleStateChanges({ // delegated to a very long switch statement
-            cradleState,
-            cradleParameters, 
-            isCachedRef, 
-            wasCachedRef,
-            hasBeenRenderedRef,
-            nullItemSetMaxListsize,
-        })
-
-    },[cradleState])
+    useCradleStateLayoutEffects({ // delegated to a very long switch statement
+        // state change
+        cradleState,
+        // support
+        cradleParameters, 
+        isCachedRef, 
+        wasCachedRef,
+        hasBeenRenderedRef,
+        nullItemSetMaxListsize,
+    })
 
     // standard rendering states (2 states)
-    useEffect(()=> { 
-
-        switch (cradleState) {
-
-            // repositioningRender and repositioningContinuation are toggled to generate continuous 
-            // repositioning renders
-            case 'repositioningRender': // no-op
-                break
-
-            case 'ready':
-
-                if (layoutHandler.boundaryNotificationsRequired()) {
-
-                    setCradleState('triggerboundarynotications')
-
-                }
-
-                break
-
-        }
-
-    },[cradleState])
+    useCradleStateStandardEffects({
+        cradleState,
+        layoutHandler,
+        setCradleState
+    })
 
     // ==========================[ RENDER ]===========================
 
@@ -706,7 +695,7 @@ export const Cradle = ({
         triggercellTriggerlineTailStyle
     ])
 
-    const contextvalueRef = useRef({
+    const cradleContextRef = useRef({
         scrollerPropertiesRef, 
         cacheAPI, 
         nullItemSetMaxListsize,
@@ -717,7 +706,7 @@ export const Cradle = ({
 
 
     // display the cradle components, the ScrollTracker, or null
-    return <CradleContext.Provider value = { contextvalueRef.current }>
+    return <CradleContext.Provider value = { cradleContextRef.current }>
 
         {(cradleState == 'repositioningRender')?null:
         <div 
