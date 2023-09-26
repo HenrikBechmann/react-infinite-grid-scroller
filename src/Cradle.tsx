@@ -86,7 +86,7 @@ import { // custom hooks
     useRowcounts, 
     useRangerowshift,
     // configuration
-    useCachedEffect,
+    useCachedEffect, // component is cached or uncached
     useFunctionsCallback,
     useEventListenerEffect,
     useObserverEffect,
