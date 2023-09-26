@@ -91,7 +91,7 @@ import { // custom hooks
     useEventListenerEffect,
     useObserverEffect,
     // reconfiguration
-    useNullItemCallback,
+    useNullItemCallback, // deprecated
     useCachingChangeEffect,
     useResizingEffect,
     useReconfigureEffect,
@@ -148,7 +148,7 @@ export const Cradle = ({
         setVirtualListSize,
         setVirtualListRange,
         startingIndex, 
-        getItem, 
+        getItem, // deprecated
         getItemPack,
         getExpansionCount,
         placeholder, 
@@ -169,7 +169,7 @@ export const Cradle = ({
         ONAFTERSCROLL_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
         MAX_CACHE_OVER_RUN,
-        VARIABLE_MEASUREMENTS_TIMEOUT,
+        VARIABLE_MEASUREMENTS_TIMEOUT, // not currently used
         scrollerContext,
         handlerListRef,
 
@@ -286,10 +286,10 @@ export const Cradle = ({
         gapProps, layout,
     })
 
-    // used to calculate content config
+    // used to calculate content config -- offset from base 0 
     const rangerowshift = useRangerowshift({crosscount,lowindex, listsize})
 
-    // =========================[ resource bundles ]===================
+    // =========================[ RESOURCE BUNDLES ]===================
 
     const virtualListProps = 
         {
@@ -483,7 +483,13 @@ export const Cradle = ({
     }
 
     // respond to change of scroller caching state 
-    useCachedEffect({isCachedRef, wasCachedRef, hasBeenRenderedRef, cradleState, setCradleState})
+    useCachedEffect({
+        isCachedRef, 
+        wasCachedRef, 
+        hasBeenRenderedRef, 
+        cradleState, 
+        setCradleState
+    })
 
     // ===================[ INITIALIZATION effects ]=========================
     // initialization effects are independent of caching
@@ -542,8 +548,10 @@ export const Cradle = ({
 
     // change cache or cacheMax properties
     useCachingChangeEffect({
+        // possible changes
         cache, 
         cacheMax, 
+        // support
         cradleStateRef, 
         contentHandler, 
         serviceHandler, 
@@ -554,6 +562,7 @@ export const Cradle = ({
     // trigger viewportresizing response based on viewport state
     useResizingEffect({
         isResizing:viewportContextRef.current.isResizing,
+        // support
         cradleStateRef, 
         isCachedRef, 
         wasCachedRef,
@@ -623,7 +632,7 @@ export const Cradle = ({
         cradleHeadStyle,
         cradleTailStyle,
         cradleAxisStyle,
-        cradleDividerStyle,
+        cradleDividerStyle, // for debug
         triggercellTriggerlineHeadStyle,
         triggercellTriggerlineTailStyle,
     ] = useCradleStyles({
@@ -654,12 +663,13 @@ export const Cradle = ({
         isCachedRef, 
         wasCachedRef,
         hasBeenRenderedRef,
-        nullItemSetMaxListsize,
+        nullItemSetMaxListsize, // deprecated
     })
 
     // standard rendering states (2 states)
     useCradleStateStandardEffects({
         cradleState,
+        // support
         layoutHandler,
         setCradleState
     })
@@ -668,6 +678,8 @@ export const Cradle = ({
 
     const cradleContent = contentHandler.content
 
+    // trigger lines are embedded in a single CellFrame, based on a flag setting
+    // passed through cradleContenxt
     const triggercellTriggerlinesRef = useRef(null)
     triggercellTriggerlinesRef.current = useMemo(()=>{
 
