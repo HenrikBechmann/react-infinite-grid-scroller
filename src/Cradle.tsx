@@ -476,7 +476,7 @@ export const Cradle = ({ // exported for DndCradle
     if (isCacheChange && !isCachedRef.current) {
 
         restoreScrollPos({
-            viewportElement:viewportContext.current.elementRef.current,
+            viewportElement:viewportContext.elementRef.current,
             layoutHandler
         })
 
