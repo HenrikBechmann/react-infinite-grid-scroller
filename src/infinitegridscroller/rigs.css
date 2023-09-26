@@ -1,4 +1,4 @@
-/*cellframe.css*/
+/*rigs.css*/
 .rigs-source-highlight {
     box-shadow: 0px 0px 6px 6px darkorange;
     border-radius: 8px;
@@ -43,6 +43,28 @@
     100% {
         box-shadow: 0 0 0 0 transparent;
         opacity: 1;
+    }
+
+}
+
+.rigs-viewport-highlight {
+    border-radius: 8px;
+    box-shadow: 0 0 3px 6px brown;
+    transition: box-shadow .5s;
+}
+
+.rigs-viewport-highlightx {
+    border-radius: 8px;
+    animation: rigs-viewport-increase .5s;
+}
+
+@keyframes rigs-viewport-increase {
+
+    0% {
+        box-shadow: 0 0 0 0 transparent;
+    }
+    100%  { 
+        box-shadow: 0 0 0 8px brown;
     }
 
 }

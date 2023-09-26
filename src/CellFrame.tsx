@@ -46,7 +46,7 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // p
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
 
 import Placeholder from './CellFrame/Placeholder' // default
-import './cellframe/cellframe.css'
+import './InfiniteGridScroller/rigs.css'
 
 // import { ViewportContext } from './Viewport'
 import DndCellFrame from './CellFrame/DndCellFrame'

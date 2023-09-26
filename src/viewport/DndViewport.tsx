@@ -28,9 +28,19 @@ const DndViewport = (props) => {
 
     })
 
+    // console.log('isOver, canDrop',targetData.isOver, targetData.canDrop)
+
     useEffect(()=>{
 
-    },[targetData.isOver])
+        const viewportElement = viewportElementRef.current
+
+        if (targetData.isOver && targetData.canDrop) {
+            viewportElement.classList.add('rigs-viewport-highlight')
+        } else {
+            viewportElement.classList.remove('rigs-viewport-highlight')
+        }
+
+    },[targetData.isOver, targetData.canDrop])
 
     useEffect(()=>{
 
