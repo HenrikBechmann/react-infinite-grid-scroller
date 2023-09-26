@@ -28,6 +28,7 @@ import {
 import DndViewport from './Viewport/DndViewport'
 
 import DndDragBar from './Viewport/DndDragBar'
+import DndScrollTab from './Viewport/DndScrollTab'
 
 import { MasterDndContext } from './InfiniteGridScroller'
 
@@ -35,8 +36,6 @@ import { MasterDndContext } from './InfiniteGridScroller'
 import ScrollTracker from './Viewport/ScrollTracker'
 
 export const ViewportContext = React.createContext(null) // for children
-
-import scrollicon from "../keyboard_double_arrow_right_FILL0_wght400_GRAD0_opsz24.png"
 
 const ViewportController = (props) => {
 
@@ -69,7 +68,8 @@ export const Viewport = ({
     VIEWPORT_RESIZE_TIMEOUT,
     useScrollTracker,
     viewportElementRef,
-    
+    showScrollTabs,
+
 }) => {
 
     // -----------------------[ initialize ]------------------
@@ -190,6 +190,10 @@ export const Viewport = ({
     // ----------------------------------[ calculate config values ]--------------------------------
 
     // styles
+    const divframestyleRef = useRef<CSSProperties>({
+        position:'absolute',
+        inset:'0',
+    })
     const divlinerstyleRef = useRef(null)
 
     // initialize with inherited styles
@@ -268,7 +272,7 @@ export const Viewport = ({
             scrollerID = { scrollerID }
         />
         }
-
+        <div data-type = 'viewport-frame' style = {divframestyleRef.current}>
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }
@@ -277,10 +281,12 @@ export const Viewport = ({
         >
             { (viewportState != 'setup') && children }
         </div>
+        {showScrollTabs && <DndScrollTab />}
         {useScrollTracker && <ScrollTracker 
             scrollTrackerAPIRef = {scrollTrackerAPIRef}
             styles = { styles.scrolltracker }
         />}
+        </div>
     </ViewportContext.Provider>
     
 } // Viewport

@@ -53,18 +53,22 @@
     transition: box-shadow .5s;
 }
 
-.rigs-viewport-highlightx {
+.rigs-scrolltab-highlight {
     border-radius: 8px;
-    animation: rigs-viewport-increase .5s;
+    animation: rigs-scrolltab-easein .5s;
+    opacity:0.7;
+    box-shadow:-3px -3px 3px 3px brown;
 }
 
-@keyframes rigs-viewport-increase {
+@keyframes rigs-scrolltab-easein {
 
     0% {
+        opacity:0;
         box-shadow: 0 0 0 0 transparent;
     }
     100%  { 
-        box-shadow: 0 0 0 8px brown;
+        opacity:0.7;
+        box-shadow:-3px -3px 3px 3px brown;
     }
 
 }
