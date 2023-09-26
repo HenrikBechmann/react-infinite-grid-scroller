@@ -315,9 +315,9 @@ export const Cradle = ({ // exported for DndCradle
      const cradleContentProps = cradleContentPropsRef.current
      Object.assign(cradleContentProps, 
          {
-             cradleRowcount:cradleRowcount,
-             viewportRowcount:viewportRowcount,
-             runwayRowcount:runwayRowcount,
+             cradleRowcount,
+             viewportRowcount,
+             runwayRowcount,
          }
      )
 
