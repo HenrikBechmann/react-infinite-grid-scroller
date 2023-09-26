@@ -138,42 +138,42 @@ export default CradleController
 export const CradleContext = React.createContext(null)
 
 // main component
-export const Cradle = ({ 
-        gridSpecs,
-        paddingProps,
-        gapProps,
-        // basics
-        runwaySize, 
-        virtualListSpecs,
-        setVirtualListSize,
-        setVirtualListRange,
-        startingIndex, 
-        getItem, // deprecated
-        getItemPack,
-        getExpansionCount,
-        placeholder, 
-        placeholderMessages,
-        userCallbacks,
-        styles,
-        triggerlineOffset,
-        cache,
-        cacheMax,
-        // for debugging
-        scrollerID,
-        // for handler list
-        cacheAPI,
-        // system
-        usePlaceholder,
-        // useScrollTracker,
-        showAxis,
-        ONAFTERSCROLL_TIMEOUT,
-        IDLECALLBACK_TIMEOUT,
-        MAX_CACHE_OVER_RUN,
-        VARIABLE_MEASUREMENTS_TIMEOUT, // not currently used
-        scrollerContext,
-        handlerListRef,
+export const Cradle = ({ // exported for DndCradle
+    gridSpecs,
+    paddingProps,
+    gapProps,
+    // basics
+    runwaySize, 
+    virtualListSpecs,
+    setVirtualListSize,
+    setVirtualListRange,
+    startingIndex, 
+    getItem, // deprecated
+    getItemPack,
+    getExpansionCount,
+    placeholder, 
+    placeholderMessages,
+    userCallbacks,
+    styles,
+    triggerlineOffset,
+    cache,
+    cacheMax,
+    // for debugging
+    scrollerID,
+    // for handler list
+    cacheAPI,
+    // system
+    usePlaceholder,
+    // useScrollTracker,
+    showAxis,
+    ONAFTERSCROLL_TIMEOUT,
+    IDLECALLBACK_TIMEOUT,
+    MAX_CACHE_OVER_RUN,
+    VARIABLE_MEASUREMENTS_TIMEOUT, // not currently used
+    scrollerContext,
+    handlerListRef,
 
-    }) => {
+}) => {
 
     // ========================[ DATA SETUP ]========================
 
