@@ -1,11 +1,18 @@
 /*rigs.css*/
+:root {
+    --rigs-highlight-source: darkorange;
+    --rigs-highlight-target: black;
+    --rigs-highlight-dropped: darkorange;
+    --rigs-highlight-scrolltab: brown;
+}
+
 .rigs-source-highlight {
-    box-shadow: 0px 0px 6px 6px darkorange;
+    box-shadow: 0px 0px 6px 6px var(--rigs-highlight-source);
     border-radius: 8px;
 }
 
 .rigs-target-highlight {
-    box-shadow: 0 0 0 6px black;
+    box-shadow: 0 0 0 6px var(--rigs-highlight-target);
     border-radius: 8px;
     opacity: 0.3;
 }
@@ -13,14 +20,14 @@
 .rigs-dropped-highlight {
 
     border-radius: 8px;
-    animation: rigs-gradual-release 1s /*linear 0.05s*/;
+    animation: rigs-dropped-release 1s;
 }
 
-@keyframes rigs-gradual-release {
+@keyframes rigs-dropped-release {
 
-    20% {box-shadow: 0 0 6px 6px darkorange;}
+    20% {box-shadow: 0 0 6px 6px var(--rigs-highlight-dropped);}
 
-    50% {box-shadow: 0 0 6px 6px transparent}
+    50% {box-shadow: 0 0 6px 6px transparent;}
 
 }
 
@@ -32,7 +39,7 @@
 @keyframes rigs-target-fade {
 
     0%  { 
-        box-shadow: 0 0 0 6px black;
+        box-shadow: 0 0 0 6px var(--rigs-highlight-target);
         opacity: 0.3;
     }
 
@@ -53,7 +60,7 @@
     border-radius: 8px;
     animation: rigs-scrolltab-easein-top .5s;
     opacity:0.7;
-    box-shadow:-3px 3px 3px 3px brown;
+    box-shadow:-3px 3px 3px 3px var(--rigs-highlight-scrolltab);
 }
 
 @keyframes rigs-scrolltab-easein-top {
@@ -64,7 +71,7 @@
     }
     100%  { 
         opacity:0.7;
-        box-shadow:-3px 3px 3px 3px brown;
+        box-shadow:-3px 3px 3px 3px var(--rigs-highlight-scrolltab);
     }
 
 }
@@ -73,7 +80,7 @@
     border-radius: 8px;
     animation: rigs-scrolltab-easein-bottom .5s;
     opacity:0.7;
-    box-shadow:-3px -3px 3px 3px brown;
+    box-shadow:-3px -3px 3px 3px var(--rigs-highlight-scrolltab);
 }
 
 @keyframes rigs-scrolltab-easein-bottom {
@@ -84,7 +91,7 @@
     }
     100%  { 
         opacity:0.7;
-        box-shadow:-3px -3px 3px 3px brown;
+        box-shadow:-3px -3px 3px 3px var(--rigs-highlight-scrolltab);
     }
 
 }
@@ -93,7 +100,7 @@
     border-radius: 8px;
     animation: rigs-scrolltab-easein-left .5s;
     opacity:0.7;
-    box-shadow:3px -3px 3px 3px brown;
+    box-shadow:3px -3px 3px 3px var(--rigs-highlight-scrolltab);
 }
 
 @keyframes rigs-scrolltab-easein-left {
@@ -104,7 +111,7 @@
     }
     100%  { 
         opacity:0.7;
-        box-shadow:3px -3px 3px 3px brown;
+        box-shadow:3px -3px 3px 3px var(--rigs-highlight-scrolltab);
     }
 
 }
