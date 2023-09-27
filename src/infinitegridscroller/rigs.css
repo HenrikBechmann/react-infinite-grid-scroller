@@ -53,7 +53,7 @@
     border-radius: 8px;
     animation: rigs-scrolltab-easein-top .5s;
     opacity:0.7;
-    box-shadow:-3px -3px 3px 3px brown;
+    box-shadow:-3px 3px 3px 3px brown;
 }
 
 @keyframes rigs-scrolltab-easein-top {
@@ -64,7 +64,7 @@
     }
     100%  { 
         opacity:0.7;
-        box-shadow:-3px -3px 3px 3px brown;
+        box-shadow:-3px 3px 3px 3px brown;
     }
 
 }
@@ -93,7 +93,7 @@
     border-radius: 8px;
     animation: rigs-scrolltab-easein-left .5s;
     opacity:0.7;
-    box-shadow:-3px 3px 3px 3px brown;
+    box-shadow:3px -3px 3px 3px brown;
 }
 
 @keyframes rigs-scrolltab-easein-left {
@@ -104,7 +104,7 @@
     }
     100%  { 
         opacity:0.7;
-        box-shadow:3px 3px 3px 3px brown;
+        box-shadow:3px -3px 3px 3px brown;
     }
 
 }

@@ -47,6 +47,7 @@ const DndScrollTab = (props) => {
                 right = '0'
                 bottom = null
                 left = null
+                borderRadius = '0 0 0 8px'
                 break
             }
             case 'bottomright': {
@@ -58,6 +59,7 @@ const DndScrollTab = (props) => {
                 right = '0'
                 bottom = '0'
                 left = null
+                borderRadius = '8px 0 0 0'
                 break
             }
             case 'bottomleft': {
@@ -66,6 +68,7 @@ const DndScrollTab = (props) => {
                 right = null
                 bottom = '0'
                 left = '0'
+                borderRadius = '0 8px 0 0'
                 break
             }
         }
@@ -77,18 +80,20 @@ const DndScrollTab = (props) => {
         alignItems:'center',
         zIndex:6,
         justifyContent:'center',
-        transform,
         backgroundColor:'white',
         position:'absolute',
         top,
         right,
         bottom,
         left,
-        borderRadius:'8px 0 0 0',
-        // boxShadow:'-3px -3px 3px 3px lightgray',
+        borderRadius,
         border:'1px solid black',
         height:'35px',
         width:'35px',
+    })
+
+    const imgstyleRef = useRef({
+        transform,
     })
 
     useEffect(()=>{
@@ -96,7 +101,7 @@ const DndScrollTab = (props) => {
     },[className])
 
     return <div ref = {scrolltabRef} style = {stylesRef.current} data-type = 'scroll-tab'> 
-        <img src = {scrollicon} />
+        <img style = {imgstyleRef.current} src = {scrollicon} />
     </div>
 
 }
