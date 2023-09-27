@@ -411,9 +411,8 @@ export const Cradle = ({ // exported for DndCradle
         cradleContentProps,
         cache,
         dndInstalled:masterDndContext.installed,
-        // dndEnabled:((masterDndContext.installed && masterDndContext.enabled) || 
-        //     (masterDndContext.installed && scrollerDndContext.dndOptions.enabled)),
-        dndEnabled:(masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled),
+        dndEnabled:(masterDndContext.installed && (
+            masterDndContext.enabled || scrollerDndContext.dndOptions.enabled)),
         cacheMax,
         startingIndex,
         scrollerID,

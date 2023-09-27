@@ -101,14 +101,14 @@ const DndCellFrame = (props) => {
 
     useEffect (() => {
 
-        const isDnd = (masterDndContext.installed && masterDndContext.enabled && scrollerDndContext.dndOptions.enabled) // && enabled)
-        // const isDnd = scrollerPropertiesRef.current.dndEnabled
+        const isDnd = (masterDndContext.installed && 
+            (masterDndContext.enabled || scrollerDndContext.dndOptions.enabled))
 
         if (isDndRef.current !== isDnd) {
             isDndRef.current = isDnd
         }
 
-    },[masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions?.enabled])
+    },[masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
 
     const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext}
 
