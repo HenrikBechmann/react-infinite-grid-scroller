@@ -175,7 +175,7 @@ export const Cradle = ({ // exported for DndCradle
 
 }) => {
 
-    // ========================[ DATA SETUP ]========================
+    // ========================[ 1. DATA SETUP ]========================
 
     // unpack core list specs
     const { 
@@ -207,7 +207,7 @@ export const Cradle = ({ // exported for DndCradle
         // for closures
         viewportContextRef = useRef(null)
 
-    viewportContextRef.current = viewportContext // for closures
+    viewportContextRef.current = viewportContext
 
     const 
         // flags
@@ -289,7 +289,7 @@ export const Cradle = ({ // exported for DndCradle
     // used to calculate content config -- offset from base 0 
     const rangerowshift = useRangerowshift({crosscount,lowindex, listsize})
 
-    // =========================[ RESOURCE BUNDLES ]===================
+    // =========================[ 2. ASSEMBLE RESOURCE BUNDLES ]===================
 
     const virtualListProps = 
         {
@@ -338,7 +338,7 @@ export const Cradle = ({ // exported for DndCradle
         }
     )
 
-    // bundle all cradle props to pass to handlers - ultimately cradleParametersRef
+    // bundle cradle props to pass to handlers - ultimately cradleParametersRef
     const 
         // cradle scaffold element refs
         headCradleElementRef = useRef(null),
@@ -457,7 +457,7 @@ export const Cradle = ({ // exported for DndCradle
     // possibly for dnd
     handlerListRef.current = handlersRef.current
 
-    // =======================[ INTERCEPT CACHING STATE CHANGE ]=========================
+    // =======================[ 3. INTERCEPT CACHING STATE CHANGE ]=========================
 
 /*    
     Intercept change in caching status:
@@ -491,7 +491,7 @@ export const Cradle = ({ // exported for DndCradle
         setCradleState
     })
 
-    // ===================[ INITIALIZATION effects ]=========================
+    // ===================[ 4. INITIALIZATION EFFECTS ]=========================
     // initialization effects are independent of caching
 
     // clear mounted flag on unmount
@@ -534,7 +534,7 @@ export const Cradle = ({ // exported for DndCradle
     // observer support
     useObserverEffect({interruptHandler})
 
-    // =====================[ RECONFIGURATION effects ]======================
+    // =====================[ 5. RECONFIGURATION EFFECTS ]======================
     // change listsize, caching, resize (UI resize of the viewport), reconfigure, or pivot
 
     // inernal callback: the new list size will always be less than current listsize
@@ -603,6 +603,7 @@ export const Cradle = ({ // exported for DndCradle
     useItemPackEffect({
         getItem, 
         getItemPack,
+        // support
         cradleStateRef,
         interruptHandler,
         setCradleState,
@@ -612,8 +613,8 @@ export const Cradle = ({ // exported for DndCradle
     usePivotEffect({
         // pivot
         orientation, 
-        layout,
         // support
+        layout,
         gapProps,
         isCachedRef,
         hasBeenRenderedRef,
@@ -625,7 +626,7 @@ export const Cradle = ({ // exported for DndCradle
 
     })
 
-    // =====================[ STYLES ]===========================
+    // =====================[ 6. STYLES ]===========================
 
     // styles for the six scaffold components
     const [
@@ -651,7 +652,7 @@ export const Cradle = ({ // exported for DndCradle
         stylesHandler,
     })
 
-    // =====================[ STATE MANAGEMENT ]==========================
+    // =====================[ 7. STATE MANAGEMENT ]==========================
 
     // this is the core state engine (over 30 states), using named states
     // useLayoutEffect for suppressing flashes
@@ -674,7 +675,7 @@ export const Cradle = ({ // exported for DndCradle
         setCradleState
     })
 
-    // ==========================[ RENDER ]===========================
+    // ==========================[ 8. RENDER ]===========================
 
     const cradleContent = contentHandler.content
 
