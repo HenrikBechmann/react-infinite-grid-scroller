@@ -1,7 +1,7 @@
 // DndScrollTab.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useEffect, useContext, useRef, CSSProperties } from 'react'
+import React, {useEffect, useContext, useRef, useMemo, CSSProperties } from 'react'
 
 import { useDrop, DropTargetMonitor} from 'react-dnd'
 
@@ -12,21 +12,78 @@ import scrollicon from "../../assets/keyboard_double_arrow_right_FILL0_wght400_G
 const DndScrollTab = (props) => {
 
     const scrolltabRef = useRef(null)
-    const { presentationOrder, gridProps, showScrollTabs} = props // head, tail
-    // const { orientation } = gridProps
+    const { position, gridSpecs } = props // head, tail
+    const { orientation } = gridSpecs
+    const [className, location] = useMemo(()=>{
+
+        let className, location
+        if (position == 'head') {
+            if (orientation == 'vertical') {
+                className = 'rigs-scrolltab-highlight-top'
+                location = 'topright'
+            } else {
+                className = 'rigs-scrolltab-highlight-bottom'
+                location = 'bottomright'
+            }
+        } else { // tail
+            if (orientation == 'vertical') {
+                className = 'rigs-scrolltab-highlight-bottom'
+                location = 'bottomright'
+            } else {
+                className = 'rigs-scrolltab-highlight-left'
+                location = 'bottomleft'
+            }
+        }
+        return [className, location]
+    },[orientation, position])
+
+    const [transform, top, right, bottom, left, borderRadius] = useMemo(()=>{
+
+        let transform, top, right, bottom, left, borderRadius
+        switch (location) {
+            case 'topright': {
+                transform = 'rotate(0.75turn)'
+                top = '0'
+                right = '0'
+                bottom = null
+                left = null
+                break
+            }
+            case 'bottomright': {
+                transform = 
+                    orientation == 'vertical'?
+                        'rotate(0.25turn)':
+                        'rotate(0turn)'
+                top = null
+                right = '0'
+                bottom = '0'
+                left = null
+                break
+            }
+            case 'bottomleft': {
+                transform = 'rotate(0.5turn)'
+                top = null
+                right = null
+                bottom = '0'
+                left = '0'
+                break
+            }
+        }
+        return [transform, top, right, bottom, left, borderRadius]
+    },[location, orientation])
+
     const stylesRef = useRef<CSSProperties>({
         display:'flex',
         alignItems:'center',
         zIndex:6,
         justifyContent:'center',
-        transform:'rotate(0.75turn)',
+        transform,
         backgroundColor:'white',
-        // opacity:'0.7',
         position:'absolute',
-        top:'0',
-        right:'0',
-        bottom:null,
-        left:null,
+        top,
+        right,
+        bottom,
+        left,
         borderRadius:'8px 0 0 0',
         // boxShadow:'-3px -3px 3px 3px lightgray',
         border:'1px solid black',
@@ -35,8 +92,8 @@ const DndScrollTab = (props) => {
     })
 
     useEffect(()=>{
-        scrolltabRef.current.classList.add('rigs-scrolltab-highlight')
-    },[])
+        scrolltabRef.current.classList.add(className)
+    },[className])
 
     return <div ref = {scrolltabRef} style = {stylesRef.current} data-type = 'scroll-tab'> 
         <img src = {scrollicon} />

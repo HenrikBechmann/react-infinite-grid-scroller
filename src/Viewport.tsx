@@ -264,7 +264,7 @@ export const Viewport = ({
     },[viewportState])
 
     // ----------------------[ render ]--------------------------------
-
+    // console.log('viewport showScrollTabs', showScrollTabs)
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
         { (masterDndContext.installed && dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && <DndDragBar 
@@ -276,7 +276,8 @@ export const Viewport = ({
         />
         }
         <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
-        {showScrollTabs && <DndScrollTab />}
+        {showScrollTabs && <><DndScrollTab position = 'head' gridSpecs = {gridSpecs}/> 
+            <DndScrollTab position = 'tail' gridSpecs = {gridSpecs} /></>}
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }

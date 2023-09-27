@@ -223,7 +223,7 @@ export const CellFrame = ({
 
     const setDroppedBorder = () => {
 
-        if (scrollerDndContext.droppedIndex == index) {
+        if (scrollerDndContext.droppedIndex === index) {
             scrollerDndContext.droppedIndex = null
             const classname = 'rigs-dropped-highlight'
             contentholderRef.current.classList.add(classname)
@@ -236,7 +236,7 @@ export const CellFrame = ({
 
     const setDisplacedBorder = () => {
 
-        if (scrollerDndContext.displacedIndex == index) {
+        if (scrollerDndContext.displacedIndex === index) {
             scrollerDndContext.displacedIndex = null
             const classname = 'rigs-target-finish'
             contentholderRef.current.classList.add(classname)

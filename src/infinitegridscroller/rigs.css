@@ -49,14 +49,14 @@
     transition: box-shadow .5s;
 }
 
-.rigs-scrolltab-highlight {
+.rigs-scrolltab-highlight-top {
     border-radius: 8px;
-    animation: rigs-scrolltab-easein .5s;
+    animation: rigs-scrolltab-easein-top .5s;
     opacity:0.7;
     box-shadow:-3px -3px 3px 3px brown;
 }
 
-@keyframes rigs-scrolltab-easein {
+@keyframes rigs-scrolltab-easein-top {
 
     0% {
         opacity:0;
@@ -65,6 +65,46 @@
     100%  { 
         opacity:0.7;
         box-shadow:-3px -3px 3px 3px brown;
+    }
+
+}
+
+.rigs-scrolltab-highlight-bottom {
+    border-radius: 8px;
+    animation: rigs-scrolltab-easein-bottom .5s;
+    opacity:0.7;
+    box-shadow:-3px -3px 3px 3px brown;
+}
+
+@keyframes rigs-scrolltab-easein-bottom {
+
+    0% {
+        opacity:0;
+        box-shadow: 0 0 0 0 transparent;
+    }
+    100%  { 
+        opacity:0.7;
+        box-shadow:-3px -3px 3px 3px brown;
+    }
+
+}
+
+.rigs-scrolltab-highlight-left {
+    border-radius: 8px;
+    animation: rigs-scrolltab-easein-left .5s;
+    opacity:0.7;
+    box-shadow:-3px 3px 3px 3px brown;
+}
+
+@keyframes rigs-scrolltab-easein-left {
+
+    0% {
+        opacity:0;
+        box-shadow: 0 0 0 0 transparent;
+    }
+    100%  { 
+        opacity:0.7;
+        box-shadow:3px 3px 3px 3px brown;
     }
 
 }
