@@ -2,20 +2,17 @@
 .rigs-source-highlight {
     box-shadow: 0px 0px 6px 6px darkorange;
     border-radius: 8px;
-    z-index: 1;
 }
 
 .rigs-target-highlight {
     box-shadow: 0 0 0 6px black;
     border-radius: 8px;
     opacity: 0.3;
-    z-index: 1;
 }
 
 .rigs-dropped-highlight {
 
     border-radius: 8px;
-    z-index: 1;
     animation: rigs-gradual-release 1s /*linear 0.05s*/;
 }
 
@@ -29,7 +26,6 @@
 
 .rigs-target-finish {
     border-radius: 8px;
-    z-index: 1;
     animation: rigs-target-fade .5s;
 }
 

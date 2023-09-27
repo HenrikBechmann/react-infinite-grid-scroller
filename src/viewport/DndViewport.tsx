@@ -16,7 +16,7 @@ const DndViewport = (props) => {
     const { scrollerID } = props
     const scrollerDndContext = useContext(ScrollerDndContext)
 
-    const viewportElementRef = useRef(null)
+    const viewportFrameElementRef = useRef(null)
 
     const showScrollTabsRef = useRef(false)
 
@@ -35,7 +35,7 @@ const DndViewport = (props) => {
 
     useEffect(()=>{
 
-        const viewportElement = viewportElementRef.current
+        const viewportElement = viewportFrameElementRef.current
 
         if (targetData.isOver && targetData.canDrop) {
             viewportElement.classList.add('rigs-viewport-highlight')
@@ -51,7 +51,7 @@ const DndViewport = (props) => {
 
     useEffect(()=>{
 
-        targetConnector(viewportElementRef.current)
+        targetConnector(viewportFrameElementRef.current)
 
     },[])
 
@@ -66,7 +66,7 @@ const DndViewport = (props) => {
 
     },[dndViewportState])
 
-    const enhancedProps = {...props,viewportElementRef, showScrollTabs:showScrollTabsRef.current}
+    const enhancedProps = {...props,viewportFrameElementRef, showScrollTabs:showScrollTabsRef.current}
 
     return <Viewport {...enhancedProps}/>
 

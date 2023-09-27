@@ -41,7 +41,7 @@ const ViewportController = (props) => {
 
     const masterDndContext = useContext(MasterDndContext)
 
-    const viewportElementRef = useRef(null)
+    const viewportFrameElementRef = useRef(null)
 
     if (masterDndContext.installed) {
 
@@ -49,7 +49,7 @@ const ViewportController = (props) => {
 
     } else {
 
-        const enhancedProps = {...props,viewportElementRef}
+        const enhancedProps = {...props,viewportFrameElementRef}
 
         return <Viewport {...enhancedProps} />
 
@@ -67,7 +67,7 @@ export const Viewport = ({
     scrollerID,
     VIEWPORT_RESIZE_TIMEOUT,
     useScrollTracker,
-    viewportElementRef,
+    viewportFrameElementRef,
     showScrollTabs,
 
 }) => {
@@ -96,7 +96,8 @@ export const Viewport = ({
 
     const isMountedRef = useRef(true)
 
-    // const viewportElementRef = useRef(null)
+    const viewportElementRef = useRef(null)
+    // const viewportFrameElementRef = useRef(null)
 
     const scrollTrackerAPIRef = useRef(null)
 
@@ -272,7 +273,8 @@ export const Viewport = ({
             scrollerID = { scrollerID }
         />
         }
-        <div data-type = 'viewport-frame' style = {divframestyleRef.current}>
+        <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
+        {showScrollTabs && <DndScrollTab />}
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }
@@ -281,7 +283,6 @@ export const Viewport = ({
         >
             { (viewportState != 'setup') && children }
         </div>
-        {showScrollTabs && <DndScrollTab />}
         {useScrollTracker && <ScrollTracker 
             scrollTrackerAPIRef = {scrollTrackerAPIRef}
             styles = { styles.scrolltracker }
