@@ -72,7 +72,9 @@ const DndScrollTab = (props) => {
                 break
             }
         }
+
         return [transform, top, right, bottom, left, borderRadius]
+
     },[location, orientation])
 
     const stylesRef = useRef<CSSProperties>({
@@ -97,7 +99,9 @@ const DndScrollTab = (props) => {
     })
 
     useEffect(()=>{
+
         scrolltabRef.current.classList.add(className)
+        
     },[className])
 
     return <div ref = {scrolltabRef} style = {stylesRef.current} data-type = 'scroll-tab'> 

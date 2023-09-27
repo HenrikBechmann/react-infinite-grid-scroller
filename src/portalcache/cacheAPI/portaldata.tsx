@@ -461,8 +461,7 @@ export default class PortalData {
                 content = usercontent
             }
 
-            // const portalData = 
-                await this.createPortal(scrollerID,content, index, itemID, scrollerContext, dndOptions, profile, true) // true = isPreload
+            await this.createPortal(scrollerID,content, index, itemID, scrollerContext, dndOptions, profile, true) // true = isPreload
 
         } else {
 
