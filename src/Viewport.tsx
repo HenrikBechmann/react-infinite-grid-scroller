@@ -108,6 +108,7 @@ export const Viewport = ({
             isResizing:false, 
             // viewportDimensions:null,
             elementRef:null,
+            frameElementRef:null,
             scrollTrackerAPIRef,
 
         }
@@ -236,6 +237,7 @@ export const Viewport = ({
 
         const localViewportData = {
             elementRef:viewportElementRef,
+            frameElementRef:viewportFrameElementRef,
             isResizing:isResizingRef.current,
         }
 

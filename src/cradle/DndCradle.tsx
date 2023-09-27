@@ -19,7 +19,8 @@ const DndCradle = (props) => {
         masterDndContext = useContext(MasterDndContext),
         viewportContext = useContext(ViewportContext),
         handlerListRef = useRef(null),
-        viewportElement = viewportContext.elementRef.current,
+        // viewportElement = viewportContext.elementRef.current,
+        viewportFrameElement = viewportContext.frameElementRef.current,
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
 
@@ -93,7 +94,7 @@ const DndCradle = (props) => {
 
     useEffect(()=>{
 
-        targetConnector(viewportElement)
+        targetConnector(viewportFrameElement)
 
     },[])
 
