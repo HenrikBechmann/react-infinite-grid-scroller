@@ -158,13 +158,11 @@ export const Cradle = ({ // exported for DndCradle
     triggerlineOffset,
     cache,
     cacheMax,
-    // for debugging
     scrollerID,
     // for handler list
     cacheAPI,
     // system
     usePlaceholder,
-    // useScrollTracker,
     showAxis,
     ONAFTERSCROLL_TIMEOUT,
     IDLECALLBACK_TIMEOUT,
@@ -190,7 +188,6 @@ export const Cradle = ({ // exported for DndCradle
     const {
 
         orientation,
-        // gap,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -679,7 +676,7 @@ export const Cradle = ({ // exported for DndCradle
 
     // ==========================[ 8. RENDER ]===========================
 
-    const cradleContent = contentHandler.content
+    const { content:cradleContent } = contentHandler
 
     // trigger lines are embedded in a single CellFrame, based on a flag setting
     // passed through cradleContenxt
@@ -718,7 +715,7 @@ export const Cradle = ({ // exported for DndCradle
     })
 
 
-    // display the cradle components, the ScrollTracker, or null
+    // display the cradle components or the ScrollTracker (from Viewport), not both
     return <CradleContext.Provider value = { cradleContextRef.current }>
 
         {(cradleState == 'repositioningRender')?null:
