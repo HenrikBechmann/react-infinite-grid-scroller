@@ -36,7 +36,7 @@ const DndCradle = (props) => {
         drop:(item:GenericObject,monitor) => {
             const dropResult:GenericObject = monitor.getDropResult()
 
-            if (!dropResult) return // TODO: check for drop on empty list
+            if (!dropResult || !dropResult.target) return // TODO: check for drop on empty list
 
             const {
                 serviceHandler, 
