@@ -618,6 +618,17 @@ const InfiniteGridScroller = (props) => { // exported to
 
     },[]);
 
+    useEffect(()=>{
+        const { dndHighlights } = stylesRef.current
+        if (dndHighlights) {
+            const root:HTMLElement = document.querySelector(':root')
+            dndHighlights.source && root.style.setProperty('--rigs-highlight-source',dndHighlights.source)
+            dndHighlights.target && root.style.setProperty('--rigs-highlight-target',dndHighlights.target)
+            dndHighlights.dropped && root.style.setProperty('--rigs-highlight-dropped',dndHighlights.dropped)
+            dndHighlights.scrolltab && root.style.setProperty('--rigs-highlight-scrolltab',dndHighlights.scrolltab)
+        }
+    },[])
+
     useEffect (() => {
 
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? true

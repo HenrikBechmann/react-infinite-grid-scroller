@@ -52,7 +52,7 @@
 
 .rigs-viewport-highlight {
     border-radius: 8px;
-    box-shadow: 0 0 3px 6px brown;
+    box-shadow: 0 0 3px 6px var(--rigs-highlight-scrolltab);
     transition: box-shadow .5s;
 }
 
