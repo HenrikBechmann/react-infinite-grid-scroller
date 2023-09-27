@@ -145,7 +145,12 @@ styles = {
   placeholdererrorframe: {},
   placeholdererrorliner: {},
   dndDragIcon: {},
-}
+  dndHighlights:{ // provide a color string for any you want to change
+    source, // default "darkorange"
+    target, // default "black"
+    dropped, // default "darkorange"
+    scrolltab, // default "brown", also used for isOver list box
+  },
 ~~~
 
 You may want to add `overscrollBehavior:'none'` to the top level viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list. Also note that dndDragIcon needs `zIndex` to be at least `1`.
