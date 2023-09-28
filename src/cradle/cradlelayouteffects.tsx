@@ -10,7 +10,6 @@ export const useCradleStateLayoutEffects = ({
     isCachedRef, 
     wasCachedRef,
     hasBeenRenderedRef,
-    nullItemSetMaxListsize,
 
 }) => {
     useLayoutEffect(()=>{
@@ -98,7 +97,7 @@ export const useCradleStateLayoutEffects = ({
 
                 }
 
-                cacheAPI.preload(finalCallback, nullItemSetMaxListsize)
+                cacheAPI.preload(finalCallback)
 
                 break
             }

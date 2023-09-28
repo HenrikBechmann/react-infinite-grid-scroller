@@ -8,7 +8,7 @@
     to present the error to the user. If a new itemID is set by the parent (to synchronize with an altered
     cache), then CellFrame replaces the old item with the new item.
 
-    getItem (which is a function provided by the host) can return one of several values:
+    getItemPack (which is a function provided by the host) can return one of several values:
         - a React component
         - a promise of a component
         - null
@@ -17,13 +17,13 @@
 
     if a promise is returned, then the promise returns a React component, null or undefined.
 
-    If a valid react component is returned from getItem, then it is instantiated in the cache, and rendered in the
+    If a valid react component is returned from getItemPack, then it is instantiated in the cache, and rendered in the
     CellFrame. If null is returned, then CellFrame sends a message to its scroller that the host has 
     indicated the the item being fetched instead represents the end of the list, and the listsize should
     be adjusted accordingly. Any other value that is returned is treated as an error, and presented
     as such to the user through the placeholder component.
 
-    getItem sends the index (logical index in the list) and a session itemID to the host, so that
+    getItemPack sends the index (logical index in the list) and a session itemID to the host, so that
     the host can sync its own tracking with the scroller.
 
     One CellFrame at a time is designated as the host of the two triggerLines with the isTriggerCell flag. 
@@ -106,7 +106,6 @@ export const CellFrame = ({
     cellMinHeight,
     cellMinWidth,
     layout,
-    getItem,  // function provided by host
     getItemPack,
     listsize, // for feedback in placeholder
     placeholder, // optionally provided by host
@@ -147,7 +146,6 @@ export const CellFrame = ({
     const { 
         cacheAPI, 
         scrollerPropertiesRef, // for the user content, if requested
-        nullItemSetMaxListsize, // for internal notification of end-of-list
         itemExceptionCallback, // for notification to host of error
         IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
         triggercellTriggerlinesRef,
@@ -454,15 +452,8 @@ export const CellFrame = ({
                                 dndOptionsRef.current = dndOptions
                                 usercontent = await itempack.content
 
-                            } else {
-
-                                usercontent = await getItem(index, itemID)
-
                             }
-
-                            if (usercontent === null) returnvalue = usercontent
-
-                            if (usercontent === undefined) {
+                            if (usercontent === null || usercontent === undefined) {
 
                                 error = new Error(placeholderMessagesRef.current.undefined)
 
@@ -539,7 +530,6 @@ export const CellFrame = ({
                                             index, itemID, returnvalue, 'cellFrame', 
                                                 new Error(placeholderMessagesRef.current.null)
                                         )
-                                    nullItemSetMaxListsize(index)
 
                                 } else { // usercontent === undefined, meaning an error has occurred
 

@@ -83,7 +83,7 @@ export default class ScrollerData {
 
     // ----------------------------[ basic operations ]--------------------------
 
-    // called from Cradle.nullItemSetMaxListsize, and serviceHandler.setListSize
+    // called from serviceHandler.setListSize
     private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback) => {
 
         if (newlistsize.length == 0) {

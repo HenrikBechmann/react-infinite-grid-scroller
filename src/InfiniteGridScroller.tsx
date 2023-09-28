@@ -79,8 +79,7 @@ type RIGS = {
 
     // functions
     placeholder:FC
-    // one of getItem or getItemPack is required
-    getItem:GetItem,
+    // getItemPack is required
     getItemPack:GetItemPack,
     // optional
     getExpansionCount:GetExpansionCount,
@@ -170,10 +169,7 @@ const InfiniteGridScroller = (props) => { // exported to
             // max for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
-        getItem, // getItem or getItemPack required. function provided by host - parameters set by system are index number
-            // and session itemID for tracking and matching; 
-            // return value is host-selected component or promise of a component, or null or undefined
-        getItemPack, // getItem or getItemPack. returns a simple object with item components: content, profile, options, dragText
+        getItemPack, // returns a simple object with item components: content, profile, options, dragText
         // grid specs:
         // optional
         getExpansionCount, // optional, function provided by host, returns the number of indexes to add to
@@ -249,16 +245,16 @@ const InfiniteGridScroller = (props) => { // exported to
     // minimal constraints
     let isMinimalPropsFail = false
 
-    if (!(cellWidth && cellHeight) || !(getItem || getItemPack)) {
-        console.log('RIGS: cellWidth, cellHeight, and getItem or getItemPack are required')
+    if (!(cellWidth && cellHeight) || !getItemPack) {
+        console.log('RIGS: cellWidth, cellHeight, and getItemPack required')
         isMinimalPropsFail = true
     }
 
     if (!isMinimalPropsFail) {
         cellWidth = +cellWidth
         cellHeight = +cellHeight
-        if (isNaN(cellWidth) || isNaN(cellHeight) || !(typeof getItem == 'function' || typeof getItemPack == 'function')) {
-            console.log('RIGS: cellWidth and cellHeifht must be nunmbers; getItem or getItemPack must be functions')
+        if (isNaN(cellWidth) || isNaN(cellHeight) || !(typeof getItemPack == 'function')) {
+            console.log('RIGS: cellWidth and cellHeifht must be nunmbers; getItemPack must be a functions')
             isMinimalPropsFail = true
         }
     }
@@ -663,7 +659,6 @@ const InfiniteGridScroller = (props) => { // exported to
 
     },[])
 
-    // called when getItem returns null, or direct call from user (see serviceHandler)
     const setVirtualListSize = useCallback((listsize) =>{
 
         let listrange = listRangeRef.current
@@ -782,7 +777,6 @@ const InfiniteGridScroller = (props) => { // exported to
                     cacheMax = { cacheMax }
                     userCallbacks = { callbacksRef.current }
                     startingIndex = { startingIndex }
-                    getItem = { getItem }
                     getItemPack = { getItemPack }
                     getExpansionCount = { getExpansionCount }
                     placeholder = { placeholder }

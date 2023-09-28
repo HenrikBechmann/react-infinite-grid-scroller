@@ -394,34 +394,6 @@ export const useObserverEffect = ({interruptHandler}) => {
 
 }
 
-export const useNullItemCallback = ({listsize, serviceHandler, contentHandler, cacheAPI}) => {
-
-    const nullItemSetMaxListsize = useCallback((maxListsize) => {
-
-        if (maxListsize < listsize) {
-
-            const { deleteListCallback, changeListSizeCallback } = serviceHandler.callbacks
-
-            let dListCallback
-            if (deleteListCallback) {
-                dListCallback = (deleteList) => {
-
-                    deleteListCallback('getItem returned null',deleteList)
-
-                }
-
-            }
-
-            contentHandler.updateVirtualListSize(maxListsize)
-            cacheAPI.changeCacheListSize(maxListsize, 
-                dListCallback,
-                changeListSizeCallback)
-
-        }
-    },[listsize])
-
-}
-
 export const useCachingChangeEffect = ({
 
     cradleStateRef, 
@@ -615,7 +587,6 @@ export const useListRangeEffect = ({
 }
 
 export const useItemPackEffect = ({
-    getItem, 
     getItemPack,
     cradleStateRef,
     interruptHandler,
@@ -629,7 +600,7 @@ export const useItemPackEffect = ({
 
         setCradleState('reload')
 
-    },[getItem, getItemPack])
+    },[getItemPack])
 }
 
 export const usePivotEffect = ({

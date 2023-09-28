@@ -174,8 +174,8 @@ export default class CacheAPI {
             guardAgainstRunawayCaching:(cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
                 return this.guardAgainstRunawayCaching(scrollerID, cacheMax, cradleListLength, MAX_CACHE_OVER_RUN)
             },
-            preload:(finalCallback, nullItemSetMaxListsize) => {
-                return this.portalData.preload(scrollerID, finalCallback, nullItemSetMaxListsize)
+            preload:(finalCallback) => {
+                return this.portalData.preload(scrollerID, finalCallback)
             },
             getCacheIndexMap:() => {
                 return this.getCacheIndexMap(scrollerID)

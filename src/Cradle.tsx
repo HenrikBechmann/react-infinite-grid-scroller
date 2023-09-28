@@ -91,7 +91,6 @@ import { // custom hooks
     useEventListenerEffect,
     useObserverEffect,
     // reconfiguration
-    useNullItemCallback, // deprecated
     useCachingChangeEffect,
     useResizingEffect,
     useReconfigureEffect,
@@ -148,7 +147,6 @@ export const Cradle = ({ // exported for DndCradle
     setVirtualListSize,
     setVirtualListRange,
     startingIndex, 
-    getItem, // deprecated
     getItemPack,
     getExpansionCount,
     placeholder, 
@@ -363,7 +361,6 @@ export const Cradle = ({ // exported for DndCradle
         cache, cacheMax,
         startingIndex, 
         runwaySize,
-        getItem, 
         getItemPack,
         getExpansionCount,
         placeholder, placeholderMessages, usePlaceholder,
@@ -534,15 +531,6 @@ export const Cradle = ({ // exported for DndCradle
     // =====================[ 5. RECONFIGURATION EFFECTS ]======================
     // change listsize, caching, resize (UI resize of the viewport), reconfigure, or pivot
 
-    // inernal callback: the new list size will always be less than current listsize
-    // invoked if getItem returns null (deprecated)
-    const nullItemSetMaxListsize = useNullItemCallback({
-        listsize:cradleInternalPropertiesRef.current.virtualListProps.size,
-        serviceHandler,
-        contentHandler,
-        cacheAPI,
-    })
-
     // change cache or cacheMax properties
     useCachingChangeEffect({
         // possible changes
@@ -598,7 +586,6 @@ export const Cradle = ({ // exported for DndCradle
 
     // a new getItemPack function implies the need to reload
     useItemPackEffect({
-        getItem, 
         getItemPack,
         // support
         cradleStateRef,
@@ -661,7 +648,6 @@ export const Cradle = ({ // exported for DndCradle
         isCachedRef, 
         wasCachedRef,
         hasBeenRenderedRef,
-        nullItemSetMaxListsize, // deprecated
     })
 
     // standard rendering states (2 states)
@@ -706,7 +692,6 @@ export const Cradle = ({ // exported for DndCradle
     const cradleContextRef = useRef({
         scrollerPropertiesRef, 
         cacheAPI, 
-        nullItemSetMaxListsize,
         itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
         IDLECALLBACK_TIMEOUT,
         triggercellTriggerlinesRef,

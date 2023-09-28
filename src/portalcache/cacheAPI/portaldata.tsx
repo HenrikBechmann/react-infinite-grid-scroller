@@ -348,7 +348,7 @@ export default class PortalData {
 
     }
 
-    private preload = (scrollerID, finalCallback, nullItemSetMaxListsize) => {
+    private preload = (scrollerID, finalCallback) => {
 
         const 
             { cradleParameters } = this.scrollerData.scrollerDataMap.get(scrollerID),
@@ -359,7 +359,7 @@ export default class PortalData {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-            { getItem, getItemPack } = cradleInheritedProperties,
+            {getItemPack } = cradleInheritedProperties,
             {lowindex, highindex} = cradleInternalProperties.virtualListProps,
 
             promises = [],
@@ -370,7 +370,6 @@ export default class PortalData {
 
         const maxListsizeInterrupt = (index) => {
             breakloop.current = true
-            nullItemSetMaxListsize(index)
         }
 
         if (stateHandler.isMountedRef.current) {
@@ -388,7 +387,6 @@ export default class PortalData {
                     const promise = this.preloadItem(
                         scrollerID,
                         index, 
-                        getItem, 
                         getItemPack,
                         scrollerPropertiesRef,
                         itemExceptionCallback,
@@ -415,7 +413,6 @@ export default class PortalData {
     private async preloadItem(
         scrollerID,
         index, 
-        getItem, 
         getItemPack,
         scrollerPropertiesRef, 
         itemExceptionCallback,
@@ -428,7 +425,7 @@ export default class PortalData {
 
         try {
 
-            usercontent = await getItem(index, itemID)
+            usercontent = await getItemPack(index, itemID)
             if (usercontent === null) returnvalue = usercontent
 
         } catch(e) {
