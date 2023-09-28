@@ -359,8 +359,8 @@ export default class PortalData {
             cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
-            {getItemPack } = cradleInheritedProperties,
-            {lowindex, highindex} = cradleInternalProperties.virtualListProps,
+            { getItemPack } = cradleInheritedProperties,
+            { lowindex, highindex } = cradleInternalProperties.virtualListProps,
 
             promises = [],
 
@@ -426,7 +426,7 @@ export default class PortalData {
         try {
 
             usercontent = await getItemPack(index, itemID)
-            if (usercontent === null) returnvalue = usercontent
+            if (usercontent === null) returnvalue = usercontent = undefined
 
         } catch(e) {
 
@@ -435,7 +435,7 @@ export default class PortalData {
 
         }
 
-        if ((usercontent !== null) && (usercontent !== undefined)) {
+        if (usercontent !== undefined) {
 
             if (!React.isValidElement(usercontent)) {
                 returnvalue = usercontent
@@ -445,7 +445,7 @@ export default class PortalData {
 
         }
 
-        if ((usercontent !== null) && (usercontent !== undefined)) {
+        if (usercontent !== undefined) {
 
             let content 
             const scrollerContext = {
@@ -462,19 +462,8 @@ export default class PortalData {
 
         } else {
 
-            if (usercontent === undefined) {
-
-                itemExceptionCallback && 
-                    itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
-
-            } else { // usercontent === null; last item in list
-
-                itemExceptionCallback && 
-                    itemExceptionCallback(index, itemID, returnvalue, 'preload', new Error('end of list'))
-
-                maxListsizeInterrupt(index)
-
-            }
+            itemExceptionCallback && 
+                itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
 
         }
 

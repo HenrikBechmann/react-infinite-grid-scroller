@@ -455,6 +455,8 @@ export const CellFrame = ({
                             }
                             if (usercontent === null || usercontent === undefined) {
 
+                                if (usercontent === null) usercontent === undefined
+                                    
                                 error = new Error(placeholderMessagesRef.current.undefined)
 
                             }
@@ -466,7 +468,7 @@ export const CellFrame = ({
 
                         }
                         // process the return value
-                        if ((usercontent !== null) && (usercontent !== undefined)) {
+                        if (usercontent !== undefined) {
 
                             const isValidElement = React.isValidElement(usercontent)
                             if (!isValidElement) {
@@ -481,7 +483,7 @@ export const CellFrame = ({
 
                         if (isMountedRef.current) {
                             // prepare the content
-                            if ((usercontent !== null) && (usercontent !== undefined)) {
+                            if (usercontent !== undefined) {
 
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
                                 let content 
@@ -518,31 +520,19 @@ export const CellFrame = ({
 
                                 isMountedRef.current && setFrameState('inserting')
 
-                            } else { // null or undefined; handle non-component value
+                            } else { // undefined; handle non-component value
 
                                 cacheAPI.unregisterPendingPortal(index) // create portal failed
 
-                                if (usercontent === null) {
+                                // change placeholder message to error message
+                                errorRef.current = error
+                                // notify the host
+                                itemExceptionCallback && 
+                                    itemExceptionCallback(
+                                        index, itemID, returnvalue, 'cellFrame', error
+                                    )
 
-                                    // truncate listsize at this index
-                                    itemExceptionCallback && 
-                                        itemExceptionCallback(
-                                            index, itemID, returnvalue, 'cellFrame', 
-                                                new Error(placeholderMessagesRef.current.null)
-                                        )
-
-                                } else { // usercontent === undefined, meaning an error has occurred
-
-                                    // change placeholder message to error message
-                                    errorRef.current = error
-                                    // notify the host
-                                    itemExceptionCallback && 
-                                        itemExceptionCallback(
-                                            index, itemID, returnvalue, 'cellFrame', error
-                                        )
-
-                                    isMountedRef.current && setFrameState('error')
-                                }
+                                isMountedRef.current && setFrameState('error')
 
                             }
 
