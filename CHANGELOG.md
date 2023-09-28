@@ -10,6 +10,7 @@ Renamed:
 - `scrollerContext` properties renamed from `cellFramePropertiesRef` to `cell`, and from `scrollerPropertiesRef` to `scroller`. Both follow the react `ref` pattern, with data held in the `current` property
 
 Removed:
+- GetItem. Use GetItemPack insteas
 - remapIndexes was removed as a service function, as dead weight
 
 ## 1.4.2 August 24, 2023
