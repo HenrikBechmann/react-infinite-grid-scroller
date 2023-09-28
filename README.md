@@ -149,7 +149,8 @@ styles = {
     source, // default "darkorange"
     target, // default "black"
     dropped, // default "darkorange"
-    scrolltab, // default "brown", also used for isOver list box
+    scroller, // default "red", canDrop but not isOver scroller
+    scrolltab, // default "brown", also used for isOver and canDrop scroller
   },
 ~~~
 
