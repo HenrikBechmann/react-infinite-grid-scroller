@@ -69,6 +69,8 @@ export const Viewport = ({
     useScrollTracker,
     viewportFrameElementRef,
     showScrollTabs,
+    SCROLLTABINTERVALMILLISECONDS,
+    SCROLLTABINTERVALPIXELS,
 
 }) => {
 
@@ -276,8 +278,20 @@ export const Viewport = ({
         />
         }
         <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
-        {showScrollTabs && <><DndScrollTab position = 'head' gridSpecs = {gridSpecs}/> 
-            <DndScrollTab position = 'tail' gridSpecs = {gridSpecs} /></>}
+        {showScrollTabs && <>
+            <DndScrollTab 
+                position = 'head' 
+                gridSpecs = {gridSpecs} 
+                SCROLLTABINTERVALMILLISECONDS = {SCROLLTABINTERVALMILLISECONDS} 
+                SCROLLTABINTERVALPIXELS = {SCROLLTABINTERVALPIXELS}
+            />
+            <DndScrollTab 
+                position = 'tail' 
+                gridSpecs = {gridSpecs} 
+                SCROLLTABINTERVALMILLISECONDS = {SCROLLTABINTERVALMILLISECONDS} 
+                SCROLLTABINTERVALPIXELS = {SCROLLTABINTERVALPIXELS}
+            />
+        </>}
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }

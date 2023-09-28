@@ -167,7 +167,6 @@ export const Cradle = ({ // exported for DndCradle
     ONAFTERSCROLL_TIMEOUT,
     IDLECALLBACK_TIMEOUT,
     MAX_CACHE_OVER_RUN,
-    VARIABLE_MEASUREMENTS_TIMEOUT, // not currently used
     scrollerContext,
     handlerListRef,
 

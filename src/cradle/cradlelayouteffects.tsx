@@ -352,17 +352,13 @@ export const useCradleStateLayoutEffects = ({
 
             case 'preparesetforvariability': {
 
-                // setTimeout(() => { // give time for DOM to produce layout
-            
-                    if (stateHandler.isMountedRef.current) {
+                if (stateHandler.isMountedRef.current) {
 
-                        contentHandler.adjustScrollblockForVariability('setcradle')
+                    contentHandler.adjustScrollblockForVariability('setcradle')
 
-                        setCradleState('finishsetforvariability')
-                        
-                    }
-
-                // }, VARIABLE_MEASUREMENTS_TIMEOUT)
+                    setCradleState('finishsetforvariability')
+                    
+                }
                 
                 break
 

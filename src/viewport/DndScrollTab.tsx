@@ -11,13 +11,20 @@ import scrollicon from "../../assets/keyboard_double_arrow_right_FILL0_wght400_G
 
 const DndScrollTab = (props) => {
 
-    const scrollerDndContext = useContext(ScrollerDndContext)
+    const 
+        scrollerDndContext = useContext(ScrollerDndContext),
 
-    const { serviceHandler } = scrollerDndContext
+        { serviceHandler } = scrollerDndContext,
 
-    const scrolltabRef = useRef(null)
-    const { position, gridSpecs } = props // head, tail
-    const { orientation } = gridSpecs
+        scrolltabRef = useRef(null),
+        { 
+            position, // head, tail
+            gridSpecs,
+            SCROLLTABINTERVALMILLISECONDS,
+            SCROLLTABINTERVALPIXELS,
+        } = props,
+        { orientation } = gridSpecs
+
     const [className, location] = useMemo(()=>{
 
         let className, location
@@ -42,7 +49,7 @@ const DndScrollTab = (props) => {
     },[orientation, position])
 
     const [transform, top, right, bottom, left, borderRadius, scrollByPixel] = useMemo(()=>{
-        const scrollByPixels = 100
+        const scrollByPixels = SCROLLTABINTERVALPIXELS
         let transform, top, right, bottom, left, borderRadius, scrollByPixel
         switch (location) {
             case 'topright': {
@@ -85,7 +92,7 @@ const DndScrollTab = (props) => {
 
         return [transform, top, right, bottom, left, borderRadius, scrollByPixel]
 
-    },[location, orientation])
+    },[location, orientation, SCROLLTABINTERVALPIXELS])
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Viewport'],
@@ -135,7 +142,7 @@ const DndScrollTab = (props) => {
 
             intervalIDRef.current = setInterval(()=>{
                 serviceHandler.scrollByPixel(scrollByPixel)
-            },100)
+            },SCROLLTABINTERVALMILLISECONDS)
         } else {
             clearInterval(intervalIDRef.current)
         }

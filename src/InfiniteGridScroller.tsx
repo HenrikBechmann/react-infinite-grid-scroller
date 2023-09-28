@@ -504,20 +504,24 @@ const InfiniteGridScroller = (props) => { // exported to
         VIEWPORT_RESIZE_TIMEOUT,
         ONAFTERSCROLL_TIMEOUT,
         IDLECALLBACK_TIMEOUT,
-        VARIABLE_MEASUREMENTS_TIMEOUT,
         // ratios:
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
         CACHE_PARTITION_SIZE, 
+
+        SCROLLTABINTERVALMILLISECONDS,
+        SCROLLTABINTERVALPIXELS,
 
     } = technical
 
     VIEWPORT_RESIZE_TIMEOUT = VIEWPORT_RESIZE_TIMEOUT ?? 250
     ONAFTERSCROLL_TIMEOUT = ONAFTERSCROLL_TIMEOUT ?? 100
     IDLECALLBACK_TIMEOUT = IDLECALLBACK_TIMEOUT ?? 250
-    VARIABLE_MEASUREMENTS_TIMEOUT = VARIABLE_MEASUREMENTS_TIMEOUT ?? 250
     
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30
+
+    SCROLLTABINTERVALMILLISECONDS = SCROLLTABINTERVALMILLISECONDS ?? 100
+    SCROLLTABINTERVALPIXELS = SCROLLTABINTERVALPIXELS ?? 100
 
     if (typeof showAxis != 'boolean') showAxis = false
 
@@ -750,6 +754,8 @@ const InfiniteGridScroller = (props) => { // exported to
             scrollerID = { scrollerID }
             VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
             useScrollTracker = { useScrollTracker }
+            SCROLLTABINTERVALMILLISECONDS = { SCROLLTABINTERVALMILLISECONDS }
+            SCROLLTABINTERVALPIXELS = { SCROLLTABINTERVALPIXELS }
 
         >
         
@@ -792,7 +798,6 @@ const InfiniteGridScroller = (props) => { // exported to
                     ONAFTERSCROLL_TIMEOUT = { ONAFTERSCROLL_TIMEOUT }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
                     MAX_CACHE_OVER_RUN = { MAX_CACHE_OVER_RUN }
-                    VARIABLE_MEASUREMENTS_TIMEOUT = { VARIABLE_MEASUREMENTS_TIMEOUT }
                     scrollerID = { scrollerID }
 
                 />
