@@ -11,6 +11,10 @@ import scrollicon from "../../assets/keyboard_double_arrow_right_FILL0_wght400_G
 
 const DndScrollTab = (props) => {
 
+    const scrollerDndContext = useContext(ScrollerDndContext)
+
+    const { serviceHandler } = scrollerDndContext
+
     const scrolltabRef = useRef(null)
     const { position, gridSpecs } = props // head, tail
     const { orientation } = gridSpecs
@@ -37,9 +41,9 @@ const DndScrollTab = (props) => {
         return [className, location]
     },[orientation, position])
 
-    const [transform, top, right, bottom, left, borderRadius] = useMemo(()=>{
-
-        let transform, top, right, bottom, left, borderRadius
+    const [transform, top, right, bottom, left, borderRadius, scrollByPixel] = useMemo(()=>{
+        const scrollByPixels = 100
+        let transform, top, right, bottom, left, borderRadius, scrollByPixel
         switch (location) {
             case 'topright': {
                 transform = 'rotate(0.75turn)'
@@ -48,6 +52,7 @@ const DndScrollTab = (props) => {
                 bottom = null
                 left = null
                 borderRadius = '0 0 0 8px'
+                scrollByPixel = -scrollByPixels
                 break
             }
             case 'bottomright': {
@@ -60,6 +65,10 @@ const DndScrollTab = (props) => {
                 bottom = '0'
                 left = null
                 borderRadius = '8px 0 0 0'
+                scrollByPixel = 
+                    (orientation == 'vertical')?
+                        scrollByPixels:
+                        -scrollByPixels
                 break
             }
             case 'bottomleft': {
@@ -69,13 +78,27 @@ const DndScrollTab = (props) => {
                 bottom = '0'
                 left = '0'
                 borderRadius = '0 8px 0 0'
+                scrollByPixel = scrollByPixels
                 break
             }
         }
 
-        return [transform, top, right, bottom, left, borderRadius]
+        return [transform, top, right, bottom, left, borderRadius, scrollByPixel]
 
     },[location, orientation])
+
+    const [ targetData, targetConnector ] = useDrop({
+        accept:scrollerDndContext.dndOptions.accept || ['Viewport'],
+        collect:(monitor:DropTargetMonitor) => {
+            return {
+                isOver:monitor.isOver(),
+                canDrop:monitor.canDrop(),
+            }
+        },
+
+    })
+
+    const {isOver, canDrop } = targetData
 
     const stylesRef = useRef<CSSProperties>({
         display:'flex',
@@ -104,7 +127,31 @@ const DndScrollTab = (props) => {
         
     },[className])
 
-    return <div ref = {scrolltabRef} style = {stylesRef.current} data-type = 'scroll-tab'> 
+    const intervalIDRef = useRef(null)
+
+    useEffect(()=>{
+
+        if (isOver && canDrop) {
+
+            intervalIDRef.current = setInterval(()=>{
+                serviceHandler.scrollByPixel(scrollByPixel)
+            },100)
+        } else {
+            clearInterval(intervalIDRef.current)
+        }
+
+        return () => {
+            clearInterval(intervalIDRef.current)
+        }
+
+    },[isOver, canDrop, scrollByPixel])
+
+    return <div ref = {(r) => {
+        
+        scrolltabRef.current = r
+        targetConnector(r)
+
+    }} style = {stylesRef.current} data-type = 'scroll-tab'> 
         <img style = {imgstyleRef.current} src = {scrollicon} />
     </div>
 
