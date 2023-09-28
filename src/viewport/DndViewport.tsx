@@ -40,12 +40,16 @@ const DndViewport = (props) => {
         if (targetData.isOver && targetData.canDrop) {
             viewportElement.classList.add('rigs-viewport-highlight')
             showScrollTabsRef.current = true
-            setDndViewportState('updatehighlight')
         } else {
             viewportElement.classList.remove('rigs-viewport-highlight')
             showScrollTabsRef.current = false
-            setDndViewportState('updatehighlight')
         }
+        if (!targetData.isOver && targetData.canDrop) {
+            viewportElement.classList.add('rigs-viewport-candrop')
+        } else {
+            viewportElement.classList.remove('rigs-viewport-candrop')
+        }
+        setDndViewportState('updatehighlight')
 
     },[targetData.isOver, targetData.canDrop])
 

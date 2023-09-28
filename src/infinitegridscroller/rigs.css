@@ -4,6 +4,7 @@
     --rigs-highlight-target: black;
     --rigs-highlight-dropped: darkorange;
     --rigs-highlight-scrolltab: brown;
+    --rigs-highlight-scrollercandrop:red;
 }
 
 .rigs-source-highlight {
@@ -53,6 +54,12 @@
 .rigs-viewport-highlight {
     border-radius: 8px;
     box-shadow: 0 0 3px 6px var(--rigs-highlight-scrolltab);
+    transition: box-shadow .5s;
+}
+
+.rigs-viewport-candrop {
+    border-radius: 8px;
+    box-shadow: 0 0 3px 6px var(--rigs-highlight-scrollercandrop);
     transition: box-shadow .5s;
 }
 

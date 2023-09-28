@@ -625,6 +625,7 @@ const InfiniteGridScroller = (props) => { // exported to
             dndHighlights.source && root.style.setProperty('--rigs-highlight-source',dndHighlights.source)
             dndHighlights.target && root.style.setProperty('--rigs-highlight-target',dndHighlights.target)
             dndHighlights.dropped && root.style.setProperty('--rigs-highlight-dropped',dndHighlights.dropped)
+            dndHighlights.scroller && root.style.setProperty('--rigs-highlight-scrollercandrop',dndHighlights.scroller)
             dndHighlights.scrolltab && root.style.setProperty('--rigs-highlight-scrolltab',dndHighlights.scrolltab)
         }
     },[])
