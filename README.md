@@ -278,6 +278,8 @@ These properties would rarely be changed.
 |VARIABLE_MEASUREMENTS_TIMEOUT:integer = 250|milliseconds to allow setCradleContent changes to render before being measured for 'variable' layout|
 |CACHE_PARTITION_SIZE:integer = 30|the cache is partitioned for performance reasons|
 |MAX_CACHE_OVER_RUN:number = 1.5|max streaming cache size over-run (while scrolling) as ratio to cacheMax|
+|SCROLLTABINTERVALMILLISECONDS:number = 100|SetInterval milliseconds for ScrollTab|
+|SCROLLTABINTERVALPIXELS:number = 100|SetInterval scrollBy pixels for ScrollTab|
 
 ### `scrollerProperties` object
 
