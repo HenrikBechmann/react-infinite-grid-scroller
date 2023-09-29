@@ -59,6 +59,8 @@ import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteG
 
 import DragIcon from './CellFrame/DragIcon'
 
+import displaceicon from "../assets/east_FILL0_wght400_GRAD0_opsz24.png"
+
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
 
