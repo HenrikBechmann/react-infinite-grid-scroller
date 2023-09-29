@@ -383,7 +383,7 @@ return {
     type, // string (or Symbol) required to match one of the list accept values
     dragText, // required. Displayed to user in the drag image for the component
   }
-  profile, // recommended. Simple object used returned to host for identification in various contexts
+  profile, // recommended. Simple object returned to host for identification in various contexts
 }
 
 ```
