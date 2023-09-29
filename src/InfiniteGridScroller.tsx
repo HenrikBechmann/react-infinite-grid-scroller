@@ -214,7 +214,7 @@ const InfiniteGridScroller = (props) => { // exported to
         // information for host cell content
         scrollerContext, // required for embedded scroller; shares scroller settings with content
         isDndMaster, // internal, set for root dnd only
-        staticComponent, // supercedies most other properties
+        staticComponent, // planned supercedes most other properties
 
     }:RIGS = props
 
@@ -477,7 +477,6 @@ const InfiniteGridScroller = (props) => { // exported to
     // package gridSpecs
     const gridSpecs = {
         orientation,
-        // gap,
         cellHeight,
         cellWidth,
         cellMinHeight,
@@ -532,7 +531,7 @@ const InfiniteGridScroller = (props) => { // exported to
         // for children
         cacheAPIRef = useRef(cacheAPI),
 
-        updateFunctionRef = useRef(null),
+        portalCacheForceUpdateFunctionRef = useRef(null),
 
         listSizeRef = useRef(startingListSize),
         listRangeRef = useRef(startingListRange),
@@ -590,7 +589,7 @@ const InfiniteGridScroller = (props) => { // exported to
 
     const getUpdateFunction = (fn) => {
 
-        updateFunctionRef.current = fn
+        portalCacheForceUpdateFunctionRef.current = fn
 
     }
 
@@ -701,9 +700,9 @@ const InfiniteGridScroller = (props) => { // exported to
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
 
-                if (updateFunctionRef.current) { // obtained from PortalCache
+                if (portalCacheForceUpdateFunctionRef.current) { // obtained from PortalCache
 
-                    cacheAPIRef.current.partitionRepoForceUpdate = updateFunctionRef.current
+                    cacheAPIRef.current.partitionRepoForceUpdate = portalCacheForceUpdateFunctionRef.current
 
                 }
 
