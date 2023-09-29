@@ -42,8 +42,8 @@ import React from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
-import ScrollerData from './cacheAPI/scrollerdata'
-import PortalData from './cacheAPI/portaldata'
+import ScrollerData from './cacheAPI/cachescrollerdata'
+import PortalData from './cacheAPI/cacheportaldata'
 import CacheService from './cacheAPI/cacheservice'
 
 // import CachePartition from './CachePartition'

@@ -101,9 +101,9 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                     isDragging:false,
                     itemID:null,
                     index:null,
+                    scrollerID: null,
                     dndOptions:{} as GenericObject,
                     // the following for inter-list drops to process drag source
-                    scrollerID: null,
                     sourceCacheAPI:null,
                     sourceStateHandler:null,
                     sourceServiceHandler:null,
@@ -119,7 +119,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
     useEffect(()=>{
 
         switch (rigsdndState) {
-            case 'setup': { // give reset of masterDndContext as chance to reset
+            case 'setup': { // give reset of masterDndContext from previous instance a chance to complete
 
                 setRigsdndState('ready')
 
