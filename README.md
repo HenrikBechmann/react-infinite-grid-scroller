@@ -347,6 +347,50 @@ _cradleContentProps_ is an object with the following properties:
 }
 ```
 
+# Drag and Drop
+
+To install drag and drop ('dnd') capability, first invoke the `RigsDnd` component for the root of the RIGS tree to install the dnd `Provider`. This can only be done once per environment. For embedded lists, use the default RIGS component.
+
+```
+import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
+...
+<div style = { containerstyle }>
+  <Scroller 
+      cellHeight = { cellHeight }
+      cellWidth = { cellWidth }
+      startingListRange = { [lowindex, highindex] } // this constitutes the virtual list
+      getItemPack = { getItemPack } // a function called by RIGS to obtain a specified user component by index number
+      dndOptions = { dndOptions } // required for both the root instance and all child RIGS instances
+  />
+</div>
+```
+`dndOptions` must include an `accept` property, with a list of accepted dnd content types. It may also include a `master` property.
+```
+const dndOptions = {
+  accept:['type1','type2','type3'] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
+  master:{enabled}, // optional, default true, for root only
+  enabled, // optional for all participating scrollers, default true
+}
+```
+
+All list components returned to RIGS with getItemPack must also include a `dndOptions` object.
+```
+// in host getItemPack
+...
+return {
+  component, // a valid React component, or promise of a component
+  dndOptions:{
+    type, // string (or Symbol) required to match one of the list accept values
+    dragText, // required. Displayed to user in the drag image for the component
+  }
+  profile, // recommended. Simple object used returned to host for identification in various contexts
+}
+
+```
+
+RIGS does not check for matches of `type` values with `accept` values.
+
+
 # Restoring scroll positions coming out of cache
 
 This is only of concern if your cell components support scrolling.
