@@ -377,7 +377,9 @@ const dndOptions = {
 }
 ```
 
-When dnd is enabled, all content packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing Scroller, for convenience.
+When dnd is enabled, all content packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). 
+
+With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing Scroller, for convenience.
 ```
 // in host getItemPack
 ...
