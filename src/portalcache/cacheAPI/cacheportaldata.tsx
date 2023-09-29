@@ -463,7 +463,17 @@ export default class PortalData {
         } else {
 
             itemExceptionCallback && 
-                itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
+                itemExceptionCallback(index, {
+                    contextType: 'itemException',
+                    itemID, 
+                    profile, 
+                    componentValue:
+                    returnvalue, 
+                    message:'cellFrame', 
+                    error
+                }
+            )
+                // itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
 
         }
 

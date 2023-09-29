@@ -519,10 +519,10 @@ export const CellFrame = ({
                                     content = usercontent
                                 }
 
-                                const retval = portalMetadataRef.current = 
+                                portalMetadataRef.current = 
                                     await cacheAPI.createPortal(content, index, itemID, scrollerContext, dndOptions, profile)
 
-                                if (retval) {
+                                if (portalMetadataRef.current) {
                                 
                                     portalNodeRef.current = portalMetadataRef.current.portalNode
                                     setContainerStyles(
@@ -541,7 +541,14 @@ export const CellFrame = ({
                                 // notify the host
                                 itemExceptionCallback && 
                                     itemExceptionCallback(
-                                        index, itemID, returnvalue, 'cellFrame', error
+                                        index, {
+                                            contextType: 'itemException',
+                                            itemID, 
+                                            profile, 
+                                            componentValue:returnvalue, 
+                                            message:'cellFrame', 
+                                            error
+                                        }
                                     )
 
                                 isMountedRef.current && setFrameState('error')
