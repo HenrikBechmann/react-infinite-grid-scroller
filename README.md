@@ -110,6 +110,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |cellMinHeight:integer| default = 25, minimum = 25, maximum = cellHeight|used for 'variable' layout with 'vertical' orientation. Applied to `min-height`|
 |cellMinWidth:integer| default = 25, minimum = 25, maximum = cellWidth|used for 'variable' layout with 'horizontal' orientation. Applied to `min-width`|
 |[_**SYSTEM SETTINGS**_]|
+|dndOptions:object|scroller settings for drag and drop|required if drag and drop is enabled. See Drag and Drop section|
 |runwaySize:integer| number of rows in the `Cradle` just out of view at head and tail of list|default = 1. minimum = 1. Gives time to assemble cellFrames before display
 |cache:string| 'cradle' (default), 'keepload', 'preload'|'cradle' matches the cache to the contents of the `Cradle`. 'keepload' keeps user components in the cache as loaded, up to `cacheMax` (and always `Cradle` user components). 'preload' loads user components up to `cacheMax`, then adjusts cache such that `Cradle` user components are always in the cache|
 |cacheMax:integer| at minimum (maintained by system) the number of user components in the `Cradle`|allows optimization of cache size for memory limits and performance|
