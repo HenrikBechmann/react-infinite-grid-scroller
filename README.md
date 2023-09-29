@@ -1,7 +1,7 @@
 # react-infinite-grid-scroller (RIGS)
 Heavy-duty vertical or horizontal infinite scroller
 
-[![npm](https://img.shields.io/badge/npm-1.4.2-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+[![npm](https://img.shields.io/badge/npm-2.0.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
 
 # Key Features
 
@@ -65,6 +65,8 @@ const lowindex = -50, highindex = 50 // random range values
   />
 </div>
 ```
+See below for drag and drop configuration.
+
 The scroller's highest level component, the `Viewport`, is a `div` with `position:absolute`, and `inset:0`, so the host container should be styled accordingly.
 
 Note that scroller-generated elements show a `data-type` attribute in browser inspectors (eg. 'viewport').
