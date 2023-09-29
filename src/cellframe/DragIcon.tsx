@@ -78,6 +78,7 @@ const DragIcon = props => {
         Object.assign(dragData,
             {
                 isDragging,
+                scrollerID,
                 itemID,
                 index,
                 dndOptions,

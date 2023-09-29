@@ -72,6 +72,9 @@ const DndCellFrame = (props) => {
 
     }
 
+    const showDirectionIcon = (isLocation && targetData.isOver && targetData.canDrop)
+
+
     useEffect(()=>{
 
         return () => {
@@ -110,7 +113,7 @@ const DndCellFrame = (props) => {
 
     },[masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
 
-    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext}
+    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext, showDirectionIcon  }
 
     return <CellFrame {...enhancedProps}/>
 

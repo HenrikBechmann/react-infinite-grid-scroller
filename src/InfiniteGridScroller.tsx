@@ -147,6 +147,7 @@ export const MasterDndContext = React.createContext(
             itemID:null,
             index:null,
             dndOptions:{} as GenericObject,
+            scrollerID:null,
             sourceCacheAPI:null,
             sourceStateHandler:null,
             sourceServiceHandler:null,

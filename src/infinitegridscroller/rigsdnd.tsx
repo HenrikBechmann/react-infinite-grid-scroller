@@ -103,6 +103,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                     index:null,
                     dndOptions:{} as GenericObject,
                     // the following for inter-list drops to process drag source
+                    scrollerID: null,
                     sourceCacheAPI:null,
                     sourceStateHandler:null,
                     sourceServiceHandler:null,

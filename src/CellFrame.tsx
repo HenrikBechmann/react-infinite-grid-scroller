@@ -58,8 +58,7 @@ import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteG
 // =====================[ dnd support ]====================
 
 import DragIcon from './CellFrame/DragIcon'
-
-import displaceicon from "../assets/east_FILL0_wght400_GRAD0_opsz24.png"
+import DisplaceIcon from './CellFrame/DisplaceIcon'
 
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
@@ -85,7 +84,7 @@ const CellFrameWrapper = (props) => {
         targetConnector = (element) => {}, // no-op
         frameRef = useRef(null),
 
-        enhancedProps = {...props, isDnd:false, targetConnector, frameRef}
+        enhancedProps = {...props, isDnd:false }
 
     return <CellFrame {...enhancedProps}/>
 } 
@@ -129,6 +128,7 @@ export const CellFrame = ({
     isDnd,
     frameRef,
     masterDndContext,
+    showDirectionIcon,
 }) => {
 
     const scrollerDndContext = useContext(ScrollerDndContext)
@@ -595,7 +595,6 @@ export const CellFrame = ({
                         masterDndContext = {masterDndContext}
                     />
                 }
-
             </>
 
             :<div></div>}
@@ -604,7 +603,9 @@ export const CellFrame = ({
             triggercellTriggerlinesRef.current:
             null)
         }
-
+        {(isDndRef.current && showDirectionIcon && (frameState == 'ready')) && 
+            <DisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
+        }
     </div>
 
 } 
