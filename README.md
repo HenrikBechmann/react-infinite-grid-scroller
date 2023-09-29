@@ -40,7 +40,7 @@ Therefore RIGS is best suited for modern browsers.
 
 Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is always near the top or left of the `Viewport` (depending on vertical or horizontal orientation). There are two CSS grids in the `Cradle`, one on each side of the `axis`. As `CellFrame`s are added to or removed from the grids, the grid on the top or left expands toward or contracts away from the top or left of the `Scrollblock` (depending on orientation), and the grid on the bottom or right expands toward or contracts away from the bottom or right of the `Scrollblock`. 
 
-`CellFrame`s display individual user components. `CellFrame`s are created and destroyed on a rolling basis as the `Cradle` re-configures and moves around the `Scrollblock` to stay in view, but user components are maintained in the internal cache until they go out of scope. New `CellFrame`s fetch user components from the internal cache (portals in the React virtual DOM) or from the host through the user-supplied `getItem` function, as needed.
+`CellFrame`s display individual user components. `CellFrame`s are created and destroyed on a rolling basis as the `Cradle` re-configures and moves around the `Scrollblock` to stay in view, but user components are maintained in the internal cache until they go out of scope. New `CellFrame`s fetch user components from the internal cache (portals in the React virtual DOM) or from the host through the user-supplied `getItemPack` function, as needed.
 
 Not shown are two triggerlines (0 `width` or `height` `div`s, depending on orientation) which straddle the top or left edge of the `Viewport`. Whenever one of these triggerlines crosses the `Viewport` edge (through scrolling), an `IntersectionObserver` sends an interrupt to the `Cradle` to update its content and configuration. Triggerlines are located in the last `CellFrame` of the head grid, unless the scroller is at the very top of its list, in which case the triggerlines are located in the first `CellFrame` of the tail grid.
 
@@ -60,7 +60,7 @@ const lowindex = -50, highindex = 50 // random range values
       cellHeight = { cellHeight }
       cellWidth = { cellWidth }
       startingListRange = { [lowindex, highindex] } // this constitutes the virtual list
-      getItem = { getItem } // a function called by RIGS to obtain a specified user component by index number
+      getItemPack = { getItemPack } // a function called by RIGS to obtain a specified user component by index number
   />
 </div>
 ```
@@ -92,7 +92,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |cellHeight:integer| number of pixels for cell height|required. Applied to `height` for 'uniform' layout, 'vertical' orientation. Applied to `max-height` for 'variable' layout, 'vertical' orientation. Approximate, used for `fr` (fractional allocation) for 'horizontal' orientation |
 |cellWidth:integer| number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
 |[_**CELL CONTENTS**_]|
-|getItem(index:integer,itemID:integer):<br />React.FC \| Promise \| undefined \| null|host-provided function. session `itemID` (integer) is for tracking and matching. Arguments provided by system|required. Must return a React component or promise of a component (`React.isValidElement`), or `undefined` = unavailable, or `null` = end-of-list|
+|getItemPack(index:integer,itemID:integer, context:object): object |host-provided function. `index` signifies position in list; session `itemID` (integer) is for tracking and matching. Arguments provided by system|required. Must return a simple object with three properties: `component` - a React component or promise of a component (`React.isValidElement`), `dndOptions` (see Drag and Drop section), and `profile`- a simple object which gets returned to host for identification in various contexts|
 |[_**LIST SIZE**_]|
 |startingListSize:integer| the starting number of items in the virtual list|required if `startingListRange` is not set. Can be modified at runtime. Constitutes a 0-based virtual array (Internally creates a starting range of [0,startingListSize - 1]. Ignored in the presence of `startingListRange` array|
 |startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list. Can be modified at runtime. |
@@ -123,13 +123,13 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 
 Notes: For explicit cache management capability, a unique session `itemID` (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced into the cache, it is assigned a new session-unique `itemID`. 
 
-The `itemID` for a user component is given to the host with the `getItem` call to obtain the component, so that the host can track the user component in the cache. If the user component is assigned to a new `index` number (see the **returned function object** cache management section below) the host will still be able to track the user component with the `itemID`. 
+The `itemID` for a user component is given to the host with the `getItemPack` call to obtain the component, so that the host can track the user component in the cache. If the user component is assigned to a new `index` number (see the **returned function object** cache management section below) the host will still be able to track the user component with the `itemID`. 
 
-The host can track removal of a user component and its `itemID` from the cache through tracking its associated index removal through the `deleteListCallback` return value, and the return values from cache management functions. 
+The host can track removal of a user component and its `itemID` from the cache through tracking its associated index removal through the `deleteListCallback` return value, and the return values from cache management functions. These feedback mechanisms also return the host's `profile` object for further identification. 
 
 Most of the time the `itemID` can be ignored.
 
-Also, note that the cache is reloaded with a new getItem function.
+Also, note that the cache is reloaded with a new `getItemPack` function.
 
 ### `styles` object
 
@@ -188,7 +188,7 @@ callbacks: {
      referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
      repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
      preloadIndexCallback, // (index) - current index being preloaded
-     itemExceptionCallback, // (index, itemID, returnvalue, location, error) - details about failed getItem calls
+     itemExceptionCallback, // (index, itemID, returnvalue, location, error) - details about failed getItemPack calls
 
      // operations tracking, called when triggered
      changeListSizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
@@ -225,9 +225,9 @@ Details about the callbacks:
 |referenceIndexCallback(index: integer, location: string, cradleState: string)|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
 |repositioningIndexCallback(index: integer)|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
 |preloadIndexCallback(index: integer)|during a preload operation, this stream gives the index number being preloaded|
-|itemExceptionCallback(index: integer, itemID: integer, returnvalue: any, location: string, error: Error)|triggered whenever getItem does not return a valid React component|
+|itemExceptionCallback(index: integer, itemID: integer, returnvalue: any, location: string, error: Error)|triggered whenever getItemPack does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
-|changeListsizeCallback(newlistsize: integer)|notification of a change of list size. Could be from getItem returning null indicating end-of-list, or an API call that results in change of list size|
+|changeListsizeCallback(newlistsize: integer)|notification of a change of list size. Could be from an API call that results in change of list size|
 |changeListRangeCallback(listrange:array) | notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
 |boundaryCallback(position:string, index:integer) | called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
 |deleteListCallback(reason: string, deleteList: array)|gives an array of indexes that have been deleted from the cache, and text of the reason|
