@@ -459,10 +459,10 @@ export const CellFrame = ({
 
                                 const itempack = getItemPack(index, itemID, context);
                                 ({ dndOptions, profile} = itempack)
-                                dndOptionsRef.current = dndOptions
-                                usercontent = await itempack.content
                                 dndOptions = dndOptions ?? {}
                                 profile = profile ?? {}
+                                dndOptionsRef.current = dndOptions
+                                usercontent = await itempack.content
 
                             }
                             if (usercontent === null || usercontent === undefined) {
@@ -544,10 +544,11 @@ export const CellFrame = ({
                                         index, {
                                             contextType: 'itemException',
                                             itemID, 
+                                            scrollerID,
                                             profile, 
                                             componentValue:returnvalue, 
-                                            message:'cellFrame', 
-                                            error
+                                            location:'cellFrame', 
+                                            error:error.message
                                         }
                                     )
 

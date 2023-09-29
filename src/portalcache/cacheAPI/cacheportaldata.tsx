@@ -5,6 +5,8 @@ import React from 'react'
 
 import { createHtmlPortalNode, InPortal } from 'react-reverse-portal'
 
+import { GenericObject } from '../../InfiniteGridScroller'
+
 import CachePartition from '../CachePartition'
 
 export default class PortalData {
@@ -348,7 +350,7 @@ export default class PortalData {
 
     }
 
-    private preload = (scrollerID, finalCallback) => {
+    private preload = (scrollerID, finalCallback, accept) => {
 
         const 
             { cradleParameters } = this.scrollerData.scrollerDataMap.get(scrollerID),
@@ -390,7 +392,8 @@ export default class PortalData {
                         getItemPack,
                         scrollerPropertiesRef,
                         itemExceptionCallback,
-                        maxListsizeInterrupt
+                        maxListsizeInterrupt,
+                        accept
                     )
                     promises.push(promise)
 
@@ -416,16 +419,34 @@ export default class PortalData {
         getItemPack,
         scrollerPropertiesRef, 
         itemExceptionCallback,
-        maxListsizeInterrupt
+        maxListsizeInterrupt,
+        accept
     ) {
 
         const itemID = this.getNewItemID()
 
-        let returnvalue, usercontent, error, dndOptions, profile
+        let returnvalue, itempack, usercontent, error, dndOptions, profile
+
+        const context:GenericObject = // {accept:{}}
+            accept?
+                {
+                    contextType:'dndFetch',
+                    accept,
+                    scrollerID,
+                }:
+                {
+                    contextType:'fetch',
+                    scrollerID,
+                }
 
         try {
 
-            usercontent = await getItemPack(index, itemID)
+            itempack = await getItemPack(index, itemID, context);
+
+            ({dndOptions, profile} = itempack)
+
+            usercontent = await itempack.content
+
             if (usercontent === null) returnvalue = usercontent = undefined
 
         } catch(e) {
@@ -434,6 +455,9 @@ export default class PortalData {
             error = e
 
         }
+
+        dndOptions = dndOptions ?? {}
+        profile = profile ?? {}
 
         if (usercontent !== undefined) {
 
@@ -466,15 +490,13 @@ export default class PortalData {
                 itemExceptionCallback(index, {
                     contextType: 'itemException',
                     itemID, 
+                    scrollerID,
                     profile, 
-                    componentValue:
-                    returnvalue, 
-                    message:'cellFrame', 
-                    error
+                    componentValue:returnvalue, 
+                    location:'preload', 
+                    error: error.message
                 }
             )
-                // itemExceptionCallback(index, itemID, returnvalue, 'preload', error)
-
         }
 
     }

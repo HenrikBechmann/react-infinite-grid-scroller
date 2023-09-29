@@ -1,7 +1,9 @@
 // cradlestate.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
-import React, {useLayoutEffect } from 'react'
+import React, {useLayoutEffect, useContext } from 'react'
+
+import { MasterDndContext, ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
 
 export const useCradleStateLayoutEffects = ({
 
@@ -12,6 +14,8 @@ export const useCradleStateLayoutEffects = ({
     hasBeenRenderedRef,
 
 }) => {
+    const masterDndContext = useContext(MasterDndContext)
+    const scrollerDndContext = useContext(ScrollerDndContext)
     useLayoutEffect(()=>{
 
         const 
@@ -97,7 +101,12 @@ export const useCradleStateLayoutEffects = ({
 
                 }
 
-                cacheAPI.preload(finalCallback)
+                const accept = 
+                    masterDndContext.installed?
+                        scrollerDndContext.dndOptions.accept:
+                        null
+
+                cacheAPI.preload(finalCallback, accept)
 
                 break
             }
