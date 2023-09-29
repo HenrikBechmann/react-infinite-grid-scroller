@@ -13,11 +13,13 @@ const DisplaceIcon = (props) => {
 
     const 
         { orientation, scrollerID, index } = props,
+
         masterDndContext = useContext(MasterDndContext),
+        {scrollerID:sourceScrollerID, index:sourceIndex} = masterDndContext.dragData,
+
         cradleContext = useContext(CradleContext),
         { virtualListProps } = cradleContext.scrollerPropertiesRef.current,
-        { crosscount } = virtualListProps,
-        {scrollerID:sourceScrollerID, index:sourceIndex} = masterDndContext.dragData
+        { crosscount } = virtualListProps
 
     const rotation = useMemo(()=>{
 
@@ -44,7 +46,7 @@ const DisplaceIcon = (props) => {
                 crosscount === 1?
                 orientation == 'vertical'?
                     '.75turn':
-                    '.5turn'
+                    '.50turn'
                 :
                 orientation == 'vertical'?
                     '.50turn':
@@ -62,9 +64,6 @@ const DisplaceIcon = (props) => {
     })
 
     const imgstyleRef = useRef<CSSProperties>({
-        textAlign:'right',
-        // width:'30px', 
-        // height:'30px',
         float:'right',
         marginRight:'6px',
         transform:`rotate(${rotation})`
