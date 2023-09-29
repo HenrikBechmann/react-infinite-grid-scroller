@@ -25,11 +25,12 @@ See the [demo site](https://henrikbechmann.github.io/rigs-demo/).
 
 RIGS uses these key technologies:
 - [CSS grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
-- [React hooks](https://reactjs.org/docs/hooks-intro.html)
+- [React hooks](https://react.dev/reference/react)
 - [React portals](https://www.npmjs.com/package/react-reverse-portal)
 - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 - [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
 - [requestIdleCallback](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback)
+- [react-dnd](https://www.npmjs.com/package/react-dnd)
 
 Therefore RIGS is best suited for modern browsers.
 
