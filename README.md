@@ -5,6 +5,7 @@ Heavy-duty vertical or horizontal infinite scroller
 
 # Key Features
 
+- intra-list and inter-list drag and drop
 - vertical or horizontal scrolling
 - designed for both "heavy" and "light" cell content (React components)
 - supports both uniform and variable cell lengths (for both vertical and horizontal)
