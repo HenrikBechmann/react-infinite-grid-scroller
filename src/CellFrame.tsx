@@ -445,14 +445,24 @@ export const CellFrame = ({
 
                             if (getItemPack) {
 
-                                const itempack = getItemPack(index, itemID, 
-                                    {
-                                        accept:scrollerDndContext.dndOptions.accept
-                                    }
-                                );
+                                const context:GenericObject = 
+                                    masterDndContext.installed?
+                                        {
+                                            contextType:'dndFetch',
+                                            accept:scrollerDndContext.dndOptions.accept,
+                                            scrollerID,
+                                        }:
+                                        {
+                                            contextType:'fetch',
+                                            scrollerID,
+                                        }
+
+                                const itempack = getItemPack(index, itemID, context);
                                 ({ dndOptions, profile} = itempack)
                                 dndOptionsRef.current = dndOptions
                                 usercontent = await itempack.content
+                                dndOptions = dndOptions ?? {}
+                                profile = profile ?? {}
 
                             }
                             if (usercontent === null || usercontent === undefined) {
