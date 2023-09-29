@@ -368,7 +368,7 @@ import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
   />
 </div>
 ```
-`dndOptions` must include an `accept` property, with a list of accepted dnd content types. It may also include a `master` property.
+`dndOptions` is required for all Scrollers when dnd is enabled. I must include an `accept` property, with a list of accepted dnd content types. For the root Scroller it may also include a `master` property.
 ```
 const dndOptions = {
   accept:['type1','type2','type3'] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
@@ -377,7 +377,7 @@ const dndOptions = {
 }
 ```
 
-All list components returned to RIGS with getItemPack must also include a `dndOptions` object when dnd is installed.
+When dnd is enabled, all list components returned to RIGS with getItemPack must also include a `dndOptions` object when dnd is installed.
 ```
 // in host getItemPack
 ...
