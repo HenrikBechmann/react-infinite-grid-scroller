@@ -353,7 +353,7 @@ _cradleContentProps_ is an object with the following properties:
 
 # Drag and Drop
 
-To install drag and drop ('dnd') capability, first invoke the `RigsDnd` component for the root of the RIGS tree to install the dnd `Provider`. This can only be done once per environment. For embedded lists, use the default RIGS component.
+To install drag and drop ('dnd') capability, first invoke the `RigsDnd` component (instead of the default component) for the root of the RIGS tree to install the dnd `Provider`. This can only be done once per environment. For embedded lists, use the default RIGS component.
 
 ```
 import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
@@ -393,7 +393,6 @@ return {
 ```
 
 RIGS does not check for matches of `type` values with `accept` values.
-
 
 # Restoring scroll positions coming out of cache
 
