@@ -377,7 +377,7 @@ const dndOptions = {
 }
 ```
 
-When dnd is enabled, all list components returned to RIGS with getItemPack must also include a `dndOptions` object when dnd is installed.
+When dnd is enabled, all list components returned to RIGS with getItemPack must also include a `dndOptions` object.
 ```
 // in host getItemPack
 ...
