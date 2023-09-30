@@ -234,8 +234,13 @@ export default class ScrollHandler {
 
                 this.updateBlockScrollPos()
 
+                const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+
                 const { repositioningFlagCallback } = serviceHandler.callbacks
-                repositioningFlagCallback && repositioningFlagCallback(false)
+                repositioningFlagCallback && repositioningFlagCallback(false, {
+                    contextType:'repositioningFlag',
+                    scrollerID,                    
+                })
                 stateHandler.setCradleState('finishreposition')
 
                 break

@@ -224,7 +224,10 @@ export default class InterruptHandler {
                 }
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
-                repositioningFlagCallback && repositioningFlagCallback(true)
+                repositioningFlagCallback && repositioningFlagCallback(true, {
+                    contextType:'repositioningFlag',
+                    scrollerID,
+                })
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
