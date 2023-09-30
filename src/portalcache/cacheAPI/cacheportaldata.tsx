@@ -491,8 +491,9 @@ export default class PortalData {
                     contextType: 'itemException',
                     itemID, 
                     scrollerID,
-                    profile, 
-                    componentValue:returnvalue, 
+                    profile,
+                    dndOptions,
+                    content:returnvalue, 
                     location:'preload', 
                     error: error.message
                 }

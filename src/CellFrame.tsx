@@ -546,7 +546,8 @@ export const CellFrame = ({
                                             itemID, 
                                             scrollerID,
                                             profile, 
-                                            componentValue:returnvalue, 
+                                            dndOptions,
+                                            content:returnvalue, 
                                             location:'cellFrame', 
                                             error:error.message
                                         }
