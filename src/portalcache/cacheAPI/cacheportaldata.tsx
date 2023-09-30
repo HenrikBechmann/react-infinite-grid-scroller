@@ -20,16 +20,16 @@ export default class PortalData {
     private globalItemID = 0
     private itemMetadataMap = new Map()
 
-    private linkSupport = ({scrollerData}) => {
+    private linkSupport = ({cacheScrollerData}) => {
 
-        this.scrollerData = scrollerData
+        this.cacheScrollerData = cacheScrollerData
 
     }
 
     private globalPartitionID = 0
     private CACHE_PARTITION_SIZE
 
-    private scrollerData
+    private cacheScrollerData
 
     // partition holds itemID components
     private partitionProps = {
@@ -210,7 +210,7 @@ export default class PortalData {
 
     }
 
-    private deletePortalByIndex(scrollerID, index, deleteListCallback) {
+    private deletePortalByIndex(scrollerID, index, deleteListCallbackHof) {
 
         const
             indexArray = 
@@ -218,7 +218,7 @@ export default class PortalData {
                     [index]:
                     index,
 
-            { indexToItemIDMap, itemSet } = this.scrollerData.scrollerDataMap.get(scrollerID),
+            { indexToItemIDMap, itemSet } = this.cacheScrollerData.scrollerDataMap.get(scrollerID),
 
             { itemMetadataMap } = this,
 
@@ -232,8 +232,8 @@ export default class PortalData {
 
             if (itemID === undefined) continue // async mismatch
 
-            deleteList.push({index,itemID})
-            const { partitionID } = itemMetadataMap.get(itemID)
+            const { partitionID, profile } = itemMetadataMap.get(itemID)
+            deleteList.push({index, itemID, profile})
 
             removePartitionPortal(partitionID,itemID)
 
@@ -243,7 +243,7 @@ export default class PortalData {
 
         }
 
-        deleteListCallback && deleteListCallback(deleteList)
+        deleteListCallbackHof && deleteListCallbackHof(deleteList)
 
     }
 
@@ -253,13 +253,13 @@ export default class PortalData {
     // registers indexes when requested but before retrieved and entered into cache
     private registerPendingPortal(scrollerID, index) {
 
-        this.scrollerData.scrollerDataMap.get(scrollerID).requestedSet.add(index)
+        this.cacheScrollerData.scrollerDataMap.get(scrollerID).requestedSet.add(index)
 
     }
 
     private unregisterPendingPortal(scrollerID, index) {
 
-        const scrollerDataMap = this.scrollerData.scrollerDataMap.get(scrollerID)
+        const scrollerDataMap = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
         if (scrollerDataMap) { // otherwise scroller has been deleted
             scrollerDataMap.requestedSet.delete(index)
@@ -276,7 +276,7 @@ export default class PortalData {
     // get new or existing itemID for contentfunctions.createCellFrame
     private getNewOrExistingItemID(scrollerID, index) {
 
-        const { indexToItemIDMap } = this.scrollerData.scrollerDataMap.get(scrollerID)
+        const { indexToItemIDMap } = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
         const itemID = 
             (indexToItemIDMap.has(index))?
@@ -289,7 +289,7 @@ export default class PortalData {
 
     private transferPortalMetadataToScroller(scrollerID, itemID, toIndex) {
 
-        const targetScrollerDataMap = this.scrollerData.scrollerDataMap.get(scrollerID)
+        const targetScrollerDataMap = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
         if (!targetScrollerDataMap) return null
 
@@ -314,7 +314,7 @@ export default class PortalData {
 
         this.unregisterPendingPortal(scrollerID, index)
 
-        const scrollerDataMap = this.scrollerData.scrollerDataMap.get(scrollerID)
+        const scrollerDataMap = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
         if (!scrollerDataMap) return null
 
@@ -353,7 +353,7 @@ export default class PortalData {
     private preload = (scrollerID, finalCallback, accept) => {
 
         const 
-            { cradleParameters } = this.scrollerData.scrollerDataMap.get(scrollerID),
+            { cradleParameters } = this.cacheScrollerData.scrollerDataMap.get(scrollerID),
 
             { scrollerPropertiesRef } = cradleParameters,
 
@@ -377,7 +377,7 @@ export default class PortalData {
         if (stateHandler.isMountedRef.current) {
             
             const 
-                indexToItemIDMap = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+                indexToItemIDMap = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
 
                 { preloadIndexCallback, itemExceptionCallback } = serviceHandler.callbacks
 
@@ -504,7 +504,7 @@ export default class PortalData {
 
     private applyPortalPartitionItemsForDeleteList = (scrollerID) => {
 
-        const { portalPartitionItemsForDeleteList } = this.scrollerData.scrollerDataMap.get(scrollerID)
+        const { portalPartitionItemsForDeleteList } = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
         if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
 
@@ -514,7 +514,7 @@ export default class PortalData {
                 
             }
 
-            this.scrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = []                    
+            this.cacheScrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = []                    
 
             this.renderPortalLists()
 

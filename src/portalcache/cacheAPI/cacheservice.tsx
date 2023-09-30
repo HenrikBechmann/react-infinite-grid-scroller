@@ -6,21 +6,21 @@ import React from 'react'
 export default class CacheService {
 
 
-    private scrollerData
-    private portalData
+    private cacheScrollerData
+    private cachePortalData
 
-    private linkSupport = ({scrollerData, portalData}) => {
+    private linkSupport = ({cacheScrollerData, cachePortalData}) => {
 
-        this.scrollerData = scrollerData
-        this.portalData = portalData
+        this.cacheScrollerData = cacheScrollerData
+        this.cachePortalData = cachePortalData
 
     }
 
     private moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex ) {
 
         const 
-            indexToItemIDMap:Map<number, number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            { itemMetadataMap } = this.portalData,
+            indexToItemIDMap:Map<number, number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+            { itemMetadataMap } = this.cachePortalData,
 
             // ----------- define parameters ---------------
 
@@ -171,10 +171,10 @@ export default class CacheService {
             emptyreturn = [null, null, [],[],[], []], // no action return value
 
             // cache resources
-            indexToItemIDMap:Map<number, number> = this.scrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            { itemMetadataMap } = this.portalData,
+            indexToItemIDMap:Map<number, number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+            { itemMetadataMap } = this.cachePortalData,
             orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b), // ascending order
-            itemSet = this.scrollerData.scrollerDataMap.get(scrollerID).itemSet
+            itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet
 
         // ---------- define contiguous range parameters; add sentinels ---------------
 

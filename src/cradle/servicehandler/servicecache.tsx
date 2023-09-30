@@ -27,7 +27,7 @@ export default class ServiceCache {
 
     cradleParameters
     setListRange
-    serviceHandler
+    // serviceHandler
 
     public clearCache = () => {
 
@@ -326,7 +326,7 @@ export default class ServiceCache {
         // determine if cradle must be reset or simply adjusted
         const 
             changecount = rangeincrement, // semantics
-            newlistsize = this.serviceHandler.newListSize = listsize + changecount,
+            newlistsize = serviceHandler.newListSize = listsize + changecount,
 
             calculatedCradleRowcount = viewportRowcount + (runwaySize * 2),
             calculatedCradleItemcount = calculatedCradleRowcount * crosscount,

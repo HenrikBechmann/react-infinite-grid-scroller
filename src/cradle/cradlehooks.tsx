@@ -402,7 +402,8 @@ export const useCachingChangeEffect = ({
     contentHandler, 
     serviceHandler, 
     cacheAPI, 
-    setCradleState
+    setCradleState,
+    scrollerID,
 
 }) => {
 
@@ -427,19 +428,23 @@ export const useCachingChangeEffect = ({
 
                 const { deleteListCallback } = serviceHandler.callbacks
 
-                let dListCallback
+                let deleteListCallbackHof
                 if (deleteListCallback) {
-                    dListCallback = (deleteList) => {
+                    deleteListCallbackHof = (deleteList) => {
 
-                        deleteListCallback('pare cache to cacheMax',deleteList)
-
+                        deleteListCallback(deleteList,
+                            {
+                                contextType:'deleteList',
+                                scrollerID,
+                                message:'pare cache to cacheMax',
+                            }
+                        )
                     }
-
                 }
 
                 // const { cacheMax } = cradleParameters.cradleInheritedPropertiesRef.current
 
-                if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
+                if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, deleteListCallbackHof)) {
 
                     cacheAPI.renderPortalLists()
                     
@@ -456,17 +461,22 @@ export const useCachingChangeEffect = ({
 
                 const { deleteListCallback } = serviceHandler.callbacks
 
-                let dListCallback
+                let deleteListCallbackHof
                 if (deleteListCallback) {
-                    dListCallback = (deleteList) => {
+                    deleteListCallbackHof = (deleteList) => {
 
-                        deleteListCallback('match cache to cradle',deleteList)
-
+                        deleteListCallback(deleteList,
+                            {
+                                contextType:'deleteList',
+                                scrollerID,
+                                message:'match cache to cradle',
+                            }
+                        )
                     }
 
                 }
 
-                if (cacheAPI.matchCacheToCradle(modelIndexList, dListCallback)) {
+                if (cacheAPI.matchCacheToCradle(modelIndexList, deleteListCallbackHof)) {
 
                     cacheAPI.renderPortalLists()
 

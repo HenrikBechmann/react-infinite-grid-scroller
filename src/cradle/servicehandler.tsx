@@ -109,15 +109,15 @@ export default class ServiceHandler {
        const 
 
        {
-           referenceIndexCallback, // (index, location, cradleState)
-           preloadIndexCallback, // (index)
-           deleteListCallback, // (reason, deleteList)
-           changeListSizeCallback, // (newlistsize)
-           changeListRangeCallback, // (listrange) two part array lowindex, highindex 
-           itemExceptionCallback, // (index, itemID, returnvalue, location, error)
-           repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning
-           repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
-           boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
+           referenceIndexCallback, // (index, callback)
+           preloadIndexCallback, // (index, context)
+           deleteListCallback, // (deleteList, context)
+           changeListSizeCallback, // (newlistsize, context)
+           changeListRangeCallback, // (listrange, context) two part array lowindex, highindex 
+           itemExceptionCallback, // (index, context)
+           repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning
+           repositioningIndexCallback, // (index, context) - current virtual index number during rapid repositioning
+           boundaryCallback, // (position, index, context) - position is "SOL" or "EOL", index is the corresponding boundary index
            
        } = cradleParameters.externalCallbacksRef.current,
 

@@ -248,17 +248,23 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
 
         const { deleteListCallback } = serviceHandler.callbacks
 
-        let dListCallback
+        let deleteListCallbackHof
         if (deleteListCallback) {
-            dListCallback = (deleteList) => {
+            deleteListCallbackHof = (deleteList) => {
 
-                deleteListCallback('pare cache to cradle',deleteList)
+                deleteListCallback(deleteList,
+                    {
+                        contextType:'deleteList',
+                        scrollerID,
+                        message:'pare cache to cradle',
+                    }
+                )
 
             }
 
         }
 
-        deletePortals(cacheAPI, deletedContentItems, dListCallback)
+        deletePortals(cacheAPI, deletedContentItems, deleteListCallbackHof)
 
     }
 

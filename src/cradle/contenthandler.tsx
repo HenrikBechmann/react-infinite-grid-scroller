@@ -296,18 +296,23 @@ export default class ContentHandler {
 
                 { deleteListCallback } = serviceHandler.callbacks
 
-            let dListCallback
+            let deleteListCallbackHof
             if (deleteListCallback) {
-                dListCallback = (deleteList) => {
+                deleteListCallbackHof = (deleteList) => {
 
-                    deleteListCallback('pare cache to cacheMax',deleteList)
+                    deleteListCallback(deleteList, 
+                    {
+                        contextType:'deleteList',
+                        scrollerID,
+                        message:'pare cache to cacheMax',
+                    })
 
                 }
 
             }
 
             if (cacheAPI.pareCacheToMax(
-                cradleInheritedProperties.cacheMax, modelIndexList, dListCallback)) {
+                cradleInheritedProperties.cacheMax, modelIndexList, deleteListCallbackHof)) {
             
                 cacheAPI.renderPortalLists()
                 

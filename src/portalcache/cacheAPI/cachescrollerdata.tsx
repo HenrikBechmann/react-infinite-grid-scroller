@@ -7,11 +7,11 @@ export default class ScrollerData {
 
     private scrollerDataMap = new Map()
 
-    private portalData
+    private cachePortalData
 
-    private linkSupport = ({portalData}) => {
+    private linkSupport = ({cachePortalData}) => {
 
-        this.portalData = portalData
+        this.cachePortalData = cachePortalData
                 
     }
     registerScroller(scrollerID) {
@@ -32,17 +32,17 @@ export default class ScrollerData {
 
         const { scrollerDataMap } = this
 
-        const { itemMetadataMap } = this.portalData
+        const { itemMetadataMap } = this.cachePortalData
 
         if ( scrollerDataMap.size == 1 ) return // already getting dismantled; avoid conflict
 
         scrollerDataMap.delete(scrollerID)
         itemSet.forEach((itemID) => {
             const { partitionID } = itemMetadataMap.get(itemID)
-            this.portalData.removePartitionPortal(partitionID,itemID)
+            this.cachePortalData.removePartitionPortal(partitionID,itemID)
             itemMetadataMap.delete(itemID)
         })
-        this.portalData.renderPortalLists()
+        this.cachePortalData.renderPortalLists()
         // this.measureMemory('UNREGISTER', scrollerID)
 
     }
@@ -51,7 +51,7 @@ export default class ScrollerData {
 
         const
             { scrollerDataMap } = this,
-            { itemMetadataMap } = this.portalData,
+            { itemMetadataMap } = this.cachePortalData,
             datamap = scrollerDataMap.get(scrollerID),
             {indexToItemIDMap, itemSet, requestedSet} = datamap
 
@@ -61,15 +61,15 @@ export default class ScrollerData {
             itemMetadataMap.clear()
 
             // clear cache partitions
-            this.portalData.clearCachePartisions()
+            this.cachePortalData.clearCachePartisions()
 
         } else {
 
             itemSet.forEach((itemID) => {
                 const { partitionID } = itemMetadataMap.get(itemID)
-                this.portalData.removePartitionPortal(partitionID,itemID)
+                this.cachePortalData.removePartitionPortal(partitionID,itemID)
             })
-            this.portalData.renderPortalLists()
+            this.cachePortalData.renderPortalLists()
 
         }
 
@@ -84,7 +84,10 @@ export default class ScrollerData {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from serviceHandler.setListSize
-    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallback) => {
+    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackHof) => {
+
+        console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackHof',
+            scrollerID, newlistsize, deleteListCallbackHof)
 
         if (newlistsize.length == 0) {
             this.clearCache(scrollerID) 
@@ -114,13 +117,13 @@ export default class ScrollerData {
                 return index > (comparehighindex)
             })
 
-            this.portalData.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
+            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackHof)
 
         }
 
     }
 
-    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallback) => { 
+    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallbackHof) => { 
 
         if (newlistrange.length == 0) {
             this.clearCache(scrollerID) 
@@ -146,7 +149,7 @@ export default class ScrollerData {
                 return index > (compareindex)
             })
 
-            this.portalData.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
+            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackHof)
 
         }
 
@@ -157,7 +160,7 @@ export default class ScrollerData {
                 return index < (compareindex)
             })
 
-            this.portalData.deletePortalByIndex(scrollerID, parelist, deleteListCallback)
+            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackHof)
 
         }
 

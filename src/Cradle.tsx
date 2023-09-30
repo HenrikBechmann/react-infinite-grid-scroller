@@ -541,7 +541,8 @@ export const Cradle = ({ // exported for DndCradle
         contentHandler, 
         serviceHandler, 
         cacheAPI, 
-        setCradleState
+        setCradleState,
+        scrollerID,
     })
 
     // trigger viewportresizing response based on viewport state
@@ -648,6 +649,7 @@ export const Cradle = ({ // exported for DndCradle
         isCachedRef, 
         wasCachedRef,
         hasBeenRenderedRef,
+        scrollerID,
     })
 
     // standard rendering states (2 states)

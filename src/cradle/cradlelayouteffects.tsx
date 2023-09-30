@@ -12,6 +12,7 @@ export const useCradleStateLayoutEffects = ({
     isCachedRef, 
     wasCachedRef,
     hasBeenRenderedRef,
+    scrollerID,
 
 }) => {
     const masterDndContext = useContext(MasterDndContext)
@@ -72,18 +73,24 @@ export const useCradleStateLayoutEffects = ({
 
                     const { deleteListCallback } = serviceHandler.callbacks
 
-                    let dListCallback
+                    let deleteListCallbackHof
                     if (deleteListCallback) {
-                        dListCallback = (deleteList) => {
+                        deleteListCallbackHof = (deleteList) => {
 
-                            deleteListCallback('pare cache to cacheMax',deleteList)
+                            deleteListCallback(deleteList,
+                                {
+                                    contextType:'deleteList',
+                                    scrollerID,
+                                    message:'pare cache to cacheMax',
+                                }
+                            )
 
                         }
 
                     }
 
                     const {cacheMax} = cradleInheritedPropertiesRef.current
-                    if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, dListCallback)) {
+                    if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, deleteListCallbackHof)) {
 
                         cacheAPI.renderPortalLists()
 
@@ -236,17 +243,23 @@ export const useCradleStateLayoutEffects = ({
 
                     const { deleteListCallback } = serviceHandler.callbacks
 
-                    let dListCallback
+                    let deleteListCallbackHof
                     if (deleteListCallback) {
-                        dListCallback = (deleteList) => {
+                        deleteListCallbackHof = (deleteList) => {
 
-                            deleteListCallback('match cache to cradle',deleteList)
+                            deleteListCallback(deleteList,
+                                {
+                                    contextType:'deleteList',
+                                    scrollerID,
+                                    message:'match cache to cradle',
+                                }
+                            )
 
                         }
 
                     }
 
-                    if (cacheAPI.matchCacheToCradle(modelIndexList, dListCallback)) {
+                    if (cacheAPI.matchCacheToCradle(modelIndexList, deleteListCallbackHof)) {
                         
                         cacheAPI.renderPortalLists()
 
@@ -456,9 +469,12 @@ export const useCradleStateLayoutEffects = ({
                 const newlistsize = serviceHandler.newListSize
                 serviceHandler.newListSize = null
 
+                console.log('changelistsizeafterinsertremove:newlistsize',newlistsize)
+
                 setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention
+                console.log('calling serviceHandler.setListSize')
                 serviceHandler.setListSize(newlistsize)
 
                 break

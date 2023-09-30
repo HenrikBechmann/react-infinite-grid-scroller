@@ -263,21 +263,28 @@ export default class ServiceGeneral {
             } = this.callbacks,
 
             currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size,
+            {scrollerID} = this.cradleParameters.cradleInternalPropertiesRef.current,
 
             { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        let dListCallback
+        let deleteListCallbackHof
         if (deleteListCallback) {
-            dListCallback = (deleteList) => {
+            deleteListCallbackHof = (deleteList) => {
 
-                deleteListCallback('change list size intervention',deleteList)
+                deleteListCallback(deleteList,
+                    {
+                        contextType:'deleteList',
+                        scrollerID,
+                        message:'change list size intervention',
+                    }
+                )
 
             }
 
         }
 
         contentHandler.updateVirtualListSize(newlistsize)
-        cacheAPI.changeCacheListSize(newlistsize, dListCallback)
+        cacheAPI.changeCacheListSize(newlistsize, deleteListCallbackHof)
 
         cacheAPI.renderPortalLists()
 
@@ -335,21 +342,28 @@ export default class ServiceGeneral {
             } = this.callbacks,
 
             currentlistrange = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.range,
+            { scrollerID } = this.cradleParameters.cradleInternalPropertiesRef.current,
 
             { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        let dListCallback
+        let deleteListCallbackHof
         if (deleteListCallback) {
-            dListCallback = (deleteList) => {
+            deleteListCallbackHof = (deleteList) => {
 
-                deleteListCallback('change list range intervention',deleteList)
+                deleteListCallback(deleteList,
+                    {
+                        contextType:'deleteList',
+                        scrollerID,
+                        message:'change list range intervention',
+                    }
+                )
 
             }
 
         }
 
         contentHandler.updateVirtualListRange(newlistrange)
-        cacheAPI.changeCacheListRange(newlistrange, dListCallback)
+        cacheAPI.changeCacheListRange(newlistrange, deleteListCallbackHof)
 
         cacheAPI.renderPortalLists()
 
