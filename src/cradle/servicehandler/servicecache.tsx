@@ -376,8 +376,9 @@ export default class ServiceCache {
         }
 
         const replacedList = replaceList // semantics
+        const deletedList = cacheIndexesDeletedList
 
-        return [shiftedList, replacedList, removedList] // inform caller
+        return [shiftedList, replacedList, removedList, deletedList] // inform caller
 
     }
 }
