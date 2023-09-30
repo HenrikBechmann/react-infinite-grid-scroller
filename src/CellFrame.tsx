@@ -457,7 +457,7 @@ export const CellFrame = ({
                                             scrollerID,
                                         }
 
-                                const itempack = getItemPack(index, itemID, context);
+                                const itempack = await getItemPack(index, itemID, context);
                                 ({ dndOptions, profile} = itempack)
                                 dndOptions = dndOptions ?? {}
                                 profile = profile ?? {}
