@@ -248,9 +248,9 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
 
         const { deleteListCallback } = serviceHandler.callbacks
 
-        let deleteListCallbackHof
+        let deleteListCallbackWrapper
         if (deleteListCallback) {
-            deleteListCallbackHof = (deleteList) => {
+            deleteListCallbackWrapper = (deleteList) => {
 
                 deleteListCallback(deleteList,
                     {
@@ -264,7 +264,7 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
 
         }
 
-        deletePortals(cacheAPI, deletedContentItems, deleteListCallbackHof)
+        deletePortals(cacheAPI, deletedContentItems, deleteListCallbackWrapper)
 
     }
 

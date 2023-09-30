@@ -159,17 +159,17 @@ export default class CacheAPI {
             clearCache:() => {
                 return this.cacheScrollerData.clearCache(scrollerID)
             },
-            changeCacheListSize:(newlistsize, deleteListCallbackHof) => {
-                return this.cacheScrollerData.changeCacheListSize(scrollerID, newlistsize, deleteListCallbackHof) 
+            changeCacheListSize:(newlistsize, deleteListCallbackWrapper) => {
+                return this.cacheScrollerData.changeCacheListSize(scrollerID, newlistsize, deleteListCallbackWrapper) 
             },
-            changeCacheListRange:(newlistrange, deleteListCallbackHof) => { 
-                return this.cacheScrollerData.changeCacheListRange(scrollerID, newlistrange, deleteListCallbackHof)
+            changeCacheListRange:(newlistrange, deleteListCallbackWrapper) => { 
+                return this.cacheScrollerData.changeCacheListRange(scrollerID, newlistrange, deleteListCallbackWrapper)
             },
-            matchCacheToCradle:(cradleIndexList, deleteListCallbackHof) => {
-                return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallbackHof)
+            matchCacheToCradle:(cradleIndexList, deleteListCallbackWrapper) => {
+                return this.matchCacheToCradle(scrollerID, cradleIndexList, deleteListCallbackWrapper)
             },
-            pareCacheToMax:(cacheMax, cradleIndexList, deleteListCallbackHof) => {
-                return this.pareCacheToMax(scrollerID, cacheMax, cradleIndexList, deleteListCallbackHof)
+            pareCacheToMax:(cacheMax, cradleIndexList, deleteListCallbackWrapper) => {
+                return this.pareCacheToMax(scrollerID, cacheMax, cradleIndexList, deleteListCallbackWrapper)
             },
             guardAgainstRunawayCaching:(cacheMax, cradleListLength, MAX_CACHE_OVER_RUN) => {
                 return this.guardAgainstRunawayCaching(scrollerID, cacheMax, cradleListLength, MAX_CACHE_OVER_RUN)
@@ -210,8 +210,8 @@ export default class CacheAPI {
             createPortal:(component, index, itemID, scrollerContext, dndOptions, profile, isPreload = false) => {
                 return this.cachePortalData.createPortal(scrollerID, component, index, itemID, scrollerContext, dndOptions, profile, isPreload = false)
             },
-            deletePortalByIndex:(index, deleteListCallbackHof) => {
-                return this.cachePortalData.deletePortalByIndex(scrollerID, index, deleteListCallbackHof)
+            deletePortalByIndex:(index, deleteListCallbackWrapper) => {
+                return this.cachePortalData.deletePortalByIndex(scrollerID, index, deleteListCallbackWrapper)
             },
             applyPortalPartitionItemsForDeleteList:() => {
                 return this.cachePortalData.applyPortalPartitionItemsForDeleteList(scrollerID)
@@ -229,7 +229,7 @@ export default class CacheAPI {
 
     // ----------------------[ cache size limit enforceent ]------------------
 
-    private matchCacheToCradle = (scrollerID, cradleIndexList, deleteListCallbackHof) => {
+    private matchCacheToCradle = (scrollerID, cradleIndexList, deleteListCallbackWrapper) => {
 
         const 
             mapkeys = Array.from(this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap.keys()),
@@ -237,7 +237,7 @@ export default class CacheAPI {
 
         if (delkeys.length) {
 
-            this.cachePortalData.deletePortalByIndex(scrollerID, delkeys, deleteListCallbackHof)
+            this.cachePortalData.deletePortalByIndex(scrollerID, delkeys, deleteListCallbackWrapper)
             return true
 
         } else {
@@ -248,7 +248,7 @@ export default class CacheAPI {
 
     }
 
-    private pareCacheToMax = (scrollerID, cacheMax, cradleIndexList, deleteListCallbackHof) => {
+    private pareCacheToMax = (scrollerID, cacheMax, cradleIndexList, deleteListCallbackWrapper) => {
 
         const modelLength = cradleIndexList.length
 
@@ -294,7 +294,7 @@ export default class CacheAPI {
 
             delList = [...headlist,...taillist]
 
-        this.cachePortalData.deletePortalByIndex(scrollerID, delList, deleteListCallbackHof)
+        this.cachePortalData.deletePortalByIndex(scrollerID, delList, deleteListCallbackWrapper)
 
         return true
 

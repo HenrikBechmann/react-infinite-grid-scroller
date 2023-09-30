@@ -296,9 +296,9 @@ export default class ContentHandler {
 
                 { deleteListCallback } = serviceHandler.callbacks
 
-            let deleteListCallbackHof
+            let deleteListCallbackWrapper
             if (deleteListCallback) {
-                deleteListCallbackHof = (deleteList) => {
+                deleteListCallbackWrapper = (deleteList) => {
 
                     deleteListCallback(deleteList, 
                     {
@@ -312,7 +312,7 @@ export default class ContentHandler {
             }
 
             if (cacheAPI.pareCacheToMax(
-                cradleInheritedProperties.cacheMax, modelIndexList, deleteListCallbackHof)) {
+                cradleInheritedProperties.cacheMax, modelIndexList, deleteListCallbackWrapper)) {
             
                 cacheAPI.renderPortalLists()
                 

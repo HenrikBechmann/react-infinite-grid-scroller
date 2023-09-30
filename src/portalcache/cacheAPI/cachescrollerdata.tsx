@@ -84,10 +84,10 @@ export default class ScrollerData {
     // ----------------------------[ basic operations ]--------------------------
 
     // called from serviceHandler.setListSize
-    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackHof) => {
+    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackWrapper) => {
 
-        console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackHof',
-            scrollerID, newlistsize, deleteListCallbackHof)
+        console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackWrapper',
+            scrollerID, newlistsize, deleteListCallbackWrapper)
 
         if (newlistsize.length == 0) {
             this.clearCache(scrollerID) 
@@ -117,13 +117,13 @@ export default class ScrollerData {
                 return index > (comparehighindex)
             })
 
-            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackHof)
+            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackWrapper)
 
         }
 
     }
 
-    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallbackHof) => { 
+    private changeCacheListRange = (scrollerID, newlistrange, deleteListCallbackWrapper) => { 
 
         if (newlistrange.length == 0) {
             this.clearCache(scrollerID) 
@@ -149,7 +149,7 @@ export default class ScrollerData {
                 return index > (compareindex)
             })
 
-            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackHof)
+            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackWrapper)
 
         }
 
@@ -160,7 +160,7 @@ export default class ScrollerData {
                 return index < (compareindex)
             })
 
-            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackHof)
+            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackWrapper)
 
         }
 

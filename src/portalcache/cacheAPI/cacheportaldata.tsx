@@ -210,7 +210,7 @@ export default class PortalData {
 
     }
 
-    private deletePortalByIndex(scrollerID, index, deleteListCallbackHof) {
+    private deletePortalByIndex(scrollerID, index, deleteListCallbackWrapper) {
 
         const
             indexArray = 
@@ -243,7 +243,7 @@ export default class PortalData {
 
         }
 
-        deleteListCallbackHof && deleteListCallbackHof(deleteList)
+        deleteListCallbackWrapper && deleteListCallbackWrapper(deleteList)
 
     }
 

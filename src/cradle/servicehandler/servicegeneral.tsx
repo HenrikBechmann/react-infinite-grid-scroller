@@ -267,9 +267,9 @@ export default class ServiceGeneral {
 
             { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        let deleteListCallbackHof
+        let deleteListCallbackWrapper
         if (deleteListCallback) {
-            deleteListCallbackHof = (deleteList) => {
+            deleteListCallbackWrapper = (deleteList) => {
 
                 deleteListCallback(deleteList,
                     {
@@ -284,7 +284,7 @@ export default class ServiceGeneral {
         }
 
         contentHandler.updateVirtualListSize(newlistsize)
-        cacheAPI.changeCacheListSize(newlistsize, deleteListCallbackHof)
+        cacheAPI.changeCacheListSize(newlistsize, deleteListCallbackWrapper)
 
         cacheAPI.renderPortalLists()
 
@@ -346,9 +346,9 @@ export default class ServiceGeneral {
 
             { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        let deleteListCallbackHof
+        let deleteListCallbackWrapper
         if (deleteListCallback) {
-            deleteListCallbackHof = (deleteList) => {
+            deleteListCallbackWrapper = (deleteList) => {
 
                 deleteListCallback(deleteList,
                     {
@@ -363,7 +363,7 @@ export default class ServiceGeneral {
         }
 
         contentHandler.updateVirtualListRange(newlistrange)
-        cacheAPI.changeCacheListRange(newlistrange, deleteListCallbackHof)
+        cacheAPI.changeCacheListRange(newlistrange, deleteListCallbackWrapper)
 
         cacheAPI.renderPortalLists()
 

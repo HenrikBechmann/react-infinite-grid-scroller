@@ -73,9 +73,9 @@ export const useCradleStateLayoutEffects = ({
 
                     const { deleteListCallback } = serviceHandler.callbacks
 
-                    let deleteListCallbackHof
+                    let deleteListCallbackWrapper
                     if (deleteListCallback) {
-                        deleteListCallbackHof = (deleteList) => {
+                        deleteListCallbackWrapper = (deleteList) => {
 
                             deleteListCallback(deleteList,
                                 {
@@ -90,7 +90,7 @@ export const useCradleStateLayoutEffects = ({
                     }
 
                     const {cacheMax} = cradleInheritedPropertiesRef.current
-                    if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, deleteListCallbackHof)) {
+                    if (cacheAPI.pareCacheToMax(cacheMax, modelIndexList, deleteListCallbackWrapper)) {
 
                         cacheAPI.renderPortalLists()
 
@@ -243,9 +243,9 @@ export const useCradleStateLayoutEffects = ({
 
                     const { deleteListCallback } = serviceHandler.callbacks
 
-                    let deleteListCallbackHof
+                    let deleteListCallbackWrapper
                     if (deleteListCallback) {
-                        deleteListCallbackHof = (deleteList) => {
+                        deleteListCallbackWrapper = (deleteList) => {
 
                             deleteListCallback(deleteList,
                                 {
@@ -259,7 +259,7 @@ export const useCradleStateLayoutEffects = ({
 
                     }
 
-                    if (cacheAPI.matchCacheToCradle(modelIndexList, deleteListCallbackHof)) {
+                    if (cacheAPI.matchCacheToCradle(modelIndexList, deleteListCallbackWrapper)) {
                         
                         cacheAPI.renderPortalLists()
 

@@ -197,7 +197,7 @@ export const allocateContentList = (
 
 }
 
-export const deletePortals = (cacheAPI, deleteList, deleteListCallbackHof) => {
+export const deletePortals = (cacheAPI, deleteList, deleteListCallbackWrapper) => {
 
     const dlist = deleteList.map((item)=>{
 
@@ -205,7 +205,7 @@ export const deletePortals = (cacheAPI, deleteList, deleteListCallbackHof) => {
         
     })
 
-    cacheAPI.deletePortalByIndex(dlist, deleteListCallbackHof)
+    cacheAPI.deletePortalByIndex(dlist, deleteListCallbackWrapper)
 }
 
 // =====================[ internal, acquire item ]======================
