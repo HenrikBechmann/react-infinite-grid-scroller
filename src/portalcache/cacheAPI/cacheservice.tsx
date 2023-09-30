@@ -5,7 +5,6 @@ import React from 'react'
 
 export default class CacheService {
 
-
     private cacheScrollerData
     private cachePortalData
 
@@ -379,7 +378,7 @@ export default class CacheService {
         // delete remaining indexes and items now duplicates; track portal data to remove after cradle updated
 
         const portalPartitionItemsForDeleteList = [] // hold portals for deletion until after after cradle synch
-        let cacheIndexesRemovedList = []
+        let cacheIndexesRemovedList = [], cacheIndexesDeletedList = []
 
         if (isInserting) {
 
@@ -394,13 +393,16 @@ export default class CacheService {
             for (const itemID of cacheItemsToRemoveList) {
 
                 if (removeItems) {
-                const { partitionID } = itemMetadataMap.get(itemID)
+                    const { partitionID, index:removedIndex, profile } = itemMetadataMap.get(itemID)
+                    cacheIndexesDeletedList.push({index:removedIndex,itemID,profile})
                     portalPartitionItemsForDeleteList.push({itemID, partitionID})
                     itemMetadataMap.delete(itemID)
                 }
                 itemSet.delete(itemID)
 
             }
+
+            // console.log('cacheIndexesDeletedList',cacheIndexesDeletedList)
 
             // abandoned indexes from remove process
             const orphanedIndexesTransferredList = Array.from(cacheIndexesTransferredSet)
@@ -411,7 +413,7 @@ export default class CacheService {
 
             }
 
-            cacheIndexesRemovedList = cacheIndexesToRemoveList.concat(orphanedIndexesTransferredList)
+             cacheIndexesRemovedList = cacheIndexesToRemoveList.concat(orphanedIndexesTransferredList)
 
         }
 
@@ -421,12 +423,15 @@ export default class CacheService {
 
         // return values for caller to send to contenthandler for cradle synchronization
         return [
+            
             startChangeIndex, 
             rangeincrement, 
             cacheIndexesShiftedList, 
             cacheIndexesRemovedList, 
             cacheIndexesToReplaceList, 
-            portalPartitionItemsForDeleteList
+            portalPartitionItemsForDeleteList,
+            cacheIndexesDeletedList,
+
         ]
 
     }

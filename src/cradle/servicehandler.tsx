@@ -313,7 +313,7 @@ export default class ServiceHandler {
 
     public removeIndex = (index, rangehighindex = null) => {
 
-        return this.servicecache.removeIndex(index, rangehighindex = null)
+        return this.servicecache.removeIndex(index, rangehighindex)
         
     }
 

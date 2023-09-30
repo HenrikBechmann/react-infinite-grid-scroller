@@ -86,8 +86,8 @@ export default class ScrollerData {
     // called from serviceHandler.setListSize
     private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackWrapper) => {
 
-        console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackWrapper',
-            scrollerID, newlistsize, deleteListCallbackWrapper)
+        // console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackWrapper',
+        //     scrollerID, newlistsize, deleteListCallbackWrapper)
 
         if (newlistsize.length == 0) {
             this.clearCache(scrollerID) 
