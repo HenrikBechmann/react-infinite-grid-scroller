@@ -445,7 +445,7 @@ export default class PortalData {
 
             ({dndOptions, profile} = itempack)
 
-            usercontent = await itempack.content
+            usercontent = await itempack.component
 
             if (usercontent === null) returnvalue = usercontent = undefined
 
@@ -471,18 +471,18 @@ export default class PortalData {
 
         if (usercontent !== undefined) {
 
-            let content 
+            let component 
             const scrollerContext = {
                 scroller:scrollerPropertiesRef,
                 cell:{current:{index,itemID}}
             }
             if (usercontent.props.hasOwnProperty('scrollerContext')) {
-                content = React.cloneElement(usercontent, {scrollerContext})
+                component = React.cloneElement(usercontent, {scrollerContext})
             } else {
-                content = usercontent
+                component = usercontent
             }
 
-            await this.createPortal(scrollerID,content, index, itemID, scrollerContext, dndOptions, profile, true) // true = isPreload
+            await this.createPortal(scrollerID,component, index, itemID, scrollerContext, dndOptions, profile, true) // true = isPreload
 
         } else {
 
@@ -493,7 +493,7 @@ export default class PortalData {
                     scrollerID,
                     profile,
                     dndOptions,
-                    content:returnvalue, 
+                    component:returnvalue, 
                     location:'preload', 
                     error: error.message
                 }

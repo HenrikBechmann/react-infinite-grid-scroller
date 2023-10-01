@@ -85,7 +85,7 @@ type RIGS = {
     getExpansionCount:GetExpansionCount,
     // internal use only
     isDndMaster:boolean,
-    staticComponent:FC,
+    staticComponent:FC, // pending
 }
 
 // React support

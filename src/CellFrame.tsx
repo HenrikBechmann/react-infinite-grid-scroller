@@ -462,7 +462,7 @@ export const CellFrame = ({
                                 dndOptions = dndOptions ?? {}
                                 profile = profile ?? {}
                                 dndOptionsRef.current = dndOptions
-                                usercontent = await itempack.content
+                                usercontent = await itempack.component
 
                             }
                             if (usercontent === null || usercontent === undefined) {
@@ -494,11 +494,11 @@ export const CellFrame = ({
                         }
 
                         if (isMountedRef.current) {
-                            // prepare the content
+                            // prepare the component
                             if (usercontent !== undefined) {
 
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
-                                let content 
+                                let component 
                                 const scrollerContext = {
                                     cell:cellFramePropertiesRef,
                                     scroller:scrollerPropertiesRef,
@@ -514,13 +514,13 @@ export const CellFrame = ({
                                     addinCount++
                                 }
                                 if (addinCount) {
-                                    content = React.cloneElement(usercontent, addinProps)
+                                    component = React.cloneElement(usercontent, addinProps)
                                 } else {
-                                    content = usercontent
+                                    component = usercontent
                                 }
 
                                 portalMetadataRef.current = 
-                                    await cacheAPI.createPortal(content, index, itemID, scrollerContext, dndOptions, profile)
+                                    await cacheAPI.createPortal(component, index, itemID, scrollerContext, dndOptions, profile)
 
                                 if (portalMetadataRef.current) {
                                 
@@ -547,7 +547,7 @@ export const CellFrame = ({
                                             scrollerID,
                                             profile, 
                                             dndOptions,
-                                            content:returnvalue, 
+                                            component:returnvalue, 
                                             location:'cellFrame', 
                                             error:error.message
                                         }
