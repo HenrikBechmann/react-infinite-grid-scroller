@@ -123,7 +123,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |placeholderMessages:Object| messages presented by the placeholder|optional, to replace default messages. See below for details|
 |callbacks:Object| collection of functions for feedback, and interactions with scroller components|optional. See below for details|
 |technical:Object| collection of values used to control system behaviour|use with caution. optional. See below for details|
-|scrollerProperties:null|requested by user components by being set to null by user; instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
+|scrollerContext:null|requested by user components by being set to null by user; instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
 
 Notes: For explicit cache management capability, a unique session `itemID` (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced into the cache, it is assigned a new session-unique `itemID`. 
 
@@ -255,7 +255,7 @@ Details about the functions returned in an object by `functionsCallback`:
 |getCacheIndexMap():Map|snapshot of cache index (=key) to itemID (=value) map|
 |getCacheItemMap():Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
 |getCradleIndexMap(): Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
-|getPropertiesSnapshot():object|copy of `scrollerPropertiesRef.current` from scrollerProperties object. See below.|
+|getPropertiesSnapshot():object|copy of `scrollerProperties.current` from scrollerContext object. See below.|
 |[_**CACHE MANAGEMENT**_]|
 |insertIndex(index:integer, rangehighindex: integer \| null):array[changedList:array, replacedList:array, removedList:array, deletedList:array]|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered; virtual list lowindex remains the same. Changes the list size by increasing virtual list highindex; synchronizes the `Cradle`|
 |removeIndex(index:integer, rangehighindex:integer \| null):array[changedList:array, replacedList:array, removedList:array], deletedList:array|a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
@@ -287,34 +287,33 @@ These properties would rarely be changed.
 |SCROLLTABINTERVALMILLISECONDS:number = 100|SetInterval milliseconds for ScrollTab|
 |SCROLLTABINTERVALPIXELS:number = 100|SetInterval scrollBy pixels for dnd ScrollTab|
 
-### `scrollerProperties` object
+### `scrollerContext` object
 
-Cell components can get access to dynamically updated parent RIGS properties, by requesting the scrollerProperties object.
+Cell components can get access to dynamically updated parent RIGS properties, by requesting the scrollerContext object.
 
-The `scrollerProperties` object is requested by user components by initializing a `scrollerProperties` component property to `null`. The property is then recognized by RIGS and set to the scrollerProperties object by the system on loading of the component to a CellFrame.
+The `scrollerContext` object is requested by user components by initializing a `scrollerContext` component property to `null`. The property is then recognized by RIGS and set to the scrollerContext object by the system on loading of the component to a CellFrame.
 
-the scrollerProperties object contains three properties:
+the scrollerContext object contains two properties:
 
 ~~~typescript
 {
-  cellFramePropertiesRef,
-  scrollerPropertiesRef
+  cell,
+  scroller,
 }
 ~~~
 
 Each of these is a _reference_ object, with values found in `propertyRef.current`.
 
-The `cellFramePropertiesRef.current` object is instantiated only when a component is instantiated in the cradle. It contains two properties:
+The `cell.current` object is instantiated only when a component is instantiated in the cradle. It contains two properties:
 
 ~~~typescript
 {
   itemID, // session cache itemID
   index, // place in virtual list
-  updateDndOptions, // takes dndOptions as argument; updates internal values (notably `enabled`)
 }
 ~~~
 
-The `scrollerPropertiesRef.current` object contains the following properties, which are identical to the properties set for the scroller (they are passed through):
+The `scroller.current` object contains the following properties, which are identical to the properties set for the scroller (they are passed through):
 
 _orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
@@ -370,7 +369,7 @@ import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
   />
 </div>
 ```
-2. `dndOptions` is required for all Scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root Scroller it may also include a `master` property.
+2. `dndOptions` is required for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property.
 ```
 const dndOptions = {
   accept:['type1','type2','type3'] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
@@ -398,7 +397,7 @@ return {
 
 RIGS does not check for matches of `type` values returned with `getItemPack`, with `accept` values sent to scrollers via the `dndOptions` property.
 
-With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing Scroller, for convenience.
+With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
 
 # Restoring scroll positions coming out of cache
 
