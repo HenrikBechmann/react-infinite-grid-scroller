@@ -5,6 +5,7 @@
 Added:
 - intra-list and inter-list drag and drop capability
 - host-provided `droppedItemCallback` function to notify host of completed drag and drop operations
+- `getItemPack` (replaces `getItem`). The return object of `getItemPack` from the host includes `component` and host-defined `profile` object; for dnd, it includes a `dndOptions` object with `dragText` and `type`
 
 Renamed:
 - `scrollerProperties` renamed to `scrollerContext`
