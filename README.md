@@ -200,8 +200,6 @@ callbacks: {
      deleteListCallback, // (deleteList, context) - data about which items have been deleted from the cache
      repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning,
      boundaryCallback, // (position, index, context) - position is "SOL" or "EOL", index is the corresponding boundary index
-
-     
 }
 ~~~
 
