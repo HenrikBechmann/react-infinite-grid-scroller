@@ -14,7 +14,7 @@ Removed:
 - remapIndexes was removed as a service function, as dead weight
 
 Changed:
-- All API functions with return values had the shape of those return values changes. Notably all return values now include a `context` object, which contains a `contextType` name, a `scrollerID` number, and sometimes more. Where possible and appropriate the return values include the host-provided `profile` object, as included in the `getItemPack` return object, to allow for enhanced item identification
+- All API functions with return values had the shape of those return values changes. Notably all return values now include a `context` object, which contains a `contextType` name, a `scrollerID` number, and sometimes more. Where possible the return values include the host-provided `profile` object, as included in the `getItemPack` return object, to allow for enhanced item identification
 
 ## 1.4.2 August 24, 2023
 
