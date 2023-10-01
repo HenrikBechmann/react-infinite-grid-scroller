@@ -381,7 +381,7 @@ When dnd is enabled, all content packages returned to RIGS with `getItemPack` mu
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing Scroller, for convenience.
 ```
-// in host getItemPack
+// in host getItemPack function
 ...
 return {
   component, // a valid React component, or promise of a component
@@ -389,7 +389,7 @@ return {
     type, // string (or Symbol) required to match one of the list accept values
     dragText, // required. Displayed to user in the drag image for the component
   }
-  profile, // recommended. Simple object returned to host for identification in various contexts
+  profile, // recommended. Simple object created by host, returned to host for item identification in various contexts
 }
 
 ```
