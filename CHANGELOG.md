@@ -4,7 +4,7 @@
 
 Added:
 - intra-list and inter-list drag and drop capability
-- host-provided `droppedItemCallback` to notify host of completed drag and drop operations
+- host-provided `droppedItemCallback` functin to notify host of completed drag and drop operations
 
 Renamed:
 - `scrollerProperties` renamed to `scrollerContext`
