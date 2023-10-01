@@ -61,6 +61,7 @@ const DisplaceIcon = (props) => {
         zIndex:2, 
         position:'absolute',
         width:'100%',
+        top:'0',
     })
 
     const imgstyleRef = useRef<CSSProperties>({
