@@ -308,7 +308,7 @@ export const useCradleStateLayoutEffects = ({
 
             case 'triggerboundarynotications': {
 
-                serviceHandler.triggerBoundaryCallbacks()
+                serviceHandler.triggerBoundaryCallbacks(scrollerID)
 
                 setCradleState('ready')
 

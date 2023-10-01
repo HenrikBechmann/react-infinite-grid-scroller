@@ -155,7 +155,7 @@ export default class ServiceHandler {
     // =======================[ BOUNDARY TRIGGERS ]===================
 
     // called by Cradle 'triggerboundarynotications' state
-    public triggerBoundaryCallbacks = () => {
+    public triggerBoundaryCallbacks = (scrollerID) => {
 
         const 
             { 
@@ -175,10 +175,16 @@ export default class ServiceHandler {
             if (callbacks.boundaryCallback) {
 
                 if (layoutHandler.SOLSignal) {
-                    callbacks.boundaryCallback('SOL', virtualListProps.lowindex)
+                    callbacks.boundaryCallback('SOL', virtualListProps.lowindex, {
+                        contextType:'boundary',
+                        scrollerID,
+                    })
                 }
                 if (layoutHandler.EOLSignal) {
-                    callbacks.boundaryCallback('EOL', virtualListProps.highindex)
+                    callbacks.boundaryCallback('EOL', virtualListProps.highindex, {
+                        contextType:'boundary',
+                        scrollerID,
+                    })
                 }
 
             }
