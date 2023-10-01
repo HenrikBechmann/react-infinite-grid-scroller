@@ -358,12 +358,14 @@ export default class CacheAPI {
 
                     index,
                     component,
+                    profile,
 
                 } = metadata
 
             cachelist.set(itemID,{
                 index,
                 component,
+                profile,
             })
 
         }

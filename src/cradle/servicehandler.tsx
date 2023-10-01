@@ -28,7 +28,6 @@
         insertIndex,
         removeIndex,
         moveIndex,
-//        remapIndexes,
     
     The functions listed are defined in this module.
 
