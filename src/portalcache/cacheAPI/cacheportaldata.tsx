@@ -383,7 +383,10 @@ export default class PortalData {
 
             for (let index = lowindex; index <= highindex; index++) {
 
-                preloadIndexCallback && preloadIndexCallback(index)
+                preloadIndexCallback && preloadIndexCallback(index, {
+                    contextType:'preloadIndex',
+                    scrollerID,
+                })
                 if (!indexToItemIDMap.has(index)) {
 
                     const promise = this.preloadItem(
