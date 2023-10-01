@@ -378,7 +378,7 @@ const dndOptions = {
   enabled, // optional for all participating scrollers, default true
 }
 ```
-3. Sub-scrollers must in addition be provided with the `cacheAPI` property to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
+3. Sub-scrollers must in addition be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
 
 4. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). 
 
