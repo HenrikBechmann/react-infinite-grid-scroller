@@ -294,7 +294,6 @@ export const useFunctionsCallback = ({functionsCallback, serviceHandler}) => {
             scrollToPixel,
             scrollByPixel,
             reload, 
-            setListsize, // deprecated
             setListSize,
             setListRange,
             prependIndexCount,
@@ -319,7 +318,6 @@ export const useFunctionsCallback = ({functionsCallback, serviceHandler}) => {
             scrollToPixel,
             scrollByPixel,
             reload,
-            setListsize, // deprecated
             setListSize,
             setListRange,
             prependIndexCount,

@@ -14,7 +14,6 @@
         scrollToPixel,
         scrollByPixel,
         reload, 
-        setListsize, *deprectated* for proper camel case
         setListSize,
         setListRange,
         prependIndexCount,
@@ -236,13 +235,6 @@ export default class ServiceHandler {
 
         this.servicegeneral.scrollByPixel(pixel, behavior)
 
-    }
-
-    // deprecated (camel case)
-    public setListsize = (newlistsize) => { // *deprecated* (for camel case)
-
-        this.setListSize(newlistsize)
-        
     }
 
     public setListSize = (newlistsize) => {
