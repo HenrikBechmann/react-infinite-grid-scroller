@@ -352,6 +352,8 @@ _cradleContentProps_ is an object with the following properties:
 
 # Drag and Drop
 
+## Installation
+
 To install drag and drop ('dnd') capability, 
 
 1. first invoke the `RigsDnd` component (instead of the default component) for the root of the RIGS tree to install the dnd `Provider`. This can only be done once per environment. For embedded lists (sub-scrollers), use the default RIGS component.
@@ -398,6 +400,8 @@ return {
 RIGS does not check for matches of `type` values returned with `getItemPack`, with `accept` values sent to scrollers via the `dndOptions` property.
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
+
+## Configuration
 
 # Restoring scroll positions coming out of cache
 
