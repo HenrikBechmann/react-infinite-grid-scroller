@@ -139,13 +139,16 @@ export default class CacheService {
 
         // ------------ replace shifted index space with moved indexes ----------
 
-        const processedmoveList = []
+        const processedmoveList = [], movedList = []
         const processmoveindexFn = (itemID, index) => {
             const newIndex = index + moveincrement // swap
 
             indexToItemIDMap.set(newIndex, itemID)
-            itemMetadataMap.get(itemID).index = newIndex
+            const itemMetadata = itemMetadataMap.get(itemID)
+            itemMetadata.index = newIndex
+            const { profile } = itemMetadata
             processedmoveList.push(newIndex)
+            movedList.push({fromIndex:index, toIndex:newIndex, itemID, profile})
 
         }
 
@@ -156,7 +159,7 @@ export default class CacheService {
 
         const processedIndexes = [...processeddisplaceList,...processedmoveList].sort((a,b)=>a-b)
 
-        return processedIndexes
+        return [ processedIndexes, movedList ]
 
     }
 

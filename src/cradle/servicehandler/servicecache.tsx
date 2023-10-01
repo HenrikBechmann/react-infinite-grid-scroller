@@ -47,6 +47,8 @@ export default class ServiceCache {
 
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
+            { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
+
             { virtualListProps } = cradleInternalProperties,
 
             { lowindex:listlowindex, size } = virtualListProps
@@ -125,7 +127,7 @@ export default class ServiceCache {
             { cacheAPI, contentHandler, stateHandler } = 
                 this.cradleParameters.handlersRef.current,
 
-            processedIndexList = // both displaced and moved indexes
+            [processedIndexList, movedList] = // both displaced and moved indexes
                 cacheAPI.moveIndex(tolowindex, fromlowindex, fromhighindex)
 
         if (processedIndexList.length) {
@@ -141,7 +143,10 @@ export default class ServiceCache {
             
         }
 
-        return processedIndexList
+        return [ processedIndexList, movedList, {
+            contextType:'moveIndex',
+            scrollerID,
+        }]
 
     }
 
