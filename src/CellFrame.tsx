@@ -416,8 +416,8 @@ export const CellFrame = ({
                         portalMetadataRef.current = cacheAPI.getPortalMetadata(itemID)
                         Object.assign(portalMetadataRef.current.scrollerContext,
                             {
-                                cellFramePropertiesRef,
-                                scrollerPropertiesRef
+                                cell:cellFramePropertiesRef,
+                                scroller:scrollerPropertiesRef
                             }
                         )
                         dndOptionsRef.current = portalMetadataRef.current.dndOptions
