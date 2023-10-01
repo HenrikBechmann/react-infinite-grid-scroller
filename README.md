@@ -129,7 +129,7 @@ Notes: For explicit cache management capability, a unique session `itemID` (inte
 
 The `itemID` for a user component is given to the host with the `getItemPack` call to obtain the component, so that the host can track the user component in the cache. If the user component is assigned to a new `index` number (see the **returned function object** cache management section below) the host will still be able to track the user component with the `itemID`. 
 
-The host can track removal of a user component and its `itemID` from the cache through tracking its associated index removal through the `deleteListCallback` return value, and the return values from cache management functions. These feedback mechanisms also return the host's `profile` object for further identification. 
+The host can track removal of a user component and its `itemID` from the cache through tracking its associated index removal through the `deleteListCallback` return values, and the return values from cache management functions. These feedback mechanisms also return the host's `profile` object for further identification. See callback documentation below.
 
 Most of the time the `itemID` can be ignored.
 
@@ -189,17 +189,17 @@ callbacks: {
      functionsCallback, // (functions) - get an object that has api functions
      
      // index tracking, called when triggered...
-     referenceIndexCallback, // (index, location, cradleState) - change of index adjacent to the axis
-     repositioningIndexCallback, // (index) - current virtual index number during rapid repositioning
-     preloadIndexCallback, // (index) - current index being preloaded
-     itemExceptionCallback, // (index, itemID, returnvalue, location, error) - details about failed getItemPack calls
+     referenceIndexCallback, // (index, context) - change of index adjacent to the axis
+     repositioningIndexCallback, // (index, context) - current virtual index number during rapid repositioning
+     preloadIndexCallback, // (index, context) - current index being preloaded
+     itemExceptionCallback, // (index, context) - details about failed getItemPack calls
 
      // operations tracking, called when triggered
-     changeListSizeCallback, // (newlistsize) - triggered when the listsize changes for any reason
-     changeListRangeCallback, // (listrange) two part array lowindex, highindex 
-     deleteListCallback, // (reason, deleteList) - data about which items have been deleted from the cache
-     repositioningFlagCallback, // (flag) - notification of start (true) or end (false) of rapid repositioning,
-     boundaryCallback, // (position, index) - position is "SOL" or "EOL", index is the corresponding boundary index
+     changeListSizeCallback, // (newlistsize, context) - triggered when the listsize changes for any reason
+     changeListRangeCallback, // (listrange, context) two part array lowindex, highindex 
+     deleteListCallback, // (deleteList, context) - data about which items have been deleted from the cache
+     repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning,
+     boundaryCallback, // (position, index, context) - position is "SOL" or "EOL", index is the corresponding boundary index
 
      
 }
