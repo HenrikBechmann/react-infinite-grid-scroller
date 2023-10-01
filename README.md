@@ -379,7 +379,6 @@ const dndOptions = {
 
 When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). 
 
-With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing Scroller, for convenience.
 ```
 // in host getItemPack function
 ...
@@ -394,7 +393,9 @@ return {
 
 ```
 
-RIGS does not check for matches of `type` values with `accept` values.
+RIGS does not check for matches of `type` values returned with `getItemPack`, with `accept` values sent to scrollers via the `dndOptions` property.
+
+With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing Scroller, for convenience.
 
 # Restoring scroll positions coming out of cache
 
