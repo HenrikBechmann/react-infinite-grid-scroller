@@ -158,6 +158,8 @@ export default class ServiceCache {
 
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
+            { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
+
             { virtualListProps } = cradleInternalProperties,
 
             { lowindex:listlowindex, size } = virtualListProps
@@ -195,7 +197,12 @@ export default class ServiceCache {
             return null
         }
 
-        return this.insertRemoveIndex(index, rangehighindex, +1)
+        const changes = this.insertRemoveIndex(index, rangehighindex, +1)
+
+        return [changes, {
+            contextType:'insertIndex',
+            scrollerID
+        }]
 
     }
 
@@ -206,6 +213,8 @@ export default class ServiceCache {
             { cradleParameters } = this,
 
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
+
+            { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
 
             { virtualListProps } = cradleInternalProperties,
 
@@ -234,7 +243,12 @@ export default class ServiceCache {
             return null
         }
 
-        return this.insertRemoveIndex(index, rangehighindex, -1)
+        const changes = this.insertRemoveIndex(index, rangehighindex, -1)
+
+        return [changes, {
+            contextType:'removeIndex',
+            scrollerID,
+        }]
 
     }
 
