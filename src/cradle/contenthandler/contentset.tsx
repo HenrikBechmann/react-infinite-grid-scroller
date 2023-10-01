@@ -266,7 +266,13 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
         serviceHandler.callbacks.referenceIndexCallback(
 
-            targetAxisReferenceIndex,'setCradleContent', cstate)
+            targetAxisReferenceIndex,{
+                contextType:'referenceIndex',
+                action:'setCradleContent',
+                cradleState:cstate,
+                scrollerID,
+            }
+        )
     
     }
 

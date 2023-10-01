@@ -289,7 +289,13 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
 
         serviceHandler.callbacks.referenceIndexCallback(
 
-            axisReferenceIndex,'updateCradleContent', cstate)
+            axisReferenceIndex,{
+                contextType:'referenceIndex',
+                action:'updateCradleContent',
+                cradleState:cstate,
+                scrollerID,
+            }
+        )
     
     }
 
