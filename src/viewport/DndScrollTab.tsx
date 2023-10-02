@@ -20,8 +20,8 @@ const DndScrollTab = (props) => {
         { 
             position, // head, tail
             gridSpecs,
-            SCROLLTABINTERVALMILLISECONDS,
-            SCROLLTABINTERVALPIXELS,
+            SCROLLTAB_INTERVAL_MILLISECONDS,
+            SCROLLTAB_INTERVAL_PIXELS,
         } = props,
         { orientation } = gridSpecs
 
@@ -49,7 +49,7 @@ const DndScrollTab = (props) => {
     },[orientation, position])
 
     const [transform, top, right, bottom, left, borderRadius, scrollByPixel] = useMemo(()=>{
-        const scrollByPixels = SCROLLTABINTERVALPIXELS
+        const scrollByPixels = SCROLLTAB_INTERVAL_PIXELS
         let transform, top, right, bottom, left, borderRadius, scrollByPixel
         switch (location) {
             case 'topright': {
@@ -92,7 +92,7 @@ const DndScrollTab = (props) => {
 
         return [transform, top, right, bottom, left, borderRadius, scrollByPixel]
 
-    },[location, orientation, SCROLLTABINTERVALPIXELS])
+    },[location, orientation, SCROLLTAB_INTERVAL_PIXELS])
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Viewport'],
@@ -142,7 +142,7 @@ const DndScrollTab = (props) => {
 
             intervalIDRef.current = setInterval(()=>{
                 serviceHandler.scrollByPixel(scrollByPixel)
-            },SCROLLTABINTERVALMILLISECONDS)
+            },SCROLLTAB_INTERVAL_MILLISECONDS)
         } else {
             clearInterval(intervalIDRef.current)
         }

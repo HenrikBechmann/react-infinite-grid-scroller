@@ -73,7 +73,7 @@ type RIGS = {
     technical:GenericObject,
     dndOptions:GenericObject,
 
-    // isOwnProperty causes scrollerContext and cacheAPI to be set by the system
+    // isOwnProperty causes scrollerContext and cacheAPI to be set by the system in CellFrame
     scrollerContext:null | undefined | GenericObject,
     cacheAPI:null | undefined | GenericObject,
 
@@ -156,7 +156,7 @@ export const MasterDndContext = React.createContext(
 
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 
-const InfiniteGridScroller = (props) => { // exported to 
+const InfiniteGridScroller = (props) => {
 
     // state
     const [scrollerState, setScrollerState] = useState('setup') // setup, setlistprops, ready
@@ -504,8 +504,8 @@ const InfiniteGridScroller = (props) => { // exported to
         MAX_CACHE_OVER_RUN, // max streaming over-run as ratio to cacheMax
         CACHE_PARTITION_SIZE, 
 
-        SCROLLTABINTERVALMILLISECONDS,
-        SCROLLTABINTERVALPIXELS,
+        SCROLLTAB_INTERVAL_MILLISECONDS,
+        SCROLLTAB_INTERVAL_PIXELS,
 
     } = technical
 
@@ -516,8 +516,8 @@ const InfiniteGridScroller = (props) => { // exported to
     MAX_CACHE_OVER_RUN = MAX_CACHE_OVER_RUN ?? 1.5
     CACHE_PARTITION_SIZE = CACHE_PARTITION_SIZE ?? 30
 
-    SCROLLTABINTERVALMILLISECONDS = SCROLLTABINTERVALMILLISECONDS ?? 100
-    SCROLLTABINTERVALPIXELS = SCROLLTABINTERVALPIXELS ?? 100
+    SCROLLTAB_INTERVAL_MILLISECONDS = SCROLLTAB_INTERVAL_MILLISECONDS ?? 100
+    SCROLLTAB_INTERVAL_PIXELS = SCROLLTAB_INTERVAL_PIXELS ?? 100
 
     if (typeof showAxis != 'boolean') showAxis = false
 
@@ -756,8 +756,8 @@ const InfiniteGridScroller = (props) => { // exported to
             scrollerID = { scrollerID }
             VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
             useScrollTracker = { useScrollTracker }
-            SCROLLTABINTERVALMILLISECONDS = { SCROLLTABINTERVALMILLISECONDS }
-            SCROLLTABINTERVALPIXELS = { SCROLLTABINTERVALPIXELS }
+            SCROLLTAB_INTERVAL_MILLISECONDS = { SCROLLTAB_INTERVAL_MILLISECONDS }
+            SCROLLTAB_INTERVAL_PIXELS = { SCROLLTAB_INTERVAL_PIXELS }
 
         >
         
@@ -818,7 +818,7 @@ const InfiniteGridScroller = (props) => { // exported to
     </ScrollerDndContext.Provider>
 }
 
-export default InfiniteGridScroller // RIGSWrapper
+export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------
 

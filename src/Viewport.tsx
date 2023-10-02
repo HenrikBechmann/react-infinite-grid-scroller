@@ -69,8 +69,8 @@ export const Viewport = ({
     useScrollTracker,
     viewportFrameElementRef,
     showScrollTabs,
-    SCROLLTABINTERVALMILLISECONDS,
-    SCROLLTABINTERVALPIXELS,
+    SCROLLTAB_INTERVAL_MILLISECONDS,
+    SCROLLTAB_INTERVAL_PIXELS,
 
 }) => {
 
@@ -282,14 +282,14 @@ export const Viewport = ({
             <DndScrollTab 
                 position = 'head' 
                 gridSpecs = {gridSpecs} 
-                SCROLLTABINTERVALMILLISECONDS = {SCROLLTABINTERVALMILLISECONDS} 
-                SCROLLTABINTERVALPIXELS = {SCROLLTABINTERVALPIXELS}
+                SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
             />
             <DndScrollTab 
                 position = 'tail' 
                 gridSpecs = {gridSpecs} 
-                SCROLLTABINTERVALMILLISECONDS = {SCROLLTABINTERVALMILLISECONDS} 
-                SCROLLTABINTERVALPIXELS = {SCROLLTABINTERVALPIXELS}
+                SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
             />
         </>}
         <div 
