@@ -322,11 +322,11 @@ The `cell.current` object is instantiated only when a component is instantiated 
 
 The `scroller.current` object contains the following properties, which are identical to the properties set for the scroller (they are passed through):
 
-_orientation, gap, padding, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
+_orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, cache, cacheMax, startingIndex_
 
-It also contains _scrollerID_, the internal session id (integer) of the current scroller, for debug purposes.
+It also contains _scrollerID_, the internal session id (integer) of the current scroller, _dndInstalled_, and _dndEnabled_.
 
-Finally, it contains two objects with bundled properties: _virtualListProps_ and _cradleContentProps_.
+Finally, it contains four objects with bundled properties: _virtualListProps_, _cradleContentProps_, _gapProps_, and _paddingProps_.
 
 _virtualListProps_ is an object with the following properties:
 ```
@@ -354,6 +354,30 @@ _cradleContentProps_ is an object with the following properties:
    highindex, // of cells in the cradle
    axisReferenceIndex, // the first index of the tail grid
    size, // count of cells in the cradle
+}
+```
+_gapProps_ is an object with the following properties:
+```
+{
+  CSS, // the CSS to be applied to the grid
+  column, // column gap
+  row, // row gap
+  list, // [column, row]
+  original, // normalized parameter value
+  source, // original parameter value
+}
+```
+_paddingProps_ is an object with the following properties:
+```
+{
+  CSS, the CSS to be applied to the Scrollblock
+  top, // top padding
+  right, // right padding
+  bottom, // bottom padding
+  left, // left padding
+  list, // [top, right, bottom, left]
+  original, // normalized parameter value
+  source, // original parameter value
 }
 ```
 
