@@ -170,8 +170,9 @@ const InfiniteGridScroller = (props) => {
             // max for variable layout
         cellWidth, // required. the outer pixel width - literal for horizontal; approximate for vertical
             // max for variable layout
+        cellMinHeight, // for layout == 'variable' && orientation == 'vertical'
+        cellMinWidth, // for layout == 'variable' && orientation == 'horizontal'
         getItemPack, // returns a simple object with item components: content, profile, options, dragText
-        // grid specs:
         // optional
         getExpansionCount, // optional, function provided by host, returns the number of indexes to add to
             // the virtual list when the scroller hits the start or end of the list
@@ -179,14 +180,12 @@ const InfiniteGridScroller = (props) => {
             // replaces default placeholder if present
 
         // the following are initialized below if they are found to be null or undefined
-        startingListSize, // the starting number of items in the virtual list. can be changed
+        startingListSize, // the starting number of items in the virtual list. can be changed (deprecated)
         startingListRange, // supercedes startingListSize if present
         orientation, // vertical or horizontal
         gap, // space between grid cells
         padding, // the padding around the Scrollblock
         layout, // uniform, variable
-        cellMinHeight, // for layout == 'variable' && orientation == 'vertical'
-        cellMinWidth, // for layout == 'variable' && orientation == 'horizontal'
 
         // scroller specs:
         runwaySize, // the number of rows outside the view of each side of the viewport 
@@ -214,6 +213,7 @@ const InfiniteGridScroller = (props) => {
         // information for host cell content
         scrollerContext, // required for embedded scroller; shares scroller settings with content
         isDndMaster, // internal, set for root dnd only
+
         staticComponent, // planned supercedes most other properties
 
     }:RIGS = props
@@ -370,7 +370,7 @@ const InfiniteGridScroller = (props) => {
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
     }
 
-    // verify unverified numbers for runtime
+    // verify numbers for runtime
     const originalValues = {
         cellMinHeight,
         cellMinWidth,
@@ -754,8 +754,8 @@ const InfiniteGridScroller = (props) => {
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
             scrollerID = { scrollerID }
-            VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
             useScrollTracker = { useScrollTracker }
+            VIEWPORT_RESIZE_TIMEOUT = { VIEWPORT_RESIZE_TIMEOUT }
             SCROLLTAB_INTERVAL_MILLISECONDS = { SCROLLTAB_INTERVAL_MILLISECONDS }
             SCROLLTAB_INTERVAL_PIXELS = { SCROLLTAB_INTERVAL_PIXELS }
 
