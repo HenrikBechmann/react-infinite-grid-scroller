@@ -257,13 +257,13 @@ Functions with no return values:
 
 Functions with return values
 
-|function(parameters: datatypes):return value: datatype|context object return|notes|
+|function(parameters: datatypes):return value: datatype|context object properties|notes|
 |---|---|---|
 |[_**SNAPSHOTS**_]|
-|getCacheIndexMap(): Map||snapshot of cache index (=key) to itemID (=value) map|
-|getCacheItemMap(): Map||snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
-|getCradleIndexMap(): Map||snapshot of `Cradle` index (=key) to itemID (=value) map|
-|getPropertiesSnapshot():object||copy of `scrollerProperties.current` from scrollerContext object. See below.|
+|getCacheIndexMap(): [Map, context]|contextType: 'cacheIndexMap', scrollerID|snapshot of cache index (=key) to itemID (=value) map|
+|getCacheItemMap(): [Map, context|contextType: 'cacheItemMap', scrollerID|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
+|getCradleIndexMap(): [Map, context|contextType: 'cradleIndexMap', scrollerID|snapshot of `Cradle` index (=key) to itemID (=value) map|
+|getPropertiesSnapshot():[object, context]|contextType: 'propertiesSnapshot', scrollerID|`object` is copy of `scroller.current` from `scrollerContext` object. See below.|
 |[_**CACHE MANAGEMENT**_]|
 |insertIndex(index:integer, rangehighindex: integer \| null):array[changedList:array, replacedList:array, removedList:array, deletedList:array]||can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered; virtual list lowindex remains the same. Changes the list size by increasing virtual list highindex; synchronizes the `Cradle`|
 |removeIndex(index:integer, rangehighindex:integer \| null):array[changedList:array, replacedList:array, removedList:array], deletedList:array||a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
