@@ -239,27 +239,35 @@ Details about the callbacks:
 
 Details about the functions returned in an object by `functionsCallback`:
 
+Functions with no return values:
+
 |function(parameters: datatypes):return value: datatype|notes|
 |---|---|
 |[_**OPERATIONS**_]|
 |scrollToIndex(index:integer):_void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
-|scrollToPixel(pixel:integer[,behavior:string = 'smooth']):void|scrolls the scroller to the provided pixel, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` must be >=0 |
-|scrollByPixel(pixel:integer[,behavior:string = 'smooth']):void|scrolls the scroller up or down by the number of provided pixels, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` can be positive (scroll down) or negative (scroll up) |
+|scrollToPixel(pixel:integer[,behavior:string = 'smooth']):_void_|scrolls the scroller to the provided pixel, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` must be >=0 |
+|scrollByPixel(pixel:integer[,behavior:string = 'smooth']):_void_|scrolls the scroller up or down by the number of provided pixels, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` can be positive (scroll down) or negative (scroll up) |
 |setListSize(index:integer):_void_|changes the list size, by adjusting the list range high index. Favour use of `setListRange` instead|
 |setListRange(array [lowindex, highindex] \| []):_void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers. [] (empty array) creates an empty virtual list|
 |prependIndexCount(count:integer):_void_|the number of indexes to expand the start of the virtual list|
 |appendIndexCount(count:integer):_void_|the number of indexes to expand the end of the virtual list|
-|[_**SNAPSHOTS**_]|
-|getCacheIndexMap():Map|snapshot of cache index (=key) to itemID (=value) map|
-|getCacheItemMap():Map|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
-|getCradleIndexMap(): Map|snapshot of `Cradle` index (=key) to itemID (=value) map|
-|getPropertiesSnapshot():object|copy of `scrollerProperties.current` from scrollerContext object. See below.|
 |[_**CACHE MANAGEMENT**_]|
-|insertIndex(index:integer, rangehighindex: integer \| null):array[changedList:array, replacedList:array, removedList:array, deletedList:array]|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered; virtual list lowindex remains the same. Changes the list size by increasing virtual list highindex; synchronizes the `Cradle`|
-|removeIndex(index:integer, rangehighindex:integer \| null):array[changedList:array, replacedList:array, removedList:array], deletedList:array|a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
-|moveIndex(toindex:integer, fromindex:integer, fromhighrange: integer \| null):array[processedIndexList:array]|a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 |reload():_void_|clears the cache and reloads the `Cradle` at its current position in the virtual list|
 |clearCache():_void_|clears the cache and the `Cradle` (leaving nothing to display)|
+
+Functions with return values
+
+|function(parameters: datatypes):return value: datatype|context object return|notes|
+|---|---|---|
+|[_**SNAPSHOTS**_]|
+|getCacheIndexMap(): Map||snapshot of cache index (=key) to itemID (=value) map|
+|getCacheItemMap(): Map||snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
+|getCradleIndexMap(): Map||snapshot of `Cradle` index (=key) to itemID (=value) map|
+|getPropertiesSnapshot():object||copy of `scrollerProperties.current` from scrollerContext object. See below.|
+|[_**CACHE MANAGEMENT**_]|
+|insertIndex(index:integer, rangehighindex: integer \| null):array[changedList:array, replacedList:array, removedList:array, deletedList:array]||can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered; virtual list lowindex remains the same. Changes the list size by increasing virtual list highindex; synchronizes the `Cradle`|
+|removeIndex(index:integer, rangehighindex:integer \| null):array[changedList:array, replacedList:array, removedList:array], deletedList:array||a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
+|moveIndex(toindex:integer, fromindex:integer, fromhighrange: integer \| null):array[processedIndexList:array]||a range of indexes can be moved. Displaced and higher indexes are renumbered. Changes the list size; synchronizes to the `Cradle`|
 
 Notes: cache management functions are provided to support drag-n-drop, sorting, and filtering operations. 
 
