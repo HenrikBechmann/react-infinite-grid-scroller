@@ -548,7 +548,7 @@ export const CellFrame = ({
                                             profile, 
                                             dndOptions,
                                             component:returnvalue, 
-                                            location:'cellFrame', 
+                                            action:'fetch', 
                                             error:error.message
                                         }
                                     )

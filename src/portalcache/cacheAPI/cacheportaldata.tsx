@@ -497,7 +497,7 @@ export default class PortalData {
                     profile,
                     dndOptions,
                     component:returnvalue, 
-                    location:'preload', 
+                    action:'preload', 
                     error: error.message
                 }
             )

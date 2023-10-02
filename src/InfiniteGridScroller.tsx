@@ -684,7 +684,7 @@ const InfiniteGridScroller = (props) => { // exported to
         callbacksRef.current.changeListSizeCallback && 
             callbacksRef.current.changeListSizeCallback(listsize, {
                 contextType:'changeListSize',
-                scrollerID:scrollerSessionIDRef.current,                
+                scrollerID:scrollerSessionIDRef.current,
             })
 
         setScrollerState('setlistprops')
