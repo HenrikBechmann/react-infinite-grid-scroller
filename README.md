@@ -219,21 +219,21 @@ scrollerFunctionsRef.current.scrollToIndex(targetIndex)
 ~~~
 Details about the callbacks:
 
-|callback function(parameters:datatypes)|notes|
-|---|---|
+|callback function(parameters:datatypes)|context object|notes|
+|---|---|---|
 |[_**GET FUNCTIONS**_]|
-|functionsCallback(functions: object)|the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
+|functionsCallback(functions: object)||the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
 |[_**TRACK INDEXES**_]|
-|referenceIndexCallback(index: integer, location: string, cradleState: string)|location can be 'setCradleContent', 'updateCradleContent'. Keeps the host up to date on the index number adjacent to the `Cradle` axis, and the state change that triggered the update|
-|repositioningIndexCallback(index: integer)|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
-|preloadIndexCallback(index: integer)|during a preload operation, this stream gives the index number being preloaded|
-|itemExceptionCallback(index: integer, itemID: integer, returnvalue: any, location: string, error: Error)|triggered whenever getItemPack does not return a valid React component|
+|referenceIndexCallback(index: integer, context:object)|contextType:'referenceIndex', action, cradleState, scrollerID|`action` can be 'setCradleContent' or 'updateCradleContent'. `cradleState` is the state change that triggered the action. Keeps the host up to date on the index number adjacent to the `Cradle` axis|
+|repositioningIndexCallback(index: integer, context:object)||the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
+|preloadIndexCallback(index: integer, conext:object)||during a preload operation, this stream gives the index number being preloaded|
+|itemExceptionCallback(index: integer, context:object)|contextType: 'itemException', itemID, scrollerID, profile, dndOptions, component, action, error |`action` can be 'preload' or 'CellFrame'. Triggered whenever getItemPack does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
-|changeListsizeCallback(newlistsize: integer)|notification of a change of list size. Could be from an API call that results in change of list size|
-|changeListRangeCallback(listrange:array) | notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
-|boundaryCallback(position:string, index:integer) | called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
-|deleteListCallback(reason: string, deleteList: array)|gives an array of indexes that have been deleted from the cache, and text of the reason|
-|repositioningFlagCallback(flag: boolean)| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
+|changeListsizeCallback(newlistsize: integer, context:object)||notification of a change of list size. Could be from an API call that results in change of list size|
+|changeListRangeCallback(listrange:array, context:object) || notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
+|boundaryCallback(position:string, index:integer, context:object) || called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
+|deleteListCallback(deleteList: array, context:object)||gives an array of indexes that have been deleted from the cache, and text of the reason|
+|repositioningFlagCallback(flag: boolean, context:object)|| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
 ### returned API `functions` object
 
