@@ -219,14 +219,14 @@ scrollerFunctionsRef.current.scrollToIndex(targetIndex)
 ~~~
 Details about the callbacks:
 
-|callback function(parameters:datatypes)|context object|notes|
+|callback function (parameters:datatypes)|context object parameter|notes|
 |---|---|---|
 |[_**GET FUNCTIONS**_]|
 |functionsCallback(functions: object)||the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
 |[_**TRACK INDEXES**_]|
 |referenceIndexCallback(index: integer, context:object)|contextType:'referenceIndex', action, cradleState, scrollerID|`action` can be 'setCradleContent' or 'updateCradleContent'. `cradleState` is the state change that triggered the action. Keeps the host up to date on the index number adjacent to the `Cradle` axis|
-|repositioningIndexCallback(index: integer, context:object)||the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
-|preloadIndexCallback(index: integer, conext:object)||during a preload operation, this stream gives the index number being preloaded|
+|repositioningIndexCallback(index: integer, context:object)|contextType:'repositioningIndex',scrollerID|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
+|preloadIndexCallback(index: integer, conext:object)|contextType:'preloadIndex', scrollerID|during a preload operation, this stream gives the index number being preloaded|
 |itemExceptionCallback(index: integer, context:object)|contextType: 'itemException', itemID, scrollerID, profile, dndOptions, component, action, error |`action` can be 'preload' or 'fetch'. Triggered whenever getItemPack does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
 |changeListsizeCallback(newlistsize: integer, context:object)||notification of a change of list size. Could be from an API call that results in change of list size|
