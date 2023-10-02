@@ -309,7 +309,7 @@ the scrollerContext object contains two properties:
 
 Each of these is a _reference_ object, with values found in `propertyRef.current`.
 
-The `cell.current` object is instantiated only when a component is instantiated in the cradle. It contains two properties:
+The `cell.current` object is instantiated only when a component is instantiated in the Cradle. It contains two properties:
 
 ~~~typescript
 {
