@@ -229,11 +229,11 @@ Details about the callbacks:
 |preloadIndexCallback(index: integer, conext:object)|contextType: 'preloadIndex', scrollerID|during a preload operation, this stream gives the index number being preloaded|
 |itemExceptionCallback(index: integer, context:object)|contextType: 'itemException', itemID, scrollerID, profile, dndOptions, component, action, error |`action` can be 'preload' or 'fetch'. Triggered whenever getItemPack does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
-|changeListsizeCallback(newlistsize: integer, context:object)||notification of a change of list size. Could be from an API call that results in change of list size|
-|changeListRangeCallback(listrange:array, context:object) || notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
-|boundaryCallback(position:string, index:integer, context:object) || called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
-|deleteListCallback(deleteList: array, context:object)||gives an array of indexes that have been deleted from the cache, and text of the reason|
-|repositioningFlagCallback(flag: boolean, context:object)|| called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
+|changeListsizeCallback(newlistsize: integer, context:object)|contextType: 'changeListSize', scrollerID|notification of a change of list size. Could be from an API call that results in change of list size|
+|changeListRangeCallback(listrange:array, context:object) |contextType: 'changeListRange', scrollerID| notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
+|boundaryCallback(position:string, index:integer, context:object) |contextType:'boundary', scrollerID| called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
+|deleteListCallback(deleteList: array, context:object)|contextType:'deleteList', scrollerID, message |gives an array of objects with `index` numbers that have been deleted from the cache, together with `itemID` and `profile`.`message` gives the reason for the deletion(s)|
+|repositioningFlagCallback(flag: boolean, context:object)|contextType:'repositioningIndex', scrollerID | called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
 ### returned API `functions` object
 
