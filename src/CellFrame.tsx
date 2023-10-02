@@ -127,11 +127,11 @@ export const CellFrame = ({
     targetConnector,
     isDnd,
     frameRef,
-    masterDndContext,
     showDirectionIcon,
 }) => {
 
     const scrollerDndContext = useContext(ScrollerDndContext)
+    const masterDndContext = useContext(MasterDndContext)
 
     const coreConfigRef = useRef(null)
     coreConfigRef.current = {
@@ -226,9 +226,9 @@ export const CellFrame = ({
         if (scrollerDndContext.droppedIndex === index) {
             scrollerDndContext.droppedIndex = null
             const classname = 'rigs-dropped-highlight'
-            contentholderRef.current.classList.add(classname)
+            contentHolderElementRef.current.classList.add(classname)
             setTimeout(()=>{
-                if (frameRef.current) contentholderRef.current.classList.remove(classname)
+                if (frameRef.current) contentHolderElementRef.current.classList.remove(classname)
             },2000)
         }
 
@@ -239,9 +239,9 @@ export const CellFrame = ({
         if (scrollerDndContext.displacedIndex === index) {
             scrollerDndContext.displacedIndex = null
             const classname = 'rigs-target-finish'
-            contentholderRef.current.classList.add(classname)
+            contentHolderElementRef.current.classList.add(classname)
             setTimeout(()=>{
-                if (frameRef.current) contentholderRef.current.classList.remove(classname)
+                if (frameRef.current) contentHolderElementRef.current.classList.remove(classname)
             },2000)
         }
 
@@ -580,7 +580,7 @@ export const CellFrame = ({
 
     }, [frameState])
 
-    const contentholderRef = useRef(null)
+    const contentHolderElementRef = useRef(null)
 
     return <div 
 
@@ -596,7 +596,7 @@ export const CellFrame = ({
     >
         {(frameState != 'setup')
             ?<>
-                <div data-type = 'contentholder' ref = {contentholderRef} style = {holderStylesRef.current}> 
+                <div data-type = 'contentholder' ref = {contentHolderElementRef} style = {holderStylesRef.current}> 
                     {((frameState != 'ready')?
                     placeholderRef.current:
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
@@ -604,14 +604,13 @@ export const CellFrame = ({
 
                 {(isDndRef.current && (frameState == 'ready')) && 
                     <DragIcon 
-                        contentholderRef = {contentholderRef} 
+                        contentHolderElementRef = {contentHolderElementRef} 
                         itemID = {itemID} 
                         index = {index} 
                         dndOptions = {dndOptionsRef.current} 
                         profile = {portalMetadataRef.current.profile} 
                         dndDragIconStyles = {dndDragIconStyles}
                         scrollerID = { scrollerID }
-                        masterDndContext = {masterDndContext}
                     />
                 }
             </>

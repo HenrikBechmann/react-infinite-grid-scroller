@@ -1,6 +1,13 @@
 // DragIcon.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    The role of DradIcon is to show the user where to start dragging, and to initiate the drag process.
+    Once started, the source CellFrame content is highlighted
+
+*/
+
 import React, {
     useRef, 
     useEffect, 
@@ -16,29 +23,31 @@ import {
 
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
-import { ViewportContext } from '../Viewport'
+// import { ViewportContext } from '../Viewport'
 
-import { ScrollerDndContext } from '../InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndContext } from '../InfiniteGridScroller'
 
 import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index, profile, contentholderRef, scrollerID} = props
-
-    let { masterDndContext } = props
+    const { itemID, index, profile, contentHolderElementRef, scrollerID} = props
+    let 
+        {
+            dndDragIconStyles, // user styles
+            dndOptions
+        } = props
 
     const scrollerDndContext = useContext(ScrollerDndContext)
+    const masterDndContext = useContext(MasterDndContext)
 
-    masterDndContext = masterDndContext ?? {} 
-
-    const {dragData} = masterDndContext || {}
-
-    let {dndDragIconStyles, dndOptions} = props
+    const { dragData } = masterDndContext || {}
 
     dndDragIconStyles = dndDragIconStyles ?? {}
     dndOptions = dndOptions ?? {}
 
+    // preview connector is neutralized in favout of a custom DragLayer (see DndDragBar)
+    // sourceConnector is connected to the dragicon div below
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
@@ -57,16 +66,7 @@ const DragIcon = props => {
                 item:monitor.getItem(),
                 isDragging:!!monitor.isDragging(),
             }
-
         },
-
-        end:(item, monitor)=>{
-
-            // console.log('DragIcon: endDrag item', item)
-
-        },
-
-        // canDrag:true,
 
     }},[itemID, dndOptions])
 
@@ -91,11 +91,11 @@ const DragIcon = props => {
     }
 
     // TODO: use element.classList instead
-    if (isDragging && !contentholderRef.current.classList.contains(classname)) {
-        contentholderRef.current.classList.add(classname)
+    if (isDragging && !contentHolderElementRef.current.classList.contains(classname)) {
+        contentHolderElementRef.current.classList.add(classname)
     }
-    if (!isDragging && contentholderRef.current.classList.contains(classname)) {
-        contentholderRef.current.classList.remove(classname)
+    if (!isDragging && contentHolderElementRef.current.classList.contains(classname)) {
+        contentHolderElementRef.current.classList.remove(classname)
     }
 
     useEffect(()=>{

@@ -1,6 +1,13 @@
 // DisplaceIcon.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    The role of DisplaceIcon is to show the user the direction in which the highlighted drop target CellFrame
+    will be displaced.
+
+*/
+
 import React, {useRef, useContext, useMemo, CSSProperties} from 'react'
 
 import displaceicon from "../../assets/east_FILL0_wght400_GRAD0_opsz24.png"
@@ -15,9 +22,10 @@ const DisplaceIcon = (props) => {
         { orientation, scrollerID, index } = props,
 
         masterDndContext = useContext(MasterDndContext),
+        cradleContext = useContext(CradleContext),
+
         {scrollerID:sourceScrollerID, index:sourceIndex} = masterDndContext.dragData,
 
-        cradleContext = useContext(CradleContext),
         { virtualListProps } = cradleContext.scrollerPropertiesRef.current,
         { crosscount } = virtualListProps
 

@@ -22,12 +22,12 @@ const DndCellFrame = (props) => {
     const 
         {itemID, index} = props,
         cradleContext = useContext(CradleContext),
+        masterDndContext = useContext(MasterDndContext),
+        scrollerDndContext = useContext(ScrollerDndContext),
         { scrollerPropertiesRef } = cradleContext,
         { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current,
         {crosscount } = virtualListProps,
 
-        masterDndContext = useContext(MasterDndContext),
-        scrollerDndContext = useContext(ScrollerDndContext),
         frameRef = useRef(null)
 
     const [ targetData, targetConnector ] = useDrop({
@@ -54,20 +54,20 @@ const DndCellFrame = (props) => {
         sourceIndex = targetData.item?.index,
         sourceScrollerID = targetData.item?.scrollerID,
 
-        isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index), // && (index !== sourceIndex + 1)),
+        isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index),
 
-        classname = 'rigs-target-highlight'
+        highlightClassname = 'rigs-target-highlight'
 
-    if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(classname)) {
+    if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(highlightClassname)) {
 
         cellCanDropRef.current = true
-        frameRef.current.classList.add(classname)
+        frameRef.current.classList.add(highlightClassname)
         masterDndContext.dropCount++
 
-    } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(classname)) {
+    } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(highlightClassname)) {
 
         masterDndContext.dropCount--
-        frameRef.current.classList.remove(classname)
+        frameRef.current.classList.remove(highlightClassname)
         cellCanDropRef.current = false
 
     }

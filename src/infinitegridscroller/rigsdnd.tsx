@@ -22,7 +22,7 @@
     - DndCellFrame - useDrop - HoC for CellFrame, useDrop for location
     - DragIcon - useDrag, conditionally rendered by CellFrame for drag
 
-    MasterDndContext (global scoped namespace) is used by (all but DragIcon)
+    MasterDndContext (global scoped namespace) is used by (all but DragIcon & DisplaceIcon)
     - RigsDnd
         - InfiniteGridScroller
     - DndViewport (useDrop)
@@ -34,6 +34,7 @@
     - DndCellFrame (useDrop)
         - CellFrame
             - DragIcon (useDrag)
+            - DisplaceIcon
 
     ScrollerDndContext (scroller scoped namespace) is used by the same modules as MasterDndContext except
     - also DragIcon
@@ -142,5 +143,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
 // use custom function only if elementsFromPoint is not supported
 const backendOptions = {
+
   getDropTargetElementsAtPoint: !hasNativeElementsFromPoint && getDropTargetElementsAtPoint
+
 }
