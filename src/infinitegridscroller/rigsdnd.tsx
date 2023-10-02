@@ -72,7 +72,7 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
-// wrapper for Dnd provider - the export statement for this is next to RigsWrapper export statement below
+// wrapper for Dnd provider
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
     const [rigsdndState, setRigsdndState] = useState('setup')
@@ -92,6 +92,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
             masterDndContext.enabled = isEnabled
         }
 
+        // reset masterDndContext on unmount. 
+        // For next mount, 'setup' state gives previous unmount time to finish
         return () => {
             Object.assign(masterDndContext,{
                 enabled:false,
