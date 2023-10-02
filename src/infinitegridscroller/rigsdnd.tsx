@@ -4,10 +4,12 @@
 /*
     Dnd is powered by react-dnd. The HTML or Touch backends are installed depending on the ismobile test.
 
-    RigsDnd must be installed as host scroller to install the DndProvicer. Only one RigsDnd
+    RigsDnd must be installed as host scroller to install the DndProvider. Only one RigsDnd
     can be installed per environment.
 
-    RigsDnd sets MasterDndContext.installed to true.
+    RigsDnd sets MasterDndContext.installed to true, and informs the child InfiniteGridScroller that it is 
+        the master scroller.
+        
     dndOptions.master.enabled for the root scroller sets global enabled condition; true by default
 
     Global communication is supported by MasterDndContext, and Scroller-scoped communication is provided by 
