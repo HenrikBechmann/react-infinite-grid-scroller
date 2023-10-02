@@ -15,22 +15,25 @@
 
     components dedicated to dnd are
     - RigsDnd - HoC for InfiniteGridScroller, master
-    - DndViewport - HoC for Viewport, show scroll areas
+    - DndViewport - useDrop - HoC for Viewport, show scroll areas
     - DndDragBar - conditionally rendered by Viewport, for drag layer
-    - DndCradle - HoC for Cradle, useDrop for drop handling
-    - DndCellFrame - HoC for CellFrame, useDrop for location
+    - DndScrollTab - useDrop, for Viewport, for scrollTab and target list canDrop isOver highlightin
+    - DndCradle - useDrop - HoC for Cradle, useDrop for drop handling
+    - DndCellFrame - useDrop - HoC for CellFrame, useDrop for location
     - DragIcon - useDrag, conditionally rendered by CellFrame for drag
 
-    MasterDndContext (global scoped namespace) is used by
+    MasterDndContext (global scoped namespace) is used by (all but DragIcon)
     - RigsDnd
-    - InfiniteGridScroller
-    - DndViewport
-    - Viewport
-    - DndDragBar
-    - DndCradle
-    - Cradle
-    - DndCellFrame
-    - CellFrame
+        - InfiniteGridScroller
+    - DndViewport (useDrop)
+        - Viewport
+            - DndDragBar
+            - DndScrollTab (useDrop)
+    - DndCradle (useDrop)
+        - Cradle
+    - DndCellFrame (useDrop)
+        - CellFrame
+            - DragIcon (useDrag)
 
     ScrollerDndContext (scroller scoped namespace) is used by the same modules as MasterDndContext except
     - also DragIcon
