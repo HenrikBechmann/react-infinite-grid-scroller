@@ -227,7 +227,7 @@ Details about the callbacks:
 |referenceIndexCallback(index: integer, context:object)|contextType:'referenceIndex', action, cradleState, scrollerID|`action` can be 'setCradleContent' or 'updateCradleContent'. `cradleState` is the state change that triggered the action. Keeps the host up to date on the index number adjacent to the `Cradle` axis|
 |repositioningIndexCallback(index: integer, context:object)||the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
 |preloadIndexCallback(index: integer, conext:object)||during a preload operation, this stream gives the index number being preloaded|
-|itemExceptionCallback(index: integer, context:object)|contextType: 'itemException', itemID, scrollerID, profile, dndOptions, component, action, error |`action` can be 'preload' or 'CellFrame'. Triggered whenever getItemPack does not return a valid React component|
+|itemExceptionCallback(index: integer, context:object)|contextType: 'itemException', itemID, scrollerID, profile, dndOptions, component, action, error |`action` can be 'preload' or 'fetch'. Triggered whenever getItemPack does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
 |changeListsizeCallback(newlistsize: integer, context:object)||notification of a change of list size. Could be from an API call that results in change of list size|
 |changeListRangeCallback(listrange:array, context:object) || notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
