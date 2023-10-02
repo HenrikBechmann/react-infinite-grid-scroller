@@ -298,6 +298,8 @@ Cell components can get access to dynamically updated parent RIGS properties, by
 
 The `scrollerContext` object is requested by user components by initializing a `scrollerContext` component property to `null`. The property is then recognized by RIGS and set to the scrollerContext object by the system on loading of the component to a CellFrame.
 
+The `srollerContext` object is required by sub-scrollers, so it must be obtained by containing components and passed to the contained subscrollers.
+
 the scrollerContext object contains two properties:
 
 ~~~typescript
