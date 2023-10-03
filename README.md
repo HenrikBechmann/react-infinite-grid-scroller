@@ -117,10 +117,10 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |usePlaceholder:boolean| default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
 |cacheAPI:null|requested by user components by being set to null by user; instantiated with a class instance by system|Experimental. If present, parent scroller instantiates the property with its cacheAPI instance, which causes any child scroller given the property to share the parent scroller cache. This currently has no operational effect|
 |[_**OBJECT PROPERTIES**_]|
-|styles:Object| collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
-|placeholderMessages:Object| messages presented by the placeholder|optional, to replace default messages. See below for details|
-|callbacks:Object| collection of functions for feedback, and interactions with scroller components|optional. See below for details|
-|technical:Object| collection of values used to control system behaviour|use with caution. optional. See below for details|
+|styles:object| collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
+|placeholderMessages:object| messages presented by the placeholder|optional, to replace default messages. See below for details|
+|callbacks:object| collection of functions for feedback, and interactions with scroller components|optional. See below for details|
+|technical:object| collection of values used to control system behaviour|use with caution. optional. See below for details|
 |scrollerContext:null|requested by user components by being set to null by user; instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
 
 Notes: For explicit cache management capability, a unique session `itemID` (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced into the cache, it is assigned a new session-unique `itemID`. 
