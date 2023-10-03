@@ -32,7 +32,7 @@ const DndCellFrame = (props) => {
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept,
-        drop:(item,monitor) => {
+        drop:(item, monitor) => {
             return {target:{
                 scrollerID,
                 itemID,
@@ -41,7 +41,7 @@ const DndCellFrame = (props) => {
         },
         collect:(monitor:DropTargetMonitor) => {
             return {
-                item:monitor.getItem() as any,
+                sourceItem:monitor.getItem() as any,
                 isOver:monitor.isOver(),
                 canDrop:monitor.canDrop(),
             }
@@ -51,8 +51,8 @@ const DndCellFrame = (props) => {
     const cellCanDropRef = useRef(false)
 
     const 
-        sourceIndex = targetData.item?.index,
-        sourceScrollerID = targetData.item?.scrollerID,
+        sourceIndex = targetData.sourceItem?.index,
+        sourceScrollerID = targetData.sourceItem?.scrollerID,
 
         isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index),
 
@@ -73,7 +73,6 @@ const DndCellFrame = (props) => {
     }
 
     const showDirectionIcon = (isLocation && targetData.isOver && targetData.canDrop)
-
 
     useEffect(()=>{
 

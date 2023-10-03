@@ -23,8 +23,6 @@ import {
 
 import { getEmptyImage } from 'react-dnd-html5-backend'
 
-// import { ViewportContext } from '../Viewport'
-
 import { MasterDndContext, ScrollerDndContext } from '../InfiniteGridScroller'
 
 import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
@@ -63,7 +61,6 @@ const DragIcon = props => {
         collect: (monitor:DragSourceMonitor) => {
 
             return {
-                // item:monitor.getItem(),
                 isDragging:!!monitor.isDragging(),
             }
         },

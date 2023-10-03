@@ -553,7 +553,7 @@ export const CellFrame = ({
                                         }
                                     )
 
-                                isMountedRef.current && setFrameState('error')
+                                isMountedRef.current && setFrameState('nodata')
 
                             }
 
@@ -621,7 +621,7 @@ export const CellFrame = ({
             triggercellTriggerlinesRef.current:
             null)
         }
-        {(isDndRef.current && showDirectionIcon && (frameState == 'ready')) && 
+        {(isDndRef.current && showDirectionIcon && (['ready','nodata'].includes(frameState))) && 
             <DisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
         }
     </div>

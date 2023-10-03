@@ -50,6 +50,8 @@ const DndCradle = (props) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
 
+            console.log('dropResult',dropResult)
+
             if (!dropResult || !dropResult.target) return
 
             const {
