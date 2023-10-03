@@ -1,14 +1,18 @@
 // DndDragBar.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    The role of DndDragBar is to show the user where the dragtarget is located
+    and to reset masterDndContext.dragData if dragging stops
+
+*/
+
 import React, {
 
     useState, 
     useRef, 
     useEffect, 
-    // useLayoutEffect, 
-    // useMemo, 
-    // useCallback,
     useContext,
     CSSProperties,
 

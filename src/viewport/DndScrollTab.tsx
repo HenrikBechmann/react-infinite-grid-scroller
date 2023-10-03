@@ -1,6 +1,13 @@
 // DndScrollTab.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    The role of DndScrollTab is to allow the user to scroll the viewport content during drag
+    by hovering over the scroll tab
+
+*/
+
 import React, {useEffect, useContext, useRef, useMemo, CSSProperties } from 'react'
 
 import { useDrop, DropTargetMonitor} from 'react-dnd'
@@ -17,14 +24,20 @@ const DndScrollTab = (props) => {
         { serviceHandler } = scrollerDndContext,
 
         scrolltabRef = useRef(null),
-        { 
+
+        {
+
             position, // head, tail
             gridSpecs,
             SCROLLTAB_INTERVAL_MILLISECONDS,
             SCROLLTAB_INTERVAL_PIXELS,
+
         } = props,
+
         { orientation } = gridSpecs
 
+    // calculate the className and location (topright, bottomright or bottomleft) based on orientation
+    // and position (head or tail)
     const [className, location] = useMemo(()=>{
 
         let className, location
@@ -48,6 +61,7 @@ const DndScrollTab = (props) => {
         return [className, location]
     },[orientation, position])
 
+    // calculate configuration details based on location and orientation
     const [transform, top, right, bottom, left, borderRadius, scrollByPixel] = useMemo(()=>{
         const scrollByPixels = SCROLLTAB_INTERVAL_PIXELS
         let transform, top, right, bottom, left, borderRadius, scrollByPixel
@@ -94,6 +108,7 @@ const DndScrollTab = (props) => {
 
     },[location, orientation, SCROLLTAB_INTERVAL_PIXELS])
 
+    // obtain drop data - isOver and canDrop
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['Viewport'],
         collect:(monitor:DropTargetMonitor) => {
