@@ -1,11 +1,18 @@
 // DndViewport.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    The role of DndViewport is to calculate whether DndScrollTabs should be shown (isOver && canDrop viewport)
+    Obtain dnd targetConnector (viewportFrameElementRef.current) from Viewport
+
+*/
+
 import React, {useEffect, useContext, useRef, useState } from 'react'
 
 import { useDrop, DropTargetMonitor} from 'react-dnd'
 
-import { MasterDndContext, ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
+import { ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
 
 import { Viewport } from '../Viewport'
 
@@ -13,7 +20,9 @@ import { Viewport } from '../Viewport'
 const DndViewport = (props) => {
 
     const [ dndViewportState, setDndViewportState] = useState('ready')
+
     const { scrollerID } = props
+
     const scrollerDndContext = useContext(ScrollerDndContext)
 
     const viewportFrameElementRef = useRef(null)
@@ -30,8 +39,6 @@ const DndViewport = (props) => {
         },
 
     })
-
-    // console.log('isOver, canDrop',targetData.isOver, targetData.canDrop)
 
     useEffect(()=>{
 

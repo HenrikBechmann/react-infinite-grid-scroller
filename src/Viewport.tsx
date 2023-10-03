@@ -5,6 +5,11 @@
     The role of viewport is to provide viewport data to its children (Scrollblock and Cradle) through the
     ViewportContext object, and act as the visible screen portal of the list being shown.
     If Viewport is resized, it notifies the Cradle to reconfigure.
+
+    Also sets setViewportState in masterDndContext if dnd is installed
+
+    shows DndDragBar when dragging according to masterDndContext, 
+        and shows DndScrollTabs on request from DndViewport
 */
 
 import React, {
@@ -37,6 +42,8 @@ import ScrollTracker from './Viewport/ScrollTracker'
 
 export const ViewportContext = React.createContext(null) // for children
 
+
+// determine if DndViewport is required
 const ViewportController = (props) => {
 
     const masterDndContext = useContext(MasterDndContext)
@@ -89,6 +96,7 @@ export const Viewport = ({
     const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
     
     if (masterDndContext.installed && (scrollerID === masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
+
         masterDndContext.setViewportState = setViewportState
 
     }
@@ -269,29 +277,28 @@ export const Viewport = ({
     // console.log('viewport showScrollTabs', showScrollTabs)
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
-        { (masterDndContext.installed && dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && <DndDragBar 
-            itemID = {dragData.itemID} 
-            index = {dragData.index} 
-            dndOptions = {dragData.dndOptions}
-            dragData = { dragData }
-            scrollerID = { scrollerID }
-        />
+        { (masterDndContext.installed && dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && 
+            <DndDragBar 
+                scrollerID = { scrollerID }
+            />
         }
         <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
-        {showScrollTabs && <>
-            <DndScrollTab 
-                position = 'head' 
-                gridSpecs = {gridSpecs} 
-                SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
-                SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
-            />
-            <DndScrollTab 
-                position = 'tail' 
-                gridSpecs = {gridSpecs} 
-                SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
-                SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
-            />
-        </>}
+        {showScrollTabs && 
+            <>
+                <DndScrollTab 
+                    position = 'head' 
+                    gridSpecs = {gridSpecs} 
+                    SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                    SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
+                />
+                <DndScrollTab 
+                    position = 'tail' 
+                    gridSpecs = {gridSpecs} 
+                    SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                    SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
+                />
+            </>
+        }
         <div 
             data-type = 'viewport'
             data-scrollerid = { scrollerID }
@@ -300,10 +307,12 @@ export const Viewport = ({
         >
             { (viewportState != 'setup') && children }
         </div>
-        {useScrollTracker && <ScrollTracker 
-            scrollTrackerAPIRef = {scrollTrackerAPIRef}
-            styles = { styles.scrolltracker }
-        />}
+        {useScrollTracker && 
+            <ScrollTracker 
+                scrollTrackerAPIRef = {scrollTrackerAPIRef}
+                styles = { styles.scrolltracker }
+            />
+        }
         </div>
     </ViewportContext.Provider>
     

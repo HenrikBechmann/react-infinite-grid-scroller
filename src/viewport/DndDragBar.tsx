@@ -30,40 +30,49 @@ import nodropicon from "../../assets/block_FILL0_wght400_GRAD0_opsz24.png"
 // drag continues here
 const DndDragBar = (props) => {
 
-    const [dragState, setDragBarState] = useState('ready')
-
     const 
+        { scrollerID} = props,
         masterDndContext = useContext(MasterDndContext),
-        canDrop = masterDndContext.dragData.canDrop,
-        {itemID, index, dndOptions, dragData, scrollerID} = props,
+        { dragData } = masterDndContext,
+        { 
+            canDrop,
+            itemID,
+            index,
+            dndOptions,
 
-        dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`
+        } = dragData,
 
-    if ((scrollerID == masterDndContext.scrollerID) && !masterDndContext.setDragBarState) {
+        dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`,
+
+        [dragState, setDragBarState] = useState('ready')
+
+    if ((scrollerID === masterDndContext.scrollerID) && !masterDndContext.setDragBarState) {
 
         masterDndContext.setDragBarState = setDragBarState
         
     }
-
 
     const dragBarData = useDragLayer(
         (monitor: DragLayerMonitor) => {
             return {
                 isDragging: monitor.isDragging(),
                 currentOffset: monitor.getSourceClientOffset(),
-                item: monitor.getItem()
             }
         })
 
-    const {isDragging, currentOffset, item} = dragBarData
+    const {isDragging, currentOffset} = dragBarData
 
     if (!isDragging && dragData.isDragging) {
-        dragData.isDragging = false
-        dragData.itemID = null
-        dragData.index = null
-        dragData.dndOptions = {} as GenericObject
+        Object.assign(
+            dragData,
+            {
+                isDragging:false,
+                itemID:null,
+                index:null,
+                dndOptions:{} as GenericObject
+            }
+        )
     }
-
 
     const candropicon = 
         canDrop?
@@ -130,13 +139,13 @@ const DndDragBar = (props) => {
 
     // dynamic
     let dragbarstyles
-    if (isDragging) {dragbarstyles = 
-        {
+    if (isDragging) {
+        dragbarstyles = {
             zIndex:10,
             position: 'fixed',
             top: 0,
             left: 0,
-            transform: `translate(${currentOffset.x}px, ${currentOffset.y}px)`,
+            transform:`translate(${currentOffset.x}px, ${currentOffset.y}px)`,
             pointerEvents: 'none', 
             paddingRight: '20px', // avoid icons
             backgroundColor:'whitesmoke',
@@ -144,7 +153,8 @@ const DndDragBar = (props) => {
             fontSize:'.75em',
             border: '1px solid black',
             borderRadius:'5px',
-        } as CSSProperties}
+        } as CSSProperties
+    }
 
     return (isDragging && currentOffset
         ?<div data-type = 'dragbar' style={dragbarstyles}>
