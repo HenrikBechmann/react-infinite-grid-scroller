@@ -63,7 +63,7 @@ const DragIcon = props => {
         collect: (monitor:DragSourceMonitor) => {
 
             return {
-                item:monitor.getItem(),
+                // item:monitor.getItem(),
                 isDragging:!!monitor.isDragging(),
             }
         },

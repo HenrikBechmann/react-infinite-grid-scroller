@@ -103,6 +103,7 @@ const DndCradle = (props) => {
 
             }
             scrollerDndContext.droppedIndex = toIndex
+            scrollerDndContext.sourceItem = item
         },
     })
 
