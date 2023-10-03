@@ -260,8 +260,8 @@ Functions with return values
 |[_**SNAPSHOTS**_]|
 |getCacheIndexMap(): [Map, context]|contextType: 'cacheIndexMap', scrollerID|snapshot of cache index (=key) to itemID (=value) map|
 |getCacheItemMap(): [Map, context|contextType: 'cacheItemMap', scrollerID|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
-|getCradleIndexMap(): [Map, context|contextType: 'cradleIndexMap', scrollerID|snapshot of `Cradle` index (=key) to itemID (=value) map|
-|getPropertiesSnapshot():[object, context]|contextType: 'propertiesSnapshot', scrollerID|`object` is copy of `scroller.current` from `scrollerContext` object. See below.|
+|getCradleIndexMap(): [Map, context]|contextType: 'cradleIndexMap', scrollerID|snapshot of `Cradle` index (=key) to itemID (=value) map|
+|getPropertiesSnapshot():[object, context]|contextType: 'propertiesSnapshot', scrollerID|`object` is a copy of `scroller.current` from `scrollerContext` object. See below.|
 |[_**CACHE MANAGEMENT**_]|
 |insertIndex(index:integer, rangehighindex: integer \| null):array[[shiftedList:array, replacedList:array, removedList:array, deletedList:array], context:object]|contextType: 'insertIndex', scrollerID|can insert a range of indexes. Displaced indexes, and higher indexes, are renumbered; virtual list lowindex remains the same. Changes the list size by increasing virtual list highindex; synchronizes the `Cradle`. `deletedList` contains an object for each item, with `index`, `itemID`, and `profile`|
 |removeIndex(index:integer, rangehighindex:integer \| null):array[[shiftedList:array, replacedList:array, removedList:array, deletedList:array], context:object]|contextType: 'removeIndex', scrollerID|a range of indexes can be removed. Higher indexes are renumbered; virtual list lowindex remains the same. Changes the list size by decreasing virtual list highindex; synchronizes to the `Cradle`|
