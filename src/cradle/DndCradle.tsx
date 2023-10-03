@@ -1,6 +1,18 @@
 // DndCradle.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    The role of DndCradle is to initiate operations based on dropping of a source on a legitimate target.
+    For intra-list drop it's straighforward: serviceHandler.moveIndex
+    Special cases:
+        - drop over failed CellFrame
+        - drop over empty list
+        - drop after source has been unmounted
+        - inter-list drop
+
+*/
+
 import React, {useEffect, useContext, useRef } from 'react'
 
 import { useDrop, DropTargetMonitor } from 'react-dnd'
@@ -18,8 +30,9 @@ const DndCradle = (props) => {
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext),
         viewportContext = useContext(ViewportContext),
+
         handlerListRef = useRef(null),
-        // viewportElement = viewportContext.elementRef.current,
+
         viewportFrameElement = viewportContext.frameElementRef.current,
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
@@ -34,9 +47,10 @@ const DndCradle = (props) => {
             }
         },
         drop:(item:GenericObject,monitor) => {
+
             const dropResult:GenericObject = monitor.getDropResult()
 
-            if (!dropResult || !dropResult.target) return // TODO: check for drop on empty list
+            if (!dropResult || !dropResult.target) return
 
             const {
                 serviceHandler, 
@@ -49,7 +63,7 @@ const DndCradle = (props) => {
                 fromIndex = item.index,
                 toIndex = dropResult.target.index
 
-            if (item.scrollerID == dropResult.target.scrollerID) {
+            if (item.scrollerID === dropResult.target.scrollerID) {
 
                 serviceHandler.moveIndex(toIndex, fromIndex)
                 scrollerDndContext.displacedIndex = (fromIndex > toIndex)? toIndex + 1:toIndex - 1
@@ -67,14 +81,14 @@ const DndCradle = (props) => {
 
                 const insert = +1
                 const pendingChangesList = cacheAPI.insertRemoveIndex(toIndex, toIndex, insert, listsize) // make space for insert
-                // pendingChangesList:
-
-                // startChangeIndex, 
-                // rangeincrement, 
-                // cacheIndexesShiftedList, 
-                // cacheIndexesRemovedList, 
-                // cacheIndexesToReplaceList, 
-                // portalPartitionItemsForDeleteList
+                // pendingChangesList = [
+                //     startChangeIndex, 
+                //     rangeincrement, 
+                //     cacheIndexesShiftedList, 
+                //     cacheIndexesRemovedList, 
+                //     cacheIndexesToReplaceList, 
+                //     portalPartitionItemsForDeleteList
+                // ]
 
                 const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = pendingChangesList
 
