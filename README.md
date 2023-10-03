@@ -12,7 +12,7 @@ Heavy-duty vertical or horizontal infinite scroller
 - single or multiple rows or columns
 - dynamically variable virtual list size; prepend or append
 - limited sparse in-memory cache, to preserve content state, with an API
-- repositioning mode when rapidly scrolling (such as by using the scroll thumb)
+- repositioning mode when rapidly scrolling
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
 - automatic reconfiguration with viewport resize
 - dynamic recalibration with async content refresh
