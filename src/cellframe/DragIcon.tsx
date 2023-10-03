@@ -49,7 +49,7 @@ const DragIcon = props => {
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
-            type:(dndOptions.type || 'Cell'), // must be defined
+            type:(dndOptions.type || '-x-x-x-'), // must be defined
             item:{ 
                 scrollerID,
                 itemID, 

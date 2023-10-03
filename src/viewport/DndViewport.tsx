@@ -30,7 +30,7 @@ const DndViewport = (props) => {
     const showScrollTabsRef = useRef(false)
 
     const [ targetData, targetConnector ] = useDrop({
-        accept:scrollerDndContext.dndOptions.accept || ['Cell'],
+        accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
         collect:(monitor:DropTargetMonitor) => {
             return {
                 isOver:monitor.isOver(),
