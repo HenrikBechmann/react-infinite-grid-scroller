@@ -50,7 +50,6 @@ const DragIcon = props => {
 
         return {
             type:(dndOptions.type || 'Cell'), // must be defined
-
             item:{ 
                 scrollerID,
                 itemID, 

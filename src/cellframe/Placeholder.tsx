@@ -16,6 +16,7 @@ const Placeholder = ({
     listsize, 
     message, 
     error, 
+    dndEnabled,
     userFrameStyles, 
     userLinerStyles,
     userErrorFrameStyles, 
@@ -64,10 +65,18 @@ const Placeholder = ({
         userErrorLinerStyles,
     ])
 
+    const float = useMemo(() => {
+        if (dndEnabled) return <div 
+            style = {{float:'left', height: '28px', width:'31px'}} 
+            data-type = 'dnd-float'
+        />
+        else return null
+    },[dndEnabled])
 
     message = message ?? '(loading...)'
 
     return <div data-type = 'placeholderframe' style = {frameStyles}>
+        {dndEnabled && float}
         { !error?
             <div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>:
             <div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>

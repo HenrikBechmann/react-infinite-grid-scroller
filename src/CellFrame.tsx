@@ -286,11 +286,14 @@ export const CellFrame = ({
 
     const customplaceholder = useMemo(() => {
 
-        if (!usePlaceholder) return null        
+        if (!usePlaceholder) return null
+
+        const dndEnabled = masterDndContext.installed && (
+            masterDndContext.enabled || scrollerDndContext.dndOptions.enabled)
 
         return placeholder?
             React.createElement(placeholder, 
-                {index, listsize, message:messageRef.current, error:errorRef.current}):
+                {index, listsize, message:messageRef.current, error:errorRef.current, dndEnabled}):
             null
             
     },[
@@ -315,6 +318,8 @@ export const CellFrame = ({
                     listsize = { listsize } 
                     message = { messageRef.current }
                     error = { errorRef.current }
+                    dndEnabled = {masterDndContext.installed && (
+                        masterDndContext.enabled || scrollerDndContext.dndOptions.enabled)}
                     userFrameStyles = { placeholderFrameStyles }
                     userLinerStyles = { placeholderLinerStyles }
                     userErrorFrameStyles = { placeholderErrorFrameStyles }
@@ -439,7 +444,7 @@ export const CellFrame = ({
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        let returnvalue, usercontent, dndOptions, profile, error
+                        let returnvalue, usercontent, dndOptions, profile, error, itempack
                         // process the fetch
                         try {
 
@@ -457,7 +462,7 @@ export const CellFrame = ({
                                             scrollerID,
                                         }
 
-                                const itempack = await getItemPack(index, itemID, context);
+                                itempack = await getItemPack(index, itemID, context);
                                 ({ dndOptions, profile} = itempack)
                                 dndOptions = dndOptions ?? {}
                                 profile = profile ?? {}
@@ -476,7 +481,11 @@ export const CellFrame = ({
                         } catch(e) {
 
                             returnvalue = usercontent = undefined
-                            error = e
+                            if (!itempack) {
+                                error = new Error ('no data ( ' + e.message +')')
+                            } else {
+                                error = e
+                            }
 
                         }
                         // process the return value
@@ -602,13 +611,13 @@ export const CellFrame = ({
                     <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {(isDndRef.current && (frameState == 'ready')) && 
+                {(isDndRef.current && (['ready','nodata'].includes(frameState))) && 
                     <DragIcon 
                         contentHolderElementRef = {contentHolderElementRef} 
                         itemID = {itemID} 
                         index = {index} 
                         dndOptions = {dndOptionsRef.current} 
-                        profile = {portalMetadataRef.current.profile} 
+                        profile = {portalMetadataRef.current?.profile} 
                         dndDragIconStyles = {dndDragIconStyles}
                         scrollerID = { scrollerID }
                     />
