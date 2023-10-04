@@ -412,11 +412,16 @@ export default class ContentHandler {
                 index = component.props.index,
                 cacheItemID = indexToItemIDMap.get(index)
 
+            // console.log('index, cacheItemID', index, cacheItemID)
+
             // if cache has no component for cradle item, then get one
             if (cacheItemID === undefined) {
 
                 const newItemID = cacheAPI.getNewItemID()
                 componentarray[componentptr] = React.cloneElement(component, {itemID:newItemID})
+
+                // console.log('getting new itemID',newItemID)
+
                 return
 
             } else { // match cache itemID to cradle component itemID

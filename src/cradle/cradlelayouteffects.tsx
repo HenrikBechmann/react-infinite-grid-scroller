@@ -443,7 +443,6 @@ export const useCradleStateLayoutEffects = ({
 
             // support for various host service requests; syncs cradle content with cache changes
             case 'applyinsertremovechanges':
-            // case 'applyremapchanges':
             case 'applymovechanges': {
 
                 cradleContent.headDisplayComponents = cradleContent.headModelComponents

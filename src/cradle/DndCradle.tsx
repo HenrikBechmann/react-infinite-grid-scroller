@@ -38,7 +38,7 @@ const DndCradle = (props) => {
         { size:listsize } = virtualListSpecs
 
     const [ targetData, targetConnector ] = useDrop({
-        accept:scrollerDndContext.dndOptions.accept || ['Cell'],
+        accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
         collect:(monitor:DropTargetMonitor) => {
             return {
                 item:monitor.getItem() as any,
@@ -51,7 +51,7 @@ const DndCradle = (props) => {
             const dropResult:GenericObject = monitor.getDropResult()
             
             const sourceType = monitor.getItemType()
-            console.log('sourceType, dropResult',sourceType, dropResult)
+            // console.log('sourceType, dropResult',sourceType, dropResult)
 
             if (!dropResult || !dropResult.target) return
 

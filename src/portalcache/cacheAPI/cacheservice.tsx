@@ -45,12 +45,10 @@ export default class CacheService {
             fromhighindexptr = reverseorderedindexlist.findIndex(value => value <= fromhighindex)
 
         // get required inverse
-        {
-            const cachelistcount = orderedindexlist.length
-
-            if (tohighindexptr != -1) tohighindexptr = (cachelistcount -1) - tohighindexptr
-            if (fromhighindexptr != -1) fromhighindexptr = (cachelistcount -1) - fromhighindexptr
-        }
+        const cachelistcount = orderedindexlist.length
+        // finalize bounds pointers
+        if (tohighindexptr != -1) tohighindexptr = (cachelistcount -1) - tohighindexptr
+        if (fromhighindexptr != -1) fromhighindexptr = (cachelistcount -1) - fromhighindexptr
 
         // ---------------- capture index data to move ----------------
 
@@ -70,17 +68,23 @@ export default class CacheService {
         }
 
         const processtomoveMap = new Map()
-        const capturemoveindexFn = (index) => {
 
-            processtomoveMap.set(index, indexToItemIDMap.get(index))
-
+        for (const index of listtoprocessformove) {
+            processtomoveMap.set(index,indexToItemIDMap.get(index))
         }
 
-        listtoprocessformove.forEach(capturemoveindexFn)
+        // const capturemoveindexFn = (index) => {
 
-        // ------------- get list of indexes to shift out of the way ---------------
+        //     processtomoveMap.set(index, indexToItemIDMap.get(index))
+
+        // }
+
+        // listtoprocessformove.forEach(capturemoveindexFn)
+
+        // ------------- get list of indexes to displace ---------------
         
-        let listtoprocessfordisplace
+        let listtoprocessfordisplace:number[]
+
         if (movedirection == 'down') { // block is moving down, shift is up; toindex < fromindex
 
             if ((tolowindexptr == -1) && (fromlowindexptr == -1)) {
@@ -116,50 +120,87 @@ export default class CacheService {
 
         if (movedirection == 'down') listtoprocessfordisplace.reverse()
 
+        const processtoDisplaceMap = new Map()
+
+        for (const index of listtoprocessfordisplace) {
+            processtoDisplaceMap.set(index,indexToItemIDMap.get(index))
+        }
+
         // -------------- move indexes out of the way --------------
 
-        const processeddisplaceList = []
+        const processedIndexSet = new Set() // list of unique indexes to update for cradle
 
-        const processsdisplaceindexFn = (index) => {
+        const 
+            preprocessedDisplaceList = [], // for internal processing
+            displacedDataList = [] // for return to host, including profile
+
+        const processsdisplaceindexFn = (itemID, index) => {
 
             const 
-                itemID = indexToItemIDMap.get(index),
+                // itemID = indexToItemIDMap.get(index),
                 newIndex = 
                     (movedirection == 'up')?
                         index - moveblocksize:
                         index + moveblocksize
 
-            indexToItemIDMap.set(newIndex,itemID)
-            itemMetadataMap.get(itemID).index = newIndex
-            processeddisplaceList.push(newIndex)
+            indexToItemIDMap.delete(index)
+            // both have to be listed for the cradle in case newIndex doesn't exist in the cache
+            processedIndexSet.add(index)
+            processedIndexSet.add(newIndex)
 
-        }
-
-        listtoprocessfordisplace.forEach(processsdisplaceindexFn)
-
-        // ------------ replace shifted index space with moved indexes ----------
-
-        const processedmoveList = [], movedList = []
-        const processmoveindexFn = (itemID, index) => {
-            const newIndex = index + moveincrement // swap
-
-            indexToItemIDMap.set(newIndex, itemID)
+            // update itemMetadata in any case
             const itemMetadata = itemMetadataMap.get(itemID)
             itemMetadata.index = newIndex
             const { profile } = itemMetadata
-            processedmoveList.push(newIndex)
-            movedList.push({fromIndex:index, toIndex:newIndex, itemID, profile})
+            preprocessedDisplaceList.push({index:newIndex,itemID})
+            displacedDataList.push({fromIndex:index,toIndex:newIndex,profile})
 
+        }
+
+        // listtoprocessfordisplace.forEach(processsdisplaceindexFn)
+        processtoDisplaceMap.forEach(processsdisplaceindexFn)
+
+        // ------------ replace shifted index space with moved indexes ----------
+
+        const 
+            preprocessedMoveList = [], // for internal processing
+            movedDataList = [] // for return to host, including profile
+
+        const processmoveindexFn = (itemID, index) => {
+            const newIndex = index + moveincrement // swap
+
+            indexToItemIDMap.delete(index)
+            // both have to be listed for the cradle in case newIndex doesn't exist in the cache
+            processedIndexSet.add(index)
+            processedIndexSet.add(newIndex)
+
+            // update itemMetadata in any case
+            const itemMetadata = itemMetadataMap.get(itemID)
+            itemMetadata.index = newIndex
+            const { profile } = itemMetadata
+            preprocessedMoveList.push({index:newIndex,itemID})
+            movedDataList.push({fromIndex:index, toIndex:newIndex, itemID, profile})
         }
 
         processtomoveMap.forEach(processmoveindexFn)
 
+        // insert new index => itemID entries
+        preprocessedMoveList.forEach((data) =>{
+            indexToItemIDMap.set(data.index, data.itemID)
+        })
+
+        preprocessedDisplaceList.forEach((data) =>{
+            indexToItemIDMap.set(data.index, data.itemID)
+        })
+
         // -----------return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes = [...processeddisplaceList,...processedmoveList].sort((a,b)=>a-b)
+        const processedIndexes:any[] = Array.from(processedIndexSet)
 
-        return [ processedIndexes, movedList ]
+        processedIndexes.sort((a,b)=>a-b)
+
+        return [ processedIndexes, movedDataList, displacedDataList ]
 
     }
 

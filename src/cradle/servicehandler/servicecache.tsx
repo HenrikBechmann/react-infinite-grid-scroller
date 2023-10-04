@@ -127,7 +127,7 @@ export default class ServiceCache {
             { cacheAPI, contentHandler, stateHandler } = 
                 this.cradleParameters.handlersRef.current,
 
-            [processedIndexList, movedList] = // both displaced and moved indexes
+            [processedIndexList, movedDataList, displacedDataList] = // both displaced and moved indexes
                 cacheAPI.moveIndex(tolowindex, fromlowindex, fromhighindex)
 
         if (processedIndexList.length) {
@@ -143,7 +143,7 @@ export default class ServiceCache {
             
         }
 
-        return [ processedIndexList, movedList, {
+        return [ processedIndexList, movedDataList, displacedDataList ,{
             contextType:'moveIndex',
             scrollerID,
         }]
