@@ -6,10 +6,9 @@
     The role of DndCradle is to initiate operations based on dropping of a source on a legitimate target.
     For intra-list drop it's straighforward: serviceHandler.moveIndex
     Special cases:
-        - drop over failed CellFrame
         - drop over empty list
         - drop after source has been unmounted
-        - inter-list drop
+        - inter-list drop with failed CellFrames
 
 */
 
