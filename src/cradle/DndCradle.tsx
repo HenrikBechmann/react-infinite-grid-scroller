@@ -91,12 +91,13 @@ const DndCradle = (props) => {
                 const insert = +1
                 const pendingChangesList = cacheAPI.insertRemoveIndex(toIndex, toIndex, insert, listsize)
                 // pendingChangesList = [
-                //     startChangeIndex, 
-                //     rangeincrement, 
-                //     cacheIndexesShiftedList, 
-                //     cacheIndexesRemovedList, 
-                //     cacheIndexesToReplaceList, 
-                //     portalPartitionItemsForDeleteList
+                    // startChangeIndex, 
+                    // rangeincrement, 
+                    // cacheIndexesShiftedList, 
+                    // cacheIndexesRemovedList, 
+                    // cacheIndexesDeletedList,
+                    // cacheIndexesToReplaceList, 
+                    // portalPartitionItemsForDeleteList,
                 // ]
 
                 const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = pendingChangesList

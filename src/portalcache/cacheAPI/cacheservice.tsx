@@ -216,67 +216,84 @@ export default class CacheService {
             isInserting = (increment === 1),
             isRemoving = (increment === -1),
 
-            emptyreturn = [null, null, [],[],[], []], // no action return value
-
             // cache resources
             indexToItemIDMap:Map<number,number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
             { itemMetadataMap } = this.cachePortalData,
-            itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet
+            itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet,
 
+            emptyreturn = [null, null, [],[],[],[],[]] // no action return value
+
+        const parameters = this.getInsertRemoveParameters({
+            highrangeIndex:highrange,
+            lowrangeIndex:index,
+            listsize,
+            increment,
+            isRemoving,
+        })
+
+        if (parameters === false) return emptyreturn
+
+        const {
+            shiftStartIndex,
+            changeStartIndex, 
+            rangeIncrement, 
+            lowrangeIndex,
+            highrangeIndex,
+        } = parameters
         // ---------- define contiguous range parameters; add sentinels ---------------
 
         // high range is the highest index number of the insert/remove range
-        let 
-            highrangeindex = highrange,
-            lowrangeindex = index // semantics - name symmetry
+        // let 
+        //     highrangeIndex = highrange,
+        //     lowrangeIndex = index // semantics - name symmetry
 
-        if (isRemoving) {
+        // if (isRemoving) {
 
-            // removal must be entirely within scope of the list
-            if (highrangeindex > (listsize - 1)) {
+        //     // removal must be entirely within scope of the list
+        //     if (highrangeIndex > (listsize - 1)) {
 
-                highrangeindex = (listsize - 1)
+        //         highrangeIndex = (listsize - 1)
 
-                if (highrangeindex < lowrangeindex) return emptyreturn
+        //         if (highrangeIndex < lowrangeIndex) return emptyreturn
 
-            }
+        //     }
 
-        } else { // isInserting
+        // } else { // isInserting
 
-            // addition can at most start at the next lowrangeindex above the current list; aka append
-            if (lowrangeindex > listsize) {
+        //     // addition can at most start at the next lowrangeIndex above the current list; aka append
+        //     if (lowrangeIndex > listsize) {
 
-                const diff = lowrangeindex - listsize
-                lowrangeindex -= diff
-                highrangeindex -= diff
+        //         const diff = lowrangeIndex - listsize
+        //         lowrangeIndex -= diff
+        //         highrangeIndex -= diff
 
-            }
+        //     }
 
-        }
+        // }
 
-        // rangecount is the absolute number in the insert/remove contiguous range
-        const 
-            rangecount = highrangeindex - lowrangeindex + 1,
-            // range increment adds sign to rangecount to indicate add/remove
-            rangeincrement = rangecount * increment,
-            startChangeIndex = 
-                (increment == 1)?
-                    lowrangeindex:
-                    highrangeindex + (rangeincrement + 1)
+        // // rangecount is the absolute number in the insert/remove contiguous range
+        // const 
+        //     rangecount = highrangeIndex - lowrangeIndex + 1,
+        //     // range increment adds sign to rangecount to indicate add/remove
+        //     rangeIncrement = rangecount * increment,
+        //     changeStartIndex = 
+        //         (increment == 1)?
+        //             lowrangeIndex:
+        //             highrangeIndex + (rangeIncrement + 1)
 
-        let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
+        // let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
 
-        if (isInserting) {
+        // if (isInserting) {
 
-            shiftStartIndex = lowrangeindex
+        //     shiftStartIndex = lowrangeIndex
 
-        } else { // isRemoving
+        // } else { // isRemoving
 
-            shiftStartIndex = highrangeindex + 1
+        //     shiftStartIndex = highrangeIndex + 1
 
-        }
+        // }
 
-        // ---------- define range boundaries within ordered cache index list ------------
+        // ---------- get list of operations ------------
 
         const [
             cacheIndexesToShiftList,
@@ -286,8 +303,8 @@ export default class CacheService {
             ] = assembleRequiredOperations({
             indexToItemIDMap,
             shiftStartIndex,
-            lowrangeindex,
-            highrangeindex,
+            lowrangeIndex,
+            highrangeIndex,
             isInserting
         })
 
@@ -303,7 +320,7 @@ export default class CacheService {
 
             const 
                 itemID = indexToItemIDMap.get(index),
-                newIndex = index + rangeincrement
+                newIndex = index + rangeIncrement
 
             if (isRemoving) {
                 cacheIndexesTransferredSet.add(index)
@@ -368,26 +385,90 @@ export default class CacheService {
         // return values for caller to send to contenthandler for cradle synchronization
         return [
             
-            startChangeIndex, 
-            rangeincrement, 
+            changeStartIndex, 
+            rangeIncrement, 
             cacheIndexesShiftedList, 
             cacheIndexesRemovedList, 
+            cacheIndexesDeletedList,
             cacheIndexesToReplaceList, 
             portalPartitionItemsForDeleteList,
-            cacheIndexesDeletedList,
 
         ]
 
     }
 
+    getInsertRemoveParameters = ({
+        highrangeIndex,
+        lowrangeIndex,
+        isRemoving,
+        listsize,
+        increment,
+    }) => {
+
+
+        if (isRemoving) {
+
+            // removal must be entirely within scope of the list
+            if (highrangeIndex > (listsize - 1)) {
+
+                highrangeIndex = (listsize - 1)
+
+                if (highrangeIndex < lowrangeIndex) return false // noop; empty return
+
+            }
+
+        } else { // isInserting
+
+            // addition can at most start at the next lowrangeIndex above the current list; aka append
+            if (lowrangeIndex > listsize) {
+
+                const diff = lowrangeIndex - listsize
+                lowrangeIndex -= diff
+                highrangeIndex -= diff
+
+            }
+
+        }
+
+        // rangecount is the absolute number in the insert/remove contiguous range
+        const 
+            rangecount = highrangeIndex - lowrangeIndex + 1,
+            // range increment adds sign to rangecount to indicate add/remove
+            rangeIncrement = rangecount * increment,
+            changeStartIndex = 
+                (increment == 1)?
+                    lowrangeIndex:
+                    highrangeIndex + (rangeIncrement + 1)
+
+        let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
+
+        if (isRemoving) {
+
+            shiftStartIndex = highrangeIndex + 1
+
+        } else { // isInserting
+
+            shiftStartIndex = lowrangeIndex
+
+        }
+
+        return {
+            rangeIncrement, 
+            shiftStartIndex,
+            changeStartIndex, 
+            lowrangeIndex,
+            highrangeIndex,            
+        }
+
+    }
 
 }
 
 const assembleRequiredOperations = ({
     indexToItemIDMap,
     shiftStartIndex,
-    lowrangeindex,
-    highrangeindex,
+    lowrangeIndex,
+    highrangeIndex,
     isInserting,
 }) => {
 
@@ -403,7 +484,7 @@ const assembleRequiredOperations = ({
     // obtain lowCacheRangePtr...
     const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
 
-        return (value >= lowrangeindex) && (value <= highrangeindex)
+        return (value >= lowrangeIndex) && (value <= highrangeIndex)
 
     })
 
@@ -412,7 +493,7 @@ const assembleRequiredOperations = ({
 
     let highCacheRangePtr = reversedCacheIndexList.findIndex(value=> {
 
-        return (value <= highrangeindex) && (value >= lowrangeindex)
+        return (value <= highrangeIndex) && (value >= lowrangeIndex)
 
     })
     // take inverse of highCacheRangePtr for non-reverse sort

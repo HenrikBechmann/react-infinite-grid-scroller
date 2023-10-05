@@ -331,9 +331,9 @@ export default class ServiceCache {
             rangeincrement, 
             shiftedList, 
             removedList, 
+            deletedList,
             replaceList, 
             portalPartitionItemsForDeleteList,
-            cacheIndexesDeletedList,
         ] = cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
 
         if (rangeincrement === null) return [[],[],[]] // no action
@@ -343,8 +343,8 @@ export default class ServiceCache {
 
         const { deleteListCallback } = serviceHandler.callbacks
 
-        deleteListCallback && cacheIndexesDeletedList.length && 
-            deleteListCallback(cacheIndexesDeletedList,{
+        deleteListCallback && deletedList.length && 
+            deleteListCallback(deletedList,{
                 contextType:'deleteList',
                 message:"delete items from cache by index",
                 scrollerID:cradleParameters.cradleInheritedPropertiesRef.current.scrollerID,
@@ -395,7 +395,6 @@ export default class ServiceCache {
         }
 
         const replacedList = replaceList // semantics
-        const deletedList = cacheIndexesDeletedList
 
         return [shiftedList, replacedList, removedList, deletedList] // inform caller
 
