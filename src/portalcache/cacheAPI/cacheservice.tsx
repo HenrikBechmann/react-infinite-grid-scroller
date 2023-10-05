@@ -123,7 +123,7 @@ export default class CacheService {
             processToDisplaceMap.set(index,indexToItemIDMap.get(index))
         }
 
-        // -------------- move indexes to displace --------------
+        // -------------- shift indexes to displace --------------
 
         const 
             processedIndexSet = new Set<number>(), // list of unique indexes for Cradle to update
@@ -148,8 +148,10 @@ export default class CacheService {
             // update itemMetadata in any case
             const itemMetadata = itemMetadataMap.get(itemID)
             itemMetadata.index = newIndex
-            const { profile } = itemMetadata
+
             preProcessedDisplaceList.push({index:newIndex,itemID})
+
+            const { profile } = itemMetadata
             displacedDataList.push({fromIndex:index, toIndex:newIndex, itemID, profile})
 
         }
@@ -176,8 +178,10 @@ export default class CacheService {
             // update itemMetadata in any case
             const itemMetadata = itemMetadataMap.get(itemID)
             itemMetadata.index = newIndex
-            const { profile } = itemMetadata
+
             preProcessedMoveList.push({index:newIndex,itemID})
+
+            const { profile } = itemMetadata
             movedDataList.push({fromIndex:index, toIndex:newIndex, itemID, profile})
 
         }
@@ -199,7 +203,7 @@ export default class CacheService {
 
         const processedIndexes:number[] = Array.from(processedIndexSet)
 
-        processedIndexes.sort((a,b)=>a-b)
+        processedIndexes.sort((a,b)=>a-b) // tidy up
 
         return [ processedIndexes, movedDataList, displacedDataList ]
 
