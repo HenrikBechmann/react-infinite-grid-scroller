@@ -121,7 +121,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |placeholderMessages:object| messages presented by the placeholder|optional, to replace default messages. See below for details|
 |callbacks:object| collection of functions for feedback, and interactions with scroller components|optional. See below for details|
 |technical:object| collection of values used to control system behaviour|use with caution. optional. See below for details|
-|scrollerContext:null|requested by user components by being set to null by user; instantiated with an object by system|required for nested RIGS; available for all user components. Contains key scroller settings. See below for details|
+|scrollerContext:null|requested by user components by being set to null by user; instantiated with an object by system| available for all user components. Contains key scroller settings. See below for details|
 
 Notes: For explicit cache management capability, a unique session `itemID` (integer) is assigned to a user component as soon as it enters the cache. The `itemID` is retired as soon as the user component is removed from the cache. If the same component is re-introduced into the cache, it is assigned a new session-unique `itemID`. 
 
@@ -296,9 +296,7 @@ Cell components can get access to dynamically updated parent RIGS properties, by
 
 The `scrollerContext` object is requested by user components by initializing a `scrollerContext` component property to `null`. The property is then recognized by RIGS and set to the scrollerContext object by the system on loading of the component to a CellFrame.
 
-The `srollerContext` object is required by sub-scrollers, so it must be obtained by containing components and passed to the contained subscrollers.
-
-the scrollerContext object contains two properties:
+The scrollerContext object contains two properties:
 
 ~~~typescript
 {
@@ -408,7 +406,7 @@ const dndOptions = {
   enabled, // optional for all participating scrollers, default true
 }
 ```
-3. Sub-scrollers must be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component (the one returned to RIGS through the `getItemPack` function) set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller. Sub-scrollers also need to request the `scrollerContext` property in the same way.
+3. Sub-scrollers must be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component (the one returned to RIGS through the `getItemPack` function) set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
 
 4. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). the `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
 
