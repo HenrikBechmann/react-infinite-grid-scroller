@@ -430,6 +430,8 @@ RIGS does not check for matches of `type` values returned with `getItemPack`, wi
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
 
+## Layout
+
 ## Configuration
 
 # Restoring scroll positions coming out of cache
