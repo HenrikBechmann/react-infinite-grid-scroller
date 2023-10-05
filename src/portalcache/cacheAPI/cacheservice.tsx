@@ -209,7 +209,7 @@ export default class CacheService {
 
     }
 
-    private insertRemoveIndex(scrollerID, index, highrange, increment, listsize, removeItems = true ) { // increment is +1 or -1
+    private insertRemoveIndex(scrollerID, index, highrange, increment, listsize, deleteItems = true ) { // increment is +1 or -1
 
         const 
             // clarity
@@ -223,75 +223,25 @@ export default class CacheService {
 
             emptyreturn = [null, null, [],[],[],[],[]] // no action return value
 
+        // ---------- get operation parameters ------------
+
         const parameters = this.getInsertRemoveParameters({
             highrangeIndex:highrange,
             lowrangeIndex:index,
             listsize,
-            increment,
-            isRemoving,
+            plusMinusIncrement:increment,
+            isInserting,
         })
 
-        if (parameters === false) return emptyreturn
+        if (parameters === false) return emptyreturn // noop
 
         const {
             shiftStartIndex,
-            changeStartIndex, 
-            rangeIncrement, 
             lowrangeIndex,
             highrangeIndex,
+            rangeIncrement, 
+            changeStartIndex, // for caller information only
         } = parameters
-        // ---------- define contiguous range parameters; add sentinels ---------------
-
-        // high range is the highest index number of the insert/remove range
-        // let 
-        //     highrangeIndex = highrange,
-        //     lowrangeIndex = index // semantics - name symmetry
-
-        // if (isRemoving) {
-
-        //     // removal must be entirely within scope of the list
-        //     if (highrangeIndex > (listsize - 1)) {
-
-        //         highrangeIndex = (listsize - 1)
-
-        //         if (highrangeIndex < lowrangeIndex) return emptyreturn
-
-        //     }
-
-        // } else { // isInserting
-
-        //     // addition can at most start at the next lowrangeIndex above the current list; aka append
-        //     if (lowrangeIndex > listsize) {
-
-        //         const diff = lowrangeIndex - listsize
-        //         lowrangeIndex -= diff
-        //         highrangeIndex -= diff
-
-        //     }
-
-        // }
-
-        // // rangecount is the absolute number in the insert/remove contiguous range
-        // const 
-        //     rangecount = highrangeIndex - lowrangeIndex + 1,
-        //     // range increment adds sign to rangecount to indicate add/remove
-        //     rangeIncrement = rangecount * increment,
-        //     changeStartIndex = 
-        //         (increment == 1)?
-        //             lowrangeIndex:
-        //             highrangeIndex + (rangeIncrement + 1)
-
-        // let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
-
-        // if (isInserting) {
-
-        //     shiftStartIndex = lowrangeIndex
-
-        // } else { // isRemoving
-
-        //     shiftStartIndex = highrangeIndex + 1
-
-        // }
 
         // ---------- get list of operations ------------
 
@@ -353,7 +303,7 @@ export default class CacheService {
 
             for (const itemID of cacheItemsToRemoveList) {
 
-                if (removeItems) {
+                if (deleteItems) {
                     const { partitionID, index:removedIndex, profile } = itemMetadataMap.get(itemID)
                     cacheIndexesDeletedList.push({index:removedIndex,itemID,profile})
                     portalPartitionItemsForDeleteList.push({itemID, partitionID})
@@ -400,13 +350,13 @@ export default class CacheService {
     getInsertRemoveParameters = ({
         highrangeIndex,
         lowrangeIndex,
-        isRemoving,
+        isInserting,
         listsize,
-        increment,
+        plusMinusIncrement,
     }) => {
 
 
-        if (isRemoving) {
+        if (!isInserting) { // isRemoving
 
             // removal must be entirely within scope of the list
             if (highrangeIndex > (listsize - 1)) {
@@ -434,15 +384,15 @@ export default class CacheService {
         const 
             rangecount = highrangeIndex - lowrangeIndex + 1,
             // range increment adds sign to rangecount to indicate add/remove
-            rangeIncrement = rangecount * increment,
+            rangeIncrement = rangecount * plusMinusIncrement,
             changeStartIndex = 
-                (increment == 1)?
+                (isInserting)?
                     lowrangeIndex:
                     highrangeIndex + (rangeIncrement + 1)
 
         let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
 
-        if (isRemoving) {
+        if (!isInserting) {
 
             shiftStartIndex = highrangeIndex + 1
 
