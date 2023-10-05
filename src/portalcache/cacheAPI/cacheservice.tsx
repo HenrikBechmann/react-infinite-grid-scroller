@@ -209,12 +209,71 @@ export default class CacheService {
 
     }
 
-    private insertRemoveIndex(scrollerID, index, highrange, increment, listsize, deleteItems = true ) { // increment is +1 or -1
+    private insertRemoveIndexedItems(
+        scrollerID, 
+        index, 
+        highrange, 
+        incrementDirection, 
+        listsize
+    ) { // increment is +1 or -1
+
+        const [
+            
+            changeStartIndex, 
+            rangeIncrement, 
+            cacheIndexesShiftedList, 
+            cacheIndexesRemovedList, 
+            cacheIndexesToReplaceList, 
+            cacheItemsToRemoveList
+        ] = this.insertRemoveIndexedItemsFromScroller(
+            scrollerID,
+            index,
+            highrange,
+            incrementDirection,
+            listsize
+        )
+
+        const 
+            { itemMetadataMap } = this.cachePortalData,
+            cacheIndexesDeletedList = [],
+            portalPartitionItemsForDeleteList = []
+
+        for (const itemID of cacheItemsToRemoveList) {
+            const { partitionID, index:removedIndex, profile } = itemMetadataMap.get(itemID)
+            cacheIndexesDeletedList.push({index:removedIndex,itemID,profile})
+            portalPartitionItemsForDeleteList.push({itemID, partitionID})
+            itemMetadataMap.delete(itemID)
+        }
+
+        // --------------- returns ---------------
+
+        // return values for caller to send to contenthandler for cradle synchronization
+        return [
+            
+            changeStartIndex, 
+            rangeIncrement, 
+            cacheIndexesShiftedList, 
+            cacheIndexesRemovedList, 
+            cacheIndexesToReplaceList, 
+            cacheIndexesDeletedList,
+            portalPartitionItemsForDeleteList,
+
+        ]
+
+    }
+
+    private insertRemoveIndexedItemsFromScroller = (
+        scrollerID,
+        index,
+        highrange,
+        incrementDirection,
+        listsize,
+    ) => { // increment is +1 or -1
 
         const 
             // clarity
-            isInserting = (increment === 1),
-            isRemoving = (increment === -1),
+            isInserting = (incrementDirection === 1),
+            isRemoving = (incrementDirection === -1),
 
             // cache resources
             indexToItemIDMap:Map<number,number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
@@ -229,7 +288,7 @@ export default class CacheService {
             highrangeIndex:highrange,
             lowrangeIndex:index,
             listsize,
-            plusMinusIncrement:increment,
+            incrementDirection,
             isInserting,
         })
 
@@ -288,8 +347,8 @@ export default class CacheService {
 
         // delete remaining indexes and items now duplicates; track portal data to remove after cradle updated
 
-        const portalPartitionItemsForDeleteList = [] // hold portals for deletion until after after cradle synch
-        let cacheIndexesRemovedList = [], cacheIndexesDeletedList = []
+        // const portalPartitionItemsForDeleteList = [] // hold portals for deletion until after after cradle synch
+        let cacheIndexesRemovedList = [] // , cacheIndexesDeletedList = []
 
         if (isInserting) {
 
@@ -303,12 +362,6 @@ export default class CacheService {
 
             for (const itemID of cacheItemsToRemoveList) {
 
-                if (deleteItems) {
-                    const { partitionID, index:removedIndex, profile } = itemMetadataMap.get(itemID)
-                    cacheIndexesDeletedList.push({index:removedIndex,itemID,profile})
-                    portalPartitionItemsForDeleteList.push({itemID, partitionID})
-                    itemMetadataMap.delete(itemID)
-                }
                 itemSet.delete(itemID)
 
             }
@@ -330,19 +383,13 @@ export default class CacheService {
 
         if (isInserting) cacheIndexesShiftedList.reverse() // return to ascending order
 
-        // --------------- returns ---------------
-
-        // return values for caller to send to contenthandler for cradle synchronization
         return [
-            
             changeStartIndex, 
             rangeIncrement, 
             cacheIndexesShiftedList, 
             cacheIndexesRemovedList, 
-            cacheIndexesDeletedList,
             cacheIndexesToReplaceList, 
-            portalPartitionItemsForDeleteList,
-
+            cacheItemsToRemoveList,
         ]
 
     }
@@ -352,7 +399,7 @@ export default class CacheService {
         lowrangeIndex,
         isInserting,
         listsize,
-        plusMinusIncrement,
+        incrementDirection,
     }) => {
 
 
@@ -384,7 +431,7 @@ export default class CacheService {
         const 
             rangecount = highrangeIndex - lowrangeIndex + 1,
             // range increment adds sign to rangecount to indicate add/remove
-            rangeIncrement = rangecount * plusMinusIncrement,
+            rangeIncrement = rangecount * incrementDirection,
             changeStartIndex = 
                 (isInserting)?
                     lowrangeIndex:

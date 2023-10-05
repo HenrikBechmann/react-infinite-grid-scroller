@@ -80,27 +80,16 @@ const DndCradle = (props) => {
                 const { dragData } = masterDndContext
                 const [ sourceProps ] = dragData.sourceServiceHandler.getPropertiesSnapshot()
                 const { size:sourcelistsize } = sourceProps.virtualListProps
-                const REMOVE = -1
+                let incrementDirection = -1
 
-                // last argument false = do not remove Items
-                dragData.sourceCacheAPI.insertRemoveIndex(fromIndex, fromIndex, REMOVE, sourcelistsize, false) 
+                // remove item from source scroller (but leave in cache)
+                dragData.sourceCacheAPI.insertRemoveIndexedItemsFromScroller(fromIndex, fromIndex, incrementDirection, sourcelistsize) 
                 dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
                 dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 
                 // make space for insert
-                const insert = +1
-                const pendingChangesList = cacheAPI.insertRemoveIndex(toIndex, toIndex, insert, listsize)
-                // pendingChangesList = [
-                    // startChangeIndex, 
-                    // rangeincrement, 
-                    // cacheIndexesShiftedList, 
-                    // cacheIndexesRemovedList, 
-                    // cacheIndexesDeletedList,
-                    // cacheIndexesToReplaceList, 
-                    // portalPartitionItemsForDeleteList,
-                // ]
-
-                const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = pendingChangesList
+                incrementDirection = +1
+                const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = cacheAPI.insertRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
 
                 const fromScroller = item.scrollerID
                 cacheAPI.transferPortalMetadataToScroller( item.itemID, toIndex ) // move into space

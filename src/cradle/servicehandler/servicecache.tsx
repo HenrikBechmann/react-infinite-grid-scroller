@@ -256,7 +256,7 @@ export default class ServiceCache {
 
     // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
     // this operation changes the listsize
-    private insertRemoveIndex = (index, rangehighindex, increment) => {
+    private insertRemoveIndex = (index, rangehighindex, incrementDirection) => {
 
         const 
 
@@ -308,7 +308,7 @@ export default class ServiceCache {
 
         if (listsize == 0) {
             
-            if (increment > 0) {
+            if (incrementDirection > 0) {
 
                 this.setListRange([index,rangehighindex])
 
@@ -331,10 +331,10 @@ export default class ServiceCache {
             rangeincrement, 
             shiftedList, 
             removedList, 
-            deletedList,
             replaceList, 
+            deletedList,
             portalPartitionItemsForDeleteList,
-        ] = cacheAPI.insertRemoveIndex(index, rangehighindex, increment, listsize)
+        ] = cacheAPI.insertRemoveIndexedItems(index, rangehighindex, incrementDirection, listsize)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 
@@ -367,7 +367,7 @@ export default class ServiceCache {
 
         if (!resetCradle) { // synchronize cradle contents to changes
 
-            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, increment, startChangeIndex) // non-zero communications isInsertRemove
+            contentHandler.synchronizeCradleItemIDsToCache(shiftedList, incrementDirection, startChangeIndex) // non-zero communications isInsertRemove
 
             const 
                 { content } = contentHandler,
