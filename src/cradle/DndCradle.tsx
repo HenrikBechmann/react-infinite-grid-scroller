@@ -6,6 +6,7 @@
     The role of DndCradle is to initiate operations based on dropping of a source on a legitimate target.
     For intra-list drop it's straighforward: serviceHandler.moveIndex
     Special cases:
+        - drop over or with failed CellFrames
         - drop over empty list
         - drop after source has been unmounted
         - inter-list drop with failed CellFrames
@@ -77,12 +78,12 @@ const DndCradle = (props) => {
             } else { // inter-list
 
                 const { dragData } = masterDndContext
-                const sourceProps = dragData.sourceServiceHandler.getPropertiesSnapshot()
+                const [ sourceProps ] = dragData.sourceServiceHandler.getPropertiesSnapshot()
                 const { size:sourcelistsize } = sourceProps.virtualListProps
-                const remove = -1
+                const REMOVE = -1
 
                 // last argument false = do not remove Items
-                dragData.sourceCacheAPI.insertRemoveIndex(fromIndex, fromIndex, remove, sourcelistsize, false) 
+                dragData.sourceCacheAPI.insertRemoveIndex(fromIndex, fromIndex, REMOVE, sourcelistsize, false) 
                 dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
                 dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 

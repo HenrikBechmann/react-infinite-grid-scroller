@@ -213,15 +213,14 @@ export default class CacheService {
 
         const 
             // clarity
-            isInserting = (increment == 1),
-            isRemoving = (increment == -1),
+            isInserting = (increment === 1),
+            isRemoving = (increment === -1),
 
             emptyreturn = [null, null, [],[],[], []], // no action return value
 
             // cache resources
-            indexToItemIDMap:Map<number, number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+            indexToItemIDMap:Map<number,number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
             { itemMetadataMap } = this.cachePortalData,
-            orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b), // ascending order
             itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet
 
         // ---------- define contiguous range parameters; add sentinels ---------------
@@ -279,125 +278,21 @@ export default class CacheService {
 
         // ---------- define range boundaries within ordered cache index list ------------
 
-        // obtain startptr for indexes to shift
-        const shiftStartCachePtr = orderedCacheIndexList.findIndex(value => {
-
-            return (value >= shiftStartIndex)
-
+        const [
+            cacheIndexesToShiftList,
+            cacheIndexesToReplaceList,
+            cacheIndexesToRemoveList,
+            cacheItemsToRemoveList,
+            ] = assembleRequiredOperations({
+            indexToItemIDMap,
+            shiftStartIndex,
+            lowrangeindex,
+            highrangeindex,
+            isInserting
         })
-
-        // obtain lowCacheRangePtr...
-        const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
-
-            return (value >= lowrangeindex) && (value <= highrangeindex)
-
-        })
-
-        // obtain highCacheRangePtr...
-        const reversedCacheIndexList = Array.from(orderedCacheIndexList).reverse()
-
-        let highCacheRangePtr = reversedCacheIndexList.findIndex(value=> {
-
-            return (value <= highrangeindex) && (value >= lowrangeindex)
-
-        })
-        // take inverse of highCacheRangePtr for non-reverse sort
-        if (highCacheRangePtr != -1) {
-
-            highCacheRangePtr = (orderedCacheIndexList.length - 1) - highCacheRangePtr
-            if (highCacheRangePtr < lowCacheRangePtr) highCacheRangePtr = -1
-
-        }
-
-        // ----------- isolate index range list and shift list ------------
-
-        // cache inputs
-        let cacheRangeIndexesList, // for either insert or remove
-            cacheToShiftIndexesList // for either insert or remove
-
-        // get inputs
-        if (lowCacheRangePtr == -1) { // core scope is out of view
-
-            cacheRangeIndexesList = []
-            cacheToShiftIndexesList = []
-
-        } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowCacheRangePtr is available
-
-            // all items above lowCacheRangePtr must have indexes reset
-            cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
-
-            if (isInserting) {
-
-                cacheToShiftIndexesList = cacheRangeIndexesList.slice()
-
-            } else {
-
-                if (shiftStartCachePtr == -1) {
-
-                    cacheToShiftIndexesList = []
-
-                } else {
-
-                    cacheToShiftIndexesList = orderedCacheIndexList.slice(shiftStartCachePtr)
-                    
-                }
-
-            }
-
-        } else { // range fully in view
-
-            cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr, highCacheRangePtr + 1)
-
-            if (isInserting) {
-
-                cacheToShiftIndexesList = orderedCacheIndexList.slice(shiftStartCachePtr)
-
-            } else {
-
-                if (shiftStartCachePtr == -1) {
-
-                    cacheToShiftIndexesList = []
-
-                } else {
-
-                    cacheToShiftIndexesList = orderedCacheIndexList.slice(shiftStartCachePtr)
-
-                }
-
-            }
-
-        }
-
-        // ----------- list cache indexes and items to replace or remove -----------
-
-        // cache outputs
-        // for insert, the range being inserted; for remove, any tail cradle items abandoned
-        let cacheIndexesToReplaceList = [], // for insert, the range being inserted
-            cacheIndexesToRemoveList = [], // for remove, the range being removed
-            cacheItemsToRemoveList = [] // for remove, derived from the previous
-
-        if (isInserting) {
-
-            cacheIndexesToReplaceList = cacheRangeIndexesList
-
-        } else { // isRemoving
-
-            cacheIndexesToRemoveList = cacheRangeIndexesList
-
-            // get cacheItemsToRemoveList
-            for (const index of cacheIndexesToRemoveList) {
-
-                cacheItemsToRemoveList.push(indexToItemIDMap.get(index))
-                indexToItemIDMap.delete(index)
-
-            }
-
-        }
-
-        // ----------- conduct cache operations; capture list of shifted indexes ----------
 
         // increment higher from top of list to preserve lower values for subsequent increment
-        if (isInserting) cacheToShiftIndexesList.reverse() 
+        if (isInserting) cacheIndexesToShiftList.reverse() 
 
         const 
             cacheIndexesShiftedList = [], // track shifted indexes
@@ -422,7 +317,7 @@ export default class CacheService {
         }
 
         // walk through items to shift
-        cacheToShiftIndexesList.forEach(processIndexFn)
+        cacheIndexesToShiftList.forEach(processIndexFn)
 
         // delete remaining indexes and items now duplicates; track portal data to remove after cradle updated
 
@@ -484,5 +379,140 @@ export default class CacheService {
         ]
 
     }
+
+
+}
+
+const assembleRequiredOperations = ({
+    indexToItemIDMap,
+    shiftStartIndex,
+    lowrangeindex,
+    highrangeindex,
+    isInserting,
+}) => {
+
+   const orderedCacheIndexList = Array.from(indexToItemIDMap.keys()).sort((a:number,b:number)=>a-b) // ascending order
+
+    // obtain startptr for indexes to shift
+    const shiftStartCachePtr = orderedCacheIndexList.findIndex(value => {
+
+        return (value >= shiftStartIndex)
+
+    })
+
+    // obtain lowCacheRangePtr...
+    const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
+
+        return (value >= lowrangeindex) && (value <= highrangeindex)
+
+    })
+
+    // obtain highCacheRangePtr...
+    const reversedCacheIndexList = Array.from(orderedCacheIndexList).reverse()
+
+    let highCacheRangePtr = reversedCacheIndexList.findIndex(value=> {
+
+        return (value <= highrangeindex) && (value >= lowrangeindex)
+
+    })
+    // take inverse of highCacheRangePtr for non-reverse sort
+    if (highCacheRangePtr != -1) {
+
+        highCacheRangePtr = (orderedCacheIndexList.length - 1) - highCacheRangePtr
+        if (highCacheRangePtr < lowCacheRangePtr) highCacheRangePtr = -1
+
+    }
+
+    // ----------- isolate index range list and shift list ------------
+
+    // cache inputs
+    let cacheRangeIndexesList, // for either insert or remove
+        cacheIndexesToShiftList // for either insert or remove
+
+    // get inputs
+    if (lowCacheRangePtr == -1) { // core scope is out of view
+
+        cacheRangeIndexesList = []
+        cacheIndexesToShiftList = []
+
+    } else if (highCacheRangePtr == -1) { // core scope is partially in view; lowCacheRangePtr is available
+
+        // all items above lowCacheRangePtr must have indexes reset
+        cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr)
+
+        if (isInserting) {
+
+            cacheIndexesToShiftList = cacheRangeIndexesList.slice()
+
+        } else {
+
+            if (shiftStartCachePtr == -1) {
+
+                cacheIndexesToShiftList = []
+
+            } else {
+
+                cacheIndexesToShiftList = orderedCacheIndexList.slice(shiftStartCachePtr)
+                
+            }
+
+        }
+
+    } else { // range fully in view
+
+        cacheRangeIndexesList = orderedCacheIndexList.slice(lowCacheRangePtr, highCacheRangePtr + 1)
+
+        if (isInserting) {
+
+            cacheIndexesToShiftList = orderedCacheIndexList.slice(shiftStartCachePtr)
+
+        } else {
+
+            if (shiftStartCachePtr == -1) {
+
+                cacheIndexesToShiftList = []
+
+            } else {
+
+                cacheIndexesToShiftList = orderedCacheIndexList.slice(shiftStartCachePtr)
+
+            }
+
+        }
+
+    }
+
+    // ----------- list cache indexes and items to replace or remove -----------
+
+    // cache outputs
+    // for insert, the range being inserted; for remove, any tail cradle items abandoned
+    let cacheIndexesToReplaceList = [], // for insert, the range being inserted
+        cacheIndexesToRemoveList = [], // for remove, the range being removed
+        cacheItemsToRemoveList = [] // for remove, derived from the previous
+
+    if (isInserting) {
+
+        cacheIndexesToReplaceList = cacheRangeIndexesList
+
+    } else { // isRemoving
+
+        cacheIndexesToRemoveList = cacheRangeIndexesList
+
+        // get cacheItemsToRemoveList
+        for (const index of cacheIndexesToRemoveList) {
+
+            cacheItemsToRemoveList.push(indexToItemIDMap.get(index))
+            indexToItemIDMap.delete(index)
+
+        }
+
+    }
+
+    return [
+        cacheIndexesToShiftList,
+        cacheIndexesToReplaceList,
+        cacheIndexesToRemoveList,
+        cacheItemsToRemoveList,
+    ]
 
 }
