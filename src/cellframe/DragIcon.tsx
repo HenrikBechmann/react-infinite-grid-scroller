@@ -44,12 +44,23 @@ const DragIcon = props => {
     dndDragIconStyles = dndDragIconStyles ?? {}
     dndOptions = dndOptions ?? {}
 
+    const dropEffect = dndOptions.dropEffect || scrollerDndContext.dndOptions?.dropEffect
+
+    const options = 
+        dropEffect?
+            {dropEffect}:
+            {}
+
     // preview connector is neutralized in favout of a custom DragLayer (see DndDragBar)
     // sourceConnector is connected to the dragicon div below
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
         return {
+
             type:(dndOptions.type || '-x-x-x-'), // must be defined
+
+            options,
+
             item:{ 
                 scrollerID,
                 itemID, 
@@ -57,14 +68,15 @@ const DragIcon = props => {
                 profile,
             },
 
-        collect: (monitor:DragSourceMonitor) => {
+            collect: (monitor:DragSourceMonitor) => {
 
-            return {
-                isDragging:!!monitor.isDragging(),
-            }
-        },
+                return {
+                    isDragging:!!monitor.isDragging(),
+                }
+            },
 
-    }},[itemID, dndOptions])
+        }
+    },[itemID, dndOptions])
 
     const 
         { isDragging } = sourceData,

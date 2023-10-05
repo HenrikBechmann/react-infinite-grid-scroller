@@ -6,10 +6,10 @@
     The role of DndCradle is to initiate operations based on dropping of a source on a legitimate target.
     For intra-list drop it's straighforward: serviceHandler.moveIndex
     Special cases:
-        - drop over or with failed CellFrames
+        - intra-list or inter-list drop over or with failed CellFrames
         - drop over empty list
         - drop after source has been unmounted
-        - inter-list drop with failed CellFrames
+        - copy vs move
 
 */
 
@@ -44,9 +44,12 @@ const DndCradle = (props) => {
             const dropResult:GenericObject = monitor.getDropResult()
             
             const sourceType = monitor.getItemType()
+
             // console.log('sourceType, dropResult',sourceType, dropResult)
 
             if (!dropResult || !dropResult.target) return
+
+            const { dropEffect } = dropResult
 
             const {
                 serviceHandler, 
