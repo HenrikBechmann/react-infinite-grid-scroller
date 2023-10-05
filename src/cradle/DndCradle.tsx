@@ -39,13 +39,6 @@ const DndCradle = (props) => {
     // const [ targetData, targetConnector ] = useDrop({
     const [ , targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
-        // collect:(monitor:DropTargetMonitor) => {
-        //     return {
-        //         item:monitor.getItem() as any,
-        //         isOver:monitor.isOver(),
-        //         canDrop:monitor.canDrop(),
-        //     }
-        // },
         drop:(item:GenericObject,monitor) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
@@ -83,16 +76,17 @@ const DndCradle = (props) => {
                 let incrementDirection = -1
 
                 // remove item from source scroller (but leave in cache)
-                dragData.sourceCacheAPI.insertRemoveIndexedItemsFromScroller(fromIndex, fromIndex, incrementDirection, sourcelistsize) 
+                dragData.sourceCacheAPI.insertRemoveIndexedItemsFromScroller(
+                    fromIndex, fromIndex, incrementDirection, sourcelistsize) 
                 dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
                 dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 
                 // make space for insert
                 incrementDirection = +1
-                const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = cacheAPI.insertRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
+                const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
+                    cacheAPI.insertRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
 
-                const fromScroller = item.scrollerID
-                cacheAPI.transferPortalMetadataToScroller( item.itemID, toIndex ) // move into space
+                cacheAPI.addCacheItemToScroller( item.itemID, toIndex ) // move into space
 
                 contentHandler.synchronizeCradleItemIDsToCache(
                     cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle
@@ -101,7 +95,7 @@ const DndCradle = (props) => {
 
                 stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
-                scrollerDndContext.displacedIndex = toIndex + 1
+                scrollerDndContext.displacedIndex = toIndex + 1 // TODO place before setCradleState?
 
             }
 

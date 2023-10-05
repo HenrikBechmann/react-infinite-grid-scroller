@@ -207,8 +207,8 @@ export default class CacheAPI {
             getNewOrExistingItemID:(index) => {
                 return this.cachePortalData.getNewOrExistingItemID(scrollerID, index)
             },
-            transferPortalMetadataToScroller:(itemID,toIndex) => {
-                return this.cachePortalData.transferPortalMetadataToScroller(scrollerID,itemID,toIndex)
+            addCacheItemToScroller:(itemID,toIndex) => {
+                return this.cachePortalData.addCacheItemToScroller(scrollerID,itemID,toIndex)
             },
             createPortal:(component, index, itemID, scrollerContext, dndOptions, profile, isPreload = false) => {
                 return this.cachePortalData.createPortal(scrollerID, component, index, itemID, scrollerContext, dndOptions, profile, isPreload = false)

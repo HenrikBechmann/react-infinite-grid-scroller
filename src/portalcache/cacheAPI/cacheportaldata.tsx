@@ -287,7 +287,7 @@ export default class PortalData {
 
     }
 
-    private transferPortalMetadataToScroller(scrollerID, itemID, toIndex) {
+    private addCacheItemToScroller(scrollerID, itemID, toIndex) {
 
         const targetScrollerDataMap = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
