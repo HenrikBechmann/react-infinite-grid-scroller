@@ -75,12 +75,6 @@ User components loaded to `CellFrame`s are placed in a `data-type = 'contentenve
 
 See the "Content Types" section of the [demodata.tsx](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx) module of the demo site for more code examples.
 
-# Animated GIF
-
-This is a random screenshare, showing nested scrollers in a resized browser (33% normal).
-
-![animation](demo/RIGSDemo.gif)
-
 # Compatible browsers
 
 RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
