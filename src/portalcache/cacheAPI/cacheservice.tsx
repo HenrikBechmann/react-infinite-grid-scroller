@@ -17,8 +17,11 @@ export default class CacheService {
 
     private moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex ) {
 
+        // ----------------------[ assemble data ]------------------------
+
         const 
-            indexToItemIDMap:Map<number, number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+            indexToItemIDMap:Map<number, number> = 
+                this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
             { itemMetadataMap } = this.cachePortalData,
 
             // ----------- define parameters ---------------
@@ -34,14 +37,15 @@ export default class CacheService {
 
             // ------------ find bounds of from and to blocks in cache -------------
 
-            orderedindexlist = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b),
+            orderedindexlist:number[] = Array.from(indexToItemIDMap.keys()).sort((a,b)=>a-b),
 
-            reverseorderedindexlist = orderedindexlist.slice().reverse(),
+            reverseorderedindexlist:number[] = orderedindexlist.slice().reverse(),
 
             tolowindexptr = orderedindexlist.findIndex(value => value >= tolowindex),
             fromlowindexptr = orderedindexlist.findIndex(value => value >= fromlowindex)
 
-        let tohighindexptr = reverseorderedindexlist.findIndex(value => value <= tohighindex),
+        let 
+            tohighindexptr = reverseorderedindexlist.findIndex(value => value <= tohighindex),
             fromhighindexptr = reverseorderedindexlist.findIndex(value => value <= fromhighindex)
 
         // get required inverse
@@ -50,54 +54,47 @@ export default class CacheService {
         if (tohighindexptr != -1) tohighindexptr = (cachelistcount -1) - tohighindexptr
         if (fromhighindexptr != -1) fromhighindexptr = (cachelistcount -1) - fromhighindexptr
 
-        // ---------------- capture index data to move ----------------
+        // ---------------- collect index data for move ----------------
 
-        let listtoprocessformove
+        let listToProcessForMove:number[]
+
         if ((fromlowindexptr == -1) && (fromhighindexptr == -1)) { // scope is out of view
 
-            listtoprocessformove = []
+            listToProcessForMove = []
 
         } else if (fromhighindexptr == -1) { // scope is partially in view
 
-            listtoprocessformove = orderedindexlist.slice(fromlowindexptr)
+            listToProcessForMove = orderedindexlist.slice(fromlowindexptr)
 
         } else { // scope is entirely in view
 
-            listtoprocessformove = orderedindexlist.slice(fromlowindexptr, fromhighindexptr + 1)
+            listToProcessForMove = orderedindexlist.slice(fromlowindexptr, fromhighindexptr + 1)
 
         }
 
-        const processtomoveMap = new Map()
+        const processToMoveMap = new Map<number,number>()
 
-        for (const index of listtoprocessformove) {
-            processtomoveMap.set(index,indexToItemIDMap.get(index))
+        for (const index of listToProcessForMove) {
+            processToMoveMap.set(index,indexToItemIDMap.get(index))
         }
 
-        // const capturemoveindexFn = (index) => {
-
-        //     processtomoveMap.set(index, indexToItemIDMap.get(index))
-
-        // }
-
-        // listtoprocessformove.forEach(capturemoveindexFn)
-
-        // ------------- get list of indexes to displace ---------------
+        // ------------- collect index data for displace ---------------
         
-        let listtoprocessfordisplace:number[]
+        let listToProcessForDisplace:number[]
 
         if (movedirection == 'down') { // block is moving down, shift is up; toindex < fromindex
 
             if ((tolowindexptr == -1) && (fromlowindexptr == -1)) {
 
-                listtoprocessfordisplace = []
+                listToProcessForDisplace = []
 
             } else if (fromlowindexptr == -1) {
 
-                listtoprocessfordisplace = orderedindexlist.slice(tolowindexptr)
+                listToProcessForDisplace = orderedindexlist.slice(tolowindexptr)
 
             } else {
 
-                listtoprocessfordisplace = orderedindexlist.slice(tolowindexptr, fromlowindexptr)
+                listToProcessForDisplace = orderedindexlist.slice(tolowindexptr, fromlowindexptr)
 
             }
 
@@ -105,39 +102,39 @@ export default class CacheService {
 
             if (tohighindexptr == -1 && fromhighindexptr == -1) {
 
-                listtoprocessfordisplace = []
+                listToProcessForDisplace = []
 
             } else if (tohighindexptr == -1) {
 
-                listtoprocessfordisplace = orderedindexlist.slice(fromhighindexptr + 1)
+                listToProcessForDisplace = orderedindexlist.slice(fromhighindexptr + 1)
 
             } else {
 
-                listtoprocessfordisplace = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
+                listToProcessForDisplace = orderedindexlist.slice(fromhighindexptr + 1, tohighindexptr + 1)
 
             }
         }
 
-        if (movedirection == 'down') listtoprocessfordisplace.reverse()
+        // if (movedirection == 'down') listToProcessForDisplace.reverse()
 
-        const processtoDisplaceMap = new Map()
+        const processToDisplaceMap = new Map<number,number>()
 
-        for (const index of listtoprocessfordisplace) {
-            processtoDisplaceMap.set(index,indexToItemIDMap.get(index))
+        for (const index of listToProcessForDisplace) {
+            processToDisplaceMap.set(index,indexToItemIDMap.get(index))
         }
 
-        // -------------- move indexes out of the way --------------
-
-        const processedIndexSet = new Set() // list of unique indexes to update for cradle
+        // -------------- move indexes to displace --------------
 
         const 
-            preprocessedDisplaceList = [], // for internal processing
-            displacedDataList = [] // for return to host, including profile
+            processedIndexSet = new Set<number>(), // list of unique indexes for Cradle to update
+            preProcessedDisplaceList:
+                {index:number,itemID:number}[] = [], // for internal processing
+            displacedDataList:
+                {fromIndex:number, toIndex:number, itemID:number, profile:object}[] = [] // for return to host, including profile
 
-        const processsdisplaceindexFn = (itemID, index) => {
+        const processsDisplaceIndexFn = (itemID, index) => {
 
             const 
-                // itemID = indexToItemIDMap.get(index),
                 newIndex = 
                     (movedirection == 'up')?
                         index - moveblocksize:
@@ -152,21 +149,23 @@ export default class CacheService {
             const itemMetadata = itemMetadataMap.get(itemID)
             itemMetadata.index = newIndex
             const { profile } = itemMetadata
-            preprocessedDisplaceList.push({index:newIndex,itemID})
-            displacedDataList.push({fromIndex:index,toIndex:newIndex,profile})
+            preProcessedDisplaceList.push({index:newIndex,itemID})
+            displacedDataList.push({fromIndex:index, toIndex:newIndex, itemID, profile})
 
         }
 
-        // listtoprocessfordisplace.forEach(processsdisplaceindexFn)
-        processtoDisplaceMap.forEach(processsdisplaceindexFn)
+        processToDisplaceMap.forEach(processsDisplaceIndexFn)
 
         // ------------ replace shifted index space with moved indexes ----------
 
         const 
-            preprocessedMoveList = [], // for internal processing
-            movedDataList = [] // for return to host, including profile
+            preProcessedMoveList:
+                {index:number,itemID:number}[] = [], // for internal processing
+            movedDataList:
+                {fromIndex:number, toIndex:number, itemID:number, profile:object}[] = [] // for return to host, including profile
 
-        const processmoveindexFn = (itemID, index) => {
+        const processMoveIndexFn = (itemID, index) => {
+
             const newIndex = index + moveincrement // swap
 
             indexToItemIDMap.delete(index)
@@ -178,25 +177,27 @@ export default class CacheService {
             const itemMetadata = itemMetadataMap.get(itemID)
             itemMetadata.index = newIndex
             const { profile } = itemMetadata
-            preprocessedMoveList.push({index:newIndex,itemID})
+            preProcessedMoveList.push({index:newIndex,itemID})
             movedDataList.push({fromIndex:index, toIndex:newIndex, itemID, profile})
+
         }
 
-        processtomoveMap.forEach(processmoveindexFn)
+        processToMoveMap.forEach(processMoveIndexFn)
 
-        // insert new index => itemID entries
-        preprocessedMoveList.forEach((data) =>{
+        // ---------------- insert collected new index => itemID entries -----------
+
+        preProcessedMoveList.forEach((data) =>{
             indexToItemIDMap.set(data.index, data.itemID)
         })
 
-        preprocessedDisplaceList.forEach((data) =>{
+        preProcessedDisplaceList.forEach((data) =>{
             indexToItemIDMap.set(data.index, data.itemID)
         })
 
-        // -----------return list of processed indexes to caller --------
+        // ----------- return list of processed indexes to caller --------
         // for synchrnization with cradle cellFrames
 
-        const processedIndexes:any[] = Array.from(processedIndexSet)
+        const processedIndexes:number[] = Array.from(processedIndexSet)
 
         processedIndexes.sort((a,b)=>a-b)
 
