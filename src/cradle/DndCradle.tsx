@@ -46,9 +46,11 @@ const DndCradle = (props) => {
             console.log('listsize, dropResult',listsize, dropResult)
 
             if (
+
                 !dropResult || 
                 !dropResult.target || 
                 ((dropResult.dataType == 'viewport') && listsize !== 0)
+
             ) return
 
             const { dropEffect } = dropResult
@@ -62,9 +64,11 @@ const DndCradle = (props) => {
 
             const 
                 fromIndex = item.index,
-                toIndex = dropResult.target.index
+                fromScrollerID = item.scrollerID,
+                toIndex = dropResult.target.index,
+                toScrollerID = dropResult.target.scrollerID
 
-            if (item.scrollerID === dropResult.target.scrollerID) { // intra-list
+            if (fromScrollerID === toScrollerID) { // intra-list
 
                 serviceHandler.moveIndex(toIndex, fromIndex)
 
