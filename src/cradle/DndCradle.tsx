@@ -42,8 +42,14 @@ const DndCradle = (props) => {
         drop:(item:GenericObject,monitor) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
-            
-            if (!dropResult || !dropResult.target) return // TODO but check for empty list
+
+            console.log('listsize, dropResult',listsize, dropResult)
+
+            if (
+                !dropResult || 
+                !dropResult.target || 
+                ((dropResult.dataType == 'viewport') && listsize !== 0)
+            ) return
 
             const { dropEffect } = dropResult
 
@@ -102,7 +108,7 @@ const DndCradle = (props) => {
             scrollerDndContext.sourceItem = item
             
         },
-    })
+    },[listsize])
 
     useEffect(()=>{
 

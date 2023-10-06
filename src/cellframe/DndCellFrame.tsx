@@ -33,11 +33,14 @@ const DndCellFrame = (props) => {
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept,
         drop:(item, monitor) => {
-            return {target:{
-                scrollerID,
-                itemID,
-                index,
-            }}
+            return {
+                dataType:'cellframe',
+                target:{
+                    scrollerID,
+                    itemID,
+                    index,
+                }
+            }
         },
         collect:(monitor:DropTargetMonitor) => {
             return {

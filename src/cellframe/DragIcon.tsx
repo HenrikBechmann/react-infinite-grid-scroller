@@ -12,6 +12,7 @@ import React, {
     useRef, 
     useEffect, 
     useContext,
+    useMemo,
 } from 'react'
 
 import type { CSSProperties } from 'react'
@@ -46,10 +47,15 @@ const DragIcon = props => {
 
     const dropEffect = dndOptions.dropEffect || scrollerDndContext.dndOptions?.dropEffect
 
-    const options = 
-        dropEffect?
-            {dropEffect}:
-            {}
+    const options = useMemo(()=>{
+
+        return (
+            dropEffect?
+                {dropEffect}:
+                {}
+        )
+
+    },[dropEffect])
 
     // preview connector is neutralized in favout of a custom DragLayer (see DndDragBar)
     // sourceConnector is connected to the dragicon div below
@@ -76,7 +82,7 @@ const DragIcon = props => {
             },
 
         }
-    },[itemID, dndOptions])
+    },[itemID, dndOptions, options])
 
     const 
         { isDragging } = sourceData,

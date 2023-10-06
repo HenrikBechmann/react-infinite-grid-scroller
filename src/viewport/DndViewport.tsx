@@ -31,10 +31,22 @@ const DndViewport = (props) => {
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
+        drop:(item, monitor) => {
+            if (monitor.isOver({shallow:true})) {
+                return {
+                    dataType:'viewport',
+                    target:{
+                        scrollerID,
+                    }
+                }
+            }
+        },
         collect:(monitor:DropTargetMonitor) => {
             return {
+
                 isOver:monitor.isOver(),
                 canDrop:monitor.canDrop(),
+
             }
         },
 
