@@ -392,18 +392,20 @@ import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
   />
 </div>
 ```
-2. `dndOptions` is required for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property. It may include an optional `dropEffect` property ('move' or 'copy') to contrain the drag and drop outcome.
+2. `dndOptions` is required for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property. It may include an optional `internalDropEffect`, `outgoingDropEffect`, `incomingDropEffect` properties ('move', 'copy' or 'any') to constrain the drag and drop outcome. `incomingDropEffect` takes precedence.
 ```
 const dndOptions = {
   accept:['type1','type2','type3'] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
   master:{enabled}, // optional, default true, for root only
   enabled, // optional for all participating scrollers, default true
-  dropEffect, // optional, default undefined
+  internalDropEffect, // optional, default undefined
+  outgoingDropEffect, // optional, default undefined
+  incomingDropEffect, // optional, default undefined
 }
 ```
 3. Sub-scrollers must be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component (the one returned to RIGS through the `getItemPack` function) set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
 
-4. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). the `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item. It may optionally include a `dropEffect` property ('move' or 'copy') to contrain the drag and drop outcome for the item.
+4. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). the `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
 
 ```
 // in host getItemPack function
@@ -413,7 +415,6 @@ return {
   dndOptions:{
     type, // string (or Symbol) required to match one of the list accept values
     dragText, // required. Displayed to user in the drag image for the component
-    dropEffect, // optional, default undefined
   }
   profile, // recommended. Simple object created by host, returned to host for item identification in various contexts
 }
