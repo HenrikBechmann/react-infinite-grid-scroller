@@ -85,7 +85,7 @@ const DndCradle = (props) => {
                 const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
                     cacheAPI.insertOrRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
 
-                cacheAPI.addCacheItemToScroller( item.itemID, toIndex ) // move into space
+                const portalMetadata = cacheAPI.addCacheItemToScroller( item.itemID, toIndex ) // move into space
 
                 contentHandler.synchronizeCradleItemIDsToCache(
                     cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle

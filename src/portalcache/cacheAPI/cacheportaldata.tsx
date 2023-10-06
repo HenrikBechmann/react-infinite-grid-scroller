@@ -287,23 +287,21 @@ export default class PortalData {
 
     }
 
-    private addCacheItemToScroller(scrollerID, itemID, toIndex) {
+    private addCacheItemToScroller(scrollerID, itemID, index) {
 
-        const targetScrollerDataMap = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
+        const scrollerDataMap = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
-        if (!targetScrollerDataMap) return null
+        if (!scrollerDataMap) return null
 
         const portalMetadata = this.itemMetadataMap.get(itemID)
 
-        // const sourceIndex = portalMetadata.index
+        if (!portalMetadata) return null
+
         portalMetadata.scrollerID = scrollerID
-        portalMetadata.index = toIndex
+        portalMetadata.index = index
 
-        targetScrollerDataMap.itemSet.add(itemID)
-        targetScrollerDataMap.indexToItemIDMap.set(toIndex, itemID)
-
-        // sourceScrollerDataMap.itemSet.delete(itemID)
-        // sourceScrollerDataMap.indexToItemIDMap.delete(sourceIndex)
+        scrollerDataMap.itemSet.add(itemID)
+        scrollerDataMap.indexToItemIDMap.set(index, itemID)
 
         return portalMetadata
 
