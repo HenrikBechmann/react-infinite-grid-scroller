@@ -209,7 +209,7 @@ export default class CacheService {
 
     }
 
-    private insertRemoveIndexedItems(
+    private insertOrRemoveIndexedItems(
         scrollerID, 
         index, 
         highrange, 
@@ -225,7 +225,7 @@ export default class CacheService {
             cacheIndexesRemovedList, 
             cacheIndexesToReplaceList, 
             cacheItemsToRemoveList
-        ] = this.insertRemoveIndexedItemsFromScroller(
+        ] = this.insertOrRemoveIndexedItemsFromScroller(
             scrollerID,
             index,
             highrange,
@@ -262,7 +262,7 @@ export default class CacheService {
 
     }
 
-    private insertRemoveIndexedItemsFromScroller = (
+    private insertOrRemoveIndexedItemsFromScroller = (
         scrollerID,
         index,
         highrange,

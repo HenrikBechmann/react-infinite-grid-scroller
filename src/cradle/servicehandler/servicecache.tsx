@@ -197,7 +197,7 @@ export default class ServiceCache {
             return null
         }
 
-        const changes = this.insertRemoveIndex(index, rangehighindex, +1)
+        const changes = this.insertOrRemoveIndex(index, rangehighindex, +1)
 
         return [changes, {
             contextType:'insertIndex',
@@ -243,7 +243,7 @@ export default class ServiceCache {
             return null
         }
 
-        const changes = this.insertRemoveIndex(index, rangehighindex, -1)
+        const changes = this.insertOrRemoveIndex(index, rangehighindex, -1)
 
         return [changes, {
             contextType:'removeIndex',
@@ -256,7 +256,7 @@ export default class ServiceCache {
 
     // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
     // this operation changes the listsize
-    private insertRemoveIndex = (index, rangehighindex, incrementDirection) => {
+    private insertOrRemoveIndex = (index, rangehighindex, incrementDirection) => {
 
         const 
 
@@ -334,7 +334,7 @@ export default class ServiceCache {
             replaceList, 
             deletedList,
             portalPartitionItemsForDeleteList,
-        ] = cacheAPI.insertRemoveIndexedItems(index, rangehighindex, incrementDirection, listsize)
+        ] = cacheAPI.insertOrRemoveIndexedItems(index, rangehighindex, incrementDirection, listsize)
 
         if (rangeincrement === null) return [[],[],[]] // no action
 

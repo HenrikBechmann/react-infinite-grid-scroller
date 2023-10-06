@@ -355,7 +355,7 @@ export default class ContentHandler {
 
     }
 
-    // supports moveIndex and insertRemoveIndex, 
+    // supports moveIndex and insertOrRemoveIndex, 
     // updates cradle contiguous items from startChangeIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 

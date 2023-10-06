@@ -43,9 +43,7 @@ const DndCradle = (props) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
             
-            if (!dropResult || !dropResult.target) return
-
-            // const sourceType = monitor.getItemType()
+            if (!dropResult || !dropResult.target) return // TODO but check for empty list
 
             const { dropEffect } = dropResult
 
@@ -77,7 +75,7 @@ const DndCradle = (props) => {
                 let incrementDirection = -1
 
                 // remove item from source scroller (but leave in cache)
-                dragData.sourceCacheAPI.insertRemoveIndexedItemsFromScroller(
+                dragData.sourceCacheAPI.insertOrRemoveIndexedItemsFromScroller(
                     fromIndex, fromIndex, incrementDirection, sourcelistsize) 
                 dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
                 dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
@@ -85,7 +83,7 @@ const DndCradle = (props) => {
                 // make space for insert
                 incrementDirection = +1
                 const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
-                    cacheAPI.insertRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
+                    cacheAPI.insertOrRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
 
                 cacheAPI.addCacheItemToScroller( item.itemID, toIndex ) // move into space
 
