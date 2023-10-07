@@ -392,7 +392,7 @@ import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
   />
 </div>
 ```
-2. `dndOptions` is required for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property. It may include an optional `internalDropEffect`, `outgoingDropEffect`, `incomingDropEffect` properties ('move', 'copy' or 'any') to constrain the drag and drop outcome. `incomingDropEffect` takes precedence.
+2. `dndOptions` is a required property for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property. It may include an optional `internalDropEffect`, `outgoingDropEffect`, `incomingDropEffect` properties ('move', 'copy' or 'any') to constrain the drag and drop outcome. `incomingDropEffect` takes precedence.
 ```
 const dndOptions = {
   accept:['type1','type2','type3'] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
