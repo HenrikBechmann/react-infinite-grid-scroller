@@ -45,14 +45,14 @@ const DragIcon = props => {
     dndDragIconStyles = dndDragIconStyles ?? {}
     dndOptions = dndOptions ?? {}
 
-    const dropEffect = dndOptions.dropEffect || scrollerDndContext.dndOptions?.dropEffect
+    const dropEffect = scrollerDndContext.dndOptions?.dropEffect
 
     const options = useMemo(()=>{
 
         return (
             dropEffect?
                 {dropEffect}:
-                {}
+                {} // must be no property: undefined dropEffect property value interpreted as 'copy' on Chrome Mac
         )
 
     },[dropEffect])
@@ -72,6 +72,7 @@ const DragIcon = props => {
                 itemID, 
                 index,
                 profile,
+                dropEffect:options.dropEffect,
             },
 
             collect: (monitor:DragSourceMonitor) => {

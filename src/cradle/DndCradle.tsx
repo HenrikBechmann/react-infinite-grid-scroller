@@ -22,6 +22,15 @@ import { ViewportContext } from '../Viewport'
 
 import { Cradle } from '../Cradle'
 
+type DndItem = { 
+    scrollerID:number,
+    itemID:number, 
+    index:number,
+    profile:GenericObject, // host defined
+    dropEffect:string, // undefined, or dropEffect property set in useDrag
+}
+
+
 // HoC for DnD functionality
 const DndCradle = (props) => {
 
@@ -39,7 +48,7 @@ const DndCradle = (props) => {
     // const [ targetData, targetConnector ] = useDrop({
     const [ , targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
-        drop:(item:GenericObject,monitor) => {
+        drop:(item:DndItem,monitor) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
 
@@ -47,9 +56,13 @@ const DndCradle = (props) => {
 
             if (
 
-                !dropResult || 
-                !dropResult.target || 
-                ((dropResult.dataType == 'viewport') && listsize !== 0)
+                // TODO take into account that drop onto blank portion of Viewport is
+                // legitimate given Viewport open space
+                // signifies last position for either intra-list or inter-list
+                // could be legitimate for single list item list copy
+                !dropResult || // cautious
+                !dropResult.target || // cautious
+                ((dropResult.dataType == 'viewport') && listsize !== 0) // require CellFrame location
 
             ) return
 
@@ -66,11 +79,28 @@ const DndCradle = (props) => {
                 fromIndex = item.index,
                 fromScrollerID = item.scrollerID,
                 toIndex = dropResult.target.index,
-                toScrollerID = dropResult.target.scrollerID
+                toScrollerID = dropResult.target.scrollerID,
+                itemID = item.itemID
 
             if (fromScrollerID === toScrollerID) { // intra-list
 
-                serviceHandler.moveIndex(toIndex, fromIndex)
+                if (cacheAPI.itemMetadataMap.has(itemID)) {
+
+                    if (dropEffect == 'move') {
+                        
+                        serviceHandler.moveIndex(toIndex, fromIndex)
+
+                    } else { // copy
+
+                        // request itemPack for copied profile
+
+                    }
+
+                } else {
+
+                    // request itemPack for moved profile
+
+                }
 
                 scrollerDndContext.displacedIndex = 
                     (fromIndex > toIndex)? 
@@ -95,7 +125,7 @@ const DndCradle = (props) => {
                 const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
                     cacheAPI.insertOrRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
 
-                const portalMetadata = cacheAPI.addCacheItemToScroller( item.itemID, toIndex ) // move into space
+                const portalMetadata = cacheAPI.addCacheItemToScroller( itemID, toIndex ) // move into space
 
                 contentHandler.synchronizeCradleItemIDsToCache(
                     cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle
