@@ -405,7 +405,7 @@ const dndOptions = {
 ```
 3. Sub-scrollers must be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component (the one returned to RIGS through the `getItemPack` function) set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
 
-4. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). the `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
+4. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). The `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
 
 ```
 // in host getItemPack function
@@ -421,13 +421,15 @@ return {
 
 ```
 
-RIGS does not check for matches of `type` values returned with `getItemPack`, with `accept` values sent to scrollers via the `dndOptions` property.
+RIGS does not check for matches of `type` values returned with `getItemPack`, with `accept` values sent to scrollers via the `dndOptions` scroller property.
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
 
 ## Layout
 
 ## Configuration
+
+## `canDrop` and `dropEffect`
 
 # Restoring scroll positions coming out of cache
 
