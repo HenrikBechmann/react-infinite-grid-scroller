@@ -72,6 +72,7 @@ const DragIcon = props => {
                 itemID, 
                 index,
                 profile,
+                dndOptions,
                 dropEffect:options.dropEffect,
             },
 

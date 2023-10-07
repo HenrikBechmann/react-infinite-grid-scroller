@@ -450,17 +450,39 @@ export const CellFrame = ({
 
                             if (getItemPack) {
 
-                                const context:GenericObject = 
-                                    masterDndContext.installed?
-                                        {
-                                            contextType:'dndFetch',
-                                            accept:scrollerDndContext.dndOptions.accept,
-                                            scrollerID,
-                                        }:
-                                        {
-                                            contextType:'fetch',
-                                            scrollerID,
-                                        }
+                                let context:GenericObject;
+                                if (masterDndContext.installed && scrollerDndContext.dndFetchIndex === index) {
+
+                                    context = {
+                                        contextType:'dndFetchRequest',
+                                        accept:scrollerDndContext.dndOptions.accept,
+                                        scrollerID,
+                                        item:scrollerDndContext.dndFetchItem,
+
+                                    }
+
+                                    console.log('dndFetchRequest',context)
+
+                                    scrollerDndContext.dndFetchIndex = null
+                                    scrollerDndContext.dndFetchItem = null
+
+                                } else if (masterDndContext.installed) {
+
+                                    context = {
+                                        contextType:'dndFetch',
+                                        accept:scrollerDndContext.dndOptions.accept,
+                                        scrollerID,
+
+                                    }
+
+                                } else {
+
+                                    context = {
+                                        contextType:'fetch',
+                                        scrollerID,
+                                    }
+
+                                }
 
                                 itempack = await getItemPack(index, itemID, context);
                                 ({ dndOptions, profile} = itempack)

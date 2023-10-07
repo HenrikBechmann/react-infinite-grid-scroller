@@ -68,6 +68,8 @@ const DndCradle = (props) => {
 
             const { dropEffect } = dropResult
 
+            item.dropEffect = dropEffect
+
             const {
                 serviceHandler, 
                 cacheAPI, 
@@ -78,34 +80,36 @@ const DndCradle = (props) => {
             const 
                 fromIndex = item.index,
                 fromScrollerID = item.scrollerID,
+
                 toIndex = dropResult.target.index,
                 toScrollerID = dropResult.target.scrollerID,
-                itemID = item.itemID
 
-            if (fromScrollerID === toScrollerID) { // intra-list
+                itemID = item.itemID,
 
-                if (cacheAPI.itemMetadataMap.has(itemID)) {
-
-                    if (dropEffect == 'move') {
-                        
-                        serviceHandler.moveIndex(toIndex, fromIndex)
-
-                    } else { // copy
-
-                        // request itemPack for copied profile
-
-                    }
-
-                } else {
-
-                    // request itemPack for moved profile
-
-                }
-
-                scrollerDndContext.displacedIndex = 
+                displacedIndex = 
                     (fromIndex > toIndex)? 
                         toIndex + 1:
                         toIndex - 1
+
+            if (fromScrollerID === toScrollerID) { // intra-list
+
+                if (dropEffect == 'move') {
+
+                    if (!cacheAPI.itemMetadataMap.has(itemID)) { // will have to fetch
+
+                        scrollerDndContext.dndFetchIndex = toIndex
+                        scrollerDndContext.dndFetchItem = item
+
+                    }
+
+                    scrollerDndContext.displacedIndex = displacedIndex
+                    serviceHandler.moveIndex(toIndex, fromIndex)
+
+                } else { // copy
+
+                    // request itemPack for copied profile
+
+                }
 
             } else { // inter-list
 
@@ -139,7 +143,7 @@ const DndCradle = (props) => {
             }
 
             scrollerDndContext.droppedIndex = toIndex
-            scrollerDndContext.sourceItem = item
+            // scrollerDndContext.sourceItem = item
             
         },
     },[listsize])
