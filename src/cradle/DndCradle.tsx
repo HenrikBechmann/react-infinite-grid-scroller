@@ -136,9 +136,9 @@ const DndCradle = (props) => {
 
                 serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
 
-                stateHandler.setCradleState('applyinsertremovechanges') // re-render
+                scrollerDndContext.displacedIndex = toIndex + 1
 
-                scrollerDndContext.displacedIndex = toIndex + 1 // TODO place before setCradleState?
+                stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
             }
 
