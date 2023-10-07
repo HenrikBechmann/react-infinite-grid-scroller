@@ -139,7 +139,7 @@ const DragIcon = props => {
 
     return <div data-type = 'dragicon' ref = { sourceConnector } style = {dragiconstylesRef.current}>
 
-        <img style = {iconstylesRef.current} src={dragicon} />
+        <img draggable = {false} style = {iconstylesRef.current} src={dragicon} />
 
     </div>
 }

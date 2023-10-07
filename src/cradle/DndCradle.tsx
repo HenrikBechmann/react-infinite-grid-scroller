@@ -42,6 +42,7 @@ const DndCradle = (props) => {
         handlerListRef = useRef(null),
 
         viewportFrameElement = viewportContext.frameElementRef.current,
+        viewportElement = viewportContext.elementRef.current,
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
 
@@ -50,12 +51,10 @@ const DndCradle = (props) => {
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
         collect:(monitor) => {
             return {
-                canDrop:monitor.canDrop()
+                canDrop:monitor.canDrop(),
             }
         },
-        drop:(item:DndItem,monitor) => {
-
-            console.log('dropping in DndCradle')
+        drop:(item:DndItem, monitor) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
 
@@ -73,7 +72,7 @@ const DndCradle = (props) => {
 
             ) return
 
-            const { dropEffect } = dropResult
+            const dropEffect = dropResult.dropEffect || 'move'
 
             item.dropEffect = dropEffect
 
@@ -150,18 +149,16 @@ const DndCradle = (props) => {
             }
 
             scrollerDndContext.droppedIndex = toIndex
-            // scrollerDndContext.sourceItem = item
             
         },
     },[listsize])
 
-    console.log('targetData.canDrop',targetData.canDrop)
+    // console.log('targetData.canDrop, didDrop',targetData.canDrop, targetData.didDrop)
 
     useEffect(()=>{
 
-        console.log('setting connector')
-
-        targetConnector(viewportFrameElement)
+        // targetConnector(viewportFrameElement)
+        targetConnector(viewportElement)
 
     },[])
 
