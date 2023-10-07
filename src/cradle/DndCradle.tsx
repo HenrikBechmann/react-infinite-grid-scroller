@@ -93,21 +93,21 @@ const DndCradle = (props) => {
 
             if (fromScrollerID === toScrollerID) { // intra-list
 
+                scrollerDndContext.displacedIndex = displacedIndex
+                if (!cacheAPI.itemMetadataMap.has(itemID) || (dropEffect == 'copy')) { // will have to fetch
+
+                    scrollerDndContext.dndFetchIndex = toIndex
+                    scrollerDndContext.dndFetchItem = item
+
+                }
+
                 if (dropEffect == 'move') {
 
-                    if (!cacheAPI.itemMetadataMap.has(itemID)) { // will have to fetch
-
-                        scrollerDndContext.dndFetchIndex = toIndex
-                        scrollerDndContext.dndFetchItem = item
-
-                    }
-
-                    scrollerDndContext.displacedIndex = displacedIndex
                     serviceHandler.moveIndex(toIndex, fromIndex)
 
-                } else { // copy
+                } else {
 
-                    // request itemPack for copied profile
+                    serviceHandler.insertIndex(toIndex)
 
                 }
 
