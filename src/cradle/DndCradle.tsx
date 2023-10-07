@@ -46,13 +46,20 @@ const DndCradle = (props) => {
         { size:listsize } = virtualListSpecs
 
     // const [ targetData, targetConnector ] = useDrop({
-    const [ , targetConnector ] = useDrop({
+    const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
+        collect:(monitor) => {
+            return {
+                canDrop:monitor.canDrop()
+            }
+        },
         drop:(item:DndItem,monitor) => {
+
+            console.log('dropping in DndCradle')
 
             const dropResult:GenericObject = monitor.getDropResult()
 
-            console.log('listsize, dropResult',listsize, dropResult)
+            console.log('DndCradle: listsize, dropResult',listsize, dropResult)
 
             if (
 
@@ -148,7 +155,11 @@ const DndCradle = (props) => {
         },
     },[listsize])
 
+    console.log('targetData.canDrop',targetData.canDrop)
+
     useEffect(()=>{
+
+        console.log('setting connector')
 
         targetConnector(viewportFrameElement)
 
