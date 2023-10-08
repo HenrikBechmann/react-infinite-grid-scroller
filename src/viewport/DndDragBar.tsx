@@ -15,6 +15,7 @@ import React, {
     useEffect, 
     useContext,
     CSSProperties,
+    KeyboardEvent,
 
 } from 'react'
 
@@ -22,6 +23,8 @@ import {
     useDragLayer, 
     DragLayerMonitor, 
 } from 'react-dnd'
+
+import { isMobile } from  '../InfiniteGridScroller/RigsDnd'
 
 import { MasterDndContext, GenericObject } from '../InfiniteGridScroller'
 
@@ -160,8 +163,33 @@ const DndDragBar = (props) => {
         } as CSSProperties
     }
 
+    const handleKeyboardEvent = (e) => {
+
+        if (masterDndContext.altKey !== e.altKey) masterDndContext.altKey = e.altKey
+        // console.log('drag event altKey',e.altKey)
+
+    };
+
+    useEffect(()=>{
+
+        if (isMobile) return
+
+        // console.log('adding event listener')
+        document.addEventListener('drag', handleKeyboardEvent)
+
+        return () => {
+
+            // console.log('removing event listener')
+            masterDndContext.altKey = null
+            document.removeEventListener('drag', handleKeyboardEvent)
+
+        }
+
+    },[])
+
+
     return (isDragging && currentOffset
-        ?<div data-type = 'dragbar' style={dragbarstyles}>
+        ?<div data-type = 'dragbar' onKeyDown={handleKeyboardEvent} style={dragbarstyles}>
 
             <div style = {candropiconholderstylesRef.current}>
                 <img style = {iconstylesRef.current} src={candropicon} />

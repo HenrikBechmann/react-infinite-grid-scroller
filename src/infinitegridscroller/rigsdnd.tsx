@@ -2,7 +2,7 @@
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
-    Dnd is powered by react-dnd. The HTML or Touch backends are installed depending on the ismobile test.
+    Dnd is powered by react-dnd. The HTML or Touch backends are installed depending on the isMobile test.
 
     RigsDnd must be installed as host scroller to install the DndProvider. Only one RigsDnd
     can be installed per environment.
@@ -58,9 +58,9 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { TouchBackend } from 'react-dnd-touch-backend'
 
-const ismobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+export const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
-const DndBackend = ismobile?TouchBackend:HTML5Backend
+const DndBackend = isMobile?TouchBackend:HTML5Backend
 
 // recommended...
 const hasNativeElementsFromPoint =
