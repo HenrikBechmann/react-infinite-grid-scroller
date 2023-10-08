@@ -49,11 +49,14 @@ const DragIcon = props => {
 
     const options = useMemo(()=>{
 
-        return (
+        const computedOptions = 
             dropEffect?
                 {dropEffect}:
                 {} // must be no property: undefined dropEffect property value interpreted as 'copy' on Chrome Mac
-        )
+
+        masterDndContext.computedDropEffect = computedOptions.dropEffect
+
+        return computedOptions
 
     },[dropEffect])
 

@@ -8,11 +8,13 @@
 
 */
 
-import React, {useRef, useContext, useMemo, CSSProperties} from 'react'
+import React, {useRef, useContext, useMemo, useState, useEffect, CSSProperties} from 'react'
 
 import displaceicon from "../../assets/east_FILL0_wght400_GRAD0_opsz24.png"
 
 import { MasterDndContext } from '../InfiniteGridScroller'
+
+import { isMobile } from  '../InfiniteGridScroller/RigsDnd'
 
 import {CradleContext} from '../Cradle'
 
@@ -21,13 +23,53 @@ const DisplaceIcon = (props) => {
     const 
         { orientation, scrollerID, index } = props,
 
+        [displaceState, setDisplaceState] = useState('ready'),
+
         masterDndContext = useContext(MasterDndContext),
+
+        altKeyRef = useRef(masterDndContext.altKey),
+
         cradleContext = useContext(CradleContext),
 
-        {scrollerID:sourceScrollerID, index:sourceIndex} = masterDndContext.dragData,
+        { dragData, computedDropEffect:dropEffect } = masterDndContext,
+
+        { scrollerID:sourceScrollerID, index:sourceIndex  } = dragData,
+
+        currentDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
 
         { virtualListProps } = cradleContext.scrollerPropertiesRef.current,
         { crosscount } = virtualListProps
+
+    const intervalIDRef = useRef(null)
+
+    useEffect(()=>{
+
+        if (isMobile) return
+
+        intervalIDRef.current = setInterval(()=>{
+
+            if (masterDndContext.altKey !== altKeyRef.current) {
+                altKeyRef.current = masterDndContext.altKey
+                setDisplaceState('refresh')
+            }
+
+        },200)
+
+        return () => {
+
+            clearInterval(intervalIDRef.current)
+
+        }
+
+    },[])
+
+    useEffect(()=>{
+
+        if (displaceState != 'ready') {
+            setDisplaceState('ready')
+        }
+
+    },[displaceState])
 
     const rotation = useMemo(()=>{
 
@@ -37,33 +79,35 @@ const DisplaceIcon = (props) => {
             'forward':
             index < sourceIndex?
                 'forward':
-                'back'
+                    currentDropEffect == 'copy'?
+                        'forward':
+                        'back'
 
         if (direction == 'forward') {
             rotation = 
                 crosscount === 1?
-                orientation == 'vertical'?
-                    '.25turn':
-                    '0turn'
-                :
-                orientation == 'vertical'?
-                    '0turn':
-                    '.25turn'
+                    orientation == 'vertical'?
+                        '.25turn':
+                        '0turn'
+                    :
+                    orientation == 'vertical'?
+                        '0turn':
+                        '.25turn'
         } else { // 'back'
             rotation = 
                 crosscount === 1?
-                orientation == 'vertical'?
-                    '.75turn':
-                    '.50turn'
-                :
-                orientation == 'vertical'?
-                    '.50turn':
-                    '.75turn'
+                    orientation == 'vertical'?
+                        '.75turn':
+                        '.50turn'
+                    :
+                    orientation == 'vertical'?
+                        '.50turn':
+                        '.75turn'
         }
 
         return rotation
 
-    },[orientation, scrollerID, index, sourceScrollerID, sourceIndex, crosscount])
+    },[orientation, scrollerID, index, sourceScrollerID, sourceIndex, crosscount, currentDropEffect])
 
     const framestyleRef = useRef<CSSProperties>({
         zIndex:2, 
@@ -72,14 +116,17 @@ const DisplaceIcon = (props) => {
         top:'0',
     })
 
-    const imgstyleRef = useRef<CSSProperties>({
-        float:'right',
-        marginRight:'6px',
-        transform:`rotate(${rotation})`
-    })
+    const imgstyles = useMemo(() => {
+        const styles = {
+            float:'right',
+            marginRight:'6px',
+            transform:`rotate(${rotation})`
+        } as CSSProperties
+        return styles
+    },[rotation])
 
     return <div style = {framestyleRef.current} data-type = 'displaceicon'>
-        <img style = {imgstyleRef.current} src = {displaceicon} />
+        <img style = {imgstyles} src = {displaceicon} />
     </div>
 
 }

@@ -180,8 +180,8 @@ const DndDragBar = (props) => {
         return () => {
 
             // console.log('removing event listener')
-            masterDndContext.altKey = null
             document.removeEventListener('drag', handleKeyboardEvent)
+            masterDndContext.altKey = null
 
         }
 
