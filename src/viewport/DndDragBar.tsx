@@ -51,7 +51,38 @@ const DndDragBar = (props) => {
 
         dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`,
 
-        [dragState, setDragBarState] = useState('ready')
+        [dragState, setDragBarState] = useState('ready'),
+
+        { computedDropEffect:dropEffect } = masterDndContext,
+
+        currentDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+
+        dropEffectIcon = currentDropEffect == 'move'?moveicon:copyicon,
+
+        altKeyRef = useRef(masterDndContext.altKey)
+
+    const intervalIDRef = useRef(null)
+
+    useEffect(()=>{
+
+        if (isMobile) return
+
+        intervalIDRef.current = setInterval(()=>{
+
+            if (masterDndContext.altKey !== altKeyRef.current) {
+                altKeyRef.current = masterDndContext.altKey
+                setDragBarState('refresh')
+            }
+
+        },200)
+
+        return () => {
+
+            clearInterval(intervalIDRef.current)
+
+        }
+
+    },[])
 
     if ((scrollerID === masterDndContext.scrollerID) && !masterDndContext.setDragBarState) {
 
@@ -89,6 +120,7 @@ const DndDragBar = (props) => {
     useEffect (()=>{
 
         switch (dragState) {
+            case 'refresh':
             case 'updateicon':
                 setDragBarState('ready')
         }
@@ -202,7 +234,7 @@ const DndDragBar = (props) => {
                 {dragText}
                 
             <div style = {modeiconholderstylesRef.current}>
-                <img style = {iconstylesRef.current} src={moveicon} />
+                <img style = {iconstylesRef.current} src={dropEffectIcon} />
             </div>
         </div>
 
