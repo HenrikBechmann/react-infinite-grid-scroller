@@ -56,11 +56,8 @@ const DndCradle = (props) => {
         },
         drop:(item:DndItem, monitor) => {
 
-            // TODO take into account that drop onto blank portion of Viewport is
-            // legitimate given Viewport open space
-            // signifies last position for either intra-list or inter-list
-            // could be legitimate for single list item list copy
-                
+            // -------------------[ gateway ]---------------------
+
             const dropResult:GenericObject = monitor.getDropResult()
 
             console.log('DndCradle: listsize, dropResult',listsize, dropResult)
@@ -72,6 +69,8 @@ const DndCradle = (props) => {
                 ((dropResult.dataType == 'viewport') && listsize !== 0) // require CellFrame location
 
             ) return
+
+            // -----------------------[ data assembly ]-----------------
 
             const dropEffect = dropResult.dropEffect || 'move' // default for mobile
 
@@ -98,10 +97,11 @@ const DndCradle = (props) => {
                         toIndex + 1:
                         toIndex - 1
 
-            // -------------------------[ intra-list ]------------------------
+            // -------------------------[ intra-list drop ]------------------------
             if (fromScrollerID === toScrollerID) {
 
                 scrollerDndContext.displacedIndex = displacedIndex
+
                 if (!cacheAPI.itemMetadataMap.has(itemID) || (dropEffect == 'copy')) { // will have to fetch
 
                     scrollerDndContext.dndFetchIndex = toIndex
@@ -119,10 +119,11 @@ const DndCradle = (props) => {
 
                 }
 
-            // -------------------------[ inter-list ]------------------------
+            // -------------------------[ inter-list drop ]------------------------
             } else {
                 
                 const { dragData } = masterDndContext
+
                 // move existing cache item
                 if (cacheAPI.itemMetadataMap.has(itemID) && dropEffect == 'move') {
 
@@ -156,7 +157,8 @@ const DndCradle = (props) => {
 
                     stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
-                } else { // copy item, or move non-cache item
+                // copy item, or move non-cache item
+                } else {
 
                     if (dropEffect == 'move') {
                         dragData.sourceServiceHandler.removeIndex(fromIndex)

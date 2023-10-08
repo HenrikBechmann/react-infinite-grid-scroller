@@ -105,6 +105,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                 setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
                 setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
                 dropCount:0,
+                altKey:null,
                 dragData:{
                     isDragging:false,
                     itemID:null,

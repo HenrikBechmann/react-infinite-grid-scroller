@@ -141,6 +141,7 @@ export const MasterDndContext = React.createContext(
         setViewportState:null, // the master viewport, for rendering the dragbar
         setDragBarState:null, // for master dragbar, to update icons
         dropCount:0,
+        altKey:null,
         dragData:{
             isDragging:false,
             canDrop:false,
