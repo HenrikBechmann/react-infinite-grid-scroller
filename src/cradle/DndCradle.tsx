@@ -56,16 +56,17 @@ const DndCradle = (props) => {
         },
         drop:(item:DndItem, monitor) => {
 
+            // TODO take into account that drop onto blank portion of Viewport is
+            // legitimate given Viewport open space
+            // signifies last position for either intra-list or inter-list
+            // could be legitimate for single list item list copy
+                
             const dropResult:GenericObject = monitor.getDropResult()
 
             console.log('DndCradle: listsize, dropResult',listsize, dropResult)
 
             if (
 
-                // TODO take into account that drop onto blank portion of Viewport is
-                // legitimate given Viewport open space
-                // signifies last position for either intra-list or inter-list
-                // could be legitimate for single list item list copy
                 !dropResult || // cautious
                 !dropResult.target || // cautious
                 ((dropResult.dataType == 'viewport') && listsize !== 0) // require CellFrame location
@@ -120,7 +121,6 @@ const DndCradle = (props) => {
 
             // -------------------------[ inter-list ]------------------------
             } else {
-
                 
                 const { dragData } = masterDndContext
                 // move existing cache item
@@ -156,7 +156,7 @@ const DndCradle = (props) => {
 
                     stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
-                } else {
+                } else { // copy item, or move non-cache item
 
                     if (dropEffect == 'move') {
                         dragData.sourceServiceHandler.removeIndex(fromIndex)
@@ -171,7 +171,6 @@ const DndCradle = (props) => {
 
                 }
 
-
             }
 
             scrollerDndContext.droppedIndex = toIndex
@@ -183,7 +182,6 @@ const DndCradle = (props) => {
 
     useEffect(()=>{
 
-        // targetConnector(viewportFrameElement)
         targetConnector(viewportElement)
 
     },[])
