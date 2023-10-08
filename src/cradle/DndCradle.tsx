@@ -72,7 +72,7 @@ const DndCradle = (props) => {
 
             ) return
 
-            const dropEffect = dropResult.dropEffect || 'move'
+            const dropEffect = dropResult.dropEffect || 'move' // default for mobile
 
             item.dropEffect = dropEffect
 
@@ -97,7 +97,8 @@ const DndCradle = (props) => {
                         toIndex + 1:
                         toIndex - 1
 
-            if (fromScrollerID === toScrollerID) { // intra-list
+            // -------------------------[ intra-list ]------------------------
+            if (fromScrollerID === toScrollerID) {
 
                 scrollerDndContext.displacedIndex = displacedIndex
                 if (!cacheAPI.itemMetadataMap.has(itemID) || (dropEffect == 'copy')) { // will have to fetch
@@ -117,34 +118,59 @@ const DndCradle = (props) => {
 
                 }
 
-            } else { // inter-list
+            // -------------------------[ inter-list ]------------------------
+            } else {
 
+                
                 const { dragData } = masterDndContext
-                const [ sourceProps ] = dragData.sourceServiceHandler.getPropertiesSnapshot()
-                const { size:sourcelistsize } = sourceProps.virtualListProps
-                let incrementDirection = -1
+                // move existing cache item
+                if (cacheAPI.itemMetadataMap.has(itemID) && dropEffect == 'move') {
 
-                // remove item from source scroller (but leave in cache)
-                dragData.sourceCacheAPI.insertOrRemoveIndexedItemsFromScroller(
-                    fromIndex, fromIndex, incrementDirection, sourcelistsize) 
-                dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
-                dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
+                    // ------------ resolve source data
+                    const 
+                        [ sourceProps ] = dragData.sourceServiceHandler.getPropertiesSnapshot(),
+                        { size:sourcelistsize } = sourceProps.virtualListProps
 
-                // make space for insert
-                incrementDirection = +1
-                const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
-                    cacheAPI.insertOrRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
+                    let incrementDirection = -1
 
-                const portalMetadata = cacheAPI.addCacheItemToScroller( itemID, toIndex ) // move into space
+                    // remove item from source scroller (but leave in cache)
+                    dragData.sourceCacheAPI.insertOrRemoveIndexedItemsFromScroller(
+                        fromIndex, fromIndex, incrementDirection, sourcelistsize) 
+                    dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
+                    dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 
-                contentHandler.synchronizeCradleItemIDsToCache(
-                    cacheIndexesShiftedList, rangeincrement, startChangeIndex) // sync cradle
+                    // ------------ resolve target data
+                    incrementDirection = +1 // insert
+                    
+                    const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
+                        cacheAPI.insertOrRemoveIndexedItems(toIndex, toIndex, incrementDirection, listsize)
 
-                serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
+                    cacheAPI.addCacheItemToScroller( itemID, toIndex ) // move item to scroller
 
-                scrollerDndContext.displacedIndex = toIndex + 1
+                    contentHandler.synchronizeCradleItemIDsToCache( // sync cradle
+                        cacheIndexesShiftedList, rangeincrement, startChangeIndex) 
 
-                stateHandler.setCradleState('applyinsertremovechanges') // re-render
+                    serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
+
+                    scrollerDndContext.displacedIndex = toIndex + 1
+
+                    stateHandler.setCradleState('applyinsertremovechanges') // re-render
+
+                } else {
+
+                    if (dropEffect == 'move') {
+                        dragData.sourceServiceHandler.removeIndex(fromIndex)
+                    }
+
+                    // move or copy requires fetch
+                    scrollerDndContext.dndFetchIndex = toIndex
+                    scrollerDndContext.dndFetchItem = item
+
+                    scrollerDndContext.displacedIndex = toIndex + 1
+                    serviceHandler.insertIndex(toIndex)
+
+                }
+
 
             }
 
