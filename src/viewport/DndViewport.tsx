@@ -26,12 +26,16 @@ const DndViewport = (props) => {
     const scrollerDndContext = useContext(ScrollerDndContext)
 
     const viewportFrameElementRef = useRef(null)
+    const outerViewportElementRef = useRef(null)
 
     const showScrollTabsRef = useRef(false)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
         drop:(item, monitor) => {
+            console.log('DndViewport drop monitor.isOver({shallow:true})',monitor.isOver({shallow:true}))
+            console.log('DndViewport drop monitor.didDrop()',monitor.didDrop())
+            // console.log('DndViewport monitor.getDropResult()',monitor.getDropResult())
             if (monitor.isOver({shallow:true})) {
                 return {
                     dataType:'viewport',
@@ -54,19 +58,19 @@ const DndViewport = (props) => {
 
     useEffect(()=>{
 
-        const viewportElement = viewportFrameElementRef.current
+        const viewportFrameElement = viewportFrameElementRef.current
 
         if (targetData.isOver && targetData.canDrop) {
-            viewportElement.classList.add('rigs-viewport-highlight')
+            viewportFrameElement.classList.add('rigs-viewport-highlight')
             showScrollTabsRef.current = true
         } else {
-            viewportElement.classList.remove('rigs-viewport-highlight')
+            viewportFrameElement.classList.remove('rigs-viewport-highlight')
             showScrollTabsRef.current = false
         }
         if (!targetData.isOver && targetData.canDrop) {
-            viewportElement.classList.add('rigs-viewport-candrop')
+            viewportFrameElement.classList.add('rigs-viewport-candrop')
         } else {
-            viewportElement.classList.remove('rigs-viewport-candrop')
+            viewportFrameElement.classList.remove('rigs-viewport-candrop')
         }
         setDndViewportState('updatehighlight')
 
@@ -89,7 +93,7 @@ const DndViewport = (props) => {
 
     },[dndViewportState])
 
-    const enhancedProps = {...props,viewportFrameElementRef, showScrollTabs:showScrollTabsRef.current}
+    const enhancedProps = {...props,viewportFrameElementRef, outerViewportElementRef, showScrollTabs:showScrollTabsRef.current}
 
     return <Viewport {...enhancedProps}/>
 

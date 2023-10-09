@@ -43,6 +43,7 @@ const DndCradle = (props) => {
 
         viewportFrameElement = viewportContext.frameElementRef.current,
         viewportElement = viewportContext.elementRef.current,
+        outerElement = viewportContext.outerElementRef.current,
         { scrollerID, virtualListSpecs } = props,
         { size:listsize } = virtualListSpecs
 
@@ -176,6 +177,13 @@ const DndCradle = (props) => {
             }
 
             scrollerDndContext.droppedIndex = toIndex
+
+            // return {
+            //     dataType:'cradle',
+            //     target:{
+            //         scrollerID,
+            //     }
+            // }
             
         },
     },[listsize])
@@ -184,7 +192,8 @@ const DndCradle = (props) => {
 
     useEffect(()=>{
 
-        targetConnector(viewportElement)
+        // targetConnector(viewportElement)
+        targetConnector(outerElement)
 
     },[])
 

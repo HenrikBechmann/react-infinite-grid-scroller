@@ -49,6 +49,7 @@ const ViewportController = (props) => {
     const masterDndContext = useContext(MasterDndContext)
 
     const viewportFrameElementRef = useRef(null)
+    const outerViewportElementRef = useRef(null)
 
     if (masterDndContext.installed) {
 
@@ -56,7 +57,7 @@ const ViewportController = (props) => {
 
     } else {
 
-        const enhancedProps = {...props,viewportFrameElementRef}
+        const enhancedProps = {...props,viewportFrameElementRef,outerViewportElementRef}
 
         return <Viewport {...enhancedProps} />
 
@@ -74,6 +75,7 @@ export const Viewport = ({
     scrollerID,
     VIEWPORT_RESIZE_TIMEOUT,
     useScrollTracker,
+    outerViewportElementRef,
     viewportFrameElementRef,
     showScrollTabs,
     SCROLLTAB_INTERVAL_MILLISECONDS,
@@ -248,6 +250,7 @@ export const Viewport = ({
         const localViewportData = {
             elementRef:viewportElementRef,
             frameElementRef:viewportFrameElementRef,
+            outerElementRef:outerViewportElementRef,
             isResizing:isResizingRef.current,
         }
 
@@ -282,37 +285,39 @@ export const Viewport = ({
                 scrollerID = { scrollerID }
             />
         }
+        <div ref = {outerViewportElementRef} data-type = 'outer-viewport-frame' style = {divframestyleRef.current}>
         <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
-        {showScrollTabs && 
-            <>
-                <DndScrollTab 
-                    position = 'head' 
-                    gridSpecs = {gridSpecs} 
-                    SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
-                    SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
+            {showScrollTabs && 
+                <>
+                    <DndScrollTab 
+                        position = 'head' 
+                        gridSpecs = {gridSpecs} 
+                        SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                        SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
+                    />
+                    <DndScrollTab 
+                        position = 'tail' 
+                        gridSpecs = {gridSpecs} 
+                        SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                        SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
+                    />
+                </>
+            }
+            <div 
+                data-type = 'viewport'
+                data-scrollerid = { scrollerID }
+                style = { divlinerstyleRef.current }
+                ref = { viewportElementRef }
+            >
+                { (viewportState != 'setup') && children }
+            </div>
+            {useScrollTracker && 
+                <ScrollTracker 
+                    scrollTrackerAPIRef = {scrollTrackerAPIRef}
+                    styles = { styles.scrolltracker }
                 />
-                <DndScrollTab 
-                    position = 'tail' 
-                    gridSpecs = {gridSpecs} 
-                    SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
-                    SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
-                />
-            </>
-        }
-        <div 
-            data-type = 'viewport'
-            data-scrollerid = { scrollerID }
-            style = { divlinerstyleRef.current }
-            ref = { viewportElementRef }
-        >
-            { (viewportState != 'setup') && children }
+            }
         </div>
-        {useScrollTracker && 
-            <ScrollTracker 
-                scrollTrackerAPIRef = {scrollTrackerAPIRef}
-                styles = { styles.scrolltracker }
-            />
-        }
         </div>
     </ViewportContext.Provider>
     
