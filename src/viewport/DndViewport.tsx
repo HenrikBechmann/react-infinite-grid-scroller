@@ -35,7 +35,6 @@ const DndViewport = (props) => {
         drop:(item, monitor) => {
             console.log('DndViewport drop monitor.isOver({shallow:true})',monitor.isOver({shallow:true}))
             console.log('DndViewport drop monitor.didDrop()',monitor.didDrop())
-            // console.log('DndViewport monitor.getDropResult()',monitor.getDropResult())
             if (monitor.isOver({shallow:true})) {
                 return {
                     dataType:'viewport',
@@ -44,6 +43,12 @@ const DndViewport = (props) => {
                     }
                 }
             }
+        },
+        hover:(item, monitor) => {
+            if (!monitor.isOver({shallow:true})) return
+
+            console.log('hovering, client offset',monitor.getClientOffset())
+
         },
         collect:(monitor:DropTargetMonitor) => {
             return {
