@@ -143,7 +143,7 @@ export const MasterDndContext = React.createContext(
         dropCount:0,
         altKey:null,
         computedDropEffect:null,
-        isOnWhitespace:false,
+        onWhitespace:false,
         dragData:{
             isDragging:false,
             canDrop:false,
@@ -556,13 +556,13 @@ const InfiniteGridScroller = (props) => {
             scrollerID,
             dndOptions, // scroller scoped
             droppedIndex:null, // polled by CellFrames
-            // sourceItem:null,
             displacedIndex:null, // polled by CellFrames
-            dndFetchIndex:null,
+            dndFetchIndex:null, // polled by CellFrames
             dndFetchItem:null,
-            cacheAPI:null,
+            cacheAPI:null, // TODO this and the next three should be derived from handlersRef by consumers
             stateHandler:null,
             serviceHandler:null,
+            handlersRef:null,
         })
 
 

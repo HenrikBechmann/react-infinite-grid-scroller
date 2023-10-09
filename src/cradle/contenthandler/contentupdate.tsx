@@ -78,6 +78,7 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
 
             crosscount,
             lowindex:listlowindex,
+            rowshift,
 
         } = virtualListProps,
 
@@ -195,6 +196,8 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
                 axisReferenceIndex,
                 SOL:(virtualListProps.lowindex == lowindex),
                 EOL:(virtualListProps.highindex == highindex),
+                lowrow:Math.floor(lowindex/crosscount) - rowshift,
+                highrow:Math.floor(highindex/crosscount) - rowshift
             })
 
 
@@ -214,6 +217,8 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
                 axisReferenceIndex:undefined,
                 SOL:undefined,
                 EOL:undefined,
+                lowrow:undefined,
+                highrow:undefined,
             })
 
         }

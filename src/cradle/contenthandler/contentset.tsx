@@ -73,6 +73,7 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
             size:listsize, 
             crosscount, 
             rowcount:listRowcount,
+            rowshift,
             // baserowblanks,
             // endrowblanks,
 
@@ -199,6 +200,8 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
             axisReferenceIndex:targetAxisReferenceIndex,
             SOL:(virtualListProps.lowindex == lowindex),
             EOL:(virtualListProps.highindex == highindex),
+            lowrow:Math.floor(lowindex/crosscount) - rowshift,
+            highrow:Math.floor(highindex/crosscount) - rowshift,
         })
 
         if (cradleContentProps.SOL && !layoutHandler.SOLSignal) {
@@ -214,6 +217,8 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
         {
             lowindex:undefined,
             highindex:undefined,
+            lowrow:undefined,
+            highrow:undefined,
             axisReferenceIndex:undefined,
             SOL:undefined,
             EOL:undefined,

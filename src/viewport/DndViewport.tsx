@@ -45,9 +45,16 @@ const DndViewport = (props) => {
             }
         },
         hover:(item, monitor) => {
+
             if (!monitor.isOver({shallow:true})) return
 
-            console.log('hovering, client offset',monitor.getClientOffset())
+            // console.log('hovering, client offset',monitor.getClientOffset())
+
+            const onWhitespace = isOnWhitespace(monitor.getClientOffset())
+
+            console.log('onWhitespace', onWhitespace)
+
+            if (!onWhitespace) return
 
         },
         collect:(monitor:DropTargetMonitor) => {
@@ -61,18 +68,80 @@ const DndViewport = (props) => {
 
     })
 
+    const isOnWhitespace = (clientOffset:{x:number, y:number}) => {
+        const 
+            cradleInternalProperties = scrollerDndContext.cradleParameters.cradleInternalPropertiesRef.current,
+            { virtualListProps } = cradleInternalProperties,
+            { 
+                size:listsize, 
+                crosscount, 
+                baserowblanks, 
+                endrowblanks, 
+                lowindex:lowlistindex, 
+                highindex:highlistindex,
+                rowcount:listrowcount,
+                rowshift,
+
+            } = virtualListProps
+
+        // console.log('listsize',listsize)
+        if (listsize === 0) {
+
+            return true // nothing but whitespace
+
+        }
+
+        const 
+            { cradleContentProps } = cradleInternalProperties,
+            { 
+                viewportRowcount, 
+                cradleRowcount, 
+                lowindex:lowcradleindex, 
+                highindex:highcradleindex,
+                lowrow,
+                highrow,
+
+            } = cradleContentProps
+
+        console.log('cradleRowcount, viewportRowcount, lowrow, highrow, listrowcount\n',
+            cradleRowcount, viewportRowcount, lowrow, highrow, listrowcount)
+        if (
+
+            cradleRowcount > viewportRowcount && 
+            lowrow > 0 &&
+            highrow < (listrowcount - 1)
+
+        ) {
+            console.log('returning from no whitespace by row')
+            return false // no white space is possible
+        }
+
+        if (
+
+            !((lowrow === 0 && baserowblanks !== 0) ||
+            (highrow === (listrowcount - 1) && endrowblanks !== 0))
+
+        ) {
+            return false // no white space is possible
+        }
+
+        console.log('more work to do in isOnWhitespace')
+
+        return false
+    }
+
     useEffect(()=>{
 
         const viewportFrameElement = viewportFrameElementRef.current
 
-        if (targetData.isOver && targetData.canDrop) {
+        if ( targetData.isOver && targetData.canDrop ) {
             viewportFrameElement.classList.add('rigs-viewport-highlight')
             showScrollTabsRef.current = true
         } else {
             viewportFrameElement.classList.remove('rigs-viewport-highlight')
             showScrollTabsRef.current = false
         }
-        if (!targetData.isOver && targetData.canDrop) {
+        if ( !targetData.isOver && targetData.canDrop ) {
             viewportFrameElement.classList.add('rigs-viewport-candrop')
         } else {
             viewportFrameElement.classList.remove('rigs-viewport-candrop')

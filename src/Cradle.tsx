@@ -303,6 +303,8 @@ export const Cradle = ({ // exported for DndCradle
         EOL:undefined, // end of list
         lowindex:undefined,
         highindex:undefined,
+        lowrow:undefined,
+        highrow:undefined,
         size:0,
      })
 
@@ -422,8 +424,8 @@ export const Cradle = ({ // exported for DndCradle
         handlersRef,
         viewportContextRef,
         cradleInheritedPropertiesRef, 
-        scrollerPropertiesRef,
         cradleInternalPropertiesRef, 
+        scrollerPropertiesRef,
         externalCallbacksRef,
     }
 
@@ -507,9 +509,15 @@ export const Cradle = ({ // exported for DndCradle
         if (!masterDndContext.installed) return
 
         // available for source drop processing
-        scrollerDndContext.cacheAPI = cacheAPI
-        scrollerDndContext.stateHandler = stateHandler
-        scrollerDndContext.serviceHandler = serviceHandler
+        // TODO the first three should be derived from the fourth. Search and replace
+        Object.assign(scrollerDndContext,{
+
+            cacheAPI,
+            stateHandler,
+            serviceHandler,
+            cradleParameters,
+
+        })
 
     },[])
 

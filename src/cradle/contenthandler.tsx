@@ -111,6 +111,8 @@ export default class ContentHandler {
                     EOL:undefined,
                     highindex:undefined, 
                     lowindex:undefined, 
+                    lowrow:undefined,
+                    highrow:undefined,
                     axisReferenceIndex:undefined,
                     size:0 
                 }
@@ -189,6 +191,8 @@ export default class ContentHandler {
                     EOL:undefined,
                     highindex:undefined, 
                     lowindex:undefined, 
+                    lowrow:undefined,
+                    highrow:undefined,
                     axisReferenceIndex:undefined,
                     size:0 
                 }
