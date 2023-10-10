@@ -185,8 +185,6 @@ const DndViewport = (props) => {
 
         if (!isWhitespace) { // check for position before list (such as in padding area)
 
-            console.log('before list clientOffset, firstChildClientOffset',
-                clientOffset.y, firstChildClientOffset.y)
             isWhitespace = 
                 (orientation == 'vertical')?
                     clientOffset.y < firstChildClientOffset.y:
