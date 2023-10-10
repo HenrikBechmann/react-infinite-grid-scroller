@@ -53,11 +53,11 @@ const DndDragBar = (props) => {
 
         [dragState, setDragBarState] = useState('ready'),
 
-        { computedDropEffect:dropEffect } = masterDndContext,
+        { prescribedDropEffect:dropEffect } = masterDndContext,
 
-        currentDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+        calculatedDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
 
-        dropEffectIcon = currentDropEffect == 'move'?moveicon:copyicon,
+        dropEffectIcon = calculatedDropEffect == 'move'?moveicon:copyicon,
 
         altKeyRef = useRef(masterDndContext.altKey)
 
@@ -71,6 +71,8 @@ const DndDragBar = (props) => {
 
             if (masterDndContext.altKey !== altKeyRef.current) {
                 altKeyRef.current = masterDndContext.altKey
+                const { setDndFrameState } = masterDndContext.dragData
+                setDndFrameState && setDndFrameState('refresh')
                 setDragBarState('refresh')
             }
 

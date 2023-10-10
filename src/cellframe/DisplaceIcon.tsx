@@ -31,11 +31,11 @@ const DisplaceIcon = (props) => {
 
         cradleContext = useContext(CradleContext),
 
-        { dragData, computedDropEffect:dropEffect } = masterDndContext,
+        { dragData, prescribedDropEffect:dropEffect } = masterDndContext,
 
         { scrollerID:sourceScrollerID, index:sourceIndex  } = dragData,
 
-        currentDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+        calculatedDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
 
         { virtualListProps } = cradleContext.scrollerPropertiesRef.current,
         { crosscount } = virtualListProps
@@ -79,7 +79,7 @@ const DisplaceIcon = (props) => {
             'forward':
             index < sourceIndex?
                 'forward':
-                    currentDropEffect == 'copy'?
+                    calculatedDropEffect == 'copy'?
                         'forward':
                         'back'
 
@@ -107,7 +107,7 @@ const DisplaceIcon = (props) => {
 
         return rotation
 
-    },[orientation, scrollerID, index, sourceScrollerID, sourceIndex, crosscount, currentDropEffect])
+    },[orientation, scrollerID, index, sourceScrollerID, sourceIndex, crosscount, calculatedDropEffect])
 
     const framestyleRef = useRef<CSSProperties>({
         zIndex:2, 

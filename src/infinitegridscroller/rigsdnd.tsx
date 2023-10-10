@@ -106,7 +106,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                 setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
                 dropCount:0,
                 altKey:null,
-                computedDropEffect:null,
+                prescribedDropEffect:null,
                 onWhitespace:false,
                 whitespacePosition:null,
                 dragData:{
@@ -115,6 +115,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                     itemID:null,
                     index:null,
                     scrollerID: null,
+                    setDndFrameState:null,
                     dndOptions:{} as GenericObject,
                     // the following for inter-list drops to process drag source
                     sourceCacheAPI:null,

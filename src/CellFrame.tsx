@@ -128,6 +128,7 @@ export const CellFrame = ({
     isDnd,
     frameRef,
     showDirectionIcon,
+    setDndFrameState,
 }) => {
 
     const scrollerDndContext = useContext(ScrollerDndContext)
@@ -638,6 +639,7 @@ export const CellFrame = ({
                         contentHolderElementRef = {contentHolderElementRef} 
                         itemID = {itemID} 
                         index = {index} 
+                        setDndFrameState = { setDndFrameState }
                         dndOptions = {dndOptionsRef.current} 
                         profile = {portalMetadataRef.current?.profile} 
                         dndDragIconStyles = {dndDragIconStyles}

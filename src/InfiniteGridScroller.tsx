@@ -142,7 +142,7 @@ export const MasterDndContext = React.createContext(
         setDragBarState:null, // for master dragbar, to update icons
         dropCount:0,
         altKey:null,
-        computedDropEffect:null,
+        prescribedDropEffect:null,
         onWhitespace:false,
         whitespacePosition:null,
         dragData:{
@@ -152,6 +152,7 @@ export const MasterDndContext = React.createContext(
             index:null,
             dndOptions:{} as GenericObject,
             scrollerID:null,
+            setDndFrameState:null,
             sourceCacheAPI:null,
             sourceStateHandler:null,
             sourceServiceHandler:null,

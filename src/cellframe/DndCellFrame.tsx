@@ -5,6 +5,7 @@ import React, {
     useRef, 
     useEffect, 
     useContext,
+    useState,
 } from 'react'
 
 import { 
@@ -24,6 +25,12 @@ const DndCellFrame = (props) => {
         cradleContext = useContext(CradleContext),
         masterDndContext = useContext(MasterDndContext),
         scrollerDndContext = useContext(ScrollerDndContext),
+        [dndFrameState, setDndFrameState] = useState('ready'),
+
+        { prescribedDropEffect:dropEffect } = masterDndContext,
+
+        calculatedDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+
         { scrollerPropertiesRef } = cradleContext,
         { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current,
         {crosscount } = virtualListProps,
@@ -59,15 +66,22 @@ const DndCellFrame = (props) => {
         sourceIndex = targetData.sourceItem?.index,
         sourceScrollerID = targetData.sourceItem?.scrollerID,
 
-        isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index),
+        isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index) || ((sourceIndex === index) && (calculatedDropEffect == 'copy')),
 
         highlightClassname = 'rigs-target-highlight'
+
+    // console.log('DndCellFrame: index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect\n',
+    //     index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect)
 
     if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(highlightClassname)) {
 
         cellCanDropRef.current = true
         frameRef.current.classList.add(highlightClassname)
         masterDndContext.dropCount++
+
+    } else if (!isLocation && (sourceIndex === index) && frameRef.current?.classList.contains(highlightClassname)) {
+
+        frameRef.current.classList.remove(highlightClassname)
 
     } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(highlightClassname)) {
 
@@ -106,7 +120,7 @@ const DndCellFrame = (props) => {
 
     const isDndRef = useRef(true)
 
-    useEffect (() => {
+    useEffect(() => {
 
         const isDnd = (masterDndContext.installed && 
             (masterDndContext.enabled || scrollerDndContext.dndOptions.enabled))
@@ -117,7 +131,15 @@ const DndCellFrame = (props) => {
 
     },[masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
 
-    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext, showDirectionIcon  }
+    useEffect(()=>{
+
+        if (dndFrameState == 'refresh') {
+            setDndFrameState('ready')
+        }
+
+    },[dndFrameState])
+
+    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext, showDirectionIcon, setDndFrameState  }
 
     return <CellFrame {...enhancedProps}/>
 

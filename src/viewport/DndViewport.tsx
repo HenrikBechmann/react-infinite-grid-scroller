@@ -19,17 +19,18 @@ import { Viewport } from '../Viewport'
 // HoC for DnD functionality
 const DndViewport = (props) => {
 
-    const [ dndViewportState, setDndViewportState] = useState('ready')
+    const 
+        [ dndViewportState, setDndViewportState] = useState('ready'),
 
-    const { scrollerID } = props
+        { scrollerID } = props,
 
-    const masterDndContext = useContext(MasterDndContext)
-    const scrollerDndContext = useContext(ScrollerDndContext)
+        masterDndContext = useContext(MasterDndContext),
+        scrollerDndContext = useContext(ScrollerDndContext),
 
-    const viewportFrameElementRef = useRef(null)
-    const outerViewportElementRef = useRef(null)
+        viewportFrameElementRef = useRef(null),
+        outerViewportElementRef = useRef(null),
 
-    const showScrollTabsRef = useRef(false)
+        showScrollTabsRef = useRef(false)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],

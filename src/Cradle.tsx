@@ -512,9 +512,11 @@ export const Cradle = ({ // exported for DndCradle
         // TODO the first three should be derived from the fourth. Search and replace
         Object.assign(scrollerDndContext,{
 
+            // required by masterDndContext for source item operations
             cacheAPI,
             stateHandler,
             serviceHandler,
+            // included for general availablility
             cradleParameters,
 
         })

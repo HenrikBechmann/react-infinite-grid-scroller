@@ -30,7 +30,7 @@ import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index, profile, contentHolderElementRef, scrollerID} = props
+    const { itemID, index, profile, contentHolderElementRef, scrollerID, setDndFrameState} = props
     let 
         {
             dndDragIconStyles, // user styles
@@ -54,7 +54,7 @@ const DragIcon = props => {
                 {dropEffect}:
                 {} // must be no property: undefined dropEffect property value interpreted as 'copy' on Chrome Mac
 
-        masterDndContext.computedDropEffect = computedOptions.dropEffect
+        masterDndContext.prescribedDropEffect = computedOptions.dropEffect
 
         return computedOptions
 
@@ -104,6 +104,7 @@ const DragIcon = props => {
                 sourceCacheAPI:scrollerDndContext.cacheAPI,
                 sourceStateHandler:scrollerDndContext.stateHandler,
                 sourceServiceHandler:scrollerDndContext.serviceHandler,
+                setDndFrameState,
             }
         )
         masterDndContext.setViewportState('startdragbar')
@@ -120,6 +121,10 @@ const DragIcon = props => {
     useEffect(()=>{
 
         previewConnector(getEmptyImage(),{ captureDraggingState: true })
+
+        return () => {
+            masterDndContext.dragData.setDndFrameState = null
+        }
 
     },[])
 
