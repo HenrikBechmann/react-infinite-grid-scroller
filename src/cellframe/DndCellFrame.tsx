@@ -82,6 +82,7 @@ const DndCellFrame = (props) => {
     } else if (!isLocation && (sourceIndex === index) && frameRef.current?.classList.contains(highlightClassname)) {
 
         frameRef.current.classList.remove(highlightClassname)
+        masterDndContext.dropCount--
 
     } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(highlightClassname)) {
 
