@@ -58,7 +58,7 @@ const DndViewport = (props) => {
 
             const [onWhitespace, position] = isOnWhitespace(monitor.getClientOffset())
 
-            console.log('onWhitespace, position', onWhitespace, position)
+            // console.log('onWhitespace, position', onWhitespace, position)
 
             if (onWhitespace !== masterDndContext.onWhitespace) {
 
@@ -127,18 +127,6 @@ const DndViewport = (props) => {
 
             return [false,null] // no white space is possible
         }
-
-        // check for baserow and endrow blanks
-        // if (
-
-        //     !((lowrow === 0 && baserowblanks !== 0) ||
-        //     (highrow === (listrowcount - 1) && endrowblanks !== 0))
-
-        // ) {
-
-        //     return [false,null] // no white space is possible
-
-        // }
 
         // test cursor position
         const 

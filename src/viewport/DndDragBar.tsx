@@ -40,7 +40,6 @@ const DndDragBar = (props) => {
     const 
         { scrollerID} = props,
         masterDndContext = useContext(MasterDndContext),
-        // scrollerDndContext = useContext(ScrollerDndContext),
         { dragData } = masterDndContext,
         { 
             canDrop,
