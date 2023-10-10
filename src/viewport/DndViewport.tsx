@@ -111,6 +111,7 @@ const DndViewport = (props) => {
 
             } = cradleContentProps
 
+        // check for cradle boundary
         if (
 
             cradleRowcount > viewportRowcount && 
@@ -122,16 +123,17 @@ const DndViewport = (props) => {
             return [false,null] // no white space is possible
         }
 
-        if (
+        // check for baserow and endrow blanks
+        // if (
 
-            !((lowrow === 0 && baserowblanks !== 0) ||
-            (highrow === (listrowcount - 1) && endrowblanks !== 0))
+        //     !((lowrow === 0 && baserowblanks !== 0) ||
+        //     (highrow === (listrowcount - 1) && endrowblanks !== 0))
 
-        ) {
+        // ) {
 
-            return [false,null] // no white space is possible
+        //     return [false,null] // no white space is possible
 
-        }
+        // }
 
         // test cursor position
         const 
@@ -183,6 +185,8 @@ const DndViewport = (props) => {
 
         if (!isWhitespace) { // check for position before list (such as in padding area)
 
+            console.log('before list clientOffset, firstChildClientOffset',
+                clientOffset.y, firstChildClientOffset.y)
             isWhitespace = 
                 (orientation == 'vertical')?
                     clientOffset.y < firstChildClientOffset.y:
