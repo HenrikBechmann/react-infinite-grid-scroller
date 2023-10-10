@@ -173,12 +173,22 @@ const DndViewport = (props) => {
                 width:firstChildCellElementRect.width
             }
 
+        // check whitespace in blank cells
         let isWhitespace = 
             orientation == 'vertical'?
                 clientOffset.x < firstChildClientOffset.x && 
                     clientOffset.y < (firstChildClientOffset.y + firstChildClientOffset.height):
                 clientOffset.y < firstChildClientOffset.y && 
                     clientOffset.x < (firstChildClientOffset.x + firstChildClientOffset.width)
+
+        if (!isWhitespace) { // check for position before list (such as in padding area)
+
+            isWhitespace = 
+                (orientation == 'vertical')?
+                    clientOffset.y < firstChildClientOffset.y:
+                    clientOffset.x < firstChildClientOffset.x
+        
+        }
 
         if (isWhitespace) return [true,'head']
 
