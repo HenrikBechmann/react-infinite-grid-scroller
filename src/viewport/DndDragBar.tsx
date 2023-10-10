@@ -28,11 +28,11 @@ import { isMobile } from  '../InfiniteGridScroller/RigsDnd'
 
 import { MasterDndContext, GenericObject } from '../InfiniteGridScroller'
 
-import moveicon from "../../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
-import copyicon from "../../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 import dropicon from "../../assets/task_alt_FILL0_wght400_GRAD0_opsz24.png"
 import nodropicon from "../../assets/block_FILL0_wght400_GRAD0_opsz24.png"
+import moveicon from "../../assets/move_item_FILL0_wght400_GRAD0_opsz24.png"
+import copyicon from "../../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 
 // drag continues here
 const DndDragBar = (props) => {

@@ -14,8 +14,6 @@
         viewport)
 */
 
-// import { isSafariIOS } from '../InfiniteGridScroller'
-
 export default class LayoutHandler { 
 
     constructor(cradleParameters) {

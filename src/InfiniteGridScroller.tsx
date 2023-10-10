@@ -144,6 +144,7 @@ export const MasterDndContext = React.createContext(
         altKey:null,
         computedDropEffect:null,
         onWhitespace:false,
+        whitespacePosition:null,
         dragData:{
             isDragging:false,
             canDrop:false,

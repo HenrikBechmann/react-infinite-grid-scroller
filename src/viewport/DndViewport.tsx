@@ -33,8 +33,6 @@ const DndViewport = (props) => {
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept || ['-x-x-x-'],
         drop:(item, monitor) => {
-            console.log('DndViewport drop monitor.isOver({shallow:true})',monitor.isOver({shallow:true}))
-            console.log('DndViewport drop monitor.didDrop()',monitor.didDrop())
             if (monitor.isOver({shallow:true})) {
                 return {
                     dataType:'viewport',
@@ -46,15 +44,23 @@ const DndViewport = (props) => {
         },
         hover:(item, monitor) => {
 
-            if (!monitor.isOver({shallow:true})) return
+            if (!monitor.isOver({shallow:true}) || !monitor.canDrop()) {
+                // not on whitespace
+                return
 
-            // console.log('hovering, client offset',monitor.getClientOffset())
+            }
 
-            const onWhitespace = isOnWhitespace(monitor.getClientOffset())
+            const [onWhitespace, position] = isOnWhitespace(monitor.getClientOffset())
 
-            console.log('onWhitespace', onWhitespace)
+            console.log('onWhitespace, position', onWhitespace, position)
 
-            if (!onWhitespace) return
+            if (!onWhitespace) {
+
+                return
+
+            } else {
+
+            }
 
         },
         collect:(monitor:DropTargetMonitor) => {
@@ -68,9 +74,11 @@ const DndViewport = (props) => {
 
     })
 
+    // TODO take gap into account
     const isOnWhitespace = (clientOffset:{x:number, y:number}) => {
         const 
-            cradleInternalProperties = scrollerDndContext.cradleParameters.cradleInternalPropertiesRef.current,
+            { cradleParameters } = scrollerDndContext,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             { virtualListProps } = cradleInternalProperties,
             { 
                 size:listsize, 
@@ -87,7 +95,7 @@ const DndViewport = (props) => {
         // console.log('listsize',listsize)
         if (listsize === 0) {
 
-            return true // nothing but whitespace
+            return [true,'all'] // nothing but whitespace
 
         }
 
@@ -103,8 +111,6 @@ const DndViewport = (props) => {
 
             } = cradleContentProps
 
-        console.log('cradleRowcount, viewportRowcount, lowrow, highrow, listrowcount\n',
-            cradleRowcount, viewportRowcount, lowrow, highrow, listrowcount)
         if (
 
             cradleRowcount > viewportRowcount && 
@@ -112,8 +118,8 @@ const DndViewport = (props) => {
             highrow < (listrowcount - 1)
 
         ) {
-            console.log('returning from no whitespace by row')
-            return false // no white space is possible
+
+            return [false,null] // no white space is possible
         }
 
         if (
@@ -122,12 +128,93 @@ const DndViewport = (props) => {
             (highrow === (listrowcount - 1) && endrowblanks !== 0))
 
         ) {
-            return false // no white space is possible
+
+            return [false,null] // no white space is possible
+
         }
 
-        console.log('more work to do in isOnWhitespace')
+        // test cursor position
+        const 
+            // collect basic data
+            { layoutHandler } = cradleParameters.handlersRef.current,
+            { axisRef, headRef, tailRef } = layoutHandler.elements,
+            axisRect = axisRef.current.getBoundingClientRect(),
+            axisClientOffset = {
+                x:axisRect.x,
+                y:axisRect.y,
+            },
+            cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
+            { orientation } = cradleInheritedProperties,
+            // determine which grid is under cursor
+            isInHeadGrid = // otherwise tail grid
+                orientation == 'vertical'?
+                    clientOffset.x < axisClientOffset.x:
+                    clientOffset.y < axisClientOffset.y
 
-        return false
+        // collect reference grid cells
+        let firstChildCellElement, lastChildCellElement
+
+        if (isInHeadGrid) {
+            firstChildCellElement = headRef.current.firstChild
+        } else {
+            firstChildCellElement = tailRef.current.firstChild
+            lastChildCellElement = tailRef.current.lastChild
+        }
+
+        if (!firstChildCellElement) return [false, null]
+
+        // ------- determine if in head whitespace
+        const 
+            firstChildCellElementRect = firstChildCellElement.getBoundingClientRect(),
+            firstChildClientOffset = {
+                x:firstChildCellElementRect.x,
+                y:firstChildCellElementRect.y,
+                height:firstChildCellElementRect.height,
+                width:firstChildCellElementRect.width
+            }
+
+        let isWhitespace = 
+            orientation == 'vertical'?
+                clientOffset.x < firstChildClientOffset.x && 
+                    clientOffset.y < (firstChildClientOffset.y + firstChildClientOffset.height):
+                clientOffset.y < firstChildClientOffset.y && 
+                    clientOffset.x < (firstChildClientOffset.x + firstChildClientOffset.width)
+
+        if (isWhitespace) return [true,'head']
+
+        // ------- determine if in tail whitespace
+        if (!lastChildCellElement) return [false, null]
+
+        // in blank cells
+        const 
+            lastChildCellElementRect = lastChildCellElement.getBoundingClientRect(),
+            lastChildClientOffset = {
+                x:lastChildCellElementRect.x,
+                y:lastChildCellElementRect.y,
+                height:lastChildCellElementRect.height,
+                width:lastChildCellElementRect.width
+            }
+        isWhitespace = 
+            orientation == 'vertical'?
+                clientOffset.x > lastChildClientOffset.x &&
+                    clientOffset.y > lastChildClientOffset.y:
+                clientOffset.y > lastChildClientOffset.y &&
+                    clientOffset.x > lastChildClientOffset.x
+
+        if (isWhitespace) return [true,'tail']
+
+        // beyond blank cell row
+        // TODO take gap into account
+        isWhitespace = 
+            orientation == 'vertical'?
+                clientOffset.y > (lastChildClientOffset.y + lastChildClientOffset.height):
+                clientOffset.x > (lastChildClientOffset.x + lastChildClientOffset.width)
+
+        if (isWhitespace) return [true,'tail']
+
+        // not in white space
+        return [false,null]
+
     }
 
     useEffect(()=>{
