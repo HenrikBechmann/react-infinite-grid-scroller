@@ -26,7 +26,7 @@ import {
 
 import { isMobile } from  '../InfiniteGridScroller/RigsDnd'
 
-import { MasterDndContext, GenericObject } from '../InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
 
 import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 import dropicon from "../../assets/task_alt_FILL0_wght400_GRAD0_opsz24.png"
@@ -40,6 +40,7 @@ const DndDragBar = (props) => {
     const 
         { scrollerID} = props,
         masterDndContext = useContext(MasterDndContext),
+        // scrollerDndContext = useContext(ScrollerDndContext),
         { dragData } = masterDndContext,
         { 
             canDrop,
@@ -113,7 +114,7 @@ const DndDragBar = (props) => {
     }
 
     const candropicon = 
-        canDrop?
+        (canDrop || masterDndContext.onWhitespace)?
             dropicon:
             nodropicon
 

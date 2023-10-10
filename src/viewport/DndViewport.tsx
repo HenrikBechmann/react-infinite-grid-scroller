@@ -12,7 +12,7 @@ import React, {useEffect, useContext, useRef, useState } from 'react'
 
 import { useDrop, DropTargetMonitor} from 'react-dnd'
 
-import { ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
+import { ScrollerDndContext, MasterDndContext, GenericObject } from '../InfiniteGridScroller'
 
 import { Viewport } from '../Viewport'
 
@@ -23,6 +23,7 @@ const DndViewport = (props) => {
 
     const { scrollerID } = props
 
+    const masterDndContext = useContext(MasterDndContext)
     const scrollerDndContext = useContext(ScrollerDndContext)
 
     const viewportFrameElementRef = useRef(null)
@@ -46,6 +47,11 @@ const DndViewport = (props) => {
 
             if (!monitor.isOver({shallow:true}) || !monitor.canDrop()) {
                 // not on whitespace
+                if (masterDndContext.onWhitespace) {
+                    masterDndContext.onWhitespace = false
+                    masterDndContext.whitespacePosition = null
+                    masterDndContext.setDragBarState('refresh')
+                }
                 return
 
             }
@@ -54,12 +60,11 @@ const DndViewport = (props) => {
 
             console.log('onWhitespace, position', onWhitespace, position)
 
-            if (!onWhitespace) {
+            if (onWhitespace !== masterDndContext.onWhitespace) {
 
-                return
-
-            } else {
-
+                masterDndContext.onWhitespace = onWhitespace as boolean
+                masterDndContext.whitespacePosition = position
+                masterDndContext.setDragBarState('refresh')
             }
 
         },
