@@ -40,6 +40,10 @@ const DndViewport = (props) => {
                     dataType:'viewport',
                     target:{
                         scrollerID,
+                        DropEffect: masterDndContext.prescribedDropEffect || 
+                            (masterDndContext.altKey? 'copy': null) || 
+                            'move'
+
                     }
                 }
             }

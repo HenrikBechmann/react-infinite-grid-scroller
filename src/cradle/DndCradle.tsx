@@ -45,7 +45,7 @@ const DndCradle = (props) => {
         viewportElement = viewportContext.elementRef.current,
         outerElement = viewportContext.outerElementRef.current,
         { scrollerID, virtualListSpecs } = props,
-        { size:listsize } = virtualListSpecs
+        { size:listsize, lowindex, highindex } = virtualListSpecs
 
     // const [ targetData, targetConnector ] = useDrop({
     const [ targetData, targetConnector ] = useDrop({
@@ -66,8 +66,8 @@ const DndCradle = (props) => {
             if (
 
                 !dropResult || // cautious
-                !dropResult.target || // cautious
-                ((dropResult.dataType == 'viewport') && listsize !== 0) // require CellFrame location
+                // !dropResult.target || // cautious
+                ((dropResult.dataType == 'viewport') && !masterDndContext.onDroppableWhitespace)
 
             ) return
 
@@ -84,19 +84,43 @@ const DndCradle = (props) => {
                 stateHandler,
             } = handlerListRef.current
 
-            const 
+            let toIndex, toScrollerID, displacedIndex
+
+            const
                 fromIndex = item.index,
                 fromScrollerID = item.scrollerID,
+                itemID = item.itemID
 
-                toIndex = dropResult.target.index,
-                toScrollerID = dropResult.target.scrollerID,
-
-                itemID = item.itemID,
+            if (dropResult.dataType == 'cellframe') {
+                toIndex = dropResult.target.index
+                toScrollerID = dropResult.target.scrollerID
 
                 displacedIndex = 
                     (fromIndex > toIndex)? 
                         toIndex + 1:
                         toIndex - 1
+            } else { // viewport
+                const whitespacePosition = masterDndContext.whitespacePosition
+                const wsdropEffect = dropResult.target.dropEffect
+                switch (whitespacePosition) {
+                    case 'all':{ // empty list
+                        toIndex = 0 // TODO should be startingIndex
+                        break
+                    }
+                    case 'head':{
+                        toIndex = lowindex
+                        break
+                    }
+                    case 'tail':{
+                        toIndex = 
+                            dropEffect == 'move'?
+                                highindex:
+                                highindex + 1
+                        break
+                    }
+                }
+                toScrollerID = dropResult.target.scrollerID
+            }
 
             // -------------------------[ intra-list drop ]------------------------
             if (fromScrollerID === toScrollerID) {
@@ -169,21 +193,18 @@ const DndCradle = (props) => {
                     scrollerDndContext.dndFetchIndex = toIndex
                     scrollerDndContext.dndFetchItem = item
 
-                    scrollerDndContext.displacedIndex = toIndex + 1
-                    serviceHandler.insertIndex(toIndex)
+                    if (masterDndContext.onDroppableWhitespace) {
+                        scrollerDndContext.displacedIndex = null
+                    } else { 
+                        scrollerDndContext.displacedIndex = toIndex + 1
+                        serviceHandler.insertIndex(toIndex)
+                    }
 
                 }
 
             }
 
             scrollerDndContext.droppedIndex = toIndex
-
-            // return {
-            //     dataType:'cradle',
-            //     target:{
-            //         scrollerID,
-            //     }
-            // }
             
         },
     },[listsize])
