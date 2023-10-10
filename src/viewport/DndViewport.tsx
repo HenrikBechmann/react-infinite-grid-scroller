@@ -57,7 +57,7 @@ const DndViewport = (props) => {
 
             }
 
-            const [onDroppableWhitespace, position] = isOnWhitespace(monitor.getClientOffset())
+            const [onDroppableWhitespace, position] = isOnDroppableWhitespace(monitor.getClientOffset())
 
             // console.log('onDroppableWhitespace, position', onDroppableWhitespace, position)
 
@@ -66,6 +66,7 @@ const DndViewport = (props) => {
                 masterDndContext.onDroppableWhitespace = onDroppableWhitespace as boolean
                 masterDndContext.whitespacePosition = position
                 masterDndContext.setDragBarState('refresh')
+
             }
 
         },
@@ -81,7 +82,7 @@ const DndViewport = (props) => {
     })
 
     // TODO take gap into account
-    const isOnWhitespace = (clientOffset:{x:number, y:number}) => {
+    const isOnDroppableWhitespace = (clientOffset:{x:number, y:number}) => {
         const 
             { cradleParameters } = scrollerDndContext,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
@@ -96,7 +97,9 @@ const DndViewport = (props) => {
                 rowcount:listrowcount,
                 rowshift,
 
-            } = virtualListProps
+            } = virtualListProps,
+            calculatedDropEffect = 
+                masterDndContext.prescribedDropEffect || (masterDndContext.altKey? 'copy': null) || 'move'
 
         // console.log('listsize',listsize)
         if (listsize === 0) {
@@ -186,7 +189,16 @@ const DndViewport = (props) => {
         
         }
 
-        if (isWhitespace) return [true,'head']
+        if (isWhitespace) {
+
+            if ((lowlistindex === masterDndContext.dragData.index) && calculatedDropEffect == 'move') {
+
+                return [false, null]
+
+            }
+
+            return [true,'head']
+        }
 
         // ------- determine if in tail whitespace
         if (!lastChildCellElement) return [false, null]
@@ -207,7 +219,16 @@ const DndViewport = (props) => {
                 clientOffset.y > lastChildClientOffset.y &&
                     clientOffset.x > lastChildClientOffset.x
 
-        if (isWhitespace) return [true,'tail']
+        if (isWhitespace) {
+
+            if ((highlistindex === masterDndContext.dragData.index) && calculatedDropEffect == 'move') {
+
+                return [false, null]
+
+            }
+
+            return [true,'tail']
+        }
 
         // beyond blank cell row
         // TODO take gap into account
@@ -216,7 +237,17 @@ const DndViewport = (props) => {
                 clientOffset.y > (lastChildClientOffset.y + lastChildClientOffset.height):
                 clientOffset.x > (lastChildClientOffset.x + lastChildClientOffset.width)
 
-        if (isWhitespace) return [true,'tail']
+        if (isWhitespace) {
+
+            if ((highlistindex === masterDndContext.dragData.index) && calculatedDropEffect == 'move') {
+
+                return [false, null]
+
+            }
+
+            return [true,'tail']
+            
+        }
 
         // not in white space
         return [false,null]
