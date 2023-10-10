@@ -48,8 +48,8 @@ const DndViewport = (props) => {
 
             if (!monitor.isOver({shallow:true}) || !monitor.canDrop()) {
                 // not on whitespace
-                if (masterDndContext.onWhitespace) {
-                    masterDndContext.onWhitespace = false
+                if (masterDndContext.onDroppableWhitespace) {
+                    masterDndContext.onDroppableWhitespace = false
                     masterDndContext.whitespacePosition = null
                     masterDndContext.setDragBarState('refresh')
                 }
@@ -57,13 +57,13 @@ const DndViewport = (props) => {
 
             }
 
-            const [onWhitespace, position] = isOnWhitespace(monitor.getClientOffset())
+            const [onDroppableWhitespace, position] = isOnWhitespace(monitor.getClientOffset())
 
-            // console.log('onWhitespace, position', onWhitespace, position)
+            // console.log('onDroppableWhitespace, position', onDroppableWhitespace, position)
 
-            if (onWhitespace !== masterDndContext.onWhitespace) {
+            if (onDroppableWhitespace !== masterDndContext.onDroppableWhitespace) {
 
-                masterDndContext.onWhitespace = onWhitespace as boolean
+                masterDndContext.onDroppableWhitespace = onDroppableWhitespace as boolean
                 masterDndContext.whitespacePosition = position
                 masterDndContext.setDragBarState('refresh')
             }

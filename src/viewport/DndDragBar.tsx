@@ -115,7 +115,7 @@ const DndDragBar = (props) => {
     }
 
     const candropicon = 
-        (canDrop || masterDndContext.onWhitespace)?
+        (canDrop || masterDndContext.onDroppableWhitespace)?
             dropicon:
             nodropicon
 
