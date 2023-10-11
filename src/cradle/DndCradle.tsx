@@ -75,6 +75,8 @@ const DndCradle = (props) => {
 
             const dropEffect = dropResult.dropEffect || 'move' // default for mobile
 
+            console.log('DndCradle dropEffect',dropEffect)
+
             item.dropEffect = dropEffect
 
             const {

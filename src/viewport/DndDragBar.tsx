@@ -200,7 +200,6 @@ const DndDragBar = (props) => {
     const handleKeyboardEvent = (e) => {
 
         if (masterDndContext.altKey !== e.altKey) masterDndContext.altKey = e.altKey
-        // console.log('drag event altKey',e.altKey)
 
     };
 
