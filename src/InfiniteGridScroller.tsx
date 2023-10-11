@@ -565,6 +565,7 @@ const InfiniteGridScroller = (props) => {
             stateHandler:null,
             serviceHandler:null,
             handlersRef:null,
+            cradleParameters:null,
         })
 
 

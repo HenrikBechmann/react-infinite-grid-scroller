@@ -61,7 +61,7 @@ const DndCradle = (props) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
 
-            console.log('DndCradle: listsize, dropResult',listsize, dropResult)
+            // console.log('DndCradle: listsize, dropResult',listsize, dropResult)
 
             if (
 
@@ -69,13 +69,17 @@ const DndCradle = (props) => {
                 // !dropResult.target || // cautious
                 ((dropResult.dataType == 'viewport') && !masterDndContext.onDroppableWhitespace)
 
-            ) return
+            ) {
+                return
+            }
 
             // -----------------------[ data assembly ]-----------------
 
             const dropEffect = dropResult.dropEffect || 'move' // default for mobile
 
-            console.log('DndCradle dropEffect',dropEffect)
+            const whitespacePosition = masterDndContext.whitespacePosition
+            const onDroppableWhitespace = masterDndContext.onDroppableWhitespace
+            // console.log('DndCradle dropEffect',dropEffect)
 
             item.dropEffect = dropEffect
 
@@ -101,12 +105,20 @@ const DndCradle = (props) => {
                     (fromIndex > toIndex)? 
                         toIndex + 1:
                         toIndex - 1
+
             } else { // viewport
+
                 const whitespacePosition = masterDndContext.whitespacePosition
+                toScrollerID = dropResult.target.scrollerID
+
+                masterDndContext.onDroppableWhitespace = false
+                masterDndContext.whitespacePosition = null
+
                 const wsdropEffect = dropResult.target.dropEffect
                 switch (whitespacePosition) {
                     case 'all':{ // empty list
-                        toIndex = 0 // TODO should be startingIndex
+                        toIndex = scrollerDndContext.cradleParameters.cradleInheritedPropertiesRef.current.startingIndex
+                        // console.log('startingIndex for toIndex', toIndex)
                         break
                     }
                     case 'head':{
@@ -114,14 +126,18 @@ const DndCradle = (props) => {
                         break
                     }
                     case 'tail':{
-                        toIndex = 
-                            dropEffect == 'move'?
-                                highindex:
-                                highindex + 1
+                        if (toScrollerID === fromScrollerID) {
+                            toIndex = 
+                                dropEffect == 'move'?
+                                    highindex:
+                                    highindex + 1
+                        } else {
+                            toIndex = highindex + 1
+                        }
                         break
                     }
                 }
-                toScrollerID = dropResult.target.scrollerID
+                // console.log('whitespace toIndex',toIndex)
             }
 
             // -------------------------[ intra-list drop ]------------------------
@@ -180,13 +196,17 @@ const DndCradle = (props) => {
 
                     serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
 
-                    scrollerDndContext.displacedIndex = toIndex + 1
+                    if (onDroppableWhitespace) {
+                        scrollerDndContext.displacedIndex = null
+                    } else {
+                        scrollerDndContext.displacedIndex = toIndex + 1
+                    }
 
                     stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
                 // copy item, or move non-cache item
                 } else {
-
+                    
                     if (dropEffect == 'move') {
                         dragData.sourceServiceHandler.removeIndex(fromIndex)
                     }
@@ -195,12 +215,13 @@ const DndCradle = (props) => {
                     scrollerDndContext.dndFetchIndex = toIndex
                     scrollerDndContext.dndFetchItem = item
 
-                    if (masterDndContext.onDroppableWhitespace) {
+                    if (onDroppableWhitespace) {
                         scrollerDndContext.displacedIndex = null
                     } else { 
                         scrollerDndContext.displacedIndex = toIndex + 1
-                        serviceHandler.insertIndex(toIndex)
                     }
+
+                    serviceHandler.insertIndex(toIndex)
 
                 }
 

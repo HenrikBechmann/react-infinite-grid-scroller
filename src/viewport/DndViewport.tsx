@@ -112,6 +112,8 @@ const DndViewport = (props) => {
 
         }
 
+        const { index:sourceIndex, scrollerID:sourceScrollerID } = masterDndContext.dragData
+
         const 
             { cradleContentProps } = cradleInternalProperties,
             { 
@@ -195,7 +197,11 @@ const DndViewport = (props) => {
 
         if (isWhitespace) {
 
-            if ((lowlistindex === masterDndContext.dragData.index) && calculatedDropEffect == 'move') {
+            if ( 
+                sourceScrollerID === scrollerID &&
+                lowlistindex === sourceIndex && 
+                calculatedDropEffect == 'move'
+            ) {
 
                 return [false, null]
 
@@ -226,7 +232,11 @@ const DndViewport = (props) => {
 
         if (isWhitespace) {
 
-            if ((highlistindex === masterDndContext.dragData.index) && calculatedDropEffect == 'move') {
+            if ( 
+                sourceScrollerID === scrollerID &&
+                highlistindex === sourceIndex && 
+                calculatedDropEffect == 'move'
+            ) {
 
                 return [false, null]
 
@@ -244,7 +254,11 @@ const DndViewport = (props) => {
 
         if (isWhitespace) {
 
-            if ((highlistindex === masterDndContext.dragData.index) && calculatedDropEffect == 'move') {
+            if ( 
+                sourceScrollerID === scrollerID &&
+                highlistindex === sourceIndex && 
+                calculatedDropEffect == 'move'
+            ) {
 
                 return [false, null]
 
