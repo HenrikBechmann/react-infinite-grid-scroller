@@ -66,7 +66,7 @@ const DndCradle = (props) => {
             if (
 
                 !dropResult || // cautious
-                // !dropResult.target || // cautious
+                !dropResult.target || // prevent response from drop on scrolltab
                 ((dropResult.dataType == 'viewport') && !masterDndContext.onDroppableWhitespace)
 
             ) {
