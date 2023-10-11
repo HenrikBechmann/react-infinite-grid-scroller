@@ -140,7 +140,15 @@ const DndCellFrame = (props) => {
 
     },[dndFrameState])
 
-    const enhancedProps = {...props, isDnd:isDndRef.current, targetConnector, frameRef, masterDndContext, showDirectionIcon, setDndFrameState  }
+    const enhancedProps = {
+        ...props, 
+        isDnd:isDndRef.current, 
+        targetConnector, 
+        frameRef, 
+        masterDndContext, 
+        showDirectionIcon, 
+        setDndFrameState 
+    }
 
     return <CellFrame {...enhancedProps}/>
 

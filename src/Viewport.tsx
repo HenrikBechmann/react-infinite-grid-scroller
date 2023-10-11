@@ -46,10 +46,10 @@ export const ViewportContext = React.createContext(null) // for children
 // determine if DndViewport is required
 const ViewportController = (props) => {
 
-    const masterDndContext = useContext(MasterDndContext)
-
-    const viewportFrameElementRef = useRef(null)
-    const outerViewportElementRef = useRef(null)
+    const 
+        masterDndContext = useContext(MasterDndContext),
+        viewportFrameElementRef = useRef(null),
+        outerViewportElementRef = useRef(null)
 
     if (masterDndContext.installed) {
 
@@ -85,17 +85,15 @@ export const Viewport = ({
 
     // -----------------------[ initialize ]------------------
 
-    const masterDndContext = useContext(MasterDndContext)
+    const 
+        masterDndContext = useContext(MasterDndContext),
+        { dragData } = masterDndContext,
+        {
 
-    const { dragData } = masterDndContext
+            orientation,
 
-    const {
-
-        orientation,
-
-    } = gridSpecs
-
-    const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
+        } = gridSpecs,
+        [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
     
     if (masterDndContext.installed && (scrollerID === masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
 
@@ -106,25 +104,22 @@ export const Viewport = ({
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
-    const isMountedRef = useRef(true)
+    const 
+        isMountedRef = useRef(true),
+        viewportElementRef = useRef(null),
+        scrollTrackerAPIRef = useRef(null),
+        // viewportContextRef is passed as a resizing interrupt (through context) to children
+        viewportContextRef = useRef(
+            {
 
-    const viewportElementRef = useRef(null)
-    // const viewportFrameElementRef = useRef(null)
+                isResizing:false, 
+                // viewportDimensions:null,
+                elementRef:null,
+                frameElementRef:null,
+                scrollTrackerAPIRef,
 
-    const scrollTrackerAPIRef = useRef(null)
-
-    // viewportContextRef is passed as a resizing interrupt (through context) to children
-    const viewportContextRef = useRef(
-        {
-
-            isResizing:false, 
-            // viewportDimensions:null,
-            elementRef:null,
-            frameElementRef:null,
-            scrollTrackerAPIRef,
-
-        }
-    )
+            }
+        )
 
     // mark as unmounted
     useEffect(() =>{
@@ -140,9 +135,10 @@ export const Viewport = ({
 
     // --------------------[ viewport resizer interrupt ]-----------------------
 
-    const resizeTimeridRef = useRef(null)
-    const isResizingRef = useRef(false)
-    const resizeObserverRef = useRef(null);    
+    const 
+        resizeTimeridRef = useRef(null),
+        isResizingRef = useRef(false),
+        resizeObserverRef = useRef(null)
 
     // set up resizeObserver
     useEffect(()=>{
@@ -204,11 +200,12 @@ export const Viewport = ({
     // ----------------------------------[ calculate config values ]--------------------------------
 
     // styles
-    const divframestyleRef = useRef<CSSProperties>({
-        position:'absolute',
-        inset:'0',
-    })
-    const divlinerstyleRef = useRef(null)
+    const 
+        divframestyleRef = useRef<CSSProperties>({
+            position:'absolute',
+            inset:'0',
+        }),
+        divlinerstyleRef = useRef(null)
 
     // initialize with inherited styles
     divlinerstyleRef.current = useMemo(() => {

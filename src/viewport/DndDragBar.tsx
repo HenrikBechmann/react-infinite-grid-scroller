@@ -59,9 +59,9 @@ const DndDragBar = (props) => {
 
         dropEffectIcon = calculatedDropEffect == 'move'?moveicon:copyicon,
 
-        altKeyRef = useRef(masterDndContext.altKey)
+        altKeyRef = useRef(masterDndContext.altKey),
 
-    const intervalIDRef = useRef(null)
+        intervalIDRef = useRef(null)
 
     useEffect(()=>{
 

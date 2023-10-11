@@ -216,6 +216,7 @@ const DndViewport = (props) => {
                 height:lastChildCellElementRect.height,
                 width:lastChildCellElementRect.width
             }
+            
         isWhitespace = 
             orientation == 'vertical'?
                 clientOffset.x > lastChildClientOffset.x &&

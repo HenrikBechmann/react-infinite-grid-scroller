@@ -37,10 +37,10 @@ const DragIcon = props => {
             dndOptions
         } = props
 
-    const scrollerDndContext = useContext(ScrollerDndContext)
-    const masterDndContext = useContext(MasterDndContext)
-
-    const { dragData } = masterDndContext || {}
+    const 
+        scrollerDndContext = useContext(ScrollerDndContext),
+        masterDndContext = useContext(MasterDndContext),
+        { dragData } = masterDndContext || {}
 
     dndDragIconStyles = dndDragIconStyles ?? {}
     dndOptions = dndOptions ?? {}
