@@ -185,10 +185,10 @@ export const CellFrame = ({
     const dndOptionsRef = useRef<GenericObject>(null)
     const cellFramePropertiesRef = useRef(null)
 
-    const updateDndOptions = (dndOptions) => {
-        dndOptionsRef.current = dndOptions
-        setFrameState('updatedndoptions')
-    }
+    // const updateDndOptions = (dndOptions) => {
+    //     dndOptionsRef.current = dndOptions
+    //     setFrameState('updatedndoptions')
+    // }
     const isDndRef = useRef(isDnd)
 
     useEffect( () => {
@@ -203,7 +203,7 @@ export const CellFrame = ({
     cellFramePropertiesRef.current = {
         itemID,
         index,
-        updateDndOptions,
+        // updateDndOptions,
     }
     // fetch error
     const errorRef = useRef(false)

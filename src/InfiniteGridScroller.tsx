@@ -145,14 +145,14 @@ export const MasterDndContext = React.createContext(
         prescribedDropEffect:null,
         onDroppableWhitespace:false,
         whitespacePosition:null,
-        dragData:{
+        dragContext:{
             isDragging:false,
             canDrop:false,
             itemID:null,
             index:null,
+            setDndFrameState:null,
             dndOptions:{} as GenericObject,
             scrollerID:null,
-            setDndFrameState:null,
             sourceCacheAPI:null,
             sourceStateHandler:null,
             sourceServiceHandler:null,
@@ -561,10 +561,12 @@ const InfiniteGridScroller = (props) => {
             displacedIndex:null, // polled by CellFrames
             dndFetchIndex:null, // polled by CellFrames
             dndFetchItem:null,
-            cacheAPI:null, // TODO this and the next three should be derived from handlersRef by consumers
+            // frequently used...
+            cacheAPI:null,
             stateHandler:null,
             serviceHandler:null,
             handlersRef:null,
+            // general access...
             cradleParameters:null,
         })
 

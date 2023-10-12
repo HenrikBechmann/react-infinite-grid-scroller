@@ -112,7 +112,7 @@ const DndViewport = (props) => {
 
         }
 
-        const { index:sourceIndex, scrollerID:sourceScrollerID } = masterDndContext.dragData
+        const { index:sourceIndex, scrollerID:sourceScrollerID } = masterDndContext.dragContext
 
         const 
             { cradleContentProps } = cradleInternalProperties,

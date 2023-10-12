@@ -31,9 +31,9 @@ const DisplaceIcon = (props) => {
 
         cradleContext = useContext(CradleContext),
 
-        { dragData, prescribedDropEffect:dropEffect } = masterDndContext,
+        { dragContext, prescribedDropEffect:dropEffect } = masterDndContext,
 
-        { scrollerID:sourceScrollerID, index:sourceIndex  } = dragData,
+        { scrollerID:sourceScrollerID, index:sourceIndex  } = dragContext,
 
         calculatedDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
 

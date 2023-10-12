@@ -30,7 +30,14 @@ import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png
 // drag starts here
 const DragIcon = props => {
 
-    const { itemID, index, profile, contentHolderElementRef, scrollerID, setDndFrameState} = props
+    const { 
+        itemID, 
+        index, 
+        profile, 
+        contentHolderElementRef, 
+        scrollerID, 
+        setDndFrameState
+    } = props
     let 
         {
             dndDragIconStyles, // user styles
@@ -40,7 +47,7 @@ const DragIcon = props => {
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext),
-        { dragData } = masterDndContext || {}
+        { dragContext } = masterDndContext || {}
 
     dndDragIconStyles = dndDragIconStyles ?? {}
     dndOptions = dndOptions ?? {}
@@ -89,12 +96,14 @@ const DragIcon = props => {
         }
     },[itemID, dndOptions, options])
 
+    // console.log('DragIcon scrollerID, index, isDragging', scrollerID, index, sourceData.isDragging)
+
     const 
         { isDragging } = sourceData,
         classname = 'rigs-source-highlight'
 
-    if (isDragging && !dragData.isDragging) {
-        Object.assign(dragData,
+    if (isDragging && !dragContext.isDragging) {
+        Object.assign(dragContext,
             {
                 isDragging,
                 scrollerID,
@@ -123,7 +132,7 @@ const DragIcon = props => {
         previewConnector(getEmptyImage(),{ captureDraggingState: true })
 
         return () => {
-            masterDndContext.dragData.setDndFrameState = null
+            masterDndContext.dragContext.setDndFrameState = null
         }
 
     },[])

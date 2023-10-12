@@ -4,7 +4,7 @@
 /*
 
     The role of DndDragBar is to show the user where the dragtarget is located
-    and to reset masterDndContext.dragData if dragging stops
+    and to reset masterDndContext.dragContext if dragging stops
 
 */
 
@@ -40,14 +40,14 @@ const DndDragBar = (props) => {
     const 
         { scrollerID} = props,
         masterDndContext = useContext(MasterDndContext),
-        { dragData } = masterDndContext,
+        { dragContext } = masterDndContext,
         { 
             canDrop,
             itemID,
             index,
             dndOptions,
 
-        } = dragData,
+        } = dragContext,
 
         dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`,
 
@@ -71,7 +71,7 @@ const DndDragBar = (props) => {
 
             if (masterDndContext.altKey !== altKeyRef.current) {
                 altKeyRef.current = masterDndContext.altKey
-                const { setDndFrameState } = masterDndContext.dragData
+                const { setDndFrameState } = masterDndContext.dragContext
                 setDndFrameState && setDndFrameState('refresh')
                 setDragBarState('refresh')
             }
@@ -102,9 +102,9 @@ const DndDragBar = (props) => {
 
     const {isDragging, currentOffset} = dragBarData
 
-    if (!isDragging && dragData.isDragging) {
+    if (!isDragging && dragContext.isDragging) {
         Object.assign(
-            dragData,
+            dragContext,
             {
                 isDragging:false,
                 itemID:null,

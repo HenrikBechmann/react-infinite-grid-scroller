@@ -87,7 +87,7 @@ export const Viewport = ({
 
     const 
         masterDndContext = useContext(MasterDndContext),
-        { dragData } = masterDndContext,
+        { dragContext } = masterDndContext,
         {
 
             orientation,
@@ -277,7 +277,7 @@ export const Viewport = ({
     // console.log('viewport showScrollTabs', showScrollTabs)
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
-        { (masterDndContext.installed && dragData.isDragging && (scrollerID === masterDndContext.scrollerID)) && 
+        { (masterDndContext.installed && dragContext.isDragging && (scrollerID === masterDndContext.scrollerID)) && 
             <DndDragBar 
                 scrollerID = { scrollerID }
             />

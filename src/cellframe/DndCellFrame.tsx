@@ -110,8 +110,8 @@ const DndCellFrame = (props) => {
 
         const canDoDrop = !!masterDndContext.dropCount
 
-        if (masterDndContext.dragData.canDrop !== canDoDrop) {
-            masterDndContext.dragData.canDrop = canDoDrop
+        if (masterDndContext.dragContext.canDrop !== canDoDrop) {
+            masterDndContext.dragContext.canDrop = canDoDrop
             masterDndContext.setDragBarState && masterDndContext.setDragBarState('updateicon')
         }
 

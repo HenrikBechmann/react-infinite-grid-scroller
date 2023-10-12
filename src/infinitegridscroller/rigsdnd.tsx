@@ -109,7 +109,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                 prescribedDropEffect:null,
                 onDroppableWhitespace:false,
                 whitespacePosition:null,
-                dragData:{
+                dragContext:{
                     isDragging:false,
                     canDrop:false,
                     itemID:null,

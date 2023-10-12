@@ -165,23 +165,23 @@ const DndCradle = (props) => {
             // -------------------------[ inter-list drop ]------------------------
             } else {
                 
-                const { dragData } = masterDndContext
+                const { dragContext } = masterDndContext
 
                 // move existing cache item
                 if (cacheAPI.itemMetadataMap.has(itemID) && dropEffect == 'move') {
 
                     // ------------ resolve source data
                     const 
-                        [ sourceProps ] = dragData.sourceServiceHandler.getPropertiesSnapshot(),
+                        [ sourceProps ] = dragContext.sourceServiceHandler.getPropertiesSnapshot(),
                         { size:sourcelistsize } = sourceProps.virtualListProps
 
                     let incrementDirection = -1
 
                     // remove item from source scroller (but leave in cache)
-                    dragData.sourceCacheAPI.insertOrRemoveIndexedItemsFromScroller(
+                    dragContext.sourceCacheAPI.insertOrRemoveIndexedItemsFromScroller(
                         fromIndex, fromIndex, incrementDirection, sourcelistsize) 
-                    dragData.sourceServiceHandler.newListSize = sourcelistsize - 1
-                    dragData.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
+                    dragContext.sourceServiceHandler.newListSize = sourcelistsize - 1
+                    dragContext.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 
                     // ------------ resolve target data
                     incrementDirection = +1 // insert
@@ -208,7 +208,7 @@ const DndCradle = (props) => {
                 } else {
                     
                     if (dropEffect == 'move') {
-                        dragData.sourceServiceHandler.removeIndex(fromIndex)
+                        dragContext.sourceServiceHandler.removeIndex(fromIndex)
                     }
 
                     // move or copy requires fetch
