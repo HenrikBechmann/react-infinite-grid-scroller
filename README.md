@@ -398,6 +398,8 @@ const dndOptions = {
   master:{enabled}, // optional, default true, for root `RigsDnd` component only
   enabled, // optional for all participating scrollers, default true
   profile, // recommended. simple object to help the host identify the scroller in the `getDropEffect` call.
+  dropEffect, // optional. the prescribed value ('move' or 'copy') for scroller items; can be overridden by getDropEffect.
+    // undefined means default: 'move', posibly modified to 'copy' by pressing the altKey on desktop systems
 }
 ```
 3. Sub-scrollers must be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component (the one returned to RIGS through the `getItemPack` function) set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
