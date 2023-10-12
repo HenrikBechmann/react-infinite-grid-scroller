@@ -438,6 +438,7 @@ context: {
     accept, // the array of strings signifying the types of content items accepted by drop
     enabled, // the current state of dnd for the scroller
     profile, // a host-provided simple object to assist with identification of the scroller
+    dropEffect // an optional prescribed value for use by contained list items
   },
   targetDndOptions:{
     ... // same as sourceDndOptions, but taken from the target scroller
