@@ -61,10 +61,13 @@ const DndCradle = (props) => {
 
             const dropResult:GenericObject = monitor.getDropResult()
 
+            const { dynamicDropEffect } = masterDndContext
+            masterDndContext.dynamicDropEffect = null // reset
             // console.log('DndCradle: listsize, dropResult',listsize, dropResult)
 
             if (
 
+                dynamicDropEffect === 'none' ||
                 !dropResult || // cautious
                 !dropResult.target || // prevent response from drop on scrolltab
                 ((dropResult.dataType == 'viewport') && !masterDndContext.onDroppableWhitespace)
@@ -75,7 +78,12 @@ const DndCradle = (props) => {
 
             // -----------------------[ data assembly ]-----------------
 
-            const dropEffect = dropResult.dropEffect || 'move' // default for mobile
+            let hostDropEffect
+            if (['move','copy'].includes(dynamicDropEffect)) {
+                hostDropEffect = dynamicDropEffect
+            }
+
+            const dropEffect = hostDropEffect || dropResult.dropEffect || 'move' // default for mobile
 
             const whitespacePosition = masterDndContext.whitespacePosition
             const onDroppableWhitespace = masterDndContext.onDroppableWhitespace
@@ -114,7 +122,7 @@ const DndCradle = (props) => {
                 masterDndContext.onDroppableWhitespace = false
                 masterDndContext.whitespacePosition = null
 
-                const wsdropEffect = dropResult.target.dropEffect
+                // const wsdropEffect = dropResult.target.dropEffect
                 switch (whitespacePosition) {
                     case 'all':{ // empty list
                         toIndex = scrollerDndContext.cradleParameters.cradleInheritedPropertiesRef.current.startingIndex
