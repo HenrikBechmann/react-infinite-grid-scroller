@@ -86,6 +86,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     let { dndOptions, getDropEffect } = props
 
+    console.log('RigsDnd dndOptions', dndOptions)
+
     useEffect(()=>{
         let isEnabled = dndOptions?.master?.enabled
 
@@ -98,7 +100,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         if (masterDndContext.getDropEffect !== getDropEffect) {
 
             masterDndContext.getDropEffect = getDropEffect
-            
+
         }
 
         // reset masterDndContext on unmount. 
@@ -123,6 +125,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                     itemID:null,
                     index:null,
                     scrollerID: null,
+                    scrollerDndOptions:null,
                     setDndFrameState:null,
                     dndOptions:{} as GenericObject,
                     // the following for inter-list drops to process drag source

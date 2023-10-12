@@ -155,6 +155,7 @@ export const MasterDndContext = React.createContext(
             setDndFrameState:null,
             dndOptions:{} as GenericObject,
             scrollerID:null,
+            scrollerDndOptions:null,
             sourceCacheAPI:null,
             sourceStateHandler:null,
             sourceServiceHandler:null,
@@ -223,6 +224,8 @@ const InfiniteGridScroller = (props) => {
         staticComponent, // planned supercedes most other properties
 
     }:RIGS = props
+
+    // console.log('InfiniteGridScroller dndOptions', dndOptions)
 
     // initialize with defaults if values are empty
     startingListSize = startingListSize ?? 0

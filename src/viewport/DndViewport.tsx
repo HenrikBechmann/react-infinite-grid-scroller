@@ -79,6 +79,7 @@ const DndViewport = (props) => {
 
                 isOver:monitor.isOver(),
                 canDrop:monitor.canDrop(),
+                itemData:monitor.getItem() as GenericObject
 
             }
         },
@@ -281,7 +282,20 @@ const DndViewport = (props) => {
         if ( targetData.isOver && targetData.canDrop ) {
             let dynamicDropEffect
             if (masterDndContext.getDropEffect ) { 
-                dynamicDropEffect = masterDndContext.getDropEffect(masterDndContext.dragContext.scrollerID,scrollerID,{})
+
+                const { itemID, index, profile, dndOptions, dropEffect } = targetData.itemData
+
+                const itemData = { itemID, index, profile, dndOptions, dropEffect }
+                const context = {
+
+                    sourceDndOptions: masterDndContext.dragContext.scrollerDndOptions,
+                    targetDndOptions: scrollerDndContext.dndOptions,
+                    itemData,
+
+                }
+                dynamicDropEffect = masterDndContext.getDropEffect(
+                    masterDndContext.dragContext.scrollerID, scrollerID, context )
+
             }
             if (masterDndContext.dynamicDropEffect != dynamicDropEffect) {
                 masterDndContext.dynamicDropEffect = dynamicDropEffect
@@ -300,7 +314,7 @@ const DndViewport = (props) => {
         }
         setDndViewportState('updatehighlight')
 
-    },[targetData.isOver, targetData.canDrop])
+    },[targetData.isOver, targetData.canDrop, targetData.itemData])
 
     useEffect(()=>{
 
