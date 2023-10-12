@@ -94,11 +94,11 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |getItemPack(index:integer, itemID:integer, context:object): object |host-provided function. `index` signifies position in list; session `itemID` (integer) is for tracking and matching. `context` provides an `accept` property when dnd is installed. Arguments provided by system|required. Must return a simple object with three properties: `component` - a React component or promise of a component (`React.isValidElement`), `dndOptions` (if dnd is enabled; see Drag and Drop section), and `profile`- a simple object which gets returned to host for identification in various contexts|
 |[_**LIST CONFIGURATION**_]|
 |startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list. Can be modified at runtime. |
+|startingIndex:integer| starting index when the scroller first loads|default = 0|
 |getExpansionCount(position:string, index:ingeger): integer| function optionally provided by host. Called whenever the lowindex or highindex are loaded into the Cradle.| `position` = "SOL" or "EOL"; index = the lowindex or highindex. Should return the number by which to expand the virtual list|
 |getDropEffect(sourceScrollerID, targetScrollerID, context): 'move' \| 'copy'\| 'none' \| `undefined`|function, optional, for `RigsDnd` component only|called whenever drag `isOver` and `canDrop` are true on a list; returns drop constraint. See Drag and Drop below. |
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
 |layout:string| 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
-|startingIndex:integer| starting index when the scroller first loads|default = 0|
 |padding:integer \| []| number of pixels padding the `Scrollblock`| default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b, r/l]. 3-item array = [t, r/l, b]. 4-item array = [t, r, b, l]|
 |[_**SYSTEM SETTINGS**_]|
 |dndOptions:object|scroller settings for drag and drop|required if drag and drop is enabled. See Drag and Drop section|
