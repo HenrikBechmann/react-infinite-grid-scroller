@@ -35,7 +35,9 @@ const DndCellFrame = (props) => {
         { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current,
         {crosscount } = virtualListProps,
 
-        frameRef = useRef(null)
+        frameRef = useRef(null),
+
+        contentHolderElementRef = useRef(null)
 
     const [ targetData, targetConnector ] = useDrop({
         accept:scrollerDndContext.dndOptions.accept,
@@ -73,21 +75,21 @@ const DndCellFrame = (props) => {
     // console.log('DndCellFrame: index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect\n',
     //     index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect)
 
-    if (isLocation && targetData.isOver && targetData.canDrop && !frameRef.current?.classList.contains(highlightClassname)) {
+    if (isLocation && targetData.isOver && targetData.canDrop && !contentHolderElementRef.current?.classList.contains(highlightClassname)) {
 
         cellCanDropRef.current = true
-        frameRef.current.classList.add(highlightClassname)
+        contentHolderElementRef.current.classList.add(highlightClassname)
         masterDndContext.dropCount++
 
-    } else if (!isLocation && (sourceIndex === index) && frameRef.current?.classList.contains(highlightClassname)) {
+    } else if (!isLocation && (sourceIndex === index) && contentHolderElementRef.current?.classList.contains(highlightClassname)) {
 
-        frameRef.current.classList.remove(highlightClassname)
+        contentHolderElementRef.current.classList.remove(highlightClassname)
         masterDndContext.dropCount--
 
-    } else if (isLocation && !targetData.isOver && frameRef.current?.classList.contains(highlightClassname)) {
+    } else if (isLocation && !targetData.isOver && contentHolderElementRef.current?.classList.contains(highlightClassname)) {
 
         masterDndContext.dropCount--
-        frameRef.current.classList.remove(highlightClassname)
+        contentHolderElementRef.current.classList.remove(highlightClassname)
         cellCanDropRef.current = false
 
     }
@@ -147,7 +149,8 @@ const DndCellFrame = (props) => {
         frameRef, 
         masterDndContext, 
         showDirectionIcon, 
-        setDndFrameState 
+        setDndFrameState,
+        contentHolderElementRef,
     }
 
     return <CellFrame {...enhancedProps}/>

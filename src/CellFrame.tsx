@@ -71,7 +71,10 @@ export const CellFrameController = props => {
 
     } else {
 
-        return <CellFrameWrapper {...props} />
+        const contentHolderElementRef = useRef(null)
+        const enhancedProps  = {...props, contentHolderElementRef}
+
+        return <CellFrameWrapper {...enhancedProps} />
 
     }
 
@@ -127,6 +130,7 @@ export const CellFrame = ({
     targetConnector,
     isDnd,
     frameRef,
+    contentHolderElementRef,
     showDirectionIcon,
     setDndFrameState,
 }) => {
@@ -612,7 +616,7 @@ export const CellFrame = ({
 
     }, [frameState])
 
-    const contentHolderElementRef = useRef(null)
+    // const contentHolderElementRef = useRef(null)
 
     return <div 
 
