@@ -428,6 +428,32 @@ With dnd enabled, the `context` parameter of the `getItemPack` function sent to 
 
 ## `canDrop` and `dropEffect`
 
+`dropEffect` can be constrained by the return value of the host-provided function `getDropEffect` (see _Scroller Properties_ above) . This function has three parameters: `sourceScrollerID` (the `scrollerID` from the source of the drag), `targetScrollerID` (the `scrollerID` from the target of the drag), and `context`. `getDropEffect` is called by RIGS whenever the drag location crosses into a scroller for which `isOver` and `canDrop` are both true. Here are the properties of the `context` parameter:
+
+```
+context: {
+  sourceDndOptions:{ // taken from the source scroller
+    accept, // the array of strings signifying the types of content items accepted by drop
+    enabled, // the current state of dnd for the scroller
+    profile, // a host-provided simple object to assist with identification of the scroller
+  },
+  targetDndOptions:{
+    ... // same as sourceDndOptions, but taken from the target scroller
+  },
+  itemData:{ // identifying information of the current item being dragged
+    itemID, // the itemID assigned to the content item by RIGA
+    index, // the item's logical position in the source scroller
+    profile, // host provided simple object to assis with identification
+    dndOptions: {, // taken from getItemPack function
+      type, // the type of the item, matches one of the accept items in both the source and target scroller
+      dragText, // the text shown in the dragBar when the item is being dragged
+    } 
+    dropEffect, // the current internally prescribed dropEffect taken from scroller settings and altKey setting if any
+  }
+}
+```
+The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffect` function. 'none' prevents a drop, 'move' and 'copy' override the item's `dropEffect` value, and `undefined` yields to the value of the item's `dropEffect` property.
+
 # Restoring scroll positions coming out of cache
 
 This is only of concern if your cell components support scrolling.
