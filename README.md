@@ -391,15 +391,13 @@ import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
   />
 </div>
 ```
-2. `dndOptions` is a required property for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property. It may include an optional `internalDropEffect`, `outgoingDropEffect`, `incomingDropEffect` properties ('move', 'copy' or 'any') to constrain the drag and drop outcome. `incomingDropEffect` takes precedence.
+2. `dndOptions` is a required property for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property, and a `profile` property with a simple object to help identify the scroller when the host responds to the `getDropEffect` function.
 ```
 const dndOptions = {
   accept:['type1','type2','type3'] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
-  master:{enabled}, // optional, default true, for root only
+  master:{enabled}, // optional, default true, for root `RigsDnd` component only
   enabled, // optional for all participating scrollers, default true
-  internalDropEffect, // optional, default undefined
-  outgoingDropEffect, // optional, default undefined
-  incomingDropEffect, // optional, default undefined
+  profile, // recommended. simple object to help the host identify the scroller in the `getDropEffect` call.
 }
 ```
 3. Sub-scrollers must be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component (the one returned to RIGS through the `getItemPack` function) set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
