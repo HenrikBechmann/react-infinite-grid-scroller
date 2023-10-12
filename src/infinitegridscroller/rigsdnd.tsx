@@ -16,15 +16,15 @@
     ScrollerDndContext (see InfiniteGridScroller for details)
 
     components dedicated to dnd are
-    - RigsDnd - HoC for InfiniteGridScroller, master
-    - DndViewport - useDrop - HoC for Viewport, show scroll areas
+    - RigsDnd - *HoC* for InfiniteGridScroller, master
+    - DndViewport - useDrop - *HoC* for Viewport, show scroll areas
     - DndDragBar - conditionally rendered by Viewport, for drag layer
-    - DndScrollTab - useDrop, for Viewport, for scrollTab and target list canDrop isOver highlightin
-    - DndCradle - useDrop - HoC for Cradle, useDrop for drop handling
-    - DndCellFrame - useDrop - HoC for CellFrame, useDrop for location
-    - DragIcon - useDrag, conditionally rendered by CellFrame for drag
+    - DndScrollTab - useDrop, conditionally rendered by Viewport, for scrollTab and target list canDrop isOver highlighting
+    - DndCradle - useDrop - *HoC* for Cradle, useDrop for drop handling
+    - DndCellFrame - useDrop - *HoC* for CellFrame, useDrop for location
+    - DndDragIcon - useDrag, conditionally rendered by CellFrame for drag
 
-    MasterDndContext (global scoped namespace) is used by (all but DragIcon & DisplaceIcon)
+    MasterDndContext (global scoped namespace) is used by (all but DndDragIcon & DndDisplaceIcon)
     - RigsDnd
         - InfiniteGridScroller
     - DndViewport (useDrop)
@@ -35,11 +35,11 @@
         - Cradle
     - DndCellFrame (useDrop)
         - CellFrame
-            - DragIcon (useDrag)
-            - DisplaceIcon
+            - DndDragIcon (useDrag)
+            - DndDisplaceIcon
 
     ScrollerDndContext (scroller scoped namespace) is used by the same modules as MasterDndContext except
-    - also DragIcon
+    - also DndDragIcon
     - not Viewport
 
 */
@@ -84,7 +84,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     if (!masterDndContext.installed) masterDndContext.installed = true
 
-    const { dndOptions } = props
+    let { dndOptions, getDropEffect } = props
 
     useEffect(()=>{
         let isEnabled = dndOptions?.master?.enabled
@@ -93,6 +93,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         if (!(masterDndContext.enabled === isEnabled)) {
             masterDndContext.enabled = isEnabled
+            masterDndContext.getDropEffect = getDropEffect
         }
 
         // reset masterDndContext on unmount. 
@@ -104,6 +105,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                 scrollerID:null,
                 setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
                 setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
+                getDropEffect:null,
+                dynamicDropEffect:null,        
                 dropCount:0,
                 altKey:null,
                 prescribedDropEffect:null,
@@ -126,7 +129,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         }
 
-    },[dndOptions])
+    },[dndOptions, getDropEffect])
 
     const enhancedProps = {...props, isDndMaster:true}
 

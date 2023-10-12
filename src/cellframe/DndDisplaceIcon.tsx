@@ -1,9 +1,9 @@
-// DisplaceIcon.tsx
+// DndDisplaceIcon.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
 
-    The role of DisplaceIcon is to show the user the direction in which the highlighted drop target CellFrame
+    The role of DndDisplaceIcon is to show the user the direction in which the highlighted drop target CellFrame
     will be displaced.
 
 */
@@ -18,7 +18,7 @@ import { isMobile } from  '../InfiniteGridScroller/RigsDnd'
 
 import {CradleContext} from '../Cradle'
 
-const DisplaceIcon = (props) => {
+const DndDisplaceIcon = (props) => {
 
     const 
         { orientation, scrollerID, index } = props,
@@ -131,4 +131,4 @@ const DisplaceIcon = (props) => {
 
 }
 
-export default DisplaceIcon
+export default DndDisplaceIcon

@@ -140,6 +140,8 @@ export const MasterDndContext = React.createContext(
         scrollerID:null, 
         setViewportState:null, // the master viewport, for rendering the dragbar
         setDragBarState:null, // for master dragbar, to update icons
+        getDropEffect:null,
+        dynamicDropEffect:null,        
         dropCount:0,
         altKey:null,
         prescribedDropEffect:null,
@@ -214,7 +216,6 @@ const InfiniteGridScroller = (props) => {
         technical, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI,
         dndOptions,
-
         // information for host cell content
         scrollerContext, // required for embedded scroller; shares scroller settings with content
         isDndMaster, // internal, set for root dnd only
@@ -242,9 +243,9 @@ const InfiniteGridScroller = (props) => {
     placeholderMessages = placeholderMessages ?? {}
     callbacks = callbacks ?? {}
     technical = technical ?? {}
-    dndOptions = dndOptions ?? {}
     cacheAPI = cacheAPI ?? null
     isDndMaster = isDndMaster ?? false
+    dndOptions = dndOptions ?? {}
 
     const masterDndContext = useContext(MasterDndContext)
 

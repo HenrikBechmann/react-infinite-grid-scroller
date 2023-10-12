@@ -57,8 +57,8 @@ import { CradleContext } from './Cradle'
 import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
 // =====================[ dnd support ]====================
 
-import DragIcon from './CellFrame/DragIcon'
-import DisplaceIcon from './CellFrame/DisplaceIcon'
+import DndDragIcon from './CellFrame/DndDragIcon'
+import DndDisplaceIcon from './CellFrame/DndDisplaceIcon'
 
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
@@ -635,7 +635,7 @@ export const CellFrame = ({
                 </div>
 
                 {(isDndRef.current && (['ready','nodata'].includes(frameState))) && 
-                    <DragIcon 
+                    <DndDragIcon 
                         contentHolderElementRef = {contentHolderElementRef} 
                         itemID = {itemID} 
                         index = {index} 
@@ -655,7 +655,7 @@ export const CellFrame = ({
             null)
         }
         {(isDndRef.current && showDirectionIcon && (['ready','nodata'].includes(frameState))) && 
-            <DisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
+            <DndDisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
         }
     </div>
 

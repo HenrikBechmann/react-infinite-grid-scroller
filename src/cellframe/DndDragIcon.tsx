@@ -1,4 +1,4 @@
-// DragIcon.tsx
+// DndDragIcon.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
 /*
@@ -28,7 +28,7 @@ import { MasterDndContext, ScrollerDndContext } from '../InfiniteGridScroller'
 
 import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 // drag starts here
-const DragIcon = props => {
+const DndDragIcon = props => {
 
     const { 
         itemID, 
@@ -96,7 +96,7 @@ const DragIcon = props => {
         }
     },[itemID, dndOptions, options])
 
-    // console.log('DragIcon scrollerID, index, isDragging', scrollerID, index, sourceData.isDragging)
+    // console.log('DndDragIcon scrollerID, index, isDragging', scrollerID, index, sourceData.isDragging)
 
     const 
         { isDragging } = sourceData,
@@ -161,4 +161,4 @@ const DragIcon = props => {
     </div>
 }
 
-export default DragIcon
+export default DndDragIcon
