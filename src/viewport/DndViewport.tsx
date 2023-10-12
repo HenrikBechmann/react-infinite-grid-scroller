@@ -280,19 +280,19 @@ const DndViewport = (props) => {
         const viewportFrameElement = viewportFrameElementRef.current
 
         if ( targetData.isOver && targetData.canDrop ) {
+
             let dynamicDropEffect
             if (masterDndContext.getDropEffect ) { 
 
-                const { itemID, index, profile, dndOptions, dropEffect } = targetData.itemData
+                const 
+                    { itemID, index, profile, dndOptions, dropEffect } = targetData.itemData,
+                    itemData = { itemID, index, profile, dndOptions, dropEffect },
+                    context = {
+                        sourceDndOptions: masterDndContext.dragContext.scrollerDndOptions,
+                        targetDndOptions: scrollerDndContext.dndOptions,
+                        itemData,
+                    }
 
-                const itemData = { itemID, index, profile, dndOptions, dropEffect }
-                const context = {
-
-                    sourceDndOptions: masterDndContext.dragContext.scrollerDndOptions,
-                    targetDndOptions: scrollerDndContext.dndOptions,
-                    itemData,
-
-                }
                 dynamicDropEffect = masterDndContext.getDropEffect(
                     masterDndContext.dragContext.scrollerID, scrollerID, context )
 
@@ -303,15 +303,24 @@ const DndViewport = (props) => {
             }
             viewportFrameElement.classList.add('rigs-viewport-highlight')
             showScrollTabsRef.current = true
+
         } else {
+
             viewportFrameElement.classList.remove('rigs-viewport-highlight')
             showScrollTabsRef.current = false
+
         }
+
         if ( !targetData.isOver && targetData.canDrop ) {
+
             viewportFrameElement.classList.add('rigs-viewport-candrop')
+
         } else {
+
             viewportFrameElement.classList.remove('rigs-viewport-candrop')
+
         }
+
         setDndViewportState('updatehighlight')
 
     },[targetData.isOver, targetData.canDrop, targetData.itemData])
@@ -333,7 +342,12 @@ const DndViewport = (props) => {
 
     },[dndViewportState])
 
-    const enhancedProps = {...props,viewportFrameElementRef, outerViewportElementRef, showScrollTabs:showScrollTabsRef.current}
+    const enhancedProps = {
+        ...props,
+        viewportFrameElementRef, 
+        outerViewportElementRef, 
+        showScrollTabs:showScrollTabsRef.current
+    }
 
     return <Viewport {...enhancedProps}/>
 
