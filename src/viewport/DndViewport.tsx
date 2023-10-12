@@ -273,11 +273,20 @@ const DndViewport = (props) => {
 
     }
 
+    // update viewportFrameElement highlight and DndDragBar state
     useEffect(()=>{
 
         const viewportFrameElement = viewportFrameElementRef.current
 
         if ( targetData.isOver && targetData.canDrop ) {
+            let dynamicDropEffect
+            if (masterDndContext.getDropEffect ) { 
+                dynamicDropEffect = masterDndContext.getDropEffect(masterDndContext.dragContext.scrollerID,scrollerID,{})
+            }
+            if (masterDndContext.dynamicDropEffect != dynamicDropEffect) {
+                masterDndContext.dynamicDropEffect = dynamicDropEffect
+                masterDndContext.setDragBarState('refresh')
+            }
             viewportFrameElement.classList.add('rigs-viewport-highlight')
             showScrollTabsRef.current = true
         } else {

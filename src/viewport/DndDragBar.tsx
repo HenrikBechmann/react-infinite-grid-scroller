@@ -53,9 +53,16 @@ const DndDragBar = (props) => {
 
         [dragState, setDragBarState] = useState('ready'),
 
-        { prescribedDropEffect:dropEffect } = masterDndContext,
+        { prescribedDropEffect } = masterDndContext,
+        { dynamicDropEffect } = masterDndContext
 
-        calculatedDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+        let hostDropEffect
+        if (['move','copy'].includes(dynamicDropEffect)) {
+            hostDropEffect = dynamicDropEffect
+        } 
+
+    const
+        calculatedDropEffect = hostDropEffect || prescribedDropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
 
         dropEffectIcon = calculatedDropEffect == 'move'?moveicon:copyicon,
 
@@ -114,8 +121,13 @@ const DndDragBar = (props) => {
         )
     }
 
+    let hostStopDrop
+    if (dynamicDropEffect == 'none') {
+        hostStopDrop = true
+    }
+
     const candropicon = 
-        (canDrop || masterDndContext.onDroppableWhitespace)?
+        (!hostStopDrop && (canDrop || masterDndContext.onDroppableWhitespace))?
             dropicon:
             nodropicon
 

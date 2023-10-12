@@ -93,7 +93,12 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         if (!(masterDndContext.enabled === isEnabled)) {
             masterDndContext.enabled = isEnabled
+        }
+
+        if (masterDndContext.getDropEffect !== getDropEffect) {
+
             masterDndContext.getDropEffect = getDropEffect
+            
         }
 
         // reset masterDndContext on unmount. 
@@ -106,10 +111,10 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
                 setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
                 setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
                 getDropEffect:null,
+                prescribedDropEffect:null,
                 dynamicDropEffect:null,        
                 dropCount:0,
                 altKey:null,
-                prescribedDropEffect:null,
                 onDroppableWhitespace:false,
                 whitespacePosition:null,
                 dragContext:{
