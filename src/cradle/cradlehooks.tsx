@@ -77,8 +77,9 @@ export const useRowblanks = ({crosscount, listsize, lowindex, highindex}) => {
                 1
 
         // get initial values
-        let baserowblanks = Math.abs(lowindex) % crosscount
-        let endrowblanks = (Math.abs(highindex) + endadjustment) % crosscount
+        let 
+            baserowblanks = Math.abs(lowindex) % crosscount,
+            endrowblanks = (Math.abs(highindex) + endadjustment) % crosscount
 
         // take inverse depending on direction
         if (lowindex < 0) {
@@ -171,18 +172,20 @@ export const useRowcounts = ({
 
         baseRowLength += gaplength
 
-        const viewportRowcount = Math.ceil(viewportLength/baseRowLength)
+        const 
+            viewportRowcount = Math.ceil(viewportLength/baseRowLength),
 
-        const listRowcount = 
-            listsize == 0?
-            0:
-            Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount)
+            listRowcount = 
+                listsize == 0?
+                0:
+                Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount),
 
-        const calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
+            calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
-        let cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount)
+        let 
+            cradleRowcount = Math.min(listRowcount, calculatedCradleRowcount),
+            runwayRowcount
 
-        let runwayRowcount
         if (cradleRowcount == calculatedCradleRowcount) {
 
             runwayRowcount = runwaySize
@@ -422,9 +425,10 @@ export const useCachingChangeEffect = ({
 
             case 'keepload': {
 
-                const modelIndexList = contentHandler.getModelIndexList()
+                const 
+                    modelIndexList = contentHandler.getModelIndexList(),
 
-                const { deleteListCallback } = serviceHandler.callbacks
+                    { deleteListCallback } = serviceHandler.callbacks
 
                 let deleteListCallbackWrapper
                 if (deleteListCallback) {
@@ -455,9 +459,10 @@ export const useCachingChangeEffect = ({
 
             case 'cradle': {
 
-                const modelIndexList = contentHandler.getModelIndexList()
+                const 
+                    modelIndexList = contentHandler.getModelIndexList(),
 
-                const { deleteListCallback } = serviceHandler.callbacks
+                    { deleteListCallback } = serviceHandler.callbacks
 
                 let deleteListCallbackWrapper
                 if (deleteListCallback) {
@@ -678,7 +683,7 @@ export const usePivotEffect = ({
                     gapProps,
                 } = cradleInheritedPropertiesRef.current,
 
-            // get previous ratio
+                // get previous ratio
                 previousCellPixelLength = 
                     ((orientation == 'vertical')?
                         cellWidth:

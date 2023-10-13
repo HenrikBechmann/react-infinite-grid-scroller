@@ -135,10 +135,12 @@ export const CellFrame = ({
     setDndFrameState,
 }) => {
 
-    const scrollerDndContext = useContext(ScrollerDndContext)
-    const masterDndContext = useContext(MasterDndContext)
+    const 
+        scrollerDndContext = useContext(ScrollerDndContext),
+        masterDndContext = useContext(MasterDndContext),
 
-    const coreConfigRef = useRef(null)
+        coreConfigRef = useRef(null)
+
     coreConfigRef.current = {
         orientation,
         layout,
@@ -148,21 +150,19 @@ export const CellFrame = ({
 
     // ----------------------[ setup ]----------------------
 
-    const cradleContext = useContext(CradleContext)
-
-    const { 
-        cacheAPI, 
-        scrollerPropertiesRef, // for the user content, if requested
-        itemExceptionCallback, // for notification to host of error
-        IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
-        triggercellTriggerlinesRef,
-    } = cradleContext
-    
-    // style change generates state refresh
-    const stylesRef = useRef({})
-    const holderStylesRef = useRef({})
-
-    const placeholderMessagesRef = useRef(null)
+    const 
+        cradleContext = useContext(CradleContext),
+        { 
+            cacheAPI, 
+            scrollerPropertiesRef, // for the user content, if requested
+            itemExceptionCallback, // for notification to host of error
+            IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
+            triggercellTriggerlinesRef,
+        } = cradleContext,
+        // style change generates state refresh
+        stylesRef = useRef({}),
+        holderStylesRef = useRef({}),
+        placeholderMessagesRef = useRef(null)
 
    placeholderMessagesRef.current = useMemo(() => {
 
@@ -173,27 +173,28 @@ export const CellFrame = ({
     },[placeholderMessages])
 
     // processing state
-    const [frameState, setFrameState] = useState('setup')
-    const frameStateRef = useRef(null)
+    const 
+        [frameState, setFrameState] = useState('setup'),
+        frameStateRef = useRef(null)
+
     frameStateRef.current = frameState
 
     // to track unmount interrupt
-    const isMountedRef = useRef(true)
-    // cache data
-    const portalMetadataRef = useRef(null)
-    // the placeholder to use
-    const placeholderRef = useRef(null)
-    // the session itemID to use; could be updated by parent
-    const itemIDRef = useRef(null)
-    itemIDRef.current = itemID
-    const dndOptionsRef = useRef<GenericObject>(null)
-    const cellFramePropertiesRef = useRef(null)
+    const 
+        isMountedRef = useRef(true),
+        // cache data
+        portalMetadataRef = useRef(null),
+        // the placeholder to use
+        placeholderRef = useRef(null),
+        // the session itemID to use; could be updated by parent
+        itemIDRef = useRef(null)
 
-    // const updateDndOptions = (dndOptions) => {
-    //     dndOptionsRef.current = dndOptions
-    //     setFrameState('updatedndoptions')
-    // }
-    const isDndRef = useRef(isDnd)
+    itemIDRef.current = itemID
+
+    const 
+        dndOptionsRef = useRef<GenericObject>(null),
+        cellFramePropertiesRef = useRef(null),
+        isDndRef = useRef(isDnd)
 
     useEffect( () => {
 
@@ -210,9 +211,10 @@ export const CellFrame = ({
         // updateDndOptions,
     }
     // fetch error
-    const errorRef = useRef(false)
-    // placeholder message
-    const messageRef = useRef(null)
+    const 
+        errorRef = useRef(false),
+        // placeholder message
+        messageRef = useRef(null)
 
     useEffect(()=>{
 
@@ -407,14 +409,15 @@ export const CellFrame = ({
 
             case 'getusercontent': {
 
-                const itemID = itemIDRef.current
-                const cached = cacheAPI.hasPortal(itemID)
-                const {
-                    layout,
-                    orientation,
-                    cellWidth,
-                    cellHeight,
-                } = coreConfigRef.current
+                const 
+                    itemID = itemIDRef.current,
+                    cached = cacheAPI.hasPortal(itemID),
+                    {
+                        layout,
+                        orientation,
+                        cellWidth,
+                        cellHeight,
+                    } = coreConfigRef.current
 
                 if (cached) {
 

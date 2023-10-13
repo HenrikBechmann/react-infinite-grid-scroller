@@ -14,9 +14,9 @@ import CacheAPI from './PortalCache/cacheAPI'
 
 const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getUpdateFunction }) => {
 
-    const cacheAPIRef = useRef(null)
-
-    const partitionArrayRef = useRef(null)
+    const 
+        cacheAPIRef = useRef(null),
+        partitionArrayRef = useRef(null)
 
     const partitionRepoForceUpdate = useCallback((partitionRenderList:any) => {
 
@@ -39,12 +39,11 @@ const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getUpdateFuncti
 
     },[])
 
-    const [portalCacheCounter, setPortalCacheCounter] = useState(0)
-    const counterRef = useRef(portalCacheCounter)
-
-    const [masterState, setMasterState] = useState('setup')
-
-    const isMountedRef = useRef(true)
+    const 
+        [portalCacheCounter, setPortalCacheCounter] = useState(0),
+        counterRef = useRef(portalCacheCounter),
+        [masterState, setMasterState] = useState('setup'),
+        isMountedRef = useRef(true)
 
     useEffect(()=>{
 

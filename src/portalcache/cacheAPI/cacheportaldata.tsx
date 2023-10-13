@@ -276,12 +276,12 @@ export default class PortalData {
     // get new or existing itemID for contentfunctions.createCellFrame
     private getNewOrExistingItemID(scrollerID, index) {
 
-        const { indexToItemIDMap } = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
-
-        const itemID = 
-            (indexToItemIDMap.has(index))?
-                indexToItemIDMap.get(index):
-                (this.getNewItemID())
+        const 
+            { indexToItemIDMap } = this.cacheScrollerData.scrollerDataMap.get(scrollerID),
+            itemID = 
+                (indexToItemIDMap.has(index))?
+                    indexToItemIDMap.get(index):
+                    (this.getNewItemID())
 
         return itemID
 

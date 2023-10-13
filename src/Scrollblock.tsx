@@ -143,9 +143,10 @@ const calcBaseScrollblockLength = ({
 
     // ---------------[ calculate crosscount ]------------------
     //crosscount is also calculated by Cradle
-    let crosslength, cellLength, viewportcrosslength
-
-    let gaplength, gapxlength
+    let 
+        crosslength, cellLength, viewportcrosslength,
+        gaplength, gapxlength
+        
     if (orientation == 'vertical') {
 
         gaplength = gapProps.column

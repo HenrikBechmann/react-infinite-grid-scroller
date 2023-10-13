@@ -78,9 +78,9 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
 // wrapper for Dnd provider
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
-    const [rigsdndState, setRigsdndState] = useState('setup')
-
-    const masterDndContext = useContext(MasterDndContext)
+    const 
+        [rigsdndState, setRigsdndState] = useState('setup'),
+        masterDndContext = useContext(MasterDndContext)
 
     if (!masterDndContext.installed) masterDndContext.installed = true
 

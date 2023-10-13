@@ -115,10 +115,10 @@ export default class LayoutHandler {
 
             span = (orientation == 'vertical')?
                 this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
-                this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
+                    this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
                 // horizontal
                 this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
-                this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
+                    this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
 
         return span
     }

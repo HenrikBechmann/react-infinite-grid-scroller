@@ -300,9 +300,6 @@ export default class ServiceCache {
         // basic assertions
         if (listsize) index = Math.max(listlowindex,index)
 
-        // if (!rangehighindex) rangehighindex = index
-        // rangehighindex = Math.max(rangehighindex, index)
-
         // ------------------- process cache ----------------
 
         if (listsize == 0) {

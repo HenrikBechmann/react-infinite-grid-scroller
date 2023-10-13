@@ -83,10 +83,10 @@ const DndCradle = (props) => {
                 hostDropEffect = dynamicDropEffect
             }
 
-            const dropEffect = hostDropEffect || dropResult.dropEffect || 'move' // default for mobile
-
-            const whitespacePosition = masterDndContext.whitespacePosition
-            const onDroppableWhitespace = masterDndContext.onDroppableWhitespace
+            const 
+                dropEffect = hostDropEffect || dropResult.dropEffect || 'move', // default for mobile
+                whitespacePosition = masterDndContext.whitespacePosition,
+                onDroppableWhitespace = masterDndContext.onDroppableWhitespace
             // console.log('DndCradle dropEffect',dropEffect)
 
             item.dropEffect = dropEffect

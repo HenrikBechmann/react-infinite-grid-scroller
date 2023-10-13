@@ -113,9 +113,8 @@ const DndViewport = (props) => {
 
         }
 
-        const { index:sourceIndex, scrollerID:sourceScrollerID } = masterDndContext.dragContext
-
         const 
+            { index:sourceIndex, scrollerID:sourceScrollerID } = masterDndContext.dragContext,
             { cradleContentProps } = cradleInternalProperties,
             { 
                 viewportRowcount, 
@@ -161,10 +160,14 @@ const DndViewport = (props) => {
         let firstChildCellElement, lastChildCellElement
 
         if (isInHeadGrid) {
+
             firstChildCellElement = headRef.current.firstChild
+
         } else {
+
             firstChildCellElement = tailRef.current.firstChild
             lastChildCellElement = tailRef.current.lastChild
+
         }
 
         if (!firstChildCellElement) return [false, null]

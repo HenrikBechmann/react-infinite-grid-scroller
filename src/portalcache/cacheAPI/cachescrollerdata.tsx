@@ -30,9 +30,9 @@ export default class ScrollerData {
 
     private unRegisterScroller = (scrollerID, itemSet) => {
 
-        const { scrollerDataMap } = this
-
-        const { itemMetadataMap } = this.cachePortalData
+        const 
+            { scrollerDataMap } = this,
+            { itemMetadataMap } = this.cachePortalData
 
         if ( scrollerDataMap.size == 1 ) return // already getting dismantled; avoid conflict
 
@@ -83,7 +83,7 @@ export default class ScrollerData {
 
     // ----------------------------[ basic operations ]--------------------------
 
-    // // called from serviceHandler.setListSize
+    // TODO delete// called from serviceHandler.setListSize
     // private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackWrapper) => {
 
     //     // console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackWrapper',

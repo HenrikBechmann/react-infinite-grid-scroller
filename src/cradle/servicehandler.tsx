@@ -66,8 +66,9 @@ export const isValueGreaterThanOrEqualToMinValue = (compareValue:any, minValue:a
 
     if (!isInteger(compareValue) || !isInteger(minValue)) return false
 
-    const testvalue = +compareValue
-    const testMinValue = +minValue
+    const 
+        testvalue = +compareValue,
+        testMinValue = +minValue
 
     return testvalue >= testMinValue
 

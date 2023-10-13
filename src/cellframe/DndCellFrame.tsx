@@ -62,9 +62,9 @@ const DndCellFrame = (props) => {
 
     // console.log('DndCellFrame didDrop',targetData.didDrop)
 
-    const cellCanDropRef = useRef(false)
-
     const 
+        cellCanDropRef = useRef(false),
+
         sourceIndex = targetData.sourceItem?.index,
         sourceScrollerID = targetData.sourceItem?.scrollerID,
 

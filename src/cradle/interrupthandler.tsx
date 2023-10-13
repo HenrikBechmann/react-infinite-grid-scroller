@@ -153,15 +153,16 @@ export default class InterruptHandler {
 
     private cradleIntersectionObserverCallback = (entries) => {
 
-        const signals = this.signals
-        const { 
+        const 
+            signals = this.signals,
+            { 
 
-            stateHandler, 
-            serviceHandler, 
-            scrollHandler, 
-            layoutHandler 
+                stateHandler, 
+                serviceHandler, 
+                scrollHandler, 
+                layoutHandler 
 
-        } = this.cradleParameters.handlersRef.current
+            } = this.cradleParameters.handlersRef.current
 
         if (signals.pauseCradleIntersectionObserver) {
 
@@ -260,10 +261,13 @@ export default class InterruptHandler {
             if (!this.cradleIntersect.disconnected) {
                 return
             }
-            const observer = this.cradleIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+            const 
+                observer = this.cradleIntersect.observer,
+                cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
+
             this.cradleIntersect.disconnected = false
         },
         disconnect:() => {
@@ -288,8 +292,10 @@ export default class InterruptHandler {
             if (!this.triggerlinesIntersect.disconnected) {
                 return
             }
-            const observer = this.triggerlinesIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+            const 
+                observer = this.triggerlinesIntersect.observer,
+                cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+                
             if (cradleElements.triggercellTriggerlineHeadRef.current &&
                 cradleElements.triggercellTriggerlineTailRef.current) {
                 observer.observe(cradleElements.triggercellTriggerlineHeadRef.current)

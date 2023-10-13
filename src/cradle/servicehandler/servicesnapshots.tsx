@@ -13,8 +13,9 @@ export default class Snapshots {
 
     public getCacheIndexMap = () => {
 
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-        const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            { cacheAPI } = this.cradleParameters.handlersRef.current,
+            { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         return [cacheAPI.getCacheIndexMap(),{
             contextType:'cacheIndexMap',
@@ -25,8 +26,9 @@ export default class Snapshots {
 
     public getCacheItemMap = () => {
 
-        const { cacheAPI } = this.cradleParameters.handlersRef.current
-        const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            { cacheAPI } = this.cradleParameters.handlersRef.current,
+            { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
         return [cacheAPI.getCacheItemMap(),{
             contextType:'cacheItemMap',
@@ -37,10 +39,11 @@ export default class Snapshots {
 
     public getCradleIndexMap = () => {
 
-        const { cacheAPI, contentHandler } = this.cradleParameters.handlersRef.current
-        const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            { cacheAPI, contentHandler } = this.cradleParameters.handlersRef.current,
+            { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-        const modelIndexList = contentHandler.getModelIndexList()
+            modelIndexList = contentHandler.getModelIndexList()
 
         return [cacheAPI.getCradleIndexMap(modelIndexList),{
             contextType:'cradleIndexMap',
@@ -50,8 +53,9 @@ export default class Snapshots {
 
     public getPropertiesSnapshot = () => {
 
-        const props = {...this.cradleParameters.scrollerPropertiesRef.current}
-        const { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
+        const 
+            props = {...this.cradleParameters.scrollerPropertiesRef.current},
+            { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
         
         props.virtualListProps = {...props.virtualListProps}
         props.cradleContentProps = {...props.cradleContentProps}

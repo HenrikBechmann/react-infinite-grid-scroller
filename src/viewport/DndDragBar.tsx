@@ -56,10 +56,10 @@ const DndDragBar = (props) => {
         { prescribedDropEffect } = masterDndContext,
         { dynamicDropEffect } = masterDndContext
 
-        let hostDropEffect
-        if (['move','copy'].includes(dynamicDropEffect)) {
-            hostDropEffect = dynamicDropEffect
-        } 
+    let hostDropEffect
+    if (['move','copy'].includes(dynamicDropEffect)) {
+        hostDropEffect = dynamicDropEffect
+    } 
 
     const
         calculatedDropEffect = hostDropEffect || prescribedDropEffect || (masterDndContext.altKey? 'copy': null) || 'move',

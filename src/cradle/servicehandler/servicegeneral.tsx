@@ -234,7 +234,7 @@ export default class ServiceGeneral {
         
     }
 
-    // public setListSize = (newlistsize) => {
+    // TODO delete public setListSize = (newlistsize) => {
 
     //     newlistsize = +newlistsize
 
@@ -385,9 +385,11 @@ export default class ServiceGeneral {
             console.log('RIGS ERROR, prependIndexCount must be an integer >= 0')
             return
         }
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex] = virtualListProps.range
-        const { size } = virtualListProps
+        
+        const 
+            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            [lowindex, highindex] = virtualListProps.range,
+            { size } = virtualListProps
 
         let newlistrange
         if (size) {
@@ -410,9 +412,11 @@ export default class ServiceGeneral {
             console.log('RIGS ERROR, appendIndexCount must be an integer >= 0')
             return
         }
-        const { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current
-        const [lowindex, highindex] = virtualListProps.range
-        const { size } = virtualListProps
+
+        const 
+            { virtualListProps } = this.cradleParameters.cradleInternalPropertiesRef.current,
+            [lowindex, highindex] = virtualListProps.range,
+            { size } = virtualListProps
 
         let newlistrange
         if (size) {

@@ -244,15 +244,16 @@ export const Viewport = ({
 
         if (viewportState == 'setup') return viewportContextRef.current
 
-        const localViewportData = {
-            elementRef:viewportElementRef,
-            frameElementRef:viewportFrameElementRef,
-            outerElementRef:outerViewportElementRef,
-            isResizing:isResizingRef.current,
-        }
+        const 
+            localViewportData = {
+                elementRef:viewportElementRef,
+                frameElementRef:viewportFrameElementRef,
+                outerElementRef:outerViewportElementRef,
+                isResizing:isResizingRef.current,
+            },
 
-        // trigger context change with new object
-        const viewportdataobject = {...viewportContextRef.current, ...localViewportData}
+            // trigger context change with new object
+            viewportdataobject = {...viewportContextRef.current, ...localViewportData}
 
         return  viewportdataobject
 

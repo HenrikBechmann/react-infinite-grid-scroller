@@ -113,9 +113,9 @@ import {
 // called to choose between dnd or no dnd for Cradle
 const CradleController = props => {
 
-    const masterDndContext = useContext(MasterDndContext)
-
-    const handlerListRef = useRef(null)
+    const 
+        masterDndContext = useContext(MasterDndContext),
+        handlerListRef = useRef(null)
 
     if (masterDndContext.installed) {
 
@@ -173,28 +173,28 @@ export const Cradle = ({ // exported for DndCradle
     // ========================[ 1. DATA SETUP ]========================
 
     // unpack core list specs
-    const { 
-
-        size:listsize,
-        lowindex, 
-        highindex,
-
-    } = virtualListSpecs
-
-    // unpack gridSpecs
-    const {
-
-        orientation,
-        cellHeight,
-        cellWidth,
-        cellMinHeight,
-        cellMinWidth,
-        layout,
-
-    } = gridSpecs
-
-    // get contexts
     const 
+        { 
+
+            size:listsize,
+            lowindex, 
+            highindex,
+
+        } = virtualListSpecs,
+
+        // unpack gridSpecs
+        {
+
+            orientation,
+            cellHeight,
+            cellWidth,
+            cellMinHeight,
+            cellMinWidth,
+            layout,
+
+        } = gridSpecs,
+
+        // get contexts
         viewportContext = useContext(ViewportContext),
         masterDndContext = useContext(MasterDndContext),
         scrollerDndContext = useContext(ScrollerDndContext),

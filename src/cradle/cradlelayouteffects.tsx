@@ -69,9 +69,9 @@ export const useCradleStateLayoutEffects = ({
 
                 const finalCallback = () => {
 
-                    const modelIndexList = contentHandler.getModelIndexList()
-
-                    const { deleteListCallback } = serviceHandler.callbacks
+                    const 
+                        modelIndexList = contentHandler.getModelIndexList(),
+                        { deleteListCallback } = serviceHandler.callbacks
 
                     let deleteListCallbackWrapper
                     if (deleteListCallback) {
@@ -239,9 +239,9 @@ export const useCradleStateLayoutEffects = ({
                 const { cache } = cradleInheritedPropertiesRef.current
                 if (cache == 'cradle') {
 
-                    const modelIndexList = contentHandler.getModelIndexList()
-
-                    const { deleteListCallback } = serviceHandler.callbacks
+                    const 
+                        modelIndexList = contentHandler.getModelIndexList(),
+                        { deleteListCallback } = serviceHandler.callbacks
 
                     let deleteListCallbackWrapper
                     if (deleteListCallback) {
