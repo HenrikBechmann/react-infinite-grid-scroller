@@ -122,7 +122,6 @@ const DndDragIcon = props => {
         masterDndContext.setViewportState('startdragbar')
     }
 
-    // TODO: use element.classList instead
     if (isDragging && !contentHolderElementRef.current.classList.contains(classname)) {
         contentHolderElementRef.current.classList.add(classname)
     }

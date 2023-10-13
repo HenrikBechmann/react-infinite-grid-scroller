@@ -509,7 +509,6 @@ export const Cradle = ({ // exported for DndCradle
         if (!masterDndContext.installed) return
 
         // available for source drop processing
-        // TODO the first three should be derived from the fourth. Search and replace
         Object.assign(scrollerDndContext,{
 
             // required by masterDndContext for source item operations
