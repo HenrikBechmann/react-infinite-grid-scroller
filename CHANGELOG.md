@@ -14,9 +14,12 @@ Renamed:
 Removed:
 - GetItem. Use GetItemPack
 - remapIndexes was removed as a service function, as dead weight
+- startingListSize. Use startingListRange
+- setListSize. Use setListRange
+- changeListSizeCallback. Use changeListRangeCallback
 
 Changed:
-- All API functions with return values had the shape of those return values changes. Notably all return values now include a `context` object, which contains a `contextType` name, a `scrollerID` number, and sometimes more. Where possible the return values include the host-provided `profile` object, as included in the `getItemPack` return object, to allow for enhanced item identification regarding cache operations
+- All API functions with return values have had the shape of those return values changes. Notably all return values now include a `context` object, which contains a `contextType` name, a `scrollerID` number, and sometimes more. Where possible the return values include the host-provided `profile` object, as included in the `getItemPack` return object, to allow for enhanced item identification regarding cache operations
 
 ## 1.4.2 August 24, 2023
 
