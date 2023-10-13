@@ -51,7 +51,7 @@ type RIGS = {
     // optional, but initialized below
     gap:number | Array<number>,
     padding:number | Array<number>,
-    startingListSize:number,
+    // startingListSize:number,
     startingIndex:number,
     runwaySize:number,
     cacheMax:null | number, // falsey means only limited by listsize
@@ -188,7 +188,7 @@ const InfiniteGridScroller = (props) => {
             // replaces default placeholder if present
 
         // the following are initialized below if they are found to be null or undefined
-        startingListSize, // the starting number of items in the virtual list. can be changed (deprecated)
+        // startingListSize, // the starting number of items in the virtual list. can be changed (deprecated)
         startingListRange, // supercedes startingListSize if present
         orientation, // vertical or horizontal
         gap, // space between grid cells
@@ -228,7 +228,7 @@ const InfiniteGridScroller = (props) => {
     // console.log('InfiniteGridScroller dndOptions', dndOptions)
 
     // initialize with defaults if values are empty
-    startingListSize = startingListSize ?? 0
+    // startingListSize = startingListSize ?? 0
     // startingListRange = startingListRange ?? []
     orientation = orientation ?? 'vertical'
     gap = gap ?? 0
@@ -384,7 +384,7 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         startingIndex,
-        startingListSize,
+        // startingListSize,
         runwaySize,
         cacheMax,
     }
@@ -393,7 +393,7 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         startingIndex,
-        startingListSize,
+        // startingListSize,
         runwaySize,
         cacheMax,        
     }
@@ -420,7 +420,7 @@ const InfiniteGridScroller = (props) => {
 
         // prop constraints - non-negative values
         runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
-        startingListSize = Math.max(0,startingListSize)
+        // startingListSize = Math.max(0,startingListSize)
         startingIndex = Math.max(0,startingIndex)
 
     }
@@ -435,30 +435,17 @@ const InfiniteGridScroller = (props) => {
             goodrange = false
         }
         if (goodrange) {
-            if (startingListRange.length == 0) {
-                startingListSize = 0
-            } else {
-                let [lowindex,highindex] = startingListRange
-                lowindex = +lowindex
-                highindex = +highindex
-                if (isNaN(lowindex) || isNaN(highindex)) {
-                    goodrange = false
-                } else if (lowindex > highindex) {
-                    goodrange = false
-                }
-                if (goodrange) {
-                    startingListSize = highindex - lowindex + 1
-                }
+            let [lowindex,highindex] = startingListRange
+            lowindex = +lowindex
+            highindex = +highindex
+            if (isNaN(lowindex) || isNaN(highindex)) {
+                goodrange = false
+            } else if (lowindex > highindex) {
+                goodrange = false
             }
         }
         if (!goodrange) {
-            startingListSize = +startingListSize
-            if (startingListSize && (!isNaN(startingListSize))) {
-                startingListRange = [0,startingListSize - 1]
-            } else {
-                startingListRange = []
-                startingListSize = 0
-            }
+            startingListRange = []
         }
     }
 
@@ -542,12 +529,16 @@ const InfiniteGridScroller = (props) => {
 
         portalCacheForceUpdateFunctionRef = useRef(null),
 
-        listSizeRef = useRef(startingListSize),
+        // listSizeRef = useRef(startingListSize),
         listRangeRef = useRef(startingListRange),
 
-        listsize = listSizeRef.current,
+        // listsize = listSizeRef.current,
         listrange = listRangeRef.current,
         [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
+        listsize = 
+            startingListRange.length == 0?
+            0:
+            highlistrange - lowlistrange + 1,
 
         virtualListSpecs = {
             size:listsize,
@@ -664,7 +655,7 @@ const InfiniteGridScroller = (props) => {
             listsize = highrange - lowrange + 1
         }
 
-        listSizeRef.current = listsize
+        // listSizeRef.current = listsize
         listRangeRef.current = listrange
 
         // inform the user
@@ -678,33 +669,33 @@ const InfiniteGridScroller = (props) => {
 
     },[])
 
-    const setVirtualListSize = useCallback((listsize) =>{
+    // TODO delete const setVirtualListSize = useCallback((listsize) =>{
 
-        let listrange = listRangeRef.current
-        if (listsize == 0) {
-            listrange = []
-        } else {
-            if (listrange.length == 0) {
-                listrange = [0,listsize - 1]
-            } else {
-                const [lowindex/*,highindex*/] = listRangeRef.current
-                listrange = [lowindex,lowindex + listsize - 1]
-            }
-        }
+    //     let listrange = listRangeRef.current
+    //     if (listsize == 0) {
+    //         listrange = []
+    //     } else {
+    //         if (listrange.length == 0) {
+    //             listrange = [0,listsize - 1]
+    //         } else {
+    //             const [lowindex/*,highindex*/] = listRangeRef.current
+    //             listrange = [lowindex,lowindex + listsize - 1]
+    //         }
+    //     }
 
-        listSizeRef.current = listsize
-        listRangeRef.current = listrange
+    //     listSizeRef.current = listsize
+    //     listRangeRef.current = listrange
 
-        // inform the user
-        callbacksRef.current.changeListSizeCallback && 
-            callbacksRef.current.changeListSizeCallback(listsize, {
-                contextType:'changeListSize',
-                scrollerID:scrollerSessionIDRef.current,
-            })
+    //     // inform the user
+    //     callbacksRef.current.changeListSizeCallback && 
+    //         callbacksRef.current.changeListSizeCallback(listsize, {
+    //             contextType:'changeListSize',
+    //             scrollerID:scrollerSessionIDRef.current,
+    //         })
 
-        setScrollerState('setlistprops')
+    //     setScrollerState('setlistprops')
 
-    },[])
+    // },[])
 
     // ---------------------[ State handling ]------------------------
 
@@ -793,7 +784,7 @@ const InfiniteGridScroller = (props) => {
                     gapProps = { gapProps }
                     styles = { stylesRef.current }
                     virtualListSpecs = {virtualListSpecsRef.current}
-                    setVirtualListSize = { setVirtualListSize }
+                    // setVirtualListSize = { setVirtualListSize }
                     setVirtualListRange = { setVirtualListRange }
                     cache = { cache }
                     cacheMax = { cacheMax }

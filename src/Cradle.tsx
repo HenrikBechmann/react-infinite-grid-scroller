@@ -144,7 +144,7 @@ export const Cradle = ({ // exported for DndCradle
     // basics
     runwaySize, 
     virtualListSpecs,
-    setVirtualListSize,
+    // setVirtualListSize,
     setVirtualListRange,
     startingIndex, 
     getItemPack,
@@ -382,7 +382,7 @@ export const Cradle = ({ // exported for DndCradle
 
         // updated values
         virtualListProps,
-        setVirtualListSize,
+        // setVirtualListSize,
         setVirtualListRange,
 
         cradleContentProps:cradleContentPropsRef.current,
