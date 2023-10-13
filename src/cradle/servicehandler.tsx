@@ -111,7 +111,7 @@ export default class ServiceHandler {
            referenceIndexCallback, // (index, callback)
            preloadIndexCallback, // (index, context)
            deleteListCallback, // (deleteList, context)
-           changeListSizeCallback, // (newlistsize, context)
+           // changeListSizeCallback, // (newlistsize, context)
            changeListRangeCallback, // (listrange, context) two part array lowindex, highindex 
            itemExceptionCallback, // (index, context)
            repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning
@@ -124,7 +124,7 @@ export default class ServiceHandler {
            referenceIndexCallback,
            preloadIndexCallback,
            deleteListCallback,
-           changeListSizeCallback,
+           // changeListSizeCallback,
            changeListRangeCallback,
            itemExceptionCallback,
            repositioningFlagCallback,

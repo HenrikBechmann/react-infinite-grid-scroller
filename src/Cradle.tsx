@@ -327,7 +327,7 @@ export const Cradle = ({ // exported for DndCradle
             repositioningIndexCallback:userCallbacks?.repositioningIndexCallback,
             preloadIndexCallback:userCallbacks?.preloadIndexCallback,
             deleteListCallback:userCallbacks?.deleteListCallback,
-            changeListSizeCallback:userCallbacks?.changeListSizeCallback,
+            // changeListSizeCallback:userCallbacks?.changeListSizeCallback,
             changeListRangeCallback:userCallbacks?.changeListRangeCallback,
             itemExceptionCallback:userCallbacks?.itemExceptionCallback,
             boundaryCallback:userCallbacks?.boundaryCallback,
