@@ -234,67 +234,67 @@ export default class ServiceGeneral {
         
     }
 
-    public setListSize = (newlistsize) => {
+    // public setListSize = (newlistsize) => {
 
-        newlistsize = +newlistsize
+    //     newlistsize = +newlistsize
 
-        const isInvalid = (!isInteger(newlistsize) || !isValueGreaterThanOrEqualToMinValue(newlistsize, 0))
+    //     const isInvalid = (!isInteger(newlistsize) || !isValueGreaterThanOrEqualToMinValue(newlistsize, 0))
 
-        if (isInvalid) {
+    //     if (isInvalid) {
 
-            console.log('RIGS ERROR setListSize(newlistsize)', newlistsize, errorMessages.setListSize)
-            return
+    //         console.log('RIGS ERROR setListSize(newlistsize)', newlistsize, errorMessages.setListSize)
+    //         return
 
-        }
+    //     }
 
-        const 
-            { 
+    //     const 
+    //         { 
 
-                cacheAPI, 
-                contentHandler, 
-                stateHandler 
+    //             cacheAPI, 
+    //             contentHandler, 
+    //             stateHandler 
 
-            } = this.cradleParameters.handlersRef.current,
+    //         } = this.cradleParameters.handlersRef.current,
 
-            { 
+    //         { 
 
-                deleteListCallback, 
+    //             deleteListCallback, 
 
-            } = this.callbacks,
+    //         } = this.callbacks,
 
-            currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size,
-            {scrollerID} = this.cradleParameters.cradleInternalPropertiesRef.current,
+    //         currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size,
+    //         {scrollerID} = this.cradleParameters.cradleInternalPropertiesRef.current,
 
-            { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
+    //         { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
 
-        let deleteListCallbackWrapper
-        if (deleteListCallback) {
-            deleteListCallbackWrapper = (deleteList) => {
+    //     let deleteListCallbackWrapper
+    //     if (deleteListCallback) {
+    //         deleteListCallbackWrapper = (deleteList) => {
 
-                deleteListCallback(deleteList,
-                    {
-                        contextType:'deleteList',
-                        scrollerID,
-                        message:'change list size intervention',
-                    }
-                )
+    //             deleteListCallback(deleteList,
+    //                 {
+    //                     contextType:'deleteList',
+    //                     scrollerID,
+    //                     message:'change list size intervention',
+    //                 }
+    //             )
 
-            }
+    //         }
 
-        }
+    //     }
 
-        contentHandler.updateVirtualListSize(newlistsize)
-        cacheAPI.changeCacheListSize(newlistsize, deleteListCallbackWrapper)
+    //     contentHandler.updateVirtualListSize(newlistsize)
+    //     cacheAPI.changeCacheListSize(newlistsize, deleteListCallbackWrapper)
 
-        cacheAPI.renderPortalLists()
+    //     cacheAPI.renderPortalLists()
 
-        if ((cache == 'preload') && (newlistsize > currentlistsize)) {
+    //     if ((cache == 'preload') && (newlistsize > currentlistsize)) {
 
-            stateHandler.setCradleState('startpreload')
+    //         stateHandler.setCradleState('startpreload')
 
-        }
+    //     }
 
-    }
+    // }
 
     public setListRange = (newlistrange) => {
 

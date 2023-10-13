@@ -83,45 +83,45 @@ export default class ScrollerData {
 
     // ----------------------------[ basic operations ]--------------------------
 
-    // called from serviceHandler.setListSize
-    private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackWrapper) => {
+    // // called from serviceHandler.setListSize
+    // private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackWrapper) => {
 
-        // console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackWrapper',
-        //     scrollerID, newlistsize, deleteListCallbackWrapper)
+    //     // console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackWrapper',
+    //     //     scrollerID, newlistsize, deleteListCallbackWrapper)
 
-        if (newlistsize.length == 0) {
-            this.clearCache(scrollerID) 
-            return
-        }
+    //     if (newlistsize.length == 0) {
+    //         this.clearCache(scrollerID) 
+    //         return
+    //     }
 
-        // match cache to newlistsize
-        const 
-            portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-            mapkeysList = Array.from(portalIndexMap.keys())
+    //     // match cache to newlistsize
+    //     const 
+    //         portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap,
+    //         mapkeysList = Array.from(portalIndexMap.keys())
 
-        mapkeysList.sort((a,b) => a - b) // ascending
+    //     mapkeysList.sort((a,b) => a - b) // ascending
 
-        const 
-            { cradleParameters } = this.scrollerDataMap.get(scrollerID),
+    //     const 
+    //         { cradleParameters } = this.scrollerDataMap.get(scrollerID),
 
-            { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current,
+    //         { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current,
 
-            { lowindex } = virtualListProps,
+    //         { lowindex } = virtualListProps,
 
-            highestindex = mapkeysList.at(-1)
+    //         highestindex = mapkeysList.at(-1)
 
-        if (highestindex > ((newlistsize + lowindex) -1)) { // pare the cache
+    //     if (highestindex > ((newlistsize + lowindex) -1)) { // pare the cache
 
-            const parelist = mapkeysList.filter((index)=>{
-                const comparehighindex = newlistsize + lowindex - 1
-                return index > (comparehighindex)
-            })
+    //         const parelist = mapkeysList.filter((index)=>{
+    //             const comparehighindex = newlistsize + lowindex - 1
+    //             return index > (comparehighindex)
+    //         })
 
-            this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackWrapper)
+    //         this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackWrapper)
 
-        }
+    //     }
 
-    }
+    // }
 
     private changeCacheListRange = (scrollerID, newlistrange, deleteListCallbackWrapper) => { 
 

@@ -14,7 +14,7 @@
         scrollToPixel,
         scrollByPixel,
         reload, 
-        setListSize,
+        // setListSize,
         setListRange,
         prependIndexCount,
         appendIndexCount,
@@ -86,7 +86,7 @@ export const isValueLessThanToOrEqualToMaxValue = (compareValue:any, maxValue:an
 
 export const errorMessages = {
     scrollToIndex:'integer: required, greater than or equal to low index',
-    setListSize:'integer: required, greater than or equal to 0',
+    // setListSize:'integer: required, greater than or equal to 0',
     setListRange:'array[lowindex,highindex]: required, both integers, highindex greater than or equal to lowindex',
     insertFrom:'insertFrom - integer: required, greater than or equal to low index',
     insertRange:'insertRange - blank, or integer greater than or equal to the "from" index',
@@ -236,11 +236,11 @@ export default class ServiceHandler {
 
     }
 
-    public setListSize = (newlistsize) => {
+    // public setListSize = (newlistsize) => {
 
-        this.servicegeneral.setListSize(newlistsize)
+    //     this.servicegeneral.setListSize(newlistsize)
 
-    }
+    // }
 
     public setListRange = (newlistrange) => {
 
@@ -314,6 +314,7 @@ export default class ServiceHandler {
         
     }
 
-    public newListSize // accessed by changelistsizeafterinsertremove event from Cradle
+    // public newListSize // accessed by changelistsizeafterinsertremove event from Cradle
+    public newListRange
 
 }

@@ -45,7 +45,7 @@ const DndCradle = (props) => {
         viewportElement = viewportContext.elementRef.current,
         outerElement = viewportContext.outerElementRef.current,
         { scrollerID, virtualListSpecs } = props,
-        { size:listsize, lowindex, highindex } = virtualListSpecs
+        { size:listsize, lowindex, highindex, range:listrange } = virtualListSpecs
 
     // const [ targetData, targetConnector ] = useDrop({
     const [ targetData, targetConnector ] = useDrop({
@@ -181,14 +181,19 @@ const DndCradle = (props) => {
                     // ------------ resolve source data
                     const 
                         [ sourceProps ] = dragContext.sourceServiceHandler.getPropertiesSnapshot(),
-                        { size:sourcelistsize } = sourceProps.virtualListProps
+                        { size:sourcelistsize, range:sourcelistrange } = sourceProps.virtualListProps
 
                     let incrementDirection = -1
 
                     // remove item from source scroller (but leave in cache)
                     dragContext.sourceCacheAPI.insertOrRemoveIndexedItemsFromScroller(
                         fromIndex, fromIndex, incrementDirection, sourcelistsize) 
-                    dragContext.sourceServiceHandler.newListSize = sourcelistsize - 1
+                    // dragContext.sourceServiceHandler.newListSize = sourcelistsize - 1
+                    const [sourcelowindex, sourcehighindex] = sourcelistrange
+                    dragContext.sourceServiceHandler.newListRange = 
+                        (sourcelowindex === sourcehighindex)?
+                            []:
+                            [sourcelowindex, sourcehighindex - 1]
                     dragContext.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 
                     // ------------ resolve target data
@@ -202,7 +207,12 @@ const DndCradle = (props) => {
                     contentHandler.synchronizeCradleItemIDsToCache( // sync cradle
                         cacheIndexesShiftedList, rangeincrement, startChangeIndex) 
 
-                    serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
+                    // serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
+                    const [lowindex, highindex] = listrange
+                    serviceHandler.newListRange = 
+                        listrange.length === 0?
+                            [toIndex, toIndex]:
+                            [lowindex, highindex + rangeincrement]
 
                     if (onDroppableWhitespace) {
                         scrollerDndContext.displacedIndex = null

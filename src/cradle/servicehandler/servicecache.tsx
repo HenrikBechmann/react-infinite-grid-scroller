@@ -252,8 +252,6 @@ export default class ServiceCache {
 
     }
 
-    // public newListSize // accessed by changelistsizeafterinsertremove event from Cradle
-
     // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
     // this operation changes the listsize
     private insertOrRemoveIndex = (index, rangehighindex, incrementDirection) => {
@@ -285,6 +283,7 @@ export default class ServiceCache {
                 lowindex:listlowindex, 
                 crosscount, 
                 size:listsize,
+                range:listrange
 
             } = virtualListProps,
 
@@ -355,7 +354,11 @@ export default class ServiceCache {
         // determine if cradle must be reset or simply adjusted
         const 
             changecount = rangeincrement, // semantics
-            newlistsize = serviceHandler.newListSize = listsize + changecount,
+            // newlistsize = serviceHandler.newListSize = listsize + changecount,
+            newlistsize = listsize + changecount,
+
+            [lowindex, highindex] = listrange,
+            newListRange = serviceHandler.newListRange = [lowindex, highindex + changecount],
 
             calculatedCradleRowcount = viewportRowcount + (runwaySize * 2),
             calculatedCradleItemcount = calculatedCradleRowcount * crosscount,

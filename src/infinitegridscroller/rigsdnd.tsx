@@ -86,7 +86,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     let { dndOptions, getDropEffect } = props
 
-    console.log('RigsDnd dndOptions', dndOptions)
+    // console.log('RigsDnd dndOptions', dndOptions)
 
     useEffect(()=>{
         let isEnabled = dndOptions?.master?.enabled

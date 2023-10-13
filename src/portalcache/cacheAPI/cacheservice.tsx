@@ -213,9 +213,9 @@ export default class CacheService {
         scrollerID, 
         index, 
         highrange, 
-        incrementDirection, 
+        incrementDirection, // incrementDirection is +1 or -1
         listsize
-    ) { // increment is +1 or -1
+    ) { 
 
         const [
             
@@ -301,6 +301,8 @@ export default class CacheService {
             rangeIncrement, 
             changeStartIndex, // for caller information only
         } = parameters
+
+        // console.log('insertOrRemoveIndexedItemsFromScroller, parameters',parameters)
 
         // ---------- get list of operations ------------
 

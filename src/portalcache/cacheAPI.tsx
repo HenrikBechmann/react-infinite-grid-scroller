@@ -159,9 +159,9 @@ export default class CacheAPI {
             clearCache:() => {
                 return this.cacheScrollerData.clearCache(scrollerID)
             },
-            changeCacheListSize:(newlistsize, deleteListCallbackWrapper) => {
-                return this.cacheScrollerData.changeCacheListSize(scrollerID, newlistsize, deleteListCallbackWrapper) 
-            },
+            // changeCacheListSize:(newlistsize, deleteListCallbackWrapper) => {
+            //     return this.cacheScrollerData.changeCacheListSize(scrollerID, newlistsize, deleteListCallbackWrapper) 
+            // },
             changeCacheListRange:(newlistrange, deleteListCallbackWrapper) => { 
                 return this.cacheScrollerData.changeCacheListRange(scrollerID, newlistrange, deleteListCallbackWrapper)
             },

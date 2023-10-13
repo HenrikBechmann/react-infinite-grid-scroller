@@ -465,15 +465,19 @@ export const useCradleStateLayoutEffects = ({
 
             case 'changelistsizeafterinsertremove': {
 
-                const newlistsize = serviceHandler.newListSize
-                serviceHandler.newListSize = null
+                // const newListSize = serviceHandler.newListSize
+                const { newListRange } = serviceHandler
+                console.log('changelistsizeafterinsertremove: newListRange',newListRange)
+                // serviceHandler.newListSize = null
+                serviceHandler.newListRange = null
 
                 // console.log('changelistsizeafterinsertremove:newlistsize',newlistsize)
 
-                setCradleState('ready') // TODO: why befiore setlistsize?
+                setCradleState('ready') // TODO: why before setlistsize?
 
                 // service handler called because this is a followon of a user intervention
-                serviceHandler.setListSize(newlistsize)
+                // serviceHandler.setListSize(newListSize)
+                serviceHandler.setListRange(newListRange)
 
                 break
             }
