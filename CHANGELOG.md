@@ -4,8 +4,10 @@
 
 Added:
 - intra-list and inter-list drag and drop capability
+- scroller dndOptions property, containing `accept` list of content types, and a scroller `profile` property to help with identification with the `getDropEffect` function
+- host provided `getDropEffect` function (for `RigsDnd` higher order component only) which provides the host the opportunity to constrain the drop effect on scrollers, based on `sourceScrollerID`, `targetScrollerID`, and `context` data.
 - host-provided `droppedItemCallback` function to notify host of completed drag and drop operations
-- `getItemPack` (replaces `getItem`). The return object of `getItemPack` from the host includes the host-defined `component` function, and a data `profile` object; for dnd, it includes a `dndOptions` object with `dragText` and `type`
+- `getItemPack` (replaces `getItem`). The return object of `getItemPack` from the host includes the host-defined `component` function, and a data `profile` object; for dnd, it includes a cell `dndOptions` object with `dragText` and `type`
 
 Renamed:
 - `scrollerProperties` renamed to `scrollerContext`
