@@ -33,7 +33,7 @@
 export type GenericObject = {[prop:string]:any}
 // enums
 type Orientation = 'vertical' | 'horizontal'
-type Layout = 'uniform' | 'variable'
+type Layout = 'uniform' | 'variable' | 'platform'
 type Cache = 'preload' | 'keepload' | 'cradle'
 // functions
 type GetItem = ((index:number, itemID:number) => null | undefined | Promise<any> | FC)
@@ -85,7 +85,7 @@ type RIGS = {
     getExpansionCount:GetExpansionCount,
     // internal use only
     isDndMaster:boolean,
-    staticComponent:FC, // pending
+    platformComponent:FC, // pending
 }
 
 // React support
@@ -193,7 +193,7 @@ const InfiniteGridScroller = (props) => {
         orientation, // vertical or horizontal
         gap, // space between grid cells
         padding, // the padding around the Scrollblock
-        layout, // uniform, variable
+        layout, // ** uniform, variable 
 
         // scroller specs:
         runwaySize, // the number of rows outside the view of each side of the viewport 
@@ -216,12 +216,12 @@ const InfiniteGridScroller = (props) => {
             //(mostly cache management)
         technical, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI,
-        dndOptions,
+        dndOptions, // **
         // information for host cell content
         scrollerContext, // required for embedded scroller; shares scroller settings with content
         isDndMaster, // internal, set for root dnd only
 
-        staticComponent, // planned supercedes most other properties
+        platformComponent, // ** planned supercedes most other properties
 
     }:RIGS = props
 
