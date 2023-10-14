@@ -154,25 +154,25 @@ export default class ServiceCache {
 
         const 
             { cradleParameters } = this,
-            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
+            cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             { virtualListProps } = cradleInternalProperties,
             { lowindex:listlowindex, size } = virtualListProps
 
         let isIndexInvalid = !isInteger(index)
 
-        if (!isIndexInvalid) {
+        // if (!isIndexInvalid) {
 
-            if (size) {
+        //     if (size) {
 
-                isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
+        //         isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
 
-            } else {
+        //     } else {
 
-                isIndexInvalid = false
+        //         isIndexInvalid = false
 
-            }
-        }
+        //     }
+        // }
 
         let isHighrangeInvalid = false
 
@@ -192,12 +192,24 @@ export default class ServiceCache {
         index = +index
         rangehighindex = +rangehighindex
 
+        if (isNaN(index)) isIndexInvalid = true
+        if (isNaN(rangehighindex)) isHighrangeInvalid = true
+
         if (isIndexInvalid || isHighrangeInvalid) {
 
             console.log('RIGS ERROR insertIndex(index, rangehighindex)')
             isIndexInvalid && console.log(index, errorMessages.insertFrom)
             isHighrangeInvalid && console.log(rangehighindex, errorMessages.insertRange)
             return null
+
+        }
+
+        // assure contiguous range
+        if (rangehighindex < (listlowindex - 1)) {
+
+            const diff = (listlowindex - rangehighindex) - 1
+            index += diff
+            rangehighindex += diff
 
         }
 
@@ -221,9 +233,9 @@ export default class ServiceCache {
 
         if (!size) return
 
-        const isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex))
-
-        let isHighrangeInvalid = false
+        let 
+            isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex)),
+            isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
 
@@ -240,6 +252,9 @@ export default class ServiceCache {
 
         index = +index
         rangehighindex = +rangehighindex
+
+        if (isNaN(index)) isIndexInvalid = true
+        if (isNaN(rangehighindex)) isHighrangeInvalid = true
 
         if (isIndexInvalid || isHighrangeInvalid) {
 
@@ -280,14 +295,12 @@ export default class ServiceCache {
                 virtualListProps,
                 cradleContentProps, 
             } = cradleInternalProperties,
-
             { 
                 lowindex:listlowindex, 
                 crosscount, 
                 size:listsize,
                 range:listrange
             } = virtualListProps,
-
             { 
                 lowindex:lowCradleIndex, 
                 highindex:highCradleIndex, 
