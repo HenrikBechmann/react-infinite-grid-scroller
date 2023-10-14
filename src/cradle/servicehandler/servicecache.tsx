@@ -175,19 +175,6 @@ export default class ServiceCache {
 
         }
 
-        // if (!isIndexInvalid) {
-
-        //     if (size) {
-
-        //         isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
-
-        //     } else {
-
-        //         isIndexInvalid = false
-
-        //     }
-        // }
-
         if (!isIndexInvalid && !isHighrangeInvalid) {
 
             if (!isBlank(rangehighindex)) {
@@ -265,12 +252,6 @@ export default class ServiceCache {
             isHighrangeInvalid = !isInteger(rangehighindex)
 
         }
-
-        // if (!isIndexInvalid) {
-
-        //     isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex))
-
-        // }
 
         // rangehighindex must be >= index
         if ((!isIndexInvalid)) {
@@ -354,8 +335,6 @@ export default class ServiceCache {
             } = cradleContentProps
 
         // basic assertions
-        if (listsize) index = Math.max(listlowindex,index)
-
         // ------------------- process cache ----------------
 
         if (listsize == 0) {
@@ -386,7 +365,7 @@ export default class ServiceCache {
             replacedList, 
             deletedList,
             portalPartitionItemsToDeleteList,
-        ] = cacheAPI.insertOrRemoveIndexes(index, rangehighindex, incrementDirection, listrange)
+        ] = cacheAPI.insertOrRemoveCacheIndexes(index, rangehighindex, incrementDirection, listrange)
 
         if (rangeincrement === null) return [[],[],[],[]] // no action
 
@@ -449,8 +428,6 @@ export default class ServiceCache {
             stateHandler.setCradleState('channelcradleresetafterinsertremove')
 
         }
-
-        // const replacedList = replaceList // semantics
 
         return [shiftedList, replacedList, removedList, deletedList] // inform caller
 

@@ -189,11 +189,11 @@ export default class CacheAPI {
             moveIndex:(tolowindex, fromlowindex, fromhighindex ) => {
                 return this.cacheService.moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex)
             },
-            insertOrRemoveIndexes:(index, highrange, incrementDirection, listrange ) => {
-                return this.cacheService.insertOrRemoveIndexes( scrollerID, index, highrange, incrementDirection, listrange )
+            insertOrRemoveCacheIndexes:(index, highrange, incrementDirection, listrange ) => {
+                return this.cacheService.insertOrRemoveCacheIndexes( scrollerID, index, highrange, incrementDirection, listrange )
             },
-            insertOrRemoveIndexesFromScroller:(index, highrange, incrementDirection, listrange) => {
-                return this.cacheService.insertOrRemoveIndexesFromScroller( scrollerID, index, highrange, incrementDirection, listrange)
+            insertOrRemoveCacheIndexesFromScroller:(index, highrange, incrementDirection, listrange) => {
+                return this.cacheService.insertOrRemoveCacheIndexesFromScroller( scrollerID, index, highrange, incrementDirection, listrange)
             },
             registerPendingPortal:(index) => {
                 return this.cachePortalData.registerPendingPortal(scrollerID, index)

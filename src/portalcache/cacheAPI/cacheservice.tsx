@@ -209,7 +209,7 @@ export default class CacheService {
 
     }
 
-    private insertOrRemoveIndexes(
+    private insertOrRemoveCacheIndexes(
         scrollerID, 
         index, 
         highrange, 
@@ -224,7 +224,7 @@ export default class CacheService {
             cacheIndexesRemovedList, 
             cacheIndexesToReplaceList, 
             cacheItemsToRemoveList
-        ] = this.insertOrRemoveIndexesFromScroller(
+        ] = this.insertOrRemoveCacheIndexesFromScroller(
             scrollerID,
             index,
             highrange,
@@ -262,7 +262,7 @@ export default class CacheService {
 
     }
 
-    private insertOrRemoveIndexesFromScroller = (
+    private insertOrRemoveCacheIndexesFromScroller = (
         scrollerID,
         index,
         highrange,
@@ -295,7 +295,7 @@ export default class CacheService {
             listrange,
         })
 
-        // console.log('insertOrRemoveIndexesFromScroller, parameters',parameters)
+        // console.log('insertOrRemoveCacheIndexesFromScroller, parameters',parameters)
 
         // ---------- get list of operations ------------
 
@@ -397,8 +397,8 @@ export default class CacheService {
 const getInsertRemoveParameters = ({
     lowrangeIndex,
     highrangeIndex,
-    isInserting,
     listrange,
+    isInserting,
 }) => {
 
     // rangecount is the absolute number in the insert/remove contiguous range
