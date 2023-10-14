@@ -161,12 +161,27 @@ export default class ServiceCache {
 
         let isIndexInvalid = false, isHighrangeInvalid = false
 
-        // affirm valid arguments
-        index = +index
-        rangehighindex = +rangehighindex
+        // assert rangehighindex value
+        if (!isBlank(rangehighindex)) {
 
-        if (isNaN(index)) isIndexInvalid = true
-        if (isNaN(rangehighindex)) isHighrangeInvalid = true
+            isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
+
+        } else {
+
+            rangehighindex = index
+
+        }
+
+        // affirm valid arguments
+        if (!isHighrangeInvalid) {
+
+            index = +index
+            rangehighindex = +rangehighindex
+
+            if (isNaN(index)) isIndexInvalid = true
+            if (isNaN(rangehighindex)) isHighrangeInvalid = true
+
+        }
 
         if (!isIndexInvalid && !isHighrangeInvalid) {
 
@@ -177,24 +192,20 @@ export default class ServiceCache {
 
         if (!isIndexInvalid && !isHighrangeInvalid) {
 
-            if (!isBlank(rangehighindex)) {
-
-                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
-
-            } else {
-
-                rangehighindex = index
-
-            }
         }
 
         // ... otherwise bail
         if (isIndexInvalid || isHighrangeInvalid) {
 
-            console.log('RIGS ERROR insertIndex(index, rangehighindex)')
-            isIndexInvalid && console.log(index, errorMessages.insertFrom)
-            isHighrangeInvalid && console.log(rangehighindex, errorMessages.insertRange)
-            return null
+            let errorString = ''
+            if (isIndexInvalid) errorString = `index $(index}: ` + errorMessages.insertFrom
+            if (isIndexInvalid && isHighrangeInvalid) errorString += ' | '
+            if (isHighrangeInvalid) errorString += `rangehighindex: ${rangehighindex}: ` + errorMessages.insertRange
+            return [null,{
+                contextType:'insertIndex',
+                error:errorString,
+                scrollerID
+            }]
 
         }
 
@@ -238,33 +249,34 @@ export default class ServiceCache {
 
         let isIndexInvalid = false, isHighrangeInvalid = false
 
-        // affirm valid arguments
-        index = +index
-        rangehighindex = +rangehighindex
+        // assert rangehighindex value
+        if (!isBlank(rangehighindex)) {
 
-        // index and rangehighindex must be valid numbers
-        if (isNaN(index)) isIndexInvalid = true
-        if (isNaN(rangehighindex)) isHighrangeInvalid = true
+            isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
+
+        } else {
+
+            rangehighindex = index
+
+        }
+
+        if ((!isHighrangeInvalid)) {
+
+            // affirm valid arguments
+            index = +index
+            rangehighindex = +rangehighindex
+
+            // index and rangehighindex must be valid numbers
+            if (isNaN(index)) isIndexInvalid = true
+            if (isNaN(rangehighindex)) isHighrangeInvalid = true
+
+        }
 
         if (!isIndexInvalid && !isHighrangeInvalid) {
 
             isIndexInvalid = !isInteger(index)
             isHighrangeInvalid = !isInteger(rangehighindex)
 
-        }
-
-        // rangehighindex must be >= index
-        if ((!isIndexInvalid)) {
-
-            if (!isBlank(rangehighindex)) {
-
-                isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
-
-            } else {
-
-                rangehighindex = index
-
-            }
         }
 
         // entire range must be within current listrange
@@ -282,10 +294,16 @@ export default class ServiceCache {
         // error to console and leave
         if (isIndexInvalid || isHighrangeInvalid) {
 
-            console.log('RIGS ERROR moveIndex(index, rangehighindex)')
-            isIndexInvalid && console.log(index, errorMessages.removeFrom)
-            isHighrangeInvalid && console.log(rangehighindex, errorMessages.removeRange)
-            return null
+            let errorString = ''
+            if (isIndexInvalid) errorString = `index $(index}: ` + errorMessages.removeFrom
+            if (isIndexInvalid && isHighrangeInvalid) errorString += ' | '
+            if (isHighrangeInvalid) errorString += `rangehighindex: ${rangehighindex}: ` + errorMessages.removeRange
+
+            return [null,{
+                contextType:'removeIndex',
+                error:errorString,
+                scrollerID,
+            }]
 
         }
 

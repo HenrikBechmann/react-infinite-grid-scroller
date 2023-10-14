@@ -120,6 +120,7 @@ const DndDisplaceIcon = (props) => {
         const styles = {
             float:'right',
             marginRight:'6px',
+            opacity:'0.5',
             transform:`rotate(${rotation})`
         } as CSSProperties
         return styles
