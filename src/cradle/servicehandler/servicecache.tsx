@@ -153,15 +153,10 @@ export default class ServiceCache {
     public insertIndex = (index, rangehighindex = null) => {
 
         const 
-
             { cradleParameters } = this,
-
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
             { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
-
             { virtualListProps } = cradleInternalProperties,
-
             { lowindex:listlowindex, size } = virtualListProps
 
         let isIndexInvalid = !isInteger(index)
@@ -169,32 +164,41 @@ export default class ServiceCache {
         if (!isIndexInvalid) {
 
             if (size) {
-                isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
-            } else {
-                isIndexInvalid = false
-            }
 
+                isIndexInvalid = !isValueGreaterThanOrEqualToMinValue(index, listlowindex)
+
+            } else {
+
+                isIndexInvalid = false
+
+            }
         }
 
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
+
             if (!isBlank(rangehighindex)) {
+
                 isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
+
             } else {
+
                 rangehighindex = index
+
             }
         }
 
         index = +index
-
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
+
             console.log('RIGS ERROR insertIndex(index, rangehighindex)')
             isIndexInvalid && console.log(index, errorMessages.insertFrom)
             isHighrangeInvalid && console.log(rangehighindex, errorMessages.insertRange)
             return null
+
         }
 
         const changes = this.insertOrRemoveIndex(index, rangehighindex, +1)
@@ -209,27 +213,28 @@ export default class ServiceCache {
     public removeIndex = (index, rangehighindex = null) => {
 
         const 
-
             { cradleParameters } = this,
-
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-
             { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
-
             { virtualListProps } = cradleInternalProperties,
-
             { lowindex:listlowindex, size } = virtualListProps
 
         if (!size) return
 
         const isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex))
+
         let isHighrangeInvalid = false
 
         if ((!isIndexInvalid)) {
+
             if (!isBlank(rangehighindex)) {
+
                 isHighrangeInvalid = !isValueGreaterThanOrEqualToMinValue(rangehighindex, index)
+
             } else {
+
                 rangehighindex = index
+
             }
         }
 
@@ -237,10 +242,12 @@ export default class ServiceCache {
         rangehighindex = +rangehighindex
 
         if (isIndexInvalid || isHighrangeInvalid) {
+
             console.log('RIGS ERROR moveIndex(index, rangehighindex)')
             isIndexInvalid && console.log(index, errorMessages.removeFrom)
             isHighrangeInvalid && console.log(rangehighindex, errorMessages.removeRange)
             return null
+
         }
 
         const changes = this.insertOrRemoveIndex(index, rangehighindex, -1)
@@ -252,49 +259,41 @@ export default class ServiceCache {
 
     }
 
-    // shared logic for insert and remove. Returns lists of indexes shifted, replaced, and removed
-    // this operation changes the listsize
+    // shared logic for insert and remove. Returns lists of indexes shifted, replaced, removed and deleted
+    // this operation changes the listrange
     private insertOrRemoveIndex = (index, rangehighindex, incrementDirection) => {
 
         const 
-
             { cradleParameters } = this,
-
+            // handlers
             { 
-                
                 cacheAPI, 
                 contentHandler, 
                 stateHandler, 
                 serviceHandler,
-            
-            } = this.cradleParameters.handlersRef.current,
+            } = cradleParameters.handlersRef.current,
 
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
 
+            // list and cradle props
             { 
-            
-                cradleContentProps, 
                 virtualListProps,
-
+                cradleContentProps, 
             } = cradleInternalProperties,
 
             { 
-            
                 lowindex:listlowindex, 
                 crosscount, 
                 size:listsize,
                 range:listrange
-
             } = virtualListProps,
 
             { 
-            
                 lowindex:lowCradleIndex, 
                 highindex:highCradleIndex, 
                 size:cradleSize, 
                 runwayRowcount:runwaySize,
                 viewportRowcount,
-            
             } = cradleContentProps
 
         // basic assertions
@@ -314,11 +313,11 @@ export default class ServiceCache {
                     replaceList.push(i)
                 }
 
-                return [[],replaceList,[]]
+                return [[],replaceList,[],[]]
 
             } else {
     
-                return [[],[],[]]
+                return [[],[],[],[]]
             }
         }
 
@@ -327,12 +326,12 @@ export default class ServiceCache {
             rangeincrement, 
             shiftedList, 
             removedList, 
-            replaceList, 
+            replacedList, 
             deletedList,
             portalPartitionItemsForDeleteList,
         ] = cacheAPI.insertOrRemoveIndexedItems(index, rangehighindex, incrementDirection, listsize)
 
-        if (rangeincrement === null) return [[],[],[]] // no action
+        if (rangeincrement === null) return [[],[],[],[]] // no action
 
         // partitionItems to delete with followup state changes - must happen after cradle update
         cacheAPI.portalPartitionItemsForDeleteList = portalPartitionItemsForDeleteList
@@ -394,7 +393,7 @@ export default class ServiceCache {
 
         }
 
-        const replacedList = replaceList // semantics
+        // const replacedList = replaceList // semantics
 
         return [shiftedList, replacedList, removedList, deletedList] // inform caller
 
