@@ -536,7 +536,7 @@ const InfiniteGridScroller = (props) => {
         listrange = listRangeRef.current,
         [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
         listsize = 
-            startingListRange.length == 0?
+            listrange.length == 0?
             0:
             highlistrange - lowlistrange + 1,
 

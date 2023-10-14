@@ -129,6 +129,8 @@ export default class ContentHandler {
 
     public updateVirtualListRange = (newlistrange) => {
 
+        // console.log('contentHandler.updateVirtualListRange: newlistrange', newlistrange)
+
         const
             { cradleParameters } = this,
 

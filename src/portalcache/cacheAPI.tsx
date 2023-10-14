@@ -133,11 +133,11 @@ export default class CacheAPI {
             setCradleParameters:(parms) => {
                 this.cacheScrollerData.scrollerDataMap.get(scrollerID).cradleParameters = parms
             },
-            set portalPartitionItemsForDeleteList(list) {
+            set portalPartitionItemsToDeleteList(list) {
                 this.setPortalPartitionItemsForDeleteList(list)
             },
             setPortalPartitionItemsForDeleteList:(list) => {
-                this.cacheScrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = list
+                this.cacheScrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsToDeleteList = list
             },
             get instance() {
                 return this.getInstance()
@@ -189,11 +189,11 @@ export default class CacheAPI {
             moveIndex:(tolowindex, fromlowindex, fromhighindex ) => {
                 return this.cacheService.moveIndex(scrollerID, tolowindex, fromlowindex, fromhighindex)
             },
-            insertOrRemoveIndexedItems:(index, highrange, incrementDirection, listsize ) => {
-                return this.cacheService.insertOrRemoveIndexedItems( scrollerID, index, highrange, incrementDirection, listsize )
+            insertOrRemoveIndexes:(index, highrange, incrementDirection, listsize ) => {
+                return this.cacheService.insertOrRemoveIndexes( scrollerID, index, highrange, incrementDirection, listsize )
             },
-            insertOrRemoveIndexedItemsFromScroller:(index, highrange, incrementDirection, listsize) => {
-                return this.cacheService.insertOrRemoveIndexedItemsFromScroller( scrollerID, index, highrange, incrementDirection, listsize)
+            insertOrRemoveIndexesFromScroller:(index, highrange, incrementDirection, listsize) => {
+                return this.cacheService.insertOrRemoveIndexesFromScroller( scrollerID, index, highrange, incrementDirection, listsize)
             },
             registerPendingPortal:(index) => {
                 return this.cachePortalData.registerPendingPortal(scrollerID, index)

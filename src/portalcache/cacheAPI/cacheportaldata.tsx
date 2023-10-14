@@ -505,17 +505,17 @@ export default class PortalData {
 
     private applyPortalPartitionItemsForDeleteList = (scrollerID) => {
 
-        const { portalPartitionItemsForDeleteList } = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
+        const { portalPartitionItemsToDeleteList } = this.cacheScrollerData.scrollerDataMap.get(scrollerID)
 
-        if (portalPartitionItemsForDeleteList && portalPartitionItemsForDeleteList.length) {
+        if (portalPartitionItemsToDeleteList && portalPartitionItemsToDeleteList.length) {
 
-            for (const item of portalPartitionItemsForDeleteList) {
+            for (const item of portalPartitionItemsToDeleteList) {
 
                 this.removePartitionPortal(item.partitionID, item.itemID)
                 
             }
 
-            this.cacheScrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsForDeleteList = []                    
+            this.cacheScrollerData.scrollerDataMap.get(scrollerID).portalPartitionItemsToDeleteList = []                    
 
             this.renderPortalLists()
 

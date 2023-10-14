@@ -209,7 +209,7 @@ export default class CacheService {
 
     }
 
-    private insertOrRemoveIndexedItems(
+    private insertOrRemoveIndexes(
         scrollerID, 
         index, 
         highrange, 
@@ -218,14 +218,13 @@ export default class CacheService {
     ) { 
 
         const [
-            
             changeStartIndex, 
             rangeIncrement, 
             cacheIndexesShiftedList, 
             cacheIndexesRemovedList, 
             cacheIndexesToReplaceList, 
             cacheItemsToRemoveList
-        ] = this.insertOrRemoveIndexedItemsFromScroller(
+        ] = this.insertOrRemoveIndexesFromScroller(
             scrollerID,
             index,
             highrange,
@@ -233,15 +232,16 @@ export default class CacheService {
             listsize
         )
 
+        // remove items
         const 
             { itemMetadataMap } = this.cachePortalData,
             cacheIndexesDeletedList = [],
-            portalPartitionItemsForDeleteList = []
+            portalPartitionItemsToDeleteList = []
 
         for (const itemID of cacheItemsToRemoveList) {
             const { partitionID, index:removedIndex, profile } = itemMetadataMap.get(itemID)
             cacheIndexesDeletedList.push({index:removedIndex,itemID,profile})
-            portalPartitionItemsForDeleteList.push({itemID, partitionID})
+            portalPartitionItemsToDeleteList.push({itemID, partitionID})
             itemMetadataMap.delete(itemID)
         }
 
@@ -256,19 +256,19 @@ export default class CacheService {
             cacheIndexesRemovedList, 
             cacheIndexesToReplaceList, 
             cacheIndexesDeletedList,
-            portalPartitionItemsForDeleteList,
+            portalPartitionItemsToDeleteList,
 
         ]
 
     }
 
-    private insertOrRemoveIndexedItemsFromScroller = (
+    private insertOrRemoveIndexesFromScroller = (
         scrollerID,
         index,
         highrange,
-        incrementDirection,
+        incrementDirection, // increment is +1 or -1
         listsize,
-    ) => { // increment is +1 or -1
+    ) => {
 
         const 
             // clarity
@@ -280,15 +280,15 @@ export default class CacheService {
             { itemMetadataMap } = this.cachePortalData,
             itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet,
 
-            emptyreturn = [null, null, [],[],[],[],[]] // no action return value
+            emptyreturn = [null, null, [],[],[],[]] // no action return value
 
         // ---------- get operation parameters ------------
 
-        const parameters = this.getInsertRemoveParameters({
+        const parameters = getInsertRemoveParameters({
             highrangeIndex:highrange,
             lowrangeIndex:index,
             listsize,
-            incrementDirection,
+            // incrementDirection,
             isInserting,
         })
 
@@ -302,22 +302,24 @@ export default class CacheService {
             changeStartIndex, // for caller information only
         } = parameters
 
-        // console.log('insertOrRemoveIndexedItemsFromScroller, parameters',parameters)
+        // console.log('insertOrRemoveIndexesFromScroller, parameters',parameters)
 
         // ---------- get list of operations ------------
 
-        const [
+        const {
             cacheIndexesToShiftList,
             cacheIndexesToReplaceList,
             cacheIndexesToRemoveList,
             cacheItemsToRemoveList,
-            ] = assembleRequiredOperations({
+            } = assembleRequiredOperations({
             indexToItemIDMap,
             shiftStartIndex,
             lowrangeIndex,
             highrangeIndex,
             isInserting
         })
+
+        // ---------- apply operations ------------
 
         // increment higher from top of list to preserve lower values for subsequent increment
         if (isInserting) cacheIndexesToShiftList.reverse() 
@@ -349,7 +351,7 @@ export default class CacheService {
 
         // delete remaining indexes and items now duplicates; track portal data to remove after cradle updated
 
-        // const portalPartitionItemsForDeleteList = [] // hold portals for deletion until after after cradle synch
+        // const portalPartitionItemsToDeleteList = [] // hold portals for deletion until after after cradle synch
         let cacheIndexesRemovedList = [] // , cacheIndexesDeletedList = []
 
         if (isInserting) {
@@ -386,7 +388,7 @@ export default class CacheService {
         if (isInserting) cacheIndexesShiftedList.reverse() // return to ascending order
 
         return [
-            changeStartIndex, 
+            changeStartIndex, // for caller
             rangeIncrement, 
             cacheIndexesShiftedList, 
             cacheIndexesRemovedList, 
@@ -396,69 +398,74 @@ export default class CacheService {
 
     }
 
-    getInsertRemoveParameters = ({
-        highrangeIndex,
+} // class CacheService
+
+// utilities
+const getInsertRemoveParameters = ({
+    highrangeIndex,
+    lowrangeIndex,
+    listsize,
+    isInserting,
+    // incrementDirection,
+}) => {
+
+
+    if (isInserting) {
+
+        // addition can at most start at the next lowrangeIndex above the current list; aka append
+        if (lowrangeIndex > listsize) {
+
+            const diff = lowrangeIndex - listsize
+            lowrangeIndex -= diff
+            highrangeIndex -= diff
+
+        }
+
+    } else { // isRemoving
+
+        // removal must be entirely within scope of the list
+        if (highrangeIndex > (listsize - 1)) {
+
+            highrangeIndex = (listsize - 1)
+
+            if (highrangeIndex < lowrangeIndex) return false // noop; empty return
+
+        }
+
+    }
+
+    // rangecount is the absolute number in the insert/remove contiguous range
+    const 
+        rangecount = highrangeIndex - lowrangeIndex + 1,
+        // range increment adds sign to rangecount to indicate add/remove
+        rangeIncrement = 
+            isInserting?
+                rangecount:
+                -rangecount,
+                
+        changeStartIndex = 
+            (isInserting)?
+                lowrangeIndex:
+                highrangeIndex + (rangeIncrement + 1)
+
+    let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
+
+    if (isInserting) {
+
+        shiftStartIndex = lowrangeIndex
+
+    } else { // isRemoving
+
+        shiftStartIndex = highrangeIndex + 1
+
+    }
+
+    return {
+        rangeIncrement, 
+        shiftStartIndex,
+        changeStartIndex, 
         lowrangeIndex,
-        isInserting,
-        listsize,
-        incrementDirection,
-    }) => {
-
-
-        if (!isInserting) { // isRemoving
-
-            // removal must be entirely within scope of the list
-            if (highrangeIndex > (listsize - 1)) {
-
-                highrangeIndex = (listsize - 1)
-
-                if (highrangeIndex < lowrangeIndex) return false // noop; empty return
-
-            }
-
-        } else { // isInserting
-
-            // addition can at most start at the next lowrangeIndex above the current list; aka append
-            if (lowrangeIndex > listsize) {
-
-                const diff = lowrangeIndex - listsize
-                lowrangeIndex -= diff
-                highrangeIndex -= diff
-
-            }
-
-        }
-
-        // rangecount is the absolute number in the insert/remove contiguous range
-        const 
-            rangecount = highrangeIndex - lowrangeIndex + 1,
-            // range increment adds sign to rangecount to indicate add/remove
-            rangeIncrement = rangecount * incrementDirection,
-            changeStartIndex = 
-                (isInserting)?
-                    lowrangeIndex:
-                    highrangeIndex + (rangeIncrement + 1)
-
-        let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
-
-        if (!isInserting) {
-
-            shiftStartIndex = highrangeIndex + 1
-
-        } else { // isInserting
-
-            shiftStartIndex = lowrangeIndex
-
-        }
-
-        return {
-            rangeIncrement, 
-            shiftStartIndex,
-            changeStartIndex, 
-            lowrangeIndex,
-            highrangeIndex,            
-        }
-
+        highrangeIndex,            
     }
 
 }
@@ -588,11 +595,11 @@ const assembleRequiredOperations = ({
 
     }
 
-    return [
+    return {
         cacheIndexesToShiftList,
         cacheIndexesToReplaceList,
         cacheIndexesToRemoveList,
         cacheItemsToRemoveList,
-    ]
+    }
 
 }

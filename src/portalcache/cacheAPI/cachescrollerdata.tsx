@@ -23,7 +23,7 @@ export default class ScrollerData {
                 cradleParameters:null,
                 // some portals may have been requested by requestidlecallback, not yet created
                 requestedSet:new Set(),
-                portalPartitionItemsForDeleteList:null,
+                portalPartitionItemsToDeleteList:null,
             }
         )
     }
@@ -61,7 +61,7 @@ export default class ScrollerData {
             itemMetadataMap.clear()
 
             // clear cache partitions
-            this.cachePortalData.clearCachePartisions()
+            this.cachePortalData.clearCachePartitions()
 
         } else {
 
