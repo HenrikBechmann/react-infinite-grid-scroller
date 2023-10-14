@@ -157,9 +157,23 @@ export default class ServiceCache {
             { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             { virtualListProps } = cradleInternalProperties,
-            { lowindex:listlowindex, size } = virtualListProps
+            { lowindex:listlowindex, hidhindex:listhighindex } = virtualListProps
 
-        let isIndexInvalid = !isInteger(index)
+        let isIndexInvalid = false, isHighrangeInvalid = false
+
+        // affirm valid arguments
+        index = +index
+        rangehighindex = +rangehighindex
+
+        if (isNaN(index)) isIndexInvalid = true
+        if (isNaN(rangehighindex)) isHighrangeInvalid = true
+
+        if (!isIndexInvalid && !isHighrangeInvalid) {
+
+            isIndexInvalid = !isInteger(index)
+            isHighrangeInvalid = !isInteger(rangehighindex)
+
+        }
 
         // if (!isIndexInvalid) {
 
@@ -174,9 +188,7 @@ export default class ServiceCache {
         //     }
         // }
 
-        let isHighrangeInvalid = false
-
-        if ((!isIndexInvalid)) {
+        if (!isIndexInvalid && !isHighrangeInvalid) {
 
             if (!isBlank(rangehighindex)) {
 
@@ -189,12 +201,7 @@ export default class ServiceCache {
             }
         }
 
-        index = +index
-        rangehighindex = +rangehighindex
-
-        if (isNaN(index)) isIndexInvalid = true
-        if (isNaN(rangehighindex)) isHighrangeInvalid = true
-
+        // ... otherwise bail
         if (isIndexInvalid || isHighrangeInvalid) {
 
             console.log('RIGS ERROR insertIndex(index, rangehighindex)')
@@ -204,7 +211,7 @@ export default class ServiceCache {
 
         }
 
-        // assure contiguous range
+        // assert contiguous range
         if (rangehighindex < (listlowindex - 1)) {
 
             const diff = (listlowindex - rangehighindex) - 1
@@ -213,6 +220,15 @@ export default class ServiceCache {
 
         }
 
+        if (index > (listhighindex + 1)) {
+
+            const diff = (index - listhighindex) - 1
+            index -= diff
+            rangehighindex -= diff
+
+        }
+
+        // proceed with insert
         const changes = this.insertOrRemoveIndex(index, rangehighindex, +1)
 
         return [changes, {
@@ -229,14 +245,34 @@ export default class ServiceCache {
             cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
             { scrollerID } = cradleParameters.cradleInheritedPropertiesRef.current,
             { virtualListProps } = cradleInternalProperties,
-            { lowindex:listlowindex, size } = virtualListProps
+            { lowindex:listlowindex, highindex:listhighindex, size } = virtualListProps
 
-        if (!size) return
+        if (!size) return // nothihg to remove
 
-        let 
-            isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex)),
-            isHighrangeInvalid = false
+        let isIndexInvalid = false, isHighrangeInvalid = false
 
+        // affirm valid arguments
+        index = +index
+        rangehighindex = +rangehighindex
+
+        // index and rangehighindex must be valid numbers
+        if (isNaN(index)) isIndexInvalid = true
+        if (isNaN(rangehighindex)) isHighrangeInvalid = true
+
+        if (!isIndexInvalid && !isHighrangeInvalid) {
+
+            isIndexInvalid = !isInteger(index)
+            isHighrangeInvalid = !isInteger(rangehighindex)
+
+        }
+
+        // if (!isIndexInvalid) {
+
+        //     isIndexInvalid = (!isInteger(index) || !isValueGreaterThanOrEqualToMinValue(index, listlowindex))
+
+        // }
+
+        // rangehighindex must be >= index
         if ((!isIndexInvalid)) {
 
             if (!isBlank(rangehighindex)) {
@@ -250,12 +286,19 @@ export default class ServiceCache {
             }
         }
 
-        index = +index
-        rangehighindex = +rangehighindex
+        // entire range must be within current listrange
+        if (!isIndexInvalid && !isHighrangeInvalid) {
 
-        if (isNaN(index)) isIndexInvalid = true
-        if (isNaN(rangehighindex)) isHighrangeInvalid = true
+            if (index < (listlowindex) || rangehighindex > listhighindex) {
 
+                isIndexInvalid = true
+                isHighrangeInvalid = true
+
+            }
+
+        }
+
+        // error to console and leave
         if (isIndexInvalid || isHighrangeInvalid) {
 
             console.log('RIGS ERROR moveIndex(index, rangehighindex)')
@@ -265,6 +308,7 @@ export default class ServiceCache {
 
         }
 
+        // proceed with remove
         const changes = this.insertOrRemoveIndex(index, rangehighindex, -1)
 
         return [changes, {
@@ -342,7 +386,7 @@ export default class ServiceCache {
             replacedList, 
             deletedList,
             portalPartitionItemsToDeleteList,
-        ] = cacheAPI.insertOrRemoveIndexes(index, rangehighindex, incrementDirection, listsize)
+        ] = cacheAPI.insertOrRemoveIndexes(index, rangehighindex, incrementDirection, listrange)
 
         if (rangeincrement === null) return [[],[],[],[]] // no action
 

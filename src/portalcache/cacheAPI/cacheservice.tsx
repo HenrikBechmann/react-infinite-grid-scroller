@@ -214,7 +214,7 @@ export default class CacheService {
         index, 
         highrange, 
         incrementDirection, // incrementDirection is +1 or -1
-        listsize
+        listrange,
     ) { 
 
         const [
@@ -229,7 +229,7 @@ export default class CacheService {
             index,
             highrange,
             incrementDirection,
-            listsize
+            listrange,
         )
 
         // remove items
@@ -267,7 +267,7 @@ export default class CacheService {
         index,
         highrange,
         incrementDirection, // increment is +1 or -1
-        listsize,
+        listrange,
     ) => {
 
         const 
@@ -278,29 +278,22 @@ export default class CacheService {
             // cache resources
             indexToItemIDMap:Map<number,number> = this.cacheScrollerData.scrollerDataMap.get(scrollerID).indexToItemIDMap,
             { itemMetadataMap } = this.cachePortalData,
-            itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet,
+            itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet
 
-            emptyreturn = [null, null, [],[],[],[]] // no action return value
+            // emptyreturn = [null, null, [],[],[],[]] // no action return value
 
         // ---------- get operation parameters ------------
 
-        const parameters = getInsertRemoveParameters({
-            highrangeIndex:highrange,
-            lowrangeIndex:index,
-            listsize,
-            // incrementDirection,
-            isInserting,
-        })
-
-        if (parameters === false) return emptyreturn // noop
-
         const {
             shiftStartIndex,
-            lowrangeIndex,
-            highrangeIndex,
             rangeIncrement, 
             changeStartIndex, // for caller information only
-        } = parameters
+        } = getInsertRemoveParameters({
+            highrangeIndex:highrange,
+            lowrangeIndex:index,
+            isInserting,
+            listrange,
+        })
 
         // console.log('insertOrRemoveIndexesFromScroller, parameters',parameters)
 
@@ -314,8 +307,8 @@ export default class CacheService {
             } = assembleRequiredOperations({
             indexToItemIDMap,
             shiftStartIndex,
-            lowrangeIndex,
-            highrangeIndex,
+            lowrangeIndex:index,
+            highrangeIndex:highrange,
             isInserting
         })
 
@@ -402,37 +395,11 @@ export default class CacheService {
 
 // utilities
 const getInsertRemoveParameters = ({
-    highrangeIndex,
     lowrangeIndex,
-    listsize,
+    highrangeIndex,
     isInserting,
-    // incrementDirection,
+    listrange,
 }) => {
-
-
-    if (isInserting) {
-
-        // addition can at most start at the next lowrangeIndex above the current list; aka append
-        if (lowrangeIndex > listsize) {
-
-            const diff = lowrangeIndex - listsize
-            lowrangeIndex -= diff
-            highrangeIndex -= diff
-
-        }
-
-    } else { // isRemoving
-
-        // removal must be entirely within scope of the list
-        if (highrangeIndex > (listsize - 1)) {
-
-            highrangeIndex = (listsize - 1)
-
-            if (highrangeIndex < lowrangeIndex) return false // noop; empty return
-
-        }
-
-    }
 
     // rangecount is the absolute number in the insert/remove contiguous range
     const 
@@ -464,8 +431,6 @@ const getInsertRemoveParameters = ({
         rangeIncrement, 
         shiftStartIndex,
         changeStartIndex, 
-        lowrangeIndex,
-        highrangeIndex,            
     }
 
 }

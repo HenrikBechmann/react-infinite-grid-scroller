@@ -187,7 +187,7 @@ const DndCradle = (props) => {
 
                     // remove item from source scroller (but leave in cache)
                     dragContext.sourceCacheAPI.insertOrRemoveIndexesFromScroller(
-                        fromIndex, fromIndex, incrementDirection, sourcelistsize) 
+                        fromIndex, fromIndex, incrementDirection, listrange) 
                     // dragContext.sourceServiceHandler.newListSize = sourcelistsize - 1
                     const [sourcelowindex, sourcehighindex] = sourcelistrange
                     dragContext.sourceServiceHandler.newListRange = 
@@ -203,7 +203,7 @@ const DndCradle = (props) => {
                     //     toIndex, toIndex, incrementDirection, listsize)
 
                     const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
-                        cacheAPI.insertOrRemoveIndexes(toIndex, toIndex, incrementDirection, listsize)
+                        cacheAPI.insertOrRemoveIndexes(toIndex, toIndex, incrementDirection, listrange)
 
                     // console.log('insertOrRemoveIndexes result: startChangeIndex, rangeincrement, cacheIndexesShiftedList\n',
                     //     startChangeIndex, rangeincrement, cacheIndexesShiftedList)
