@@ -63,7 +63,6 @@ const DndCradle = (props) => {
 
             const { dynamicDropEffect } = masterDndContext
             masterDndContext.dynamicDropEffect = null // reset
-            // console.log('DndCradle: listsize, dropResult',listsize, dropResult)
 
             if (
 
@@ -83,14 +82,16 @@ const DndCradle = (props) => {
                 hostDropEffect = dynamicDropEffect
             }
 
+            // collect drop parameters
             const 
                 dropEffect = hostDropEffect || dropResult.dropEffect || 'move', // default for mobile
-                whitespacePosition = masterDndContext.whitespacePosition,
-                onDroppableWhitespace = masterDndContext.onDroppableWhitespace
+                onDroppableWhitespace = masterDndContext.onDroppableWhitespace,
+                whitespacePosition = masterDndContext.whitespacePosition
             // console.log('DndCradle dropEffect',dropEffect)
 
             item.dropEffect = dropEffect
 
+            // collect operational resources
             const {
                 serviceHandler, 
                 cacheAPI, 
@@ -98,64 +99,71 @@ const DndCradle = (props) => {
                 stateHandler,
             } = handlerListRef.current
 
+            // collect source/target parameters
             let toIndex, toScrollerID, displacedIndex
-
             const
                 fromIndex = item.index,
                 fromScrollerID = item.scrollerID,
                 itemID = item.itemID
+                toScrollerID = dropResult.target.scrollerID
 
+            // toIndex and displaceIndex for datatype == 'cellframe'
             if (dropResult.dataType == 'cellframe') {
+
                 toIndex = dropResult.target.index
-                toScrollerID = dropResult.target.scrollerID
-
                 displacedIndex = 
-                    (fromIndex > toIndex)? 
-                        toIndex + 1:
-                        toIndex - 1
+                    (fromIndex > toIndex)
+                        ?toIndex + 1
+                        :toIndex - 1
 
-            } else { // viewport
+            } else { // toIndex and displaceIndex for datatype == 'viewport'
 
-                const whitespacePosition = masterDndContext.whitespacePosition
-                toScrollerID = dropResult.target.scrollerID
-
+                // reset
                 masterDndContext.onDroppableWhitespace = false
                 masterDndContext.whitespacePosition = null
 
-                // const wsdropEffect = dropResult.target.dropEffect
+                // console.log('whitespacePosition',whitespacePosition)
                 switch (whitespacePosition) {
                     case 'all':{ // empty list
+
                         toIndex = scrollerDndContext.cradleParameters.cradleInheritedPropertiesRef.current.startingIndex
-                        // console.log('startingIndex for toIndex', toIndex)
+
                         break
                     }
                     case 'head':{
 
                         if (toScrollerID === fromScrollerID) {
                             toIndex = 
-                                dropEffect == 'move'?
-                                    lowindex:
-                                    lowindex - 1
-                        } else {
+                                dropEffect == 'move'
+                                    ?lowindex
+                                    :lowindex - 1
+                        } else { // inter-list
                             toIndex = lowindex - 1
                         }
                         break
                     }
                     case 'tail':{
+
                         if (toScrollerID === fromScrollerID) {
                             toIndex = 
-                                dropEffect == 'move'?
-                                    highindex:
-                                    highindex + 1
-                        } else {
+                                dropEffect == 'move'
+                                    ?highindex
+                                    :highindex + 1
+                        } else { // inter-list
+
                             toIndex = highindex + 1
+
                         }
                         break
                     }
                 }
 
-                // console.log('whitespace toIndex',toIndex)
+                displacedIndex = null
+
             }
+
+            // console.log('fromIndex, fromScrollerID, toIndex, toScrollerID, itemID, dropEffect, onDroppableWhitespace, whitespacePosition\n',
+            //     fromIndex, fromScrollerID, toIndex, toScrollerID, itemID, dropEffect, onDroppableWhitespace, whitespacePosition)
 
             // -------------------------[ intra-list drop ]------------------------
             if (fromScrollerID === toScrollerID) {
@@ -179,6 +187,9 @@ const DndCradle = (props) => {
                     serviceHandler.insertIndex(toIndex)
 
                 }
+
+                // console.log('AFTER INTRA serviceHandler.getCacheIndexMap, getCacheItemMap\n',
+                //     serviceHandler.getCacheIndexMap(), serviceHandler.getCacheItemMap())
 
             // -------------------------[ inter-list drop ]------------------------
             } else {
@@ -227,7 +238,6 @@ const DndCradle = (props) => {
                     contentHandler.synchronizeCradleItemIDsToCache( // sync cradle
                         cacheIndexesShiftedList, rangeincrement, startChangeIndex) 
 
-                    // serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
                     const [lowindex, highindex] = listrange
                     serviceHandler.newListRange = 
                         listrange.length === 0
@@ -245,10 +255,6 @@ const DndCradle = (props) => {
                     }
 
                     scrollerDndContext.droppedIndex = toIndex
-
-                    // console.log('droppedIndex move existing item', toIndex)
-
-                    // stateHandler.setCradleState('channelcradleresetafterinsertremove')
 
                     stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
@@ -278,7 +284,7 @@ const DndCradle = (props) => {
             }
             
         },
-    },[listsize])
+    })
 
     // console.log('targetData.canDrop, didDrop',targetData.canDrop, targetData.didDrop)
 

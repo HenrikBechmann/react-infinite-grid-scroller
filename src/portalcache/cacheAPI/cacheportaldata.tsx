@@ -232,6 +232,8 @@ export default class PortalData {
 
             if (itemID === undefined) continue // async mismatch
 
+            // console.log('getting itemMetadataMap itemID', itemID)
+
             const { partitionID, profile } = itemMetadataMap.get(itemID)
             deleteList.push({index, itemID, profile})
 

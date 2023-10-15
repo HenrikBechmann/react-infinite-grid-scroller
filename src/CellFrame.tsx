@@ -478,7 +478,7 @@ export const CellFrame = ({
 
                                     }
 
-                                    console.log('dndFetchRequest',context)
+                                    // console.log('dndFetchRequest',context)
 
                                     scrollerDndContext.dndFetchIndex = null
                                     scrollerDndContext.dndFetchItem = null

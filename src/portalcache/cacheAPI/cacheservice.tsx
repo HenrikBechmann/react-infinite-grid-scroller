@@ -211,8 +211,8 @@ export default class CacheService {
 
     private insertOrRemoveCacheIndexes(
         scrollerID, 
-        index, 
-        highrange, 
+        lowchangeindex, 
+        highchangeindex, 
         incrementDirection, // incrementDirection is +1 or -1
         listrange,
     ) { 
@@ -226,8 +226,8 @@ export default class CacheService {
             cacheItemsToRemoveList
         ] = this.insertOrRemoveCacheIndexesFromScroller(
             scrollerID,
-            index,
-            highrange,
+            lowchangeindex,
+            highchangeindex,
             incrementDirection,
             listrange,
         )
@@ -264,8 +264,8 @@ export default class CacheService {
 
     private insertOrRemoveCacheIndexesFromScroller = (
         scrollerID,
-        index,
-        highrange,
+        lowchangeIndex,
+        highchangeIndex,
         incrementDirection, // increment is +1 or -1
         listrange,
     ) => {
@@ -287,8 +287,8 @@ export default class CacheService {
             rangeIncrement, 
             changeStartIndex, // for caller information only
         } = getInsertRemoveParameters({
-            highrangeIndex:highrange,
-            lowrangeIndex:index,
+            highchangeIndex,
+            lowchangeIndex,
             isInserting,
             listrange,
         })
@@ -299,7 +299,7 @@ export default class CacheService {
         // ---------- get list of operations ------------
 
         // console.log(
-        //     'assembleRequiredOperations INPUT: indexToItemIDMap, shiftStartIndex, lowrangeIndex, highrangeIndex, isInserting\n',
+        //     'assembleRequiredOperations INPUT: indexToItemIDMap, shiftStartIndex, lowchangeIndex, highchangeIndex, isInserting\n',
         //     indexToItemIDMap, shiftStartIndex, index, highrange, isInserting)
 
         const {
@@ -310,8 +310,8 @@ export default class CacheService {
             } = assembleRequiredOperations({
             indexToItemIDMap,
             shiftStartIndex,
-            lowrangeIndex:index,
-            highrangeIndex:highrange,
+            lowchangeIndex,
+            highchangeIndex,
             isInserting
         })
 
@@ -404,44 +404,52 @@ export default class CacheService {
 
 // utilities
 const getInsertRemoveParameters = ({
-    lowrangeIndex,
-    highrangeIndex,
+    lowchangeIndex,
+    highchangeIndex,
     listrange,
     isInserting,
 }) => {
 
     // rangecount is the absolute number in the insert/remove contiguous range
     const 
-        rangecount = highrangeIndex - lowrangeIndex + 1,
+        rangecount = highchangeIndex - lowchangeIndex + 1,
         // range increment adds sign to rangecount to indicate add/remove
         rangeIncrement = 
             isInserting?
                 rangecount:
                 -rangecount,
                 
-        [listlowindex] = listrange,
+        [listlowindex, listhighindex] = listrange,
 
         changeStartIndex = 
             (isInserting)?
-                lowrangeIndex:
-                highrangeIndex + (rangeIncrement + 1)
+                lowchangeIndex:
+                highchangeIndex + (rangeIncrement + 1)
 
     let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
 
     if (isInserting) {
 
-        shiftStartIndex = Math.max(lowrangeIndex,listlowindex)
+        shiftStartIndex = Math.max(lowchangeIndex,listlowindex)
 
     } else { // isRemoving
 
-        shiftStartIndex = highrangeIndex + 1
+        shiftStartIndex = highchangeIndex + 1
 
     }
+
+    // let newListRange
+    // if (isInserting) {
+
+    // } else {
+    //     newListRange = listrange
+    // }
 
     return {
         rangeIncrement, 
         shiftStartIndex,
-        changeStartIndex, 
+        changeStartIndex,
+        // newListRange,
     }
 
 }
@@ -449,8 +457,8 @@ const getInsertRemoveParameters = ({
 const assembleRequiredOperations = ({
     indexToItemIDMap,
     shiftStartIndex,
-    lowrangeIndex,
-    highrangeIndex,
+    lowchangeIndex,
+    highchangeIndex,
     isInserting,
 }) => {
 
@@ -466,7 +474,7 @@ const assembleRequiredOperations = ({
     // obtain lowCacheRangePtr...
     const lowCacheRangePtr = orderedCacheIndexList.findIndex(value => {
 
-        return (value >= lowrangeIndex) && (value <= highrangeIndex)
+        return (value >= lowchangeIndex) && (value <= highchangeIndex)
 
     })
 
@@ -475,7 +483,7 @@ const assembleRequiredOperations = ({
 
     let highCacheRangePtr = reversedCacheIndexList.findIndex(value=> {
 
-        return (value <= highrangeIndex) && (value >= lowrangeIndex)
+        return (value <= highchangeIndex) && (value >= lowchangeIndex)
 
     })
     // take inverse of highCacheRangePtr for non-reverse sort

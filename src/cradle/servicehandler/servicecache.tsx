@@ -404,8 +404,6 @@ export default class ServiceCache {
             newlistsize = listsize + changecount,
 
             [lowindex, highindex] = listrange,
-            newListRange = serviceHandler.newListRange = [lowindex, highindex + changecount],
-
             calculatedCradleRowcount = viewportRowcount + (runwaySize * 2),
             calculatedCradleItemcount = calculatedCradleRowcount * crosscount,
 
@@ -413,6 +411,16 @@ export default class ServiceCache {
 
             resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
                 (highCradleIndex >= (newlistsize - 1)))
+
+        let newListRange
+        if (incrementDirection < 0) {
+            newListRange = [lowindex, highindex + changecount]
+        } else {
+            let insertlowshift = Math.min(index - lowindex,0)
+            newListRange = [lowindex + insertlowshift, highindex + changecount + insertlowshift]
+        }
+
+        serviceHandler.newListRange = newListRange
 
         if (!resetCradle) { // synchronize cradle contents to changes
 
