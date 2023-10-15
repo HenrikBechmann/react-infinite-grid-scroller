@@ -280,8 +280,6 @@ export default class CacheService {
             { itemMetadataMap } = this.cachePortalData,
             itemSet = this.cacheScrollerData.scrollerDataMap.get(scrollerID).itemSet
 
-            // emptyreturn = [null, null, [],[],[],[]] // no action return value
-
         // ---------- get operation parameters ------------
 
         const {
@@ -295,9 +293,14 @@ export default class CacheService {
             listrange,
         })
 
-        // console.log('insertOrRemoveCacheIndexesFromScroller, parameters',parameters)
+        // console.log('getInsertRemoveParameters result: shiftStartIndex, rangeIncrement, changeStartIndex\n', 
+        //     shiftStartIndex, rangeIncrement, changeStartIndex)
 
         // ---------- get list of operations ------------
+
+        // console.log(
+        //     'assembleRequiredOperations INPUT: indexToItemIDMap, shiftStartIndex, lowrangeIndex, highrangeIndex, isInserting\n',
+        //     indexToItemIDMap, shiftStartIndex, index, highrange, isInserting)
 
         const {
             cacheIndexesToShiftList,
@@ -312,6 +315,10 @@ export default class CacheService {
             isInserting
         })
 
+        // console.log(
+        //     'assembleRequiredOperations OUTPUT: cacheIndexesToShiftList, cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList\n',
+        //         cacheIndexesToShiftList, cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList)
+            
         // ---------- apply operations ------------
 
         // increment higher from top of list to preserve lower values for subsequent increment
@@ -380,6 +387,8 @@ export default class CacheService {
 
         if (isInserting) cacheIndexesShiftedList.reverse() // return to ascending order
 
+        // console.log('itemMetadataMap',itemMetadataMap)
+
         return [
             changeStartIndex, // for caller
             rangeIncrement, 
@@ -410,6 +419,8 @@ const getInsertRemoveParameters = ({
                 rangecount:
                 -rangecount,
                 
+        [listlowindex] = listrange,
+
         changeStartIndex = 
             (isInserting)?
                 lowrangeIndex:
@@ -419,7 +430,7 @@ const getInsertRemoveParameters = ({
 
     if (isInserting) {
 
-        shiftStartIndex = lowrangeIndex
+        shiftStartIndex = Math.max(lowrangeIndex,listlowindex)
 
     } else { // isRemoving
 

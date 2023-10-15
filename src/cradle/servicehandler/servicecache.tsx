@@ -190,10 +190,6 @@ export default class ServiceCache {
 
         }
 
-        if (!isIndexInvalid && !isHighrangeInvalid) {
-
-        }
-
         // ... otherwise bail
         if (isIndexInvalid || isHighrangeInvalid) {
 
@@ -291,7 +287,7 @@ export default class ServiceCache {
 
         }
 
-        // error to console and leave
+        // error; leave
         if (isIndexInvalid || isHighrangeInvalid) {
 
             let errorString = ''
@@ -355,9 +351,9 @@ export default class ServiceCache {
         // basic assertions
         // ------------------- process cache ----------------
 
-        if (listsize == 0) {
+        if (listsize == 0) { // nothing in cache
             
-            if (incrementDirection > 0) {
+            if (incrementDirection > 0) { // items can be added
 
                 this.setListRange([index,rangehighindex])
 
@@ -369,7 +365,7 @@ export default class ServiceCache {
 
                 return [[],replaceList,[],[]]
 
-            } else {
+            } else { // nothing to remove
     
                 return [[],[],[],[]]
             }
@@ -447,6 +443,8 @@ export default class ServiceCache {
 
         }
 
+        // --------------------- return results to caller ------------------
+        
         return [shiftedList, replacedList, removedList, deletedList] // inform caller
 
     }

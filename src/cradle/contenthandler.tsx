@@ -365,7 +365,10 @@ export default class ContentHandler {
     // updates cradle contiguous items from startChangeIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
-        // asssemble resources
+        // console.log('synchronizeCradleItemIDsToCache: updatedIndexList, isInsertRemove, startChangeIndex\n',
+        //     updatedIndexList, isInsertRemove, startChangeIndex)
+
+        // assemble resources
         const 
             { cacheAPI } = this.cradleParameters.handlersRef.current,
             
@@ -378,6 +381,8 @@ export default class ContentHandler {
         if (cradleContentProps.size == 0) return
 
         const { lowindex:lowSpan, highindex:highSpan } = cradleContentProps
+
+        // console.log('lowSpan, highSpan',lowSpan, highSpan)
 
         let startIndex, endIndex
         if (isInsertRemove) {

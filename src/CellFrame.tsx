@@ -230,14 +230,23 @@ export const CellFrame = ({
 
     const setDroppedBorder = () => {
 
-        if (scrollerDndContext.droppedIndex === index) {
-            scrollerDndContext.droppedIndex = null
-            const classname = 'rigs-dropped-highlight'
-            contentHolderElementRef.current.classList.add(classname)
-            setTimeout(()=>{
-                if (frameRef.current) contentHolderElementRef.current.classList.remove(classname)
-            },2000)
-        }
+        setTimeout(()=>{ // for dnd CellFrame could cross axis and lose element (about to be replaced)
+
+            if (scrollerDndContext.droppedIndex === index) {
+
+                const classname = 'rigs-dropped-highlight'
+
+                if (contentHolderElementRef.current) { // may have crossed axis
+                    scrollerDndContext.droppedIndex = null
+                    contentHolderElementRef.current.classList.add(classname)
+                    setTimeout(()=>{
+                        if (contentHolderElementRef.current) contentHolderElementRef.current.classList.remove(classname)
+                    },2000)
+    
+                }
+
+            }
+        },100)
 
     }
 

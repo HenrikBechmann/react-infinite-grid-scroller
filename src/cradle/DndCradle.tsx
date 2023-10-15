@@ -130,7 +130,15 @@ const DndCradle = (props) => {
                         break
                     }
                     case 'head':{
-                        toIndex = lowindex
+
+                        if (toScrollerID === fromScrollerID) {
+                            toIndex = 
+                                dropEffect == 'move'?
+                                    lowindex:
+                                    lowindex - 1
+                        } else {
+                            toIndex = lowindex - 1
+                        }
                         break
                     }
                     case 'tail':{
@@ -145,6 +153,7 @@ const DndCradle = (props) => {
                         break
                     }
                 }
+
                 // console.log('whitespace toIndex',toIndex)
             }
 
@@ -152,6 +161,7 @@ const DndCradle = (props) => {
             if (fromScrollerID === toScrollerID) {
 
                 scrollerDndContext.displacedIndex = displacedIndex
+                scrollerDndContext.droppedIndex = toIndex
 
                 if (!cacheAPI.itemMetadataMap.has(itemID) || (dropEffect == 'copy')) { // will have to fetch
 
@@ -199,8 +209,8 @@ const DndCradle = (props) => {
                     // ------------ resolve target data
                     incrementDirection = +1 // insert
                     
-                    // console.log('insertOrRemoveCacheIndexes input: toIndex, toIndex, incrementDirection, listsize\n',
-                    //     toIndex, toIndex, incrementDirection, listsize)
+                    // console.log('insertOrRemoveCacheIndexes input: toIndex, toIndex, incrementDirection, listrange\n',
+                    //     toIndex, toIndex, incrementDirection, listrange)
 
                     const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
                         cacheAPI.insertOrRemoveCacheIndexes(toIndex, toIndex, incrementDirection, listrange)
@@ -212,21 +222,33 @@ const DndCradle = (props) => {
 
                     cacheAPI.addCacheItemToScroller( itemID, toIndex ) // move item to scroller
 
+                    // console.log('ITEM addCacheItemToScroller: cacheAPI.itemMetadataMap.get(itemID)',cacheAPI.itemMetadataMap.get(itemID))
+
                     contentHandler.synchronizeCradleItemIDsToCache( // sync cradle
                         cacheIndexesShiftedList, rangeincrement, startChangeIndex) 
 
                     // serviceHandler.newListSize = listsize + rangeincrement // rangeincrement always +1 here
                     const [lowindex, highindex] = listrange
                     serviceHandler.newListRange = 
-                        listrange.length === 0?
-                            [toIndex, toIndex]:
-                            [lowindex, highindex + rangeincrement]
+                        listrange.length === 0
+                            ?[toIndex, toIndex]
+                            :onDroppableWhitespace
+                                ?whitespacePosition == 'head'
+                                    ?[lowindex - 1,highindex]
+                                    :[lowindex, highindex + rangeincrement]
+                                :[lowindex, highindex + rangeincrement]
 
                     if (onDroppableWhitespace) {
                         scrollerDndContext.displacedIndex = null
                     } else {
                         scrollerDndContext.displacedIndex = toIndex + 1
                     }
+
+                    scrollerDndContext.droppedIndex = toIndex
+
+                    // console.log('droppedIndex move existing item', toIndex)
+
+                    // stateHandler.setCradleState('channelcradleresetafterinsertremove')
 
                     stateHandler.setCradleState('applyinsertremovechanges') // re-render
 
@@ -247,13 +269,13 @@ const DndCradle = (props) => {
                         scrollerDndContext.displacedIndex = toIndex + 1
                     }
 
+                    scrollerDndContext.droppedIndex = toIndex
+
                     serviceHandler.insertIndex(toIndex)
 
                 }
 
             }
-
-            scrollerDndContext.droppedIndex = toIndex
             
         },
     },[listsize])
