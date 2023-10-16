@@ -13,7 +13,7 @@
 
 */
 
-import React, {useEffect, useContext, useRef } from 'react'
+import React, { useEffect, useContext, useRef, useState } from 'react'
 
 import { useDrop, DropTargetMonitor } from 'react-dnd'
 
@@ -45,7 +45,36 @@ const DndCradle = (props) => {
         viewportElement = viewportContext.elementRef.current,
         outerElement = viewportContext.outerElementRef.current,
         { scrollerID, virtualListSpecs } = props,
-        { size:listsize, lowindex, highindex, range:listrange } = virtualListSpecs
+        { size:listsize, lowindex, highindex, range:listrange } = virtualListSpecs,
+        [dndCradleState, setDndCradleState] = useState('ready')
+
+    useEffect(()=>{
+
+        switch (dndCradleState) {
+
+            case 'gotoheadposition': {
+                const 
+                    { lowindex } = virtualListSpecs,
+                    { serviceHandler } = handlerListRef.current
+                
+                serviceHandler.scrollToIndex(lowindex)
+
+                setDndCradleState('ready')
+                break
+            }
+            case 'gototailposition': {
+                const 
+                    { highindex } = virtualListSpecs,
+                    { serviceHandler } = handlerListRef.current
+                
+                serviceHandler.scrollToIndex(highindex)
+
+                setDndCradleState('ready')
+                break
+            }
+        }
+
+    },[dndCradleState])
 
     // const [ targetData, targetConnector ] = useDrop({
     const [ targetData, targetConnector ] = useDrop({
@@ -187,7 +216,15 @@ const DndCradle = (props) => {
                 } else {
 
                     serviceHandler.insertIndex(toIndex)
-
+                    if (onDroppableWhitespace) {
+                        setTimeout(() => {
+                            if (whitespacePosition == 'head') {
+                                setDndCradleState('gotoheadposition')
+                            } else {
+                                setDndCradleState('gototailposition')
+                            }
+                        },100)
+                    }
                 }
 
                 // console.log('AFTER INTRA serviceHandler.getCacheIndexMap, getCacheItemMap\n',
@@ -283,6 +320,15 @@ const DndCradle = (props) => {
 
                 }
 
+                if (onDroppableWhitespace) {
+                    setTimeout(() => {
+                        if (whitespacePosition == 'head') {
+                            setDndCradleState('gotoheadposition')
+                        } else {
+                            setDndCradleState('gototailposition')
+                        }
+                    },100)
+                }
             }
             
         },

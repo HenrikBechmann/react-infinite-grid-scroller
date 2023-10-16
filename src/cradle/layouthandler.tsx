@@ -258,7 +258,7 @@ export default class LayoutHandler {
         }
 
         const 
-            { cradlePositionData } = layoutHandler,
+            { cradlePositionData } = this, // layoutHandler,
             axisReferencePosition = cradlePositionData.targetAxisReferencePosition,
             rowReferencePosition = Math.ceil(axisReferencePosition/crosscount),
             paddingOffset = 
