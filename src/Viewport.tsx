@@ -283,7 +283,7 @@ export const Viewport = ({
         { (masterDndContext.installed 
             && dragContext.isDragging 
             && (scrollerID === masterDndContext.scrollerID)) 
-        && <DndDragBar 
+            && <DndDragBar 
                 scrollerID = { scrollerID }
             />
         }

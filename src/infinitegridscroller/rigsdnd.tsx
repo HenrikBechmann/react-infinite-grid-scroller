@@ -129,6 +129,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         }
 
+        // console.log('RigsDnd masterDndContext.enabled, isEnabled, dndOptions', masterDndContext.enabled, isEnabled, dndOptions)
+
         if (masterDndContext.getDropEffect !== getDropEffect) {
 
             masterDndContext.getDropEffect = getDropEffect

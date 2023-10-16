@@ -89,7 +89,7 @@ const DndDragIcon = props => {
             },
 
             collect: (monitor:DragSourceMonitor) => {
-
+                // console.log('collecting content')
                 return {
                     isDragging:!!monitor.isDragging(),
                 }
@@ -162,5 +162,11 @@ const DndDragIcon = props => {
 
     </div>
 }
+
+    // return <div data-type = 'dragicon' ref = { sourceConnector } style = {dragiconstylesRef.current}>
+
+    //     <img draggable = {false} style = {iconstylesRef.current} src={dragicon} />
+
+    // </div>
 
 export default DndDragIcon
