@@ -432,9 +432,10 @@ const InfiniteGridScroller = (props) => {
     if (!problemCount && scrollerState == 'setup') {
 
         let goodrange = true
-        if (!startingListRange || 
-            !Array.isArray(startingListRange) || 
-            !((startingListRange.length == 2) || (startingListRange.length == 0))) {
+        if (!startingListRange 
+            || !Array.isArray(startingListRange) 
+            || !((startingListRange.length == 2) 
+                || (startingListRange.length == 0))) {
             goodrange = false
         }
         if (goodrange) {

@@ -119,13 +119,8 @@ export const getShiftInstruction = ({
     if (
             (isSafariIOS // either trigger offset is exactly 0
                 && (triggerConfigData.headOffset == 0 
-                    || triggerConfigData.tailOffset == 0)
-
-            ) 
-
-        ||
-
-            (!isSafariIOS // either trigger offset is within range of 0
+                    || triggerConfigData.tailOffset == 0)) 
+            || (!isSafariIOS // either trigger offset is within range of 0
                 && ((triggerConfigData.headOffset >= -1 
                         && triggerConfigData.headOffset <= 1)
                 || (triggerConfigData.tailOffset >= -1 

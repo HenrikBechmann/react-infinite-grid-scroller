@@ -183,13 +183,15 @@ export default class InterruptHandler {
             const entry = entries[i]
             if (entry.target.dataset.type == 'head') {
                 this.isHeadCradleInView = (
-                    entry.isIntersecting || 
-                        ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
+                    entry.isIntersecting 
+                        || ((entry.rootBounds.width == 0) 
+                            && (entry.rootBounds.height == 0)) // reparenting
                 )
             } else {
                 this.isTailCradleInView = (
-                    entry.isIntersecting  || 
-                        ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
+                    entry.isIntersecting 
+                        || ((entry.rootBounds.width == 0) 
+                            && (entry.rootBounds.height == 0)) // reparenting
                 )
             }
         }

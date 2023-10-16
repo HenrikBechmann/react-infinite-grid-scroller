@@ -49,7 +49,7 @@ export default class ServiceGeneral {
 
         if (!size) return
 
-        const isInvalid = (!isInteger(index)) //|| 
+        const isInvalid = (!isInteger(index))
 
         if (!isInvalid) {
 
@@ -311,7 +311,9 @@ export default class ServiceGeneral {
                 lowindex = +lowindex
                 highindex = +highindex
 
-                isInvalid = ((!isInteger(lowindex)) || (!isInteger(highindex)) || (!isValueGreaterThanOrEqualToMinValue(highindex, lowindex)))
+                isInvalid = ((!isInteger(lowindex)) 
+                    || (!isInteger(highindex)) 
+                    || (!isValueGreaterThanOrEqualToMinValue(highindex, lowindex)))
 
                 if (!isInvalid) newlistrange = [lowindex,highindex]
 

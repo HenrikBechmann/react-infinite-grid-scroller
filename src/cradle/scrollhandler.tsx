@@ -185,8 +185,8 @@ export default class ScrollHandler {
             clearTimeout(this._scrollforvariabletimerid)
 
             // immediate interrupt halt and adjustment for overshoot at start of end of scrollblock
-            if ((( trackingBlockScrollPos - scrollblockOffset) < 0) || // overshoot start
-                (scrollblockLength < (trackingBlockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
+            if ((( trackingBlockScrollPos - scrollblockOffset) < 0) // overshoot start
+                || (scrollblockLength < (trackingBlockScrollPos - scrollblockOffset + viewportLength))) { // overshoot end
 
                 this.onAfterScrollForVariable() // immediate halt and adjust
 
@@ -248,8 +248,8 @@ export default class ScrollHandler {
 
             default: {
 
-                if ((this.scrollData.start != this.scrollData.current) || 
-                    (this.scrollData.current != this.scrollData.previous)) {
+                if ((this.scrollData.start != this.scrollData.current) 
+                    || (this.scrollData.current != this.scrollData.previous)) {
 
                     if (stateHandler.isMountedRef.current) {
 
