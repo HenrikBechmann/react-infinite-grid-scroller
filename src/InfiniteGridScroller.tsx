@@ -91,7 +91,7 @@ type RIGS = {
 // React support
 import React, { useEffect, useState, useCallback, useRef, useContext, FC } from 'react'
 
-import { RigsDnd } from './InfiniteGridScroller/RigsDnd'
+import { RigsDnd, masterDndContextBase } from './InfiniteGridScroller/RigsDnd'
 
 export { RigsDnd } // RigsDnd is called as root instead of InfiniteGridScroller if dnd is being invoked
 
@@ -133,34 +133,7 @@ import PortalCache from './PortalCache'
 // global session ID generator
 let globalScrollerID = 0
 
-export const MasterDndContext = React.createContext(
-    {
-        enabled:false, 
-        installed:false,
-        scrollerID:null, 
-        setViewportState:null, // the master viewport, for rendering the dragbar
-        setDragBarState:null, // for master dragbar, to update icons
-        getDropEffect:null,
-        dropCount:0,
-        altKey:null,
-        prescribedDropEffect:null,
-        dynamicDropEffect:null,        
-        onDroppableWhitespace:false,
-        whitespacePosition:null,
-        dragContext:{
-            isDragging:false,
-            canDrop:false,
-            itemID:null,
-            index:null,
-            setDndFrameState:null,
-            dndOptions:{} as GenericObject,
-            scrollerID:null,
-            scrollerDndOptions:null,
-            sourceCacheAPI:null,
-            sourceStateHandler:null,
-            sourceServiceHandler:null,
-        }
-    }) // inform children; tree scope
+export const MasterDndContext = React.createContext(masterDndContextBase) // inform children; tree scope
 
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 

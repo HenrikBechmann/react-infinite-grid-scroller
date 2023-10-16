@@ -75,6 +75,36 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
+export const masterDndContextBase = {
+    enabled:false,
+    installed:false,
+    scrollerID:null,
+    prescribedDropEffect:null,
+    dynamicDropEffect:null,        
+    dropCount:0,
+    altKey:null,
+    onDroppableWhitespace:false,
+    whitespacePosition:null,
+    dragContext:{
+        isDragging:false,
+        canDrop:false,
+        itemID:null,
+        index:null,
+        scrollerID: null,
+        scrollerDndOptions:null,
+        setDndFrameState:null,
+        dndOptions:{} as GenericObject,
+        // the following for inter-list drops to process drag source
+        sourceCacheAPI:null,
+        sourceStateHandler:null,
+        sourceServiceHandler:null,
+    },
+    // functions
+    setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
+    setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
+    getDropEffect:null, // provided by host to RigsDnd
+}
+
 // wrapper for Dnd provider
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
@@ -94,7 +124,9 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         isEnabled = isEnabled ?? true
 
         if (!(masterDndContext.enabled === isEnabled)) {
+
             masterDndContext.enabled = isEnabled
+
         }
 
         if (masterDndContext.getDropEffect !== getDropEffect) {
@@ -106,34 +138,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         // reset masterDndContext on unmount. 
         // For next mount, 'setup' state gives previous unmount time to finish
         return () => {
-            Object.assign(masterDndContext,{
-                enabled:false,
-                installed:false,
-                scrollerID:null,
-                setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
-                setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
-                getDropEffect:null,
-                prescribedDropEffect:null,
-                dynamicDropEffect:null,        
-                dropCount:0,
-                altKey:null,
-                onDroppableWhitespace:false,
-                whitespacePosition:null,
-                dragContext:{
-                    isDragging:false,
-                    canDrop:false,
-                    itemID:null,
-                    index:null,
-                    scrollerID: null,
-                    scrollerDndOptions:null,
-                    setDndFrameState:null,
-                    dndOptions:{} as GenericObject,
-                    // the following for inter-list drops to process drag source
-                    sourceCacheAPI:null,
-                    sourceStateHandler:null,
-                    sourceServiceHandler:null,
-                }
-            })
+            
+            Object.assign(masterDndContext,masterDndContextBase)
 
         }
 
