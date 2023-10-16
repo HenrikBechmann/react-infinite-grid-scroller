@@ -646,8 +646,8 @@ export const CellFrame = ({
             ?<>
                 <div data-type = 'contentholder' ref = {contentHolderElementRef} style = {holderStylesRef.current}> 
                     {((frameState != 'ready')
-                    ?placeholderRef.current
-                    :<OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
+                        ?placeholderRef.current
+                        :<OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
                 {(isDndRef.current && (['ready','nodata'].includes(frameState))) && 
@@ -670,8 +670,10 @@ export const CellFrame = ({
             ?triggercellTriggerlinesRef.current
             :null)
         }
-        {(isDndRef.current && showDirectionIcon && (['ready','nodata'].includes(frameState))) && 
-            <DndDisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
+        {(isDndRef.current 
+            && showDirectionIcon 
+            && (['ready','nodata'].includes(frameState))) 
+            && <DndDisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
         }
     </div>
 

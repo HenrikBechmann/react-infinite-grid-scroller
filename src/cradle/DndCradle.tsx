@@ -138,7 +138,9 @@ const DndCradle = (props) => {
                                     ?lowindex
                                     :lowindex - 1
                         } else { // inter-list
+
                             toIndex = lowindex - 1
+                            
                         }
                         break
                     }
