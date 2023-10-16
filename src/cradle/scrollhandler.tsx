@@ -65,14 +65,14 @@ export default class ScrollHandler {
             { orientation } = this.cradleParameters.cradleInheritedPropertiesRef.current,
             
             scrollPositionCurrent = 
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft,
+                (orientation == 'vertical')
+                    ?viewportElement.scrollTop
+                    :viewportElement.scrollLeft,
 
             scrollXPositionCurrent = 
-                (orientation == 'horizontal')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft
+                (orientation == 'horizontal')
+                    ?viewportElement.scrollTop
+                    :viewportElement.scrollLeft
 
         clearTimeout(this._scrolltimerid)
 
@@ -288,14 +288,14 @@ export default class ScrollHandler {
             orientation = this.cradleParameters.cradleInheritedPropertiesRef.current.orientation,
 
             scrollblockOffset = 
-                (orientation == 'vertical')?
-                    scrollblockElement.offsetTop:
-                    scrollblockElement.offsetLeft,
+                (orientation == 'vertical')
+                    ?scrollblockElement.offsetTop
+                    :scrollblockElement.offsetLeft,
 
             trackingBlockScrollPos =
-                (orientation == 'vertical')?
-                    viewportElement.scrollTop:
-                    viewportElement.scrollLeft,
+                (orientation == 'vertical')
+                    ?viewportElement.scrollTop
+                    :viewportElement.scrollLeft,
 
             scrollTop = viewportElement.scrollTop,
             scrollLeft = viewportElement.scrollLeft
@@ -444,9 +444,9 @@ export default class ScrollHandler {
         let axisPixelOffset = cellLength - ((scrollPos + scrollblockOffset) % cellLength)
 
         const paddingOffset = 
-            orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left
+            orientation == 'vertical'
+                ?paddingProps.top
+                :paddingProps.left
 
         if (axisPixelOffset == cellLength) { // + paddingOffset)) {
             axisPixelOffset = 0

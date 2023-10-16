@@ -26,14 +26,14 @@ const Placeholder = ({
     const [frameStyles, linerStyles] = useMemo(()=>{
 
         const uFrameStyles = 
-            (!error)?
-                userFrameStyles:
-                userErrorFrameStyles
+            (!error)
+                ?userFrameStyles
+                :userErrorFrameStyles
 
         const uLinerStyles = 
-            (!error)?
-                userLinerStyles:
-                userErrorLinerStyles
+            (!error)
+                ?userLinerStyles
+                :userErrorLinerStyles
 
         const frameStyles = {
             border:'2px solid black',
@@ -77,9 +77,9 @@ const Placeholder = ({
 
     return <div data-type = 'placeholderframe' style = {frameStyles}>
         {dndEnabled && float}
-        { !error?
-            <div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>:
-            <div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
+        { !error
+            ?<div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>
+            :<div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
         }
         
     </div>

@@ -307,10 +307,10 @@ export const CellFrame = ({
         const dndEnabled = masterDndContext.installed && (
             masterDndContext.enabled || scrollerDndContext.dndOptions.enabled)
 
-        return placeholder?
-            React.createElement(placeholder, 
-                {index, listsize, message:messageRef.current, error:errorRef.current, dndEnabled}):
-            null
+        return placeholder
+            ?React.createElement(placeholder, 
+                {index, listsize, message:messageRef.current, error:errorRef.current, dndEnabled})
+            :null
             
     },[
         index, 
@@ -326,9 +326,9 @@ export const CellFrame = ({
         if (!usePlaceholder) return null
 
         const placeholder = 
-            customplaceholder?
-                customplaceholder:
-                <Placeholder 
+            customplaceholder
+                ?customplaceholder
+                :<Placeholder 
                     key = 'placeholder'
                     index = { index } 
                     listsize = { listsize } 
@@ -360,14 +360,14 @@ export const CellFrame = ({
     // ---------------- [ requestidlecallback config ] ------------------------
 
     const requestidlecallback = // requestIdleCallback
-        window['requestIdleCallback']?
-            window['requestIdleCallback']:
-            requestIdleCallback
+        window['requestIdleCallback']
+            ?window['requestIdleCallback']
+            :requestIdleCallback
 
     const cancelidlecallback = // cancelIdleCallback
-        window['cancelIdleCallback']?
-            window['cancelIdleCallback']:
-            cancelIdleCallback
+        window['cancelIdleCallback']
+            ?window['cancelIdleCallback']
+            :cancelIdleCallback
 
     const requestIdleCallbackIdRef = useRef(null)
 
@@ -645,9 +645,9 @@ export const CellFrame = ({
         {(frameState != 'setup')
             ?<>
                 <div data-type = 'contentholder' ref = {contentHolderElementRef} style = {holderStylesRef.current}> 
-                    {((frameState != 'ready')?
-                    placeholderRef.current:
-                    <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
+                    {((frameState != 'ready')
+                    ?placeholderRef.current
+                    :<OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
                 {(isDndRef.current && (['ready','nodata'].includes(frameState))) && 
@@ -666,9 +666,9 @@ export const CellFrame = ({
 
             :<div></div>}
 
-        {(isTriggercell?
-            triggercellTriggerlinesRef.current:
-            null)
+        {(isTriggercell
+            ?triggercellTriggerlinesRef.current
+            :null)
         }
         {(isDndRef.current && showDirectionIcon && (['ready','nodata'].includes(frameState))) && 
             <DndDisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />

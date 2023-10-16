@@ -149,14 +149,14 @@ export const allocateContentList = (
         headitemcount = (axisReferenceIndex - lowcontentindex),
 
         targetTriggercellIndex = 
-            (headitemcount == 0)?
-                axisReferenceIndex:
-                axisReferenceIndex - 1
+            (headitemcount == 0)
+                ?axisReferenceIndex
+                :axisReferenceIndex - 1
 
     layoutHandler.triggercellIsInTail = 
-        (headitemcount == 0)?
-            true:
-            false
+        (headitemcount == 0)
+            ?true
+            :false
 
     if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) { //&& 
         if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {

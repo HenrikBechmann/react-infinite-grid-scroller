@@ -87,19 +87,19 @@ export default class InterruptHandler {
                 } = virtualListProps,
 
                 scrollPos = 
-                    (orientation == 'vertical')?
-                        viewportElement.scrollTop:
-                        viewportElement.scrollLeft,
+                    (orientation == 'vertical')
+                        ?viewportElement.scrollTop
+                        :viewportElement.scrollLeft,
 
                 contentLength = 
-                    (orientation == 'vertical')?
-                        viewportElement.scrollHeight:
-                        viewportElement.scrollWidth,
+                    (orientation == 'vertical')
+                        ?viewportElement.scrollHeight
+                        :viewportElement.scrollWidth,
 
                 viewportLength = 
-                    (orientation == 'vertical')?
-                        viewportElement.offsetHeight:
-                        viewportElement.offsetWidth
+                    (orientation == 'vertical')
+                        ?viewportElement.offsetHeight
+                        :viewportElement.offsetWidth
 
             // for browser top or bottom bounce
             // fractional pixels can cause this to fail, hence Math.floor)

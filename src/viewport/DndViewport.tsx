@@ -40,10 +40,11 @@ const DndViewport = (props) => {
                     dataType:'viewport',
                     target:{
                         scrollerID,
-                        DropEffect: masterDndContext.prescribedDropEffect || 
-                            (masterDndContext.altKey? 'copy': null) || 
-                            'move'
-
+                        DropEffect: masterDndContext.prescribedDropEffect 
+                            || (masterDndContext.altKey
+                                ? 'copy'
+                                : null) 
+                            || 'move'
                     }
                 }
             }
@@ -104,7 +105,11 @@ const DndViewport = (props) => {
 
             } = virtualListProps,
             calculatedDropEffect = 
-                masterDndContext.prescribedDropEffect || (masterDndContext.altKey? 'copy': null) || 'move'
+                masterDndContext.prescribedDropEffect 
+                    || (masterDndContext.altKey
+                        ? 'copy'
+                        : null) 
+                    || 'move'
 
         // console.log('listsize',listsize)
         if (listsize === 0) {
@@ -152,9 +157,9 @@ const DndViewport = (props) => {
             { orientation } = cradleInheritedProperties,
             // determine which grid is under cursor
             isInHeadGrid = // otherwise tail grid
-                orientation == 'vertical'?
-                    clientOffset.x < axisClientOffset.x:
-                    clientOffset.y < axisClientOffset.y
+                orientation == 'vertical'
+                    ?clientOffset.x < axisClientOffset.x
+                    :clientOffset.y < axisClientOffset.y
 
         // collect reference grid cells
         let firstChildCellElement, lastChildCellElement
@@ -184,27 +189,27 @@ const DndViewport = (props) => {
 
         // check whitespace in blank cells
         let isWhitespace = 
-            orientation == 'vertical'?
-                clientOffset.x < firstChildClientOffset.x && 
-                    clientOffset.y < (firstChildClientOffset.y + firstChildClientOffset.height):
-                clientOffset.y < firstChildClientOffset.y && 
-                    clientOffset.x < (firstChildClientOffset.x + firstChildClientOffset.width)
+            orientation == 'vertical'
+                ?clientOffset.x < firstChildClientOffset.x 
+                    && clientOffset.y < (firstChildClientOffset.y + firstChildClientOffset.height)
+                :clientOffset.y < firstChildClientOffset.y 
+                    && clientOffset.x < (firstChildClientOffset.x + firstChildClientOffset.width)
 
         if (!isWhitespace) { // check for position before list (such as in padding area)
 
             isWhitespace = 
-                (orientation == 'vertical')?
-                    clientOffset.y < firstChildClientOffset.y:
-                    clientOffset.x < firstChildClientOffset.x
+                (orientation == 'vertical')
+                    ?clientOffset.y < firstChildClientOffset.y
+                    :clientOffset.x < firstChildClientOffset.x
         
         }
 
         if (isWhitespace) {
 
             if ( 
-                sourceScrollerID === scrollerID &&
-                lowlistindex === sourceIndex && 
-                calculatedDropEffect == 'move'
+                sourceScrollerID === scrollerID 
+                && lowlistindex === sourceIndex 
+                && calculatedDropEffect == 'move'
             ) {
 
                 return [false, null]
@@ -228,18 +233,18 @@ const DndViewport = (props) => {
             }
             
         isWhitespace = 
-            orientation == 'vertical'?
-                clientOffset.x > lastChildClientOffset.x &&
-                    clientOffset.y > lastChildClientOffset.y:
-                clientOffset.y > lastChildClientOffset.y &&
-                    clientOffset.x > lastChildClientOffset.x
+            orientation == 'vertical'
+                ?clientOffset.x > lastChildClientOffset.x 
+                    && clientOffset.y > lastChildClientOffset.y
+                :clientOffset.y > lastChildClientOffset.y 
+                    && clientOffset.x > lastChildClientOffset.x
 
         if (isWhitespace) {
 
             if ( 
-                sourceScrollerID === scrollerID &&
-                highlistindex === sourceIndex && 
-                calculatedDropEffect == 'move'
+                sourceScrollerID === scrollerID 
+                && highlistindex === sourceIndex 
+                && calculatedDropEffect == 'move'
             ) {
 
                 return [false, null]
@@ -252,16 +257,16 @@ const DndViewport = (props) => {
         // beyond blank cell row
         // TODO take gap into account
         isWhitespace = 
-            orientation == 'vertical'?
-                clientOffset.y > (lastChildClientOffset.y + lastChildClientOffset.height):
-                clientOffset.x > (lastChildClientOffset.x + lastChildClientOffset.width)
+            orientation == 'vertical'
+                ?clientOffset.y > (lastChildClientOffset.y + lastChildClientOffset.height)
+                :clientOffset.x > (lastChildClientOffset.x + lastChildClientOffset.width)
 
         if (isWhitespace) {
 
             if ( 
-                sourceScrollerID === scrollerID &&
-                highlistindex === sourceIndex && 
-                calculatedDropEffect == 'move'
+                sourceScrollerID === scrollerID 
+                && highlistindex === sourceIndex 
+                && calculatedDropEffect == 'move'
             ) {
 
                 return [false, null]

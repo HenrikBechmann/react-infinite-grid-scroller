@@ -712,19 +712,19 @@ export const Cradle = ({ // exported for DndCradle
     // display the cradle components or the ScrollTracker (from Viewport), not both
     return <CradleContext.Provider value = { cradleContextRef.current }>
 
-        {(cradleState == 'repositioningRender')?null:
-        <div 
+        {(cradleState == 'repositioningRender')
+            ?null
+            :<div 
             data-type = 'cradle-axis'
             style = { cradleAxisStyle } 
             ref = { axisCradleElementRef }
         >
-            { showAxis? // for debug
-                <div 
+            { showAxis
+                ?<div // for debug
                     data-type = 'cradle-divider' 
                     style = { cradleDividerStyle }
-                >
-                </div>:
-                null
+                 ></div>
+                :null
             }
             <div 
             
@@ -734,9 +734,9 @@ export const Cradle = ({ // exported for DndCradle
             
             >
             
-                {(cradleState != 'setup')?
-                    cradleContent.headDisplayComponents:
-                    null
+                {(cradleState != 'setup')
+                    ?cradleContent.headDisplayComponents
+                    :null
                 }
             
             </div>
@@ -748,9 +748,9 @@ export const Cradle = ({ // exported for DndCradle
             
             >
             
-                {(cradleState != 'setup')?
-                    cradleContent.tailDisplayComponents:
-                    null
+                {(cradleState != 'setup')
+                    ?cradleContent.tailDisplayComponents
+                    :null
                 }
             
             </div>

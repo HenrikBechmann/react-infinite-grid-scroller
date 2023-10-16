@@ -109,9 +109,9 @@ export const useCradleStateLayoutEffects = ({
                 }
 
                 const accept = 
-                    masterDndContext.installed?
-                        scrollerDndContext.dndOptions.accept:
-                        null
+                    masterDndContext.installed
+                        ?scrollerDndContext.dndOptions.accept
+                        :null
 
                 cacheAPI.preload(finalCallback, accept)
 

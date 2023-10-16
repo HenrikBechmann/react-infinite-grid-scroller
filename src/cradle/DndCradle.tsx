@@ -212,9 +212,9 @@ const DndCradle = (props) => {
                     // dragContext.sourceServiceHandler.newListSize = sourcelistsize - 1
                     const [sourcelowindex, sourcehighindex] = sourcelistrange
                     dragContext.sourceServiceHandler.newListRange = 
-                        (sourcelowindex === sourcehighindex)?
-                            []:
-                            [sourcelowindex, sourcehighindex - 1]
+                        (sourcelowindex === sourcehighindex)
+                            ?[]
+                            :[sourcelowindex, sourcehighindex - 1]
                     dragContext.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 
                     // ------------ resolve target data

@@ -78,18 +78,18 @@ const DndScrollTab = (props) => {
             }
             case 'bottomright': {
                 transform = 
-                    orientation == 'vertical'?
-                        'rotate(0.25turn)':
-                        'rotate(0turn)'
+                    orientation == 'vertical'
+                        ?'rotate(0.25turn)'
+                        :'rotate(0turn)'
                 top = null
                 right = '0'
                 bottom = '0'
                 left = null
                 borderRadius = '8px 0 0 0'
                 scrollByPixel = 
-                    (orientation == 'vertical')?
-                        scrollByPixels:
-                        -scrollByPixels
+                    (orientation == 'vertical')
+                        ?scrollByPixels
+                        :-scrollByPixels
                 break
             }
             case 'bottomleft': {

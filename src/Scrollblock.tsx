@@ -178,9 +178,9 @@ const calcBaseScrollblockLength = ({
         listrowcount = Math.ceil(listsize/crosscount),
 
         baselength = (listrowcount * cellLength) - 
-            ((listrowcount > 0)?
-                gaplength: // final cell has no trailing gap
-                0)
+            ((listrowcount > 0)
+                ?gaplength // final cell has no trailing gap
+                :0)
     if (orientation == 'vertical') {
         baselength + paddingProps.top + paddingProps.bottom
     } else {

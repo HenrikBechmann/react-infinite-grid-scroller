@@ -21,27 +21,27 @@ export const useCrosscount = ({
 
         const 
             viewportcrosslength = 
-                (orientation == 'vertical')?
-                    viewportwidth:
-                    viewportheight,
+                (orientation == 'vertical')
+                    ?viewportwidth
+                    :viewportheight,
 
             crosspadding = 
-                (orientation == 'vertical')?
-                    paddingProps.left + paddingProps.right:
-                    paddingProps.top + paddingProps.bottom,
+                (orientation == 'vertical')
+                    ?paddingProps.left + paddingProps.right
+                    :paddingProps.top + paddingProps.bottom,
 
             crossgap = 
-                (orientation == 'vertical')?
-                    gapProps.column:
-                    gapProps.row,
+                (orientation == 'vertical')
+                    ?gapProps.column
+                    :gapProps.row,
 
             // cross length of viewport (gap to match crossLength)
             viewportcrosslengthforcalc = viewportcrosslength - crosspadding + crossgap,
 
             cellcrosslength = 
-                ((orientation == 'vertical')?
-                    cellWidth:
-                    cellHeight) 
+                ((orientation == 'vertical')
+                    ?cellWidth
+                    :cellHeight) 
                 + crossgap,
 
             cellcrosslengthforcalc = 
@@ -72,9 +72,9 @@ export const useRowblanks = ({crosscount, listsize, lowindex, highindex}) => {
         }
         // add position adjustment for 0
         const endadjustment =
-            (highindex < 0)?
-                -1:
-                1
+            (highindex < 0)
+                ?-1
+                :1
 
         // get initial values
         let 
@@ -84,16 +84,16 @@ export const useRowblanks = ({crosscount, listsize, lowindex, highindex}) => {
         // take inverse depending on direction
         if (lowindex < 0) {
             baserowblanks =
-                (baserowblanks == 0)? 
-                0:
-                crosscount - baserowblanks
+                (baserowblanks == 0)
+                    ?0
+                    :crosscount - baserowblanks
         }
 
         if (highindex >= 0) {
             endrowblanks =
-                (endrowblanks == 0)? 
-                0:
-                crosscount - endrowblanks
+                (endrowblanks == 0)
+                    ?0
+                    :crosscount - endrowblanks
         }
 
         return [baserowblanks, endrowblanks]
@@ -134,14 +134,14 @@ export const useRowcounts = ({
 
         const 
             viewportLength = 
-                (orientation == 'vertical')?
-                    viewportheight:
-                    viewportwidth,
+                (orientation == 'vertical')
+                    ?viewportheight
+                    :viewportwidth,
 
             gaplength = 
-                (orientation == 'vertical')?
-                    gapProps.column:
-                    gapProps.row
+                (orientation == 'vertical')
+                    ?gapProps.column
+                    :gapProps.row
 
         let baseRowLength
         if (layout == 'uniform') {
@@ -176,9 +176,9 @@ export const useRowcounts = ({
             viewportRowcount = Math.ceil(viewportLength/baseRowLength),
 
             listRowcount = 
-                listsize == 0?
-                0:
-                Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount),
+                listsize == 0
+                    ?0
+                    :Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount),
 
             calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
@@ -246,9 +246,9 @@ export const useRowcounts = ({
 export const useRangerowshift = ({crosscount,lowindex, listsize}) => {
     const rangerowshift = useMemo(() => {
 
-        return listsize == 0?
-            undefined:
-            Math.floor(lowindex/crosscount)
+        return listsize == 0
+            ?undefined
+            :Math.floor(lowindex/crosscount)
 
     },[crosscount,lowindex, listsize])
 
@@ -631,14 +631,14 @@ export const usePivotEffect = ({
     useEffect(()=> {
 
         layoutHandler.cradlePositionData.blockScrollProperty = 
-            (orientation == "vertical")?
-                "scrollTop":
-                "scrollLeft"
+            (orientation == "vertical")
+                ?"scrollTop"
+                :"scrollLeft"
 
         layoutHandler.cradlePositionData.blockXScrollProperty = 
-            (orientation == "horizontal")?
-                "scrollTop":
-                "scrollLeft"
+            (orientation == "horizontal")
+                ?"scrollTop"
+                :"scrollLeft"
 
         if (cradleStateRef.current == 'setup') {
             layoutHandler.cradlePositionData.trackingBlockScrollPos = 0
@@ -665,14 +665,14 @@ export const usePivotEffect = ({
             { cradlePositionData } = layoutHandler,
 
             gaplength = 
-                (orientation == 'vertical')?
-                    gapProps.column:
-                    gapProps.row,
+                (orientation == 'vertical')
+                    ?gapProps.column
+                    :gapProps.row,
 
             gapxlength = 
-                (orientation == 'vertical')?
-                    gapProps.row:
-                    gapProps.column
+                (orientation == 'vertical')
+                    ?gapProps.row
+                    :gapProps.column
 
         if (layout == 'uniform') {
 
@@ -685,9 +685,9 @@ export const usePivotEffect = ({
 
                 // get previous ratio
                 previousCellPixelLength = 
-                    ((orientation == 'vertical')?
-                        cellWidth:
-                        cellHeight)
+                    ((orientation == 'vertical')
+                        ?cellWidth
+                        :cellHeight)
                     + gapxlength,
 
                 previousPixelOffsetAxisFromViewport = 
@@ -696,10 +696,10 @@ export const usePivotEffect = ({
                 previousratio = previousPixelOffsetAxisFromViewport/previousCellPixelLength,
 
                 pivotCellPixelLength = 
-                    ((orientation == 'vertical')?
-                        cellHeight:
-                        cellWidth)
-                + gaplength,
+                    ((orientation == 'vertical')
+                        ?cellHeight
+                        :cellWidth)
+                    + gaplength,
 
                 pivotAxisOffset = previousratio * pivotCellPixelLength
 

@@ -31,9 +31,9 @@ export default class CacheService {
             tohighindex = tolowindex + (moveblocksize - 1),
 
             movedirection = 
-                (moveincrement > 0)? // move block up in list
-                    'up': // shift down, make room for shiftingindex above
-                    'down',   // shift up, make room for shiftingindex below
+                (moveincrement > 0) // move block up in list
+                    ?'up' // shift down, make room for shiftingindex above
+                    :'down', // shift up, make room for shiftingindex below
 
             // ------------ find bounds of from and to blocks in cache -------------
 
@@ -136,9 +136,9 @@ export default class CacheService {
 
             const 
                 newIndex = 
-                    (movedirection == 'up')?
-                        index - moveblocksize:
-                        index + moveblocksize
+                    (movedirection == 'up')
+                        ?index - moveblocksize
+                        :index + moveblocksize
 
             indexToItemIDMap.delete(index)
             // both have to be listed for the cradle in case newIndex doesn't exist in the cache
@@ -415,16 +415,16 @@ const getInsertRemoveParameters = ({
         rangecount = highchangeIndex - lowchangeIndex + 1,
         // range increment adds sign to rangecount to indicate add/remove
         rangeIncrement = 
-            isInserting?
-                rangecount:
-                -rangecount,
+            isInserting
+                ?rangecount
+                :-rangecount,
                 
         [listlowindex, listhighindex] = listrange,
 
         changeStartIndex = 
-            (isInserting)?
-                lowchangeIndex:
-                highchangeIndex + (rangeIncrement + 1)
+            (isInserting)
+                ?lowchangeIndex
+                :highchangeIndex + (rangeIncrement + 1)
 
     let shiftStartIndex // start of indexes to shift up (insert) or down (remove)
 

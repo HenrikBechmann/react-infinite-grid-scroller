@@ -29,7 +29,11 @@ const DndCellFrame = (props) => {
 
         { prescribedDropEffect:dropEffect } = masterDndContext,
 
-        calculatedDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+        calculatedDropEffect = dropEffect 
+            || (masterDndContext.altKey
+                ? 'copy'
+                : null) 
+            || 'move',
 
         { scrollerPropertiesRef } = cradleContext,
         { orientation, scrollerID, virtualListProps} = scrollerPropertiesRef.current,

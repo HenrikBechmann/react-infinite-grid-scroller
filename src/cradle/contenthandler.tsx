@@ -412,9 +412,9 @@ export default class ContentHandler {
         const 
             lowPtr = firstIndex - lowSpan,
 
-            highPtr = isInsertRemove?
-                cradleModelComponents.length - 1:
-                Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
+            highPtr = isInsertRemove
+                ?cradleModelComponents.length - 1
+                :Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
         // function to update individual cradle components to cache changes
         function processcomponentFn(component, componentptr, componentarray) {

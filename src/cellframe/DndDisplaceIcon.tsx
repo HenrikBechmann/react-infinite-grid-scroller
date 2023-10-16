@@ -35,7 +35,11 @@ const DndDisplaceIcon = (props) => {
 
         { scrollerID:sourceScrollerID, index:sourceIndex  } = dragContext,
 
-        calculatedDropEffect = dropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+        calculatedDropEffect = dropEffect 
+            || masterDndContext.altKey
+                ? 'copy'
+                : null
+            || 'move',
 
         { virtualListProps } = cradleContext.scrollerPropertiesRef.current,
         { crosscount } = virtualListProps
@@ -75,34 +79,32 @@ const DndDisplaceIcon = (props) => {
 
         let rotation
         const direction = 
-            (scrollerID !== sourceScrollerID)?
-            'forward':
-            index < sourceIndex?
-                'forward':
-                    calculatedDropEffect == 'copy'?
-                        'forward':
-                        'back'
+            (scrollerID !== sourceScrollerID)
+                ?'forward'
+                :index < sourceIndex
+                    ?'forward'
+                    :calculatedDropEffect == 'copy'
+                        ?'forward'
+                        :'back'
 
         if (direction == 'forward') {
             rotation = 
-                crosscount === 1?
-                    orientation == 'vertical'?
-                        '.25turn':
-                        '0turn'
-                    :
-                    orientation == 'vertical'?
-                        '0turn':
-                        '.25turn'
+                crosscount === 1
+                    ?orientation == 'vertical'
+                        ?'.25turn'
+                        :'0turn'
+                    :orientation == 'vertical'
+                        ?'0turn'
+                        :'.25turn'
         } else { // 'back'
             rotation = 
-                crosscount === 1?
-                    orientation == 'vertical'?
-                        '.75turn':
-                        '.50turn'
-                    :
-                    orientation == 'vertical'?
-                        '.50turn':
-                        '.75turn'
+                crosscount === 1
+                    ?orientation == 'vertical'
+                        ?'.75turn'
+                        :'.50turn'
+                    :orientation == 'vertical'
+                        ?'.50turn'
+                        :'.75turn'
         }
 
         return rotation

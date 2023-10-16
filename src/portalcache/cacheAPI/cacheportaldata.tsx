@@ -214,9 +214,9 @@ export default class PortalData {
 
         const
             indexArray = 
-                (!Array.isArray(index))?
-                    [index]:
-                    index,
+                (!Array.isArray(index))
+                    ?[index]
+                    :index,
 
             { indexToItemIDMap, itemSet } = this.cacheScrollerData.scrollerDataMap.get(scrollerID),
 
@@ -281,9 +281,9 @@ export default class PortalData {
         const 
             { indexToItemIDMap } = this.cacheScrollerData.scrollerDataMap.get(scrollerID),
             itemID = 
-                (indexToItemIDMap.has(index))?
-                    indexToItemIDMap.get(index):
-                    (this.getNewItemID())
+                (indexToItemIDMap.has(index))
+                    ?indexToItemIDMap.get(index)
+                    :(this.getNewItemID())
 
         return itemID
 
@@ -431,13 +431,13 @@ export default class PortalData {
         let returnvalue, itempack, usercontent, error, dndOptions, profile
 
         const context:GenericObject = // {accept:{}}
-            accept?
-                {
+            accept
+                ?{
                     contextType:'dndFetch',
                     accept,
                     scrollerID,
-                }:
-                {
+                }
+                :{
                     contextType:'fetch',
                     scrollerID,
                 }

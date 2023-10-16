@@ -80,16 +80,16 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
         } = virtualListProps,
 
         paddingOffset = 
-            orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left,
+            orientation == 'vertical'
+                ?paddingProps.top
+                :paddingProps.left,
 
         // cradleContent = this.content,
 
         gaplength =
-            orientation == 'vertical'?
-                gapProps.column:
-                gapProps.row
+            orientation == 'vertical'
+                ?gapProps.column
+                :gapProps.row
 
     let { targetPixelOffsetAxisFromViewport } =  cradlePositionData
 
@@ -104,11 +104,11 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
     // calculate axis reference base index
     workingAxisReferenceIndex -=
-        workingAxisReferenceIndex < 0? 
-            (workingAxisReferenceIndex % crosscount)?
-                (crosscount - Math.abs(workingAxisReferenceIndex % crosscount)):
-                0:
-            workingAxisReferenceIndex % crosscount
+        workingAxisReferenceIndex < 0
+            ?(workingAxisReferenceIndex % crosscount)
+                ?(crosscount - Math.abs(workingAxisReferenceIndex % crosscount))
+                :0
+            :workingAxisReferenceIndex % crosscount
 
     // reposition at row boundary
     if ([
@@ -120,9 +120,9 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
     ].includes(cradleState)) {
 
         targetPixelOffsetAxisFromViewport = 
-            (workingAxisReferenceIndex == listlowindex)?
-                paddingOffset:
-                gaplength // default
+            (workingAxisReferenceIndex == listlowindex)
+                ?paddingOffset
+                :gaplength // default
 
     }
 
@@ -132,9 +132,9 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
         // ----------------------[ 3. get content requirements ]----------------------
 
         baseRowPixelLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth)
+            ((orientation == 'vertical')
+                ?cellHeight
+                :cellWidth)
             + gaplength
 
     const {
@@ -286,9 +286,9 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
     // reset scrollblock Offset and length
     const 
         totalpaddinglength = 
-            orientation == 'vertical'?
-                paddingProps.top + paddingProps.bottom:
-                paddingProps.left + paddingProps.right,
+            orientation == 'vertical'
+                ?paddingProps.top + paddingProps.bottom
+                :paddingProps.left + paddingProps.right,
 
         scrollblockElement = viewportElement.firstChild,
         blocknewlength = (listRowcount * baseRowPixelLength) - gaplength // final cell has no trailing gap
@@ -363,9 +363,9 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
         axisElement.style.left = 'auto'
 
         headElement.style.padding = 
-            headcontentlist.length?
-                `0px 0px ${gapProps.column}px 0px`:
-                `0px`
+            headcontentlist.length
+                ?`0px 0px ${gapProps.column}px 0px`
+                :`0px`
 
     } else { // orientation = 'horizontal'
 
@@ -375,9 +375,9 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
         axisElement.style.left = left + 'px'
 
         headElement.style.padding = 
-            headcontentlist.length?
-                `0px ${gapProps.row}px 0px 0px`:
-                `0px`
+            headcontentlist.length
+                ?`0px ${gapProps.row}px 0px 0px`
+                :`0px`
 
     }
 
@@ -475,9 +475,9 @@ export const calculateContentParameters = ({ // called from setCradleContent onl
 
     const 
         paddingOffset = 
-            orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left,
+            orientation == 'vertical'
+                ?paddingProps.top
+                :paddingProps.left,
 
         targetPixelOffsetViewportFromScrollblock = 
             ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset

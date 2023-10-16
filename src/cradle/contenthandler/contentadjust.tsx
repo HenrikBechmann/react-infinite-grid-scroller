@@ -98,27 +98,27 @@ export const contentAdjust = (source, cradleParameters) => {
                 { orientation } = cradleInheritedProperties,
 
                 scrollblockLength = 
-                    orientation == 'vertical'?
-                        scrollblockElement.offsetHeight:
-                        scrollblockElement.offsetWidth,
+                    orientation == 'vertical'
+                        ?scrollblockElement.offsetHeight
+                        :scrollblockElement.offsetWidth,
 
                 scrollblockOffset = 
-                    orientation == 'vertical'?
-                        scrollblockElement.offsetTop:
-                        scrollblockElement.offsetLeft,
+                    orientation == 'vertical'
+                        ?scrollblockElement.offsetTop
+                        :scrollblockElement.offsetLeft,
 
                 viewportLength = 
-                    orientation == 'vertical'?
-                        viewportElement.offsetHeight:
-                        viewportElement.offsetWidth,
+                    orientation == 'vertical'
+                        ?viewportElement.offsetHeight
+                        :viewportElement.offsetWidth,
 
                 scrollTop = viewportElement.scrollTop,
                 scrollLeft = viewportElement.scrollLeft,
 
                 viewportScrollPos = 
-                    orientation == 'vertical'?
-                        viewportElement.scrollTop:
-                        viewportElement.scrollLeft
+                    orientation == 'vertical'
+                        ?viewportElement.scrollTop
+                        :viewportElement.scrollLeft
 
             // check for overshoot
             if ((scrollblockLength + scrollblockOffset - viewportScrollPos) < viewportLength) { // overshoot
@@ -188,36 +188,36 @@ export const contentAdjust = (source, cradleParameters) => {
         postCradleRowCount = listLastRow - cradleLastRow,
 
         gaplength = 
-            orientation == 'vertical'?
-                gapProps.column:
-                gapProps.row,
+            orientation == 'vertical'
+                ?gapProps.column
+                :gapProps.row,
 
         // base pixel values
         baseCellLength = 
-            ((orientation == 'vertical')?
-                cellHeight:
-                cellWidth
-            ) + gaplength,
+            ((orientation == 'vertical')
+                ?cellHeight
+                :cellWidth) 
+            + gaplength,
 
         measuredTailPixelLength = 
-            (orientation == 'vertical')?
-                tailGridElement.offsetHeight:
-                tailGridElement.offsetWidth,
+            (orientation == 'vertical')
+                ?tailGridElement.offsetHeight
+                :tailGridElement.offsetWidth,
 
         postCradleRowsPixelLength = (postCradleRowCount * baseCellLength),
 
         paddingTailOffset = 
-            orientation == 'vertical'?
-                paddingProps.bottom:
-                paddingProps.right,
+            orientation == 'vertical'
+                ?paddingProps.bottom
+                :paddingProps.right,
 
         totalPostAxisScrollblockPixelLength = 
             postCradleRowsPixelLength + measuredTailPixelLength + paddingTailOffset,
 
         paddingHeadOffset = 
-            orientation == 'vertical'?
-                paddingProps.top:
-                paddingProps.left,
+            orientation == 'vertical'
+                ?paddingProps.top
+                :paddingProps.left,
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         totalPreAxisScrollblockPixelLength = 
@@ -252,25 +252,25 @@ export const contentAdjust = (source, cradleParameters) => {
     if (orientation == 'vertical') {
 
         headGridElement.style.padding = 
-            headRowCount?
-                `0px 0px ${gapProps.column}px 0px`:
-                `0px`
+            headRowCount
+                ?`0px 0px ${gapProps.column}px 0px`
+                :`0px`
 
     } else {
 
         headGridElement.style.padding = 
-            headRowCount?
-                `0px ${gapProps.row}px 0px 0px`:
-                `0px`
+            headRowCount
+                ?`0px ${gapProps.row}px 0px 0px`
+                :`0px`
 
     }
 
     // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to trackingBlockScrollPos
     const 
         startingScrollPos = 
-            (orientation == 'vertical')?
-                viewportElement.scrollTop:
-                viewportElement.scrollLeft,
+            (orientation == 'vertical')
+                ?viewportElement.scrollTop
+                :viewportElement.scrollLeft,
 
         scrollDiff = trackingBlockScrollPos - startingScrollPos
 

@@ -78,9 +78,9 @@ export default class StylesHandler {
 
             headstyles.gridAutoRows = 
             tailstyles.gridAutoRows =
-                (layout == 'uniform')?
-                    null:
-                    'max-content'
+                (layout == 'uniform')
+                    ?null
+                    :'max-content'
 
             headstyles.gridAutoColumns = tailstyles.gridAutoColumns = null
 
@@ -102,9 +102,9 @@ export default class StylesHandler {
 
             headstyles.gridAutoColumns = 
             tailstyles.gridAutoColumns = 
-                (layout == 'uniform')?
-                    null:
-                    'max-content'
+                (layout == 'uniform')
+                    ?null
+                    :'max-content'
             
         }
 

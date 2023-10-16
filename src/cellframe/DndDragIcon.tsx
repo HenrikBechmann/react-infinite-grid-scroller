@@ -57,9 +57,9 @@ const DndDragIcon = props => {
     const options = useMemo(()=>{
 
         const computedOptions = 
-            dropEffect?
-                {dropEffect}:
-                {} // must be no property: undefined dropEffect property value interpreted as 'copy' on Chrome Mac
+            dropEffect
+                ?{dropEffect}
+                :{} // must be no property: undefined dropEffect property value interpreted as 'copy' on Chrome Mac
 
         masterDndContext.prescribedDropEffect = computedOptions.dropEffect
 

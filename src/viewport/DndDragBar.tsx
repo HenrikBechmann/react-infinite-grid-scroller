@@ -62,9 +62,17 @@ const DndDragBar = (props) => {
     } 
 
     const
-        calculatedDropEffect = hostDropEffect || prescribedDropEffect || (masterDndContext.altKey? 'copy': null) || 'move',
+        calculatedDropEffect = hostDropEffect 
+            || prescribedDropEffect 
+            || (masterDndContext.altKey
+                ? 'copy'
+                : null) 
+            || 'move',
 
-        dropEffectIcon = calculatedDropEffect == 'move'?moveicon:copyicon,
+        dropEffectIcon = calculatedDropEffect == 
+            'move'
+                ?moveicon
+                :copyicon,
 
         altKeyRef = useRef(masterDndContext.altKey),
 
@@ -127,9 +135,12 @@ const DndDragBar = (props) => {
     }
 
     const candropicon = 
-        (!hostStopDrop && (canDrop || masterDndContext.onDroppableWhitespace))?
-            dropicon:
-            nodropicon
+        (!hostStopDrop 
+            && (canDrop 
+                || masterDndContext.onDroppableWhitespace)
+        )
+            ?dropicon
+            :nodropicon
 
     useEffect (()=>{
 
