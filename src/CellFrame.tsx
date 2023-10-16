@@ -87,7 +87,7 @@ const CellFrameWrapper = (props) => {
         targetConnector = (element) => {}, // no-op
         frameRef = useRef(null),
 
-        enhancedProps = {...props, isDnd:false }
+        enhancedProps = {...props, isDndEnabled:false }
 
     return <CellFrame {...enhancedProps}/>
 } 
@@ -128,10 +128,10 @@ export const CellFrame = ({
     gridstartstyle,
     parentframeRef,
     targetConnector,
-    isDnd,
+    isDndEnabled,
     frameRef,
     contentHolderElementRef,
-    showDirectionIcon,
+    showDndDisplaceIcon,
     setDndFrameState,
 }) => {
 
@@ -194,16 +194,16 @@ export const CellFrame = ({
     const 
         dndOptionsRef = useRef<GenericObject>(null),
         cellFramePropertiesRef = useRef(null),
-        isDndRef = useRef(isDnd)
+        isDndEnabledRef = useRef(isDndEnabled)
 
-    useEffect( () => {
+    // useEffect( () => {
 
-        let enabled = dndOptionsRef.current?.enabled
-        enabled = enabled ?? true
-        const isLocalDnd = isDnd && enabled
+    //     let enabled = dndOptionsRef.current?.enabled
+    //     enabled = enabled ?? true
+    //     const isLocalDnd = isDnd && enabled
 
-        isDndRef.current = isLocalDnd 
-    },[isDnd,dndOptionsRef.current?.enabled])
+    //     isDndRef.current = isLocalDnd 
+    // },[isDnd,dndOptionsRef.current?.enabled])
 
     cellFramePropertiesRef.current = {
         itemID,
@@ -654,7 +654,7 @@ export const CellFrame = ({
                         :<OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {(isDndRef.current 
+                {(isDndEnabledRef.current 
                     && (['ready','nodata'].includes(frameState))) 
                     && <DndDragIcon 
                         contentHolderElementRef = {contentHolderElementRef} 
@@ -675,8 +675,8 @@ export const CellFrame = ({
             ?triggercellTriggerlinesRef.current
             :null)
         }
-        {(isDndRef.current 
-            && showDirectionIcon 
+        {(isDndEnabledRef.current 
+            && showDndDisplaceIcon 
             && (['ready','nodata'].includes(frameState))) 
             && <DndDisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
         }

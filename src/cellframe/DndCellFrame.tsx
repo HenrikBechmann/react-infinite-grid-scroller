@@ -31,8 +31,8 @@ const DndCellFrame = (props) => {
 
         calculatedDropEffect = dropEffect 
             || (masterDndContext.altKey
-                ? 'copy'
-                : null) 
+                ?'copy'
+                :null) 
             || 'move',
 
         { scrollerPropertiesRef } = cradleContext,
@@ -108,7 +108,7 @@ const DndCellFrame = (props) => {
 
     }
 
-    const showDirectionIcon = 
+    const showDndDisplaceIcon = 
         (isLocation 
         && targetData.isOver 
         && targetData.canDrop)
@@ -138,15 +138,16 @@ const DndCellFrame = (props) => {
 
     updateDragLayerIcon()
 
-    const isDndRef = useRef(true)
+    const isDndEnabledRef = useRef(true)
 
     useEffect(() => {
 
-        const isDnd = (masterDndContext.installed && 
-            (masterDndContext.enabled || scrollerDndContext.dndOptions.enabled))
+        const isDndEnabled = (masterDndContext.installed && 
+            (masterDndContext.enabled 
+                || scrollerDndContext.dndOptions.enabled))
 
-        if (isDndRef.current !== isDnd) {
-            isDndRef.current = isDnd
+        if (isDndEnabledRef.current !== isDndEnabled) {
+            isDndEnabledRef.current = isDndEnabled
         }
 
     },[masterDndContext.installed, masterDndContext.enabled, scrollerDndContext.dndOptions.enabled])
@@ -161,11 +162,11 @@ const DndCellFrame = (props) => {
 
     const enhancedProps = {
         ...props, 
-        isDnd:isDndRef.current, 
+        isDndEnabled:isDndEnabledRef.current, 
         targetConnector, 
         frameRef, 
         masterDndContext, 
-        showDirectionIcon, 
+        showDndDisplaceIcon, 
         setDndFrameState,
         contentHolderElementRef,
     }

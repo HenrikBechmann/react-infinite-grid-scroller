@@ -240,11 +240,7 @@ export const Cradle = ({ // exported for DndCradle
         cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // if (!scrollerContext) { // root scroller
-        // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
-        // console.log('-- index','~'+scrollerContext?.cellFramePropertiesRef.current.index+'~')
-        // console.log('-- itemID','+'+scrollerContext?.cellFramePropertiesRef.current.itemID+'+')
-    // }
+    // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
