@@ -224,9 +224,9 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
         }
 
         let gridstart
-        if (cradleContentProps.SOL === true && 
-            !(virtualListProps.baserowblanks === undefined || 
-            virtualListProps.baserowblanks === 0)) {
+        if (cradleContentProps.SOL === true 
+            && !(virtualListProps.baserowblanks === undefined 
+                || virtualListProps.baserowblanks === 0)) {
             gridstart = `${virtualListProps.baserowblanks + 1}`
         } else {
             gridstart = 'unset'

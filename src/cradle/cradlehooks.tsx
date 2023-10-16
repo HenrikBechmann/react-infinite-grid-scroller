@@ -516,8 +516,8 @@ export const useResizingEffect = ({
 
         }
 
-        if ((isResizing) && 
-                (cradleStateRef.current != 'viewportresizing')) {
+        if ((isResizing) 
+            && (cradleStateRef.current != 'viewportresizing')) {
 
             interruptHandler.pauseInterrupts()
  
@@ -526,7 +526,8 @@ export const useResizingEffect = ({
         }
 
         // complete viewportresizing mode
-        if (!isResizing && (cradleStateRef.current == 'viewportresizing')) {
+        if (!isResizing 
+            && (cradleStateRef.current == 'viewportresizing')) {
 
             setCradleState('finishviewportresize')
 

@@ -72,25 +72,35 @@ const DndCellFrame = (props) => {
         sourceIndex = targetData.sourceItem?.index,
         sourceScrollerID = targetData.sourceItem?.scrollerID,
 
-        isLocation = (scrollerID !== sourceScrollerID) || (sourceIndex !== index) || ((sourceIndex === index) && (calculatedDropEffect == 'copy')),
+        isLocation = (scrollerID !== sourceScrollerID) 
+            || (sourceIndex !== index) 
+            || ((sourceIndex === index) 
+                && (calculatedDropEffect == 'copy')),
 
         highlightClassname = 'rigs-target-highlight'
 
     // console.log('DndCellFrame: index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect\n',
     //     index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect)
 
-    if (isLocation && targetData.isOver && targetData.canDrop && !contentHolderElementRef.current?.classList.contains(highlightClassname)) {
+    if (isLocation 
+        && targetData.isOver 
+        && targetData.canDrop 
+        && !contentHolderElementRef.current?.classList.contains(highlightClassname)) {
 
         cellCanDropRef.current = true
         contentHolderElementRef.current.classList.add(highlightClassname)
         masterDndContext.dropCount++
 
-    } else if (!isLocation && (sourceIndex === index) && contentHolderElementRef.current?.classList.contains(highlightClassname)) {
+    } else if (!isLocation 
+        && (sourceIndex === index) 
+        && contentHolderElementRef.current?.classList.contains(highlightClassname)) {
 
         contentHolderElementRef.current.classList.remove(highlightClassname)
         masterDndContext.dropCount--
 
-    } else if (isLocation && !targetData.isOver && contentHolderElementRef.current?.classList.contains(highlightClassname)) {
+    } else if (isLocation 
+        && !targetData.isOver 
+        && contentHolderElementRef.current?.classList.contains(highlightClassname)) {
 
         masterDndContext.dropCount--
         contentHolderElementRef.current.classList.remove(highlightClassname)
@@ -98,7 +108,10 @@ const DndCellFrame = (props) => {
 
     }
 
-    const showDirectionIcon = (isLocation && targetData.isOver && targetData.canDrop)
+    const showDirectionIcon = 
+        (isLocation 
+        && targetData.isOver 
+        && targetData.canDrop)
 
     useEffect(()=>{
 

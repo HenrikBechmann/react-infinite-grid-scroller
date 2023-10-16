@@ -304,8 +304,10 @@ export const CellFrame = ({
 
         if (!usePlaceholder) return null
 
-        const dndEnabled = masterDndContext.installed && (
-            masterDndContext.enabled || scrollerDndContext.dndOptions.enabled)
+        const 
+            dndEnabled = masterDndContext.installed 
+                && (masterDndContext.enabled 
+                    || scrollerDndContext.dndOptions.enabled)
 
         return placeholder
             ?React.createElement(placeholder, 
@@ -334,8 +336,9 @@ export const CellFrame = ({
                     listsize = { listsize } 
                     message = { messageRef.current }
                     error = { errorRef.current }
-                    dndEnabled = {masterDndContext.installed && (
-                        masterDndContext.enabled || scrollerDndContext.dndOptions.enabled)}
+                    dndEnabled = {masterDndContext.installed 
+                        && (masterDndContext.enabled 
+                            || scrollerDndContext.dndOptions.enabled)}
                     userFrameStyles = { placeholderFrameStyles }
                     userLinerStyles = { placeholderLinerStyles }
                     userErrorFrameStyles = { placeholderErrorFrameStyles }
@@ -468,7 +471,8 @@ export const CellFrame = ({
                             if (getItemPack) {
 
                                 let context:GenericObject;
-                                if (masterDndContext.installed && scrollerDndContext.dndFetchIndex === index) {
+                                if (masterDndContext.installed 
+                                    && scrollerDndContext.dndFetchIndex === index) {
 
                                     context = {
                                         contextType:'dndFetchRequest',
@@ -587,8 +591,8 @@ export const CellFrame = ({
                                 // change placeholder message to error message
                                 errorRef.current = error
                                 // notify the host
-                                itemExceptionCallback && 
-                                    itemExceptionCallback(
+                                itemExceptionCallback 
+                                    && itemExceptionCallback(
                                         index, {
                                             contextType: 'itemException',
                                             itemID, 
@@ -650,8 +654,9 @@ export const CellFrame = ({
                         :<OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
-                {(isDndRef.current && (['ready','nodata'].includes(frameState))) && 
-                    <DndDragIcon 
+                {(isDndRef.current 
+                    && (['ready','nodata'].includes(frameState))) 
+                    && <DndDragIcon 
                         contentHolderElementRef = {contentHolderElementRef} 
                         itemID = {itemID} 
                         index = {index} 

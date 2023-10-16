@@ -228,9 +228,9 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
     // set or cancel first row offset if within cradle
     let gridstart
-    if (cradleContentProps.SOL === true && 
-        !(virtualListProps.baserowblanks === undefined || 
-        virtualListProps.baserowblanks === 0)) {
+    if (cradleContentProps.SOL === true 
+        && !(virtualListProps.baserowblanks === undefined 
+            || virtualListProps.baserowblanks === 0)) {
         gridstart = `${virtualListProps.baserowblanks + 1}`
     } else {
         gridstart = 'unset'

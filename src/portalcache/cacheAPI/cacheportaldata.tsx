@@ -489,8 +489,8 @@ export default class PortalData {
 
         } else {
 
-            itemExceptionCallback && 
-                itemExceptionCallback(index, {
+            itemExceptionCallback 
+                && itemExceptionCallback(index, {
                     contextType: 'itemException',
                     itemID, 
                     scrollerID,

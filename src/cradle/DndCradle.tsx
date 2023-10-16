@@ -95,10 +95,11 @@ const DndCradle = (props) => {
 
             if (
 
-                dynamicDropEffect === 'none' ||
-                !dropResult || // cautious
-                !dropResult.target || // prevent response from drop on scrolltab
-                ((dropResult.dataType == 'viewport') && !masterDndContext.onDroppableWhitespace)
+                dynamicDropEffect === 'none' 
+                    || !dropResult // cautious
+                    || !dropResult.target // prevent response from drop on scrolltab
+                    || ((dropResult.dataType == 'viewport') 
+                        && !masterDndContext.onDroppableWhitespace)
 
             ) {
                 return
@@ -113,7 +114,9 @@ const DndCradle = (props) => {
 
             // collect drop parameters
             const 
-                dropEffect = hostDropEffect || dropResult.dropEffect || 'move', // default for mobile
+                dropEffect = hostDropEffect 
+                    || dropResult.dropEffect 
+                    || 'move', // default for mobile
                 onDroppableWhitespace = masterDndContext.onDroppableWhitespace,
                 whitespacePosition = masterDndContext.whitespacePosition
             // console.log('DndCradle dropEffect',dropEffect)
@@ -236,7 +239,8 @@ const DndCradle = (props) => {
                 const { dragContext } = masterDndContext
 
                 // move existing cache item
-                if (cacheAPI.itemMetadataMap.has(itemID) && dropEffect == 'move') {
+                if (cacheAPI.itemMetadataMap.has(itemID) 
+                    && dropEffect == 'move') {
 
                     // ------------ resolve source data
                     const 

@@ -158,7 +158,7 @@ export const allocateContentList = (
             ?true
             :false
 
-    if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) { //&& 
+    if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) {
         if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {
             const 
                 triggercellPtr = triggercellIndex - lowcontentindex,

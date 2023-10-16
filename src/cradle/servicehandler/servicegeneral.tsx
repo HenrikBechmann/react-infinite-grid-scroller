@@ -368,9 +368,10 @@ export default class ServiceGeneral {
         cacheAPI.renderPortalLists()
 
 
-        if ((cache == 'preload') && 
-            (newlistrange.length == 2) &&
-            (newlistrange[0] < currentlistrange[0] || newlistrange[1] > currentlistrange[1])) {
+        if ((cache == 'preload') 
+            && (newlistrange.length == 2) 
+            && (newlistrange[0] < currentlistrange[0] 
+                || newlistrange[1] > currentlistrange[1])) {
 
             stateHandler.setCradleState('startpreload')
 

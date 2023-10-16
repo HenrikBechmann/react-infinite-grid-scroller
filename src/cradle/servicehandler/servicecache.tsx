@@ -388,8 +388,9 @@ export default class ServiceCache {
 
         const { deleteListCallback } = serviceHandler.callbacks
 
-        deleteListCallback && deletedList.length && 
-            deleteListCallback(deletedList,{
+        deleteListCallback 
+            && deletedList.length 
+            && deleteListCallback(deletedList,{
                 contextType:'deleteList',
                 message:"delete items from cache by index",
                 scrollerID:cradleParameters.cradleInheritedPropertiesRef.current.scrollerID,
@@ -409,8 +410,8 @@ export default class ServiceCache {
 
             measuredCradleItemCount = (cradleSize == 0)?0:highCradleIndex - lowCradleIndex + 1,
 
-            resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) || 
-                (highCradleIndex >= (newlistsize - 1)))
+            resetCradle = ((measuredCradleItemCount < calculatedCradleItemcount) 
+                || (highCradleIndex >= (newlistsize - 1)))
 
         let newListRange
         if (incrementDirection < 0) {

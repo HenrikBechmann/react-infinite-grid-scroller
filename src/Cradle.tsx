@@ -223,7 +223,10 @@ export const Cradle = ({ // exported for DndCradle
 
     // zero width and height means the component must be in portal (cache) state
     const 
-        isInPortal = ((viewportwidth == 0) && (viewportheight == 0)),
+        isInPortal = (
+            (viewportwidth == 0) 
+            && (viewportheight == 0)
+        ),
         isCacheChange = (isInPortal != isCachedRef.current)
 
     if (isCacheChange) {
@@ -409,8 +412,11 @@ export const Cradle = ({ // exported for DndCradle
         cradleContentProps,
         cache,
         dndInstalled:masterDndContext.installed,
-        dndEnabled:(masterDndContext.installed && (
-            masterDndContext.enabled || scrollerDndContext.dndOptions.enabled)),
+        dndEnabled:(
+            masterDndContext.installed 
+            && (masterDndContext.enabled 
+                || scrollerDndContext.dndOptions.enabled)
+            ),
         cacheMax,
         startingIndex,
         scrollerID,

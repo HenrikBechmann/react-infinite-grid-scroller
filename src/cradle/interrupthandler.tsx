@@ -209,9 +209,8 @@ export default class InterruptHandler {
 
                     !['repositioningRender','finishreposition',//'repositioningContinuation','finishreposition',
                         'renderupdatedcontent','finishupdatedcontent',
-                        'finishviewportresize'].includes(cradleState) &&
-
-                    !viewportContext.isResizing
+                        'finishviewportresize'].includes(cradleState) 
+                    && !viewportContext.isResizing
 
                 ) 
             {
@@ -296,8 +295,8 @@ export default class InterruptHandler {
                 observer = this.triggerlinesIntersect.observer,
                 cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
                 
-            if (cradleElements.triggercellTriggerlineHeadRef.current &&
-                cradleElements.triggercellTriggerlineTailRef.current) {
+            if (cradleElements.triggercellTriggerlineHeadRef.current 
+                && cradleElements.triggercellTriggerlineTailRef.current) {
                 observer.observe(cradleElements.triggercellTriggerlineHeadRef.current)
                 observer.observe(cradleElements.triggercellTriggerlineTailRef.current)
             }

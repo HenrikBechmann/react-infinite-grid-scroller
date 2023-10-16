@@ -255,7 +255,10 @@ const InfiniteGridScroller = (props) => {
     // minimal constraints
     let isMinimalPropsFail = false
 
-    if (!(cellWidth && cellHeight) || !getItemPack) {
+    if (!(
+        cellWidth 
+            && cellHeight) 
+        || !getItemPack) {
         console.log('RIGS: cellWidth, cellHeight, and getItemPack required')
         isMinimalPropsFail = true
     }
@@ -659,8 +662,8 @@ const InfiniteGridScroller = (props) => {
         listRangeRef.current = listrange
 
         // inform the user
-        callbacksRef.current.changeListRangeCallback && 
-            callbacksRef.current.changeListRangeCallback(listrange, {
+        callbacksRef.current.changeListRangeCallback 
+            && callbacksRef.current.changeListRangeCallback(listrange, {
                 contextType:'changeListRange',
                 scrollerID:scrollerSessionIDRef.current,
             })
@@ -755,7 +758,8 @@ const InfiniteGridScroller = (props) => {
         // }}
     >
 
-        {(scrollerState != 'setup') && <Viewport
+        {(scrollerState != 'setup') 
+        && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
             styles = { stylesRef.current }
@@ -811,7 +815,8 @@ const InfiniteGridScroller = (props) => {
             </Scrollblock>
         </Viewport>}
         <div data-type = 'cachewrapper'>
-            {useLocalCache && <div data-type = 'cacheroot' style = { cacherootstyle }>
+            {useLocalCache 
+            && <div data-type = 'cacheroot' style = { cacherootstyle }>
                 <PortalCache 
 
                     getCacheAPI = { getCacheAPI } 

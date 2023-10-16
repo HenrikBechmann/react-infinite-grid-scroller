@@ -95,7 +95,9 @@ export const Viewport = ({
         } = gridSpecs,
         [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
     
-    if (masterDndContext.installed && (scrollerID === masterDndContext.scrollerID) && !masterDndContext.setViewportState) {
+    if (masterDndContext.installed 
+        && (scrollerID === masterDndContext.scrollerID) 
+        && !masterDndContext.setViewportState) {
 
         masterDndContext.setViewportState = setViewportState
 
@@ -278,15 +280,17 @@ export const Viewport = ({
     // console.log('viewport showScrollTabs', showScrollTabs)
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
-        { (masterDndContext.installed && dragContext.isDragging && (scrollerID === masterDndContext.scrollerID)) && 
-            <DndDragBar 
+        { (masterDndContext.installed 
+            && dragContext.isDragging 
+            && (scrollerID === masterDndContext.scrollerID)) 
+        && <DndDragBar 
                 scrollerID = { scrollerID }
             />
         }
         <div ref = {outerViewportElementRef} data-type = 'outer-viewport-frame' style = {divframestyleRef.current}>
         <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
-            {showScrollTabs && 
-                <>
+            {showScrollTabs 
+                && <>
                     <DndScrollTab 
                         position = 'head' 
                         gridSpecs = {gridSpecs} 
@@ -309,8 +313,8 @@ export const Viewport = ({
             >
                 { (viewportState != 'setup') && children }
             </div>
-            {useScrollTracker && 
-                <ScrollTracker 
+            {useScrollTracker 
+                && <ScrollTracker 
                     scrollTrackerAPIRef = {scrollTrackerAPIRef}
                     styles = { styles.scrolltracker }
                 />

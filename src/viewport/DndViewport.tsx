@@ -134,9 +134,9 @@ const DndViewport = (props) => {
         // check for cradle boundary
         if (
 
-            cradleRowcount > viewportRowcount && 
-            lowrow > 0 &&
-            highrow < (listrowcount - 1)
+            cradleRowcount > viewportRowcount 
+                && lowrow > 0 
+                && highrow < (listrowcount - 1)
 
         ) {
 
