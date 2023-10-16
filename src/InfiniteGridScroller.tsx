@@ -615,7 +615,7 @@ const InfiniteGridScroller = (props) => {
 
     useEffect (() => {
 
-        const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? true
+        const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? masterDndContext.enabled
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
             scrollerDndContextRef.current.dndOptions.enabled = enabled
         }
