@@ -191,7 +191,7 @@ const InfiniteGridScroller = (props) => {
         cacheAPI,
         dndOptions, // **
         // information for host cell content
-        scrollerContext, // required for embedded scroller; shares scroller settings with content
+        scrollerContext, // parent scroller settings
         isDndMaster, // internal, set for root dnd only
 
         platformComponent, // ** planned supercedes most other properties
@@ -540,10 +540,90 @@ const InfiniteGridScroller = (props) => {
             cradleParameters:null,
         })
 
-    const lowindex = listRangeRef.current[0]
+    const [lowindex,highindex] = listRangeRef.current
     if (lowindex !== undefined) {
         startingIndex = Math.max(lowindex,startingIndex)
     }
+
+    const cradlePositionDataRef = useRef({
+
+        /*
+            "block" = cradleblock, which is the element that is scrolled
+
+            trackingBlockScrollPos is set by scrollHandler during and after scrolling,
+            and by setCradleContent in contentHandler, which repositions the cradle.
+
+            trackingBlockScrollPos is used by
+                - cradle initialization in response to reparenting interrupt
+                - setCradleContent
+
+        */
+        trackingBlockScrollPos:null, // the edge of the viewport
+        trackingXBlockScrollPos:null, // the cross position for oversized scrollBlock
+
+        /*
+            values can be "scrollTop" or "scrollLeft" (of the viewport element) depending on orientation
+
+            blockScrollProperty is set by the orientation reconfiguration effect in cradle module.
+
+            it is used where trackingBlockScrollPos is used above.
+        */
+        blockScrollProperty: null,
+        blockXScrollProperty: null,
+
+        /*
+            targetAxisReferencePosition is set by
+                - setCradleContent
+                - updateCradleContent
+                - layoutHandler (initialization)
+                - scrollHandler (during and after scroll)
+                - host scrollToIndex call
+
+            targetAxisReferencePosition is used by
+                - scrollTrackerArgs in cradle module
+                - requestedAxisReferenceIndex in setCradleContent
+        */
+        targetAxisReferencePosition:null,
+
+        /*
+            targetPixelOffsetAxisFromViewport is set by
+                - setCradleContent
+                - updateCradleContent
+                - layoutHandler (initialization)
+                - scrollHandler (during and after scroll)
+                - pivot effect (change of orientation) in cradle module
+
+            targetPixelOffsetAxisFromViewport is used by
+                - previousAxisOffset in pivot effect
+                - setCradleContent
+
+        */
+        targetPixelOffsetAxisFromViewport:null, // pixels into the viewport
+
+    })
+
+    const cradlePositionData = cradlePositionDataRef.current
+
+    useEffect (()=>{
+
+        if (listsize) {
+
+            // console.log('listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition\n',
+            //     listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition)
+
+            startingIndex = Math.max(startingIndex, lowindex)
+            startingIndex = Math.min(startingIndex, highindex)
+
+            cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
+
+        } else {
+
+            cradlePositionData.targetAxisReferencePosition = 0
+        }
+
+        cradlePositionData.targetPixelOffsetAxisFromViewport = 0
+
+    },[])
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
@@ -749,6 +829,7 @@ const InfiniteGridScroller = (props) => {
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
                     scrollerContext = { scrollerContext }
+                    cradlePositionData = {cradlePositionData}
 
                     cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }

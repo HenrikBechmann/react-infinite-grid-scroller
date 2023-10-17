@@ -77,56 +77,7 @@ export default class ContentHandler {
 
     }
 
-    // =============================[ UPDATE VIRTUAL LIST SIZE OR RANGE ]==========================
-    // TODO delete these are utilities
-
-    // reset the cradle with new content, including allocation between head and tail parts of the cradle
-    // - called only from the Cradle state handler
-    // public updateVirtualListSize = (newlistsize) => {
-
-    //     const 
-    //         { cradleParameters } = this,
-    //         cradleInternalProperties = cradleParameters.cradleInternalPropertiesRef.current,
-    //         { 
-
-    //             cradleContentProps,
-    //             setVirtualListSize,
-
-    //         } = cradleInternalProperties
-
-    //     if (newlistsize == 0) {
-
-    //         const 
-    //             cradleContent = this.content,
-    //             cradleHandlers = cradleParameters.handlersRef.current,
-    //             { layoutHandler } = cradleHandlers,
-    //             { cradlePositionData } = layoutHandler
-
-    //         this.clearCradle()
-    //         cradleContent.headDisplayComponents = []
-    //         cradleContent.tailDisplayComponents = []
-    //         Object.assign(cradleContentProps, 
-    //             {
-    //                 SOL:undefined, 
-    //                 EOL:undefined,
-    //                 highindex:undefined, 
-    //                 lowindex:undefined, 
-    //                 lowrow:undefined,
-    //                 highrow:undefined,
-    //                 axisReferenceIndex:undefined,
-    //                 size:0 
-    //             }
-    //         )
-
-    //         cradlePositionData.targetAxisReferencePosition = 0
-    //         cradlePositionData.targetPixelOffsetAxisFromViewport = 0
-
-    //     }
-
-    //     setVirtualListSize(newlistsize)
-
-    // }
-
+    // =============================[ UPDATE VIRTUAL LIST RANGE ]==========================
     public updateVirtualListRange = (newlistrange) => {
 
         // console.log('contentHandler.updateVirtualListRange: newlistrange', newlistrange)

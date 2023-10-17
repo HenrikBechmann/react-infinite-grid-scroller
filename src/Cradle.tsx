@@ -167,6 +167,7 @@ export const Cradle = ({ // exported for DndCradle
     MAX_CACHE_OVER_RUN,
     scrollerContext,
     handlerListRef,
+    cradlePositionData,
 
 }) => {
 
@@ -378,7 +379,7 @@ export const Cradle = ({ // exported for DndCradle
     // configuration properties to share with handlers
     const cradleInternalPropertiesRef = useRef(null)
     cradleInternalPropertiesRef.current = {
-
+        cradlePositionData,
         // updated values
         virtualListProps,
         // setVirtualListSize,

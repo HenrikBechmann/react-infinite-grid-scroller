@@ -428,6 +428,8 @@ export const CellFrame = ({
 
                 if (cached) {
 
+                    // console.log('retrieving from cache: itemID', itemID)
+
                     messageRef.current = placeholderMessagesRef.current.retrieving
 
                     if (isMountedRef.current) {
@@ -450,6 +452,8 @@ export const CellFrame = ({
                     }
 
                 } else {
+
+                    // console.log('fetching new: itemID',itemID)
 
                     messageRef.current = placeholderMessagesRef.current.loading
 

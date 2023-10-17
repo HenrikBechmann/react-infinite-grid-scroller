@@ -50,6 +50,7 @@ export default class LayoutHandler {
             { 
             
                 virtualListProps,
+                cradlePositionData,
 
             } = this.cradleParameters.cradleInternalPropertiesRef.current,
             { 
@@ -60,22 +61,24 @@ export default class LayoutHandler {
 
             } = virtualListProps
 
-        if (listsize) {
+        // if (listsize) {
 
-            // console.log('listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition\n',
-            //     listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition)
+        //     // console.log('listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition\n',
+        //     //     listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition)
 
-            startingIndex = Math.max(startingIndex, lowindex)
-            startingIndex = Math.min(startingIndex, highindex)
+        //     startingIndex = Math.max(startingIndex, lowindex)
+        //     startingIndex = Math.min(startingIndex, highindex)
 
-            this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
+        //     this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
 
-        } else {
+        // } else {
 
-            this.cradlePositionData.targetAxisReferencePosition = 0
-        }
+        //     this.cradlePositionData.targetAxisReferencePosition = 0
+        // }
 
-        this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
+        // this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
+
+        this.cradlePositionData = cradlePositionData
 
     } // constructor
 
