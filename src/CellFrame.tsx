@@ -499,6 +499,7 @@ export const CellFrame = ({
 
                                     context = {
                                         contextType:'fetch',
+                                        accept:scrollerDndContext?.dndOptions?.accept,
                                         scrollerID,
                                     }
 
@@ -524,6 +525,7 @@ export const CellFrame = ({
 
                             returnvalue = usercontent = undefined
                             if (!itempack) {
+                                // console.log('error', e)
                                 error = new Error ('no data ( ' + e.message +')')
                             } else {
                                 error = e
