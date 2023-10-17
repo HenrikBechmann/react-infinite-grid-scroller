@@ -114,10 +114,10 @@ import {
 const CradleController = props => {
 
     const 
-        masterDndContext = useContext(MasterDndContext),
+        scrollerDndContext = useContext(ScrollerDndContext),
         handlerListRef = useRef(null)
 
-    if (masterDndContext.installed) {
+    if (scrollerDndContext.dndOptions.enabled) {
 
         return <DndCradle {...props}/>
 
@@ -408,11 +408,7 @@ export const Cradle = ({ // exported for DndCradle
         cradleContentProps,
         cache,
         dndInstalled:masterDndContext.installed,
-        dndEnabled:(
-            masterDndContext.installed 
-            && (masterDndContext.enabled 
-                || scrollerDndContext.dndOptions.enabled)
-            ),
+        dndEnabled:scrollerDndContext.dndOptions.enabled,
         cacheMax,
         startingIndex,
         scrollerID,

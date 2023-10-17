@@ -360,7 +360,6 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         startingIndex,
-        // startingListSize,
         runwaySize,
         cacheMax,
     }
@@ -397,7 +396,6 @@ const InfiniteGridScroller = (props) => {
         // prop constraints - non-negative values
         runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
         // startingListSize = Math.max(0,startingListSize)
-        startingIndex = Math.max(0,startingIndex)
 
     }
 
@@ -542,6 +540,10 @@ const InfiniteGridScroller = (props) => {
             cradleParameters:null,
         })
 
+    const lowindex = listRangeRef.current[0]
+    if (lowindex !== undefined) {
+        startingIndex = Math.max(lowindex,startingIndex)
+    }
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
     if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
@@ -645,34 +647,6 @@ const InfiniteGridScroller = (props) => {
         setScrollerState('setlistprops')
 
     },[])
-
-    // TODO delete const setVirtualListSize = useCallback((listsize) =>{
-
-    //     let listrange = listRangeRef.current
-    //     if (listsize == 0) {
-    //         listrange = []
-    //     } else {
-    //         if (listrange.length == 0) {
-    //             listrange = [0,listsize - 1]
-    //         } else {
-    //             const [lowindex/*,highindex*/] = listRangeRef.current
-    //             listrange = [lowindex,lowindex + listsize - 1]
-    //         }
-    //     }
-
-    //     listSizeRef.current = listsize
-    //     listRangeRef.current = listrange
-
-    //     // inform the user
-    //     callbacksRef.current.changeListSizeCallback && 
-    //         callbacksRef.current.changeListSizeCallback(listsize, {
-    //             contextType:'changeListSize',
-    //             scrollerID:scrollerSessionIDRef.current,
-    //         })
-
-    //     setScrollerState('setlistprops')
-
-    // },[])
 
     // ---------------------[ State handling ]------------------------
 

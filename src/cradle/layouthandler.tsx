@@ -62,6 +62,9 @@ export default class LayoutHandler {
 
         if (listsize) {
 
+            // console.log('listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition\n',
+            //     listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition)
+
             startingIndex = Math.max(startingIndex, lowindex)
             startingIndex = Math.min(startingIndex, highindex)
 

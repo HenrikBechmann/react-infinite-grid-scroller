@@ -63,9 +63,9 @@ import DndDisplaceIcon from './CellFrame/DndDisplaceIcon'
 // called to choose between dnd or no dnd for CellFrame
 export const CellFrameController = props => {
 
-    const masterDndContext = useContext(MasterDndContext)
+    const scrollerDndContext = useContext(ScrollerDndContext)
 
-    if (masterDndContext.installed) {
+    if (scrollerDndContext.dndOptions.enabled) {
 
         return <DndCellFrame {...props}/>
 
@@ -127,7 +127,6 @@ export const CellFrame = ({
     usePlaceholder,
     gridstartstyle,
     parentframeRef,
-    targetConnector,
     isDndEnabled,
     frameRef,
     contentHolderElementRef,
@@ -305,9 +304,7 @@ export const CellFrame = ({
         if (!usePlaceholder) return null
 
         const 
-            dndEnabled = masterDndContext.installed 
-                && (masterDndContext.enabled 
-                    || scrollerDndContext.dndOptions.enabled)
+            dndEnabled = scrollerDndContext.dndOptions.enabled
 
         return placeholder
             ?React.createElement(placeholder, 
@@ -336,9 +333,7 @@ export const CellFrame = ({
                     listsize = { listsize } 
                     message = { messageRef.current }
                     error = { errorRef.current }
-                    dndEnabled = {masterDndContext.installed 
-                        && (masterDndContext.enabled 
-                            || scrollerDndContext.dndOptions.enabled)}
+                    dndEnabled = {scrollerDndContext.dndOptions.enabled}
                     userFrameStyles = { placeholderFrameStyles }
                     userLinerStyles = { placeholderLinerStyles }
                     userErrorFrameStyles = { placeholderErrorFrameStyles }
@@ -636,10 +631,7 @@ export const CellFrame = ({
 
     return <div 
 
-        ref = {(r) => {
-            targetConnector(r)
-            frameRef.current = r
-        }}
+        ref = { frameRef }
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 

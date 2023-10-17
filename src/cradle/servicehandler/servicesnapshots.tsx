@@ -54,20 +54,19 @@ export default class Snapshots {
     public getPropertiesSnapshot = () => {
 
         const 
-            props = {...this.cradleParameters.scrollerPropertiesRef.current},
+            snapshot = {...this.cradleParameters.scrollerPropertiesRef.current},
             { scrollerID } = this.cradleParameters.cradleInheritedPropertiesRef.current
         
-        props.virtualListProps = {...props.virtualListProps}
-        props.cradleContentProps = {...props.cradleContentProps}
-        props.gapProps = {...props.gapProps}
-        props.paddingProps = {...props.paddingProps}
+        snapshot.virtualListProps = {...snapshot.virtualListProps}
+        snapshot.cradleContentProps = {...snapshot.cradleContentProps}
+        snapshot.gapProps = {...snapshot.gapProps}
+        snapshot.paddingProps = {...snapshot.paddingProps}
 
-        return [props,{
+        return  [snapshot,{
             contextType:'propertiesSnapshot',
             scrollerID,
         }]
 
     }
-
 
 }

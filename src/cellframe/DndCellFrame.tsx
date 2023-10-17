@@ -115,6 +115,8 @@ const DndCellFrame = (props) => {
 
     useEffect(()=>{
 
+        targetConnector(frameRef.current)
+
         return () => {
             
             if (cellCanDropRef.current) masterDndContext.dropCount--
@@ -142,9 +144,7 @@ const DndCellFrame = (props) => {
 
     useEffect(() => {
 
-        const isDndEnabled = (masterDndContext.installed && 
-            (masterDndContext.enabled 
-                || scrollerDndContext.dndOptions.enabled))
+        const isDndEnabled = scrollerDndContext.dndOptions.enabled
 
         if (isDndEnabledRef.current !== isDndEnabled) {
             isDndEnabledRef.current = isDndEnabled
@@ -163,7 +163,6 @@ const DndCellFrame = (props) => {
     const enhancedProps = {
         ...props, 
         isDndEnabled:isDndEnabledRef.current, 
-        targetConnector, 
         frameRef, 
         masterDndContext, 
         showDndDisplaceIcon, 

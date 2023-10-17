@@ -35,7 +35,7 @@ import DndViewport from './Viewport/DndViewport'
 import DndDragBar from './Viewport/DndDragBar'
 import DndScrollTab from './Viewport/DndScrollTab'
 
-import { MasterDndContext } from './InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
 
 // popup position tracker for repositioning
 import ScrollTracker from './Viewport/ScrollTracker'
@@ -47,11 +47,11 @@ export const ViewportContext = React.createContext(null) // for children
 const ViewportController = (props) => {
 
     const 
-        masterDndContext = useContext(MasterDndContext),
+        scrollerDndContext = useContext(ScrollerDndContext),
         viewportFrameElementRef = useRef(null),
         outerViewportElementRef = useRef(null)
 
-    if (masterDndContext.installed) {
+    if (scrollerDndContext.dndOptions.enabled) {
 
         return <DndViewport {...props}/>
 
