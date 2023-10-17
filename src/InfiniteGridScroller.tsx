@@ -72,6 +72,7 @@ type RIGS = {
     callbacks:GenericObject,
     technical:GenericObject,
     dndOptions:GenericObject,
+    profile:GenericObject,
 
     // isOwnProperty causes scrollerContext and cacheAPI to be set by the system in CellFrame
     scrollerContext:null | undefined | GenericObject,
@@ -190,6 +191,7 @@ const InfiniteGridScroller = (props) => {
         technical, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI,
         dndOptions, // **
+        profile,
         // information for host cell content
         scrollerContext, // parent scroller settings
         isDndMaster, // internal, set for root dnd only
@@ -527,6 +529,7 @@ const InfiniteGridScroller = (props) => {
         scrollerDndContextRef = useRef({
             scrollerID,
             dndOptions, // scroller scoped
+            profile,
             droppedIndex:null, // polled by CellFrames
             displacedIndex:null, // polled by CellFrames
             dndFetchIndex:null, // polled by CellFrames
@@ -556,7 +559,6 @@ const InfiniteGridScroller = (props) => {
             trackingBlockScrollPos is used by
                 - cradle initialization in response to reparenting interrupt
                 - setCradleContent
-
         */
         trackingBlockScrollPos:null, // the edge of the viewport
         trackingXBlockScrollPos:null, // the cross position for oversized scrollBlock
@@ -829,7 +831,8 @@ const InfiniteGridScroller = (props) => {
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
                     scrollerContext = { scrollerContext }
-                    cradlePositionData = {cradlePositionData}
+                    cradlePositionData = {  cradlePositionData}
+                    scrollerProfile = { profile }
 
                     cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }

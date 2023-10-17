@@ -168,6 +168,7 @@ export const Cradle = ({ // exported for DndCradle
     scrollerContext,
     handlerListRef,
     cradlePositionData,
+    scrollerProfile,
 
 }) => {
 
@@ -483,7 +484,7 @@ export const Cradle = ({ // exported for DndCradle
         wasCachedRef, 
         hasBeenRenderedRef, 
         cradleState, 
-        setCradleState
+        setCradleState,
     })
 
     // ===================[ 4. INITIALIZATION EFFECTS ]=========================
@@ -702,6 +703,7 @@ export const Cradle = ({ // exported for DndCradle
     const cradleContextRef = useRef({
         scrollerPropertiesRef, 
         cacheAPI, 
+        scrollerProfile,
         itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
         IDLECALLBACK_TIMEOUT,
         triggercellTriggerlinesRef,
