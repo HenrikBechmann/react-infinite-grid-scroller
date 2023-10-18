@@ -297,7 +297,9 @@ const DndViewport = (props) => {
                     itemData = { itemID, index, profile, dndOptions, dropEffect },
                     context = {
                         sourceDndOptions: masterDndContext.dragContext.scrollerDndOptions,
+                        sourceProfile:masterDndContext.dragContext.scrollerProfile,
                         targetDndOptions: scrollerDndContext.dndOptions,
+                        targetProfile:scrollerDndContext.profile,
                         itemData,
                     }
 

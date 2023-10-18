@@ -191,7 +191,7 @@ const InfiniteGridScroller = (props) => {
         technical, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
         cacheAPI,
         dndOptions, // **
-        profile,
+        profile, // host provided scroller data
         // information for host cell content
         scrollerContext, // parent scroller settings
         isDndMaster, // internal, set for root dnd only

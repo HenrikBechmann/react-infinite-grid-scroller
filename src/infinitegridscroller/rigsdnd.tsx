@@ -92,6 +92,7 @@ export const masterDndContextBase = {
         index:null,
         scrollerID: null,
         scrollerDndOptions:null,
+        scrollerProfile:null,
         setDndFrameState:null,
         dndOptions:{} as GenericObject,
         // the following for inter-list drops to process drag source

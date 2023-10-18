@@ -113,6 +113,7 @@ const DndDragIcon = props => {
                 index,
                 dndOptions,
                 scrollerDndOptions:scrollerDndContext.dndOptions,
+                scrollerProfile:scrollerDndContext.profile,
                 sourceCacheAPI:scrollerDndContext.cacheAPI,
                 sourceStateHandler:scrollerDndContext.stateHandler,
                 sourceServiceHandler:scrollerDndContext.serviceHandler,

@@ -98,7 +98,7 @@ const DndCradle = (props) => {
                 dynamicDropEffect === 'none' 
                     || !dropResult // cautious
                     || !dropResult.target // prevent response from drop on scrolltab
-                    || ((dropResult.dataType == 'viewport') 
+                    || ((dropResult.dataType == 'viewport') // whitespace
                         && !masterDndContext.onDroppableWhitespace)
 
             ) {

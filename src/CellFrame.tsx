@@ -474,9 +474,11 @@ export const CellFrame = ({
                                     && scrollerDndContext.dndFetchIndex === index) {
 
                                     context = {
+
                                         contextType:'dndFetchRequest',
                                         accept:scrollerDndContext.dndOptions.accept,
                                         scrollerID,
+                                        scrollerProfile:cradleContext.profile,
                                         item:scrollerDndContext.dndFetchItem,
 
                                     }
@@ -489,18 +491,22 @@ export const CellFrame = ({
                                 } else if (masterDndContext.installed) {
 
                                     context = {
+
                                         contextType:'dndFetch',
                                         accept:scrollerDndContext.dndOptions.accept,
                                         scrollerID,
+                                        scrollerProfile:cradleContext.profile,
 
                                     }
 
                                 } else {
 
                                     context = {
+
                                         contextType:'fetch',
-                                        accept:scrollerDndContext?.dndOptions?.accept,
+                                        scrollerProfile:cradleContext.profile,
                                         scrollerID,
+                                        
                                     }
 
                                 }
