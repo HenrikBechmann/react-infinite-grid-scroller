@@ -36,7 +36,7 @@ const DndDragIcon = props => {
         profile, 
         contentHolderElementRef, 
         scrollerID, 
-        setDndFrameState
+        setDndCellFrameState
     } = props
     let 
         {
@@ -59,7 +59,7 @@ const DndDragIcon = props => {
         const computedOptions = 
             dropEffect
                 ?{dropEffect}
-                :{} // must be no property: undefined dropEffect property value interpreted as 'copy' on Chrome Mac
+                :{} // must be no property: undefined existing dropEffect property value interpreted as 'copy' on Chrome Mac
 
         masterDndContext.prescribedDropEffect = computedOptions.dropEffect
 
@@ -81,8 +81,8 @@ const DndDragIcon = props => {
 
             item:{ 
                 scrollerID,
-                itemID, 
                 index,
+                itemID,
                 profile,
                 dndOptions,
                 dropEffect:options.dropEffect,
@@ -117,7 +117,7 @@ const DndDragIcon = props => {
                 sourceCacheAPI:scrollerDndContext.cacheAPI,
                 sourceStateHandler:scrollerDndContext.stateHandler,
                 sourceServiceHandler:scrollerDndContext.serviceHandler,
-                setDndFrameState,
+                setDndCellFrameState,
             }
         )
         masterDndContext.setViewportState('startdragbar')
@@ -135,7 +135,7 @@ const DndDragIcon = props => {
         previewConnector(getEmptyImage(),{ captureDraggingState: true })
 
         return () => {
-            masterDndContext.dragContext.setDndFrameState = null
+            masterDndContext.dragContext.setDndCellFrameState = null
         }
 
     },[])

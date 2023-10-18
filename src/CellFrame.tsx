@@ -131,7 +131,7 @@ export const CellFrame = ({
     frameRef,
     contentHolderElementRef,
     showDndDisplaceIcon,
-    setDndFrameState,
+    setDndCellFrameState,
 }) => {
 
     const 
@@ -664,7 +664,7 @@ export const CellFrame = ({
                         contentHolderElementRef = {contentHolderElementRef} 
                         itemID = {itemID} 
                         index = {index} 
-                        setDndFrameState = { setDndFrameState }
+                        setDndCellFrameState = { setDndCellFrameState }
                         dndOptions = {dndOptionsRef.current} 
                         profile = {portalMetadataRef.current?.profile} 
                         dndDragIconStyles = {dndDragIconStyles}

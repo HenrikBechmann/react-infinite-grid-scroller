@@ -12,7 +12,7 @@ import React, {FC, useState, useEffect, useRef, useCallback} from 'react'
 
 import CacheAPI from './PortalCache/cacheAPI'
 
-const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getUpdateFunction }) => {
+const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getPortalCacheUpdateFunction }) => {
 
     const 
         cacheAPIRef = useRef(null),
@@ -35,7 +35,7 @@ const PortalCache:FC<any> = ({CACHE_PARTITION_SIZE, getCacheAPI, getUpdateFuncti
         cacheAPIRef.current = cacheAPI
 
         getCacheAPI(cacheAPI)
-        getUpdateFunction(partitionRepoForceUpdate)
+        getPortalCacheUpdateFunction(partitionRepoForceUpdate)
 
     },[])
 

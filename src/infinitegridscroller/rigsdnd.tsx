@@ -75,31 +75,38 @@ function getDropTargetElementsAtPoint(x, y, dropTargets) {
   })
 }
 
+// drag source data
+export const masterDndDragContextBase = {
+    isDragging:false,
+    canDrop:false,
+    itemID:null,
+    index:null,
+    scrollerID:null,
+    dndOptions:null,
+    scrollerDndOptions:null,
+    scrollerProfile:null,
+    // processing
+    sourceCacheAPI:null,
+    sourceStateHandler:null,
+    sourceServiceHandler:null,
+    setDndCellFrameState:null,
+}
+
+// master dnd control data
 export const masterDndContextBase = {
+    // master data
     enabled:false,
     installed:false,
-    scrollerID:null,
+    scrollerID:null, // the root scroller
+    // current drag status
     prescribedDropEffect:null,
     dynamicDropEffect:null,        
     dropCount:0,
     altKey:null,
     onDroppableWhitespace:false,
     whitespacePosition:null,
-    dragContext:{
-        isDragging:false,
-        canDrop:false,
-        itemID:null,
-        index:null,
-        scrollerID: null,
-        scrollerDndOptions:null,
-        scrollerProfile:null,
-        setDndFrameState:null,
-        dndOptions:{} as GenericObject,
-        // the following for inter-list drops to process drag source
-        sourceCacheAPI:null,
-        sourceStateHandler:null,
-        sourceServiceHandler:null,
-    },
+    // source data
+    dragContext:masterDndDragContextBase,
     // functions
     setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
     setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
@@ -139,7 +146,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         }
 
         // reset masterDndContext on unmount. 
-        // For next mount, 'setup' state gives previous unmount time to finish
+        // For next mount, 'setup' state gives previous unmount reset time to finish
         return () => {
             
             Object.assign(masterDndContext,masterDndContextBase)

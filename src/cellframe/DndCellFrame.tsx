@@ -25,7 +25,7 @@ const DndCellFrame = (props) => {
         cradleContext = useContext(CradleContext),
         masterDndContext = useContext(MasterDndContext),
         scrollerDndContext = useContext(ScrollerDndContext),
-        [dndFrameState, setDndFrameState] = useState('ready'),
+        [dndCellFrameState, setDndCellFrameState] = useState('ready'),
 
         { prescribedDropEffect:dropEffect } = masterDndContext,
 
@@ -154,11 +154,11 @@ const DndCellFrame = (props) => {
 
     useEffect(()=>{
 
-        if (dndFrameState == 'refresh') {
-            setDndFrameState('ready')
+        if (dndCellFrameState == 'refresh') {
+            setDndCellFrameState('ready')
         }
 
-    },[dndFrameState])
+    },[dndCellFrameState])
 
     const enhancedProps = {
         ...props, 
@@ -166,7 +166,7 @@ const DndCellFrame = (props) => {
         frameRef, 
         masterDndContext, 
         showDndDisplaceIcon, 
-        setDndFrameState,
+        setDndCellFrameState,
         contentHolderElementRef,
     }
 

@@ -28,6 +28,8 @@ import { isMobile } from  '../InfiniteGridScroller/RigsDnd'
 
 import { MasterDndContext, ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
 
+import { masterDndDragContextBase } from '../InfiniteGridScroller/RigsDnd'
+
 import dragicon from "../../assets/drag_indicator_FILL0_wght400_GRAD0_opsz24.png"
 import dropicon from "../../assets/task_alt_FILL0_wght400_GRAD0_opsz24.png"
 import nodropicon from "../../assets/block_FILL0_wght400_GRAD0_opsz24.png"
@@ -86,8 +88,8 @@ const DndDragBar = (props) => {
 
             if (masterDndContext.altKey !== altKeyRef.current) {
                 altKeyRef.current = masterDndContext.altKey
-                const { setDndFrameState } = masterDndContext.dragContext
-                setDndFrameState && setDndFrameState('refresh')
+                const { setDndCellFrameState } = masterDndContext.dragContext
+                setDndCellFrameState && setDndCellFrameState('refresh')
                 setDragBarState('refresh')
             }
 
@@ -118,15 +120,7 @@ const DndDragBar = (props) => {
     const {isDragging, currentOffset} = dragBarData
 
     if (!isDragging && dragContext.isDragging) {
-        Object.assign(
-            dragContext,
-            {
-                isDragging:false,
-                itemID:null,
-                index:null,
-                dndOptions:{} as GenericObject
-            }
-        )
+        Object.assign( dragContext, masterDndDragContextBase )
     }
 
     let hostStopDrop

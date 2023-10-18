@@ -506,10 +506,8 @@ const InfiniteGridScroller = (props) => {
 
         portalCacheForceUpdateFunctionRef = useRef(null),
 
-        // listSizeRef = useRef(startingListSize),
         listRangeRef = useRef(startingListRange),
 
-        // listsize = listSizeRef.current,
         listrange = listRangeRef.current,
         [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
         listsize = 
@@ -526,6 +524,7 @@ const InfiniteGridScroller = (props) => {
 
         virtualListSpecsRef = useRef(virtualListSpecs),
 
+        // scroller scoped dnd data
         scrollerDndContextRef = useRef({
             scrollerID,
             dndOptions, // scroller scoped
@@ -533,8 +532,8 @@ const InfiniteGridScroller = (props) => {
             droppedIndex:null, // polled by CellFrames
             displacedIndex:null, // polled by CellFrames
             dndFetchIndex:null, // polled by CellFrames
-            dndFetchItem:null,
-            // frequently used...
+            dndFetchItem:null, // data to pass to host
+            // access to frequently used operations by dnd processes...
             cacheAPI:null,
             stateHandler:null,
             serviceHandler:null,
@@ -548,6 +547,10 @@ const InfiniteGridScroller = (props) => {
         startingIndex = Math.max(lowindex,startingIndex)
     }
 
+    // placing cradlePositionData here preserves values with switch from dnd enabled to not enabled
+    // it is passed to the layoutHandler through the cradle
+    // the switch causes scroller controllers to load alternate components, causing new setup and initialization processes
+    // this includes viewport, cradle and cellframe. See notes in RigsDnd for more detail
     const cradlePositionDataRef = useRef({
 
         /*
@@ -604,11 +607,12 @@ const InfiniteGridScroller = (props) => {
 
     })
 
+    // assure that cradlePositionData is always the same object
     const cradlePositionData = cradlePositionDataRef.current
 
     useEffect (()=>{
 
-        if (listsize) {
+        if (listsize) { // only applies to startup; no change tracking required
 
             // console.log('listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition\n',
             //     listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition)
@@ -654,7 +658,7 @@ const InfiniteGridScroller = (props) => {
 
     }
 
-    const getUpdateFunction = (fn) => {
+    const getPortalCacheUpdateFunction = (fn) => {
 
         portalCacheForceUpdateFunctionRef.current = fn
 
@@ -852,7 +856,7 @@ const InfiniteGridScroller = (props) => {
                 <PortalCache 
 
                     getCacheAPI = { getCacheAPI } 
-                    getUpdateFunction = { getUpdateFunction }
+                    getPortalCacheUpdateFunction = { getPortalCacheUpdateFunction }
                     CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
 
             </div>}
