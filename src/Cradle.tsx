@@ -414,6 +414,7 @@ export const Cradle = ({ // exported for DndCradle
         cacheMax,
         startingIndex,
         scrollerID,
+        scrollerProfile,
     }
 
     // placeholder in cradleParameters to make available individual handlers
