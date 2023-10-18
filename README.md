@@ -108,7 +108,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |useScrollTracker:boolean| default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
 |placeholder:React.FC|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error, dndEnabled. Arguments set by system|
 |usePlaceholder:boolean| default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
-|cacheAPI:null|requested by user components by being set to null by user; instantiated with a class instance by system|Experimental. If present, parent scroller instantiates the property with its cacheAPI instance, which causes any child scroller given the property to share the parent scroller cache. This currently has no operational effect|
+|cacheAPI:null|requested by user components by being set to null by user; instantiated with a class instance by system|Required for drag and drop to share portal data among scrollers. If present, parent scroller instantiates the property with its cacheAPI instance, which causes any child scroller given the property to share the parent scroller cache.|
 |[_**OBJECT PROPERTIES**_]|
 |styles:object| collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
 |placeholderMessages:object| messages presented by the placeholder|optional, to replace default messages. See below for details|
