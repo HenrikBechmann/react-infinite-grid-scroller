@@ -396,7 +396,6 @@ const dndOptions = {
   accept:['type1','type2','type3',...] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
   master:{enabled}, // optional, default true, for root `RigsDnd` component only. Serves as default for scroller enabled setting.
   enabled, // optional for all participating scrollers, default set by master.enabled
-  profile, // recommended. simple object to help the host identify the scroller in the `getDropEffect` call.
   dropEffect, // optional. the prescribed value ('move' or 'copy') for dragged scroller items; can be overridden by getDropEffect.
     // undefined dropEffect means default = 'move', posibly modified to 'copy' by pressing the altKey on desktop systems
 }
