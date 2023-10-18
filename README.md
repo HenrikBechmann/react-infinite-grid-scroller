@@ -429,6 +429,10 @@ With dnd enabled, the `context` parameter of the `getItemPack` function sent to 
 
 ## `canDrop` and `dropEffect`
 
+`canDrop` is initially controlled by `react-dnd` by comparing the dragged item's `type` property to the list of `accept` values of the target scroller. If there is a match, then the item can be dropped on the scroller.
+
+`canDrop` can be further constrained by the host-provided `getDropEffect` function, as follows.
+
 `dropEffect` can be constrained by the return value of the host-provided function `getDropEffect` (see _Scroller Properties_ above) . This function has three parameters: `sourceScrollerID` (the `scrollerID` from the source of the drag), `targetScrollerID` (the `scrollerID` from the target of the drag), and `context`. `getDropEffect` is called by RIGS whenever the drag location crosses into a scroller for which `isOver` and `canDrop` are both true. Here are the properties of the `context` parameter:
 
 ```
@@ -436,16 +440,17 @@ context: {
   sourceDndOptions:{ // taken from the source scroller
     accept, // the array of strings signifying the types of content items accepted by drop
     enabled, // the current state of dnd for the scroller
-    profile, // a host-provided simple object to assist with identification of the scroller
     dropEffect // an optional prescribed value for use by contained list items
   },
+  sourceProfile, // a host-provided simple object to assist with identification of the scroller
   targetDndOptions:{
     ... // same as sourceDndOptions, but taken from the target scroller
   },
+  targetProfile, // similar to sourceProfile
   itemData:{ // identifying information of the current item being dragged
     itemID, // the itemID assigned to the content item by RIGA
     index, // the item's logical position in the source scroller
-    profile, // host provided simple object to assis with identification
+    profile, // host provided simple object to assist with item identification
     dndOptions: {, // taken from getItemPack function
       type, // the type of the item, matches one of the accept items in both the source and target scroller
       dragText, // the text shown in the dragBar when the item is being dragged
@@ -454,7 +459,7 @@ context: {
   }
 }
 ```
-The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffect` function. 'none' prevents a drop, 'move' and 'copy' override the item's `dropEffect` value, and `undefined` yields to the value of the item's `dropEffect` property.
+The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffect` function. 'none' prevents a drop, 'move' and 'copy' override the item's `dropEffect` value, and `undefined` yields to the value of the scroller's `dropEffect` property.
 
 # Restoring scroll positions coming out of cache
 
