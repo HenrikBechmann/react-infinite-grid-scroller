@@ -246,7 +246,7 @@ const InfiniteGridScroller = (props) => {
     },[]);
 
     console.log('InfiniteGridScroller: scrollerID, scrollerState, masterDndContext.installed, dndOptions',
-        scrollerID, scrollerState, masterDndContext.installed, dndOptions)
+        scrollerID, scrollerState, masterDndContext.installed, {...dndOptions})
 
     // if (!masterDndContext.installed) dndOptions = null
 
