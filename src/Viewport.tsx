@@ -51,6 +51,8 @@ const ViewportController = (props) => {
         viewportFrameElementRef = useRef(null)
         // outerViewportElementRef = useRef(null)
 
+    console.log('ViewportController:scrollerDndContext, scrollerDndContext.dndOptions.enabled\n',scrollerDndContext, scrollerDndContext.dndOptions.enabled)
+
     if (scrollerDndContext.dndOptions.enabled) {
 
         return <DndViewport {...props}/>

@@ -106,7 +106,7 @@ export const masterDndContextBase = {
     onDroppableWhitespace:false,
     whitespacePosition:null,
     // source data
-    dragContext:masterDndDragContextBase,
+    dragContext:{...masterDndDragContextBase},
     // functions
     setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
     setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
@@ -124,7 +124,31 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     let { dndOptions, getDropEffect } = props
 
-    // console.log('RigsDnd dndOptions', dndOptions)
+    const isMountedRef = useRef(true)
+
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        return () => {
+            isMountedRef.current = false
+        }
+
+    },[])
+
+    useEffect(()=>{
+
+        return () => {
+
+            if (isMountedRef.current) return
+
+            Object.assign(masterDndContext,{...masterDndContextBase})
+
+            console.log('RigsDnd: clearing masterDndContext', {...masterDndContext})
+
+        }
+
+    },[])
 
     useEffect(()=>{
         let isEnabled = dndOptions?.master?.enabled
@@ -147,11 +171,6 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         // reset masterDndContext on unmount. 
         // For next mount, 'setup' state gives previous unmount reset time to finish
-        return () => {
-            
-            Object.assign(masterDndContext,masterDndContextBase)
-
-        }
 
     },[dndOptions, getDropEffect])
 

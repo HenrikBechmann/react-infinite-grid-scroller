@@ -134,7 +134,7 @@ import PortalCache from './PortalCache'
 // global session ID generator
 let globalScrollerID = 0
 
-export const MasterDndContext = React.createContext(masterDndContextBase) // inform children; tree scope
+export const MasterDndContext = React.createContext({...masterDndContextBase}) // inform children; tree scope
 
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 
@@ -225,7 +225,30 @@ const InfiniteGridScroller = (props) => {
     isDndMaster = isDndMaster ?? false
     dndOptions = dndOptions ?? {}
 
-    const masterDndContext = useContext(MasterDndContext)
+    const 
+        masterDndContext = useContext(MasterDndContext),
+
+        // for mount version
+        scrollerSessionIDRef = useRef(null),
+        scrollerID = scrollerSessionIDRef.current
+
+    useEffect (() => {
+
+        if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
+            scrollerSessionIDRef.current = globalScrollerID++
+            isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
+        }
+
+        return () => {
+            clearScrollerDndContext()
+        }
+
+    },[]);
+
+    console.log('InfiniteGridScroller: scrollerID, scrollerState, masterDndContext.installed, dndOptions',
+        scrollerID, scrollerState, masterDndContext.installed, dndOptions)
+
+    // if (!masterDndContext.installed) dndOptions = null
 
     // minimal constraints
     let isMinimalPropsFail = false
@@ -497,9 +520,6 @@ const InfiniteGridScroller = (props) => {
     triggerlineOffset = triggerlineOffset ?? 10
 
     const 
-        // for mount version
-        scrollerSessionIDRef = useRef(null),
-        scrollerID = scrollerSessionIDRef.current,
 
         // for children
         cacheAPIRef = useRef(cacheAPI),
@@ -680,14 +700,25 @@ const InfiniteGridScroller = (props) => {
 
     },[])
 
-    useEffect (() => {
-
-        if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
-            scrollerSessionIDRef.current = globalScrollerID++
-            isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
+    const clearScrollerDndContext = () => {
+        console.log('clearing scrollerDndContext, scrollerID',scrollerID)
+        scrollerDndContextRef.current = {
+            scrollerID:null,
+            dndOptions:{}, // scroller scoped
+            profile:null,
+            droppedIndex:null, // polled by CellFrames
+            displacedIndex:null, // polled by CellFrames
+            dndFetchIndex:null, // polled by CellFrames
+            dndFetchItem:null, // data to pass to host
+            // access to frequently used operations by dnd processes...
+            cacheAPI:null,
+            stateHandler:null,
+            serviceHandler:null,
+            handlersRef:null,
+            // general access...
+            cradleParameters:null,
         }
-
-    },[]);
+    }
 
     useEffect(()=>{
         const { dndHighlights } = stylesRef.current
@@ -701,14 +732,19 @@ const InfiniteGridScroller = (props) => {
         }
     },[])
 
+
     useEffect (() => {
+
+        scrollerDndContextRef.current.dndOptions = dndOptions
 
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? masterDndContext.enabled
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
             scrollerDndContextRef.current.dndOptions.enabled = enabled
         }
 
-    },[scrollerDndContextRef.current.dndOptions.enabled])
+        console.log('setting scrollerDndContext enabled', enabled)
+
+    },[dndOptions])
 
     const setVirtualListRange = useCallback((listrange) =>{
 
