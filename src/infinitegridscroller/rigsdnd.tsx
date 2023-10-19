@@ -144,7 +144,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
             Object.assign(masterDndContext,{...masterDndContextBase})
 
-            console.log('RigsDnd: clearing masterDndContext', {...masterDndContext})
+            // console.log('RigsDnd: clearing masterDndContext', {...masterDndContext})
 
         }
 

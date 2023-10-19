@@ -245,8 +245,8 @@ const InfiniteGridScroller = (props) => {
 
     },[]);
 
-    console.log('InfiniteGridScroller: scrollerID, scrollerState, masterDndContext.installed, dndOptions',
-        scrollerID, scrollerState, masterDndContext.installed, {...dndOptions})
+    // console.log('InfiniteGridScroller: scrollerID, scrollerState, masterDndContext.installed, dndOptions',
+    //     scrollerID, scrollerState, masterDndContext.installed, {...dndOptions})
 
     // if (!masterDndContext.installed) dndOptions = null
 
@@ -701,7 +701,7 @@ const InfiniteGridScroller = (props) => {
     },[])
 
     const clearScrollerDndContext = () => {
-        console.log('clearing scrollerDndContext, scrollerID',scrollerID)
+        // console.log('clearing scrollerDndContext, scrollerID',scrollerID)
         scrollerDndContextRef.current = {
             scrollerID:null,
             dndOptions:{}, // scroller scoped
@@ -737,12 +737,26 @@ const InfiniteGridScroller = (props) => {
 
         scrollerDndContextRef.current.dndOptions = dndOptions
 
+        let changes = 0
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? masterDndContext.enabled
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
             scrollerDndContextRef.current.dndOptions.enabled = enabled
+            changes++
+            // scrollerDndContextRef.current = {...scrollerDndContextRef.current}
         }
 
-        console.log('setting scrollerDndContext enabled', enabled)
+        const masterenabled = dndOptions.master?.enabled ?? true
+        if (masterDndContext.enabled !== masterenabled) {
+            masterDndContext.enabled = masterenabled
+            changes ++
+        }
+
+        if (changes) {
+
+            console.log('setting scrollerDndContext dndOptions', dndOptions)
+            setScrollerState('update')
+
+        }
 
     },[dndOptions])
 
@@ -780,7 +794,7 @@ const InfiniteGridScroller = (props) => {
 
         switch (scrollerState) {
 
-            case 'setup':
+            case 'setup':{
                 // replace cacheAPI with facade which includes hidden scrollerID
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
@@ -790,10 +804,14 @@ const InfiniteGridScroller = (props) => {
                     cacheAPIRef.current.partitionRepoForceUpdate = portalCacheForceUpdateFunctionRef.current
 
                 }
-
-            case 'setlistprops':
                 setScrollerState('ready')
-
+                break
+            }
+            case 'update':
+            case 'setlistprops':{
+                setScrollerState('ready')
+                break
+            }
         }
 
         return () => {
