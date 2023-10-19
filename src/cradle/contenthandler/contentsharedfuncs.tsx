@@ -12,7 +12,7 @@
 
 import React from 'react'
 
-import { CellFrameController } from '../../CellFrame'
+import CellFrame from '../../CellFrame'
 
 // =====================[ shared by both setCradleContent and updateCradleContent ]====================
 
@@ -274,6 +274,6 @@ const createCellFrame = ({
 
         }
 
-    return <CellFrameController { ...props } /> // CellFrameController decides if DnD s/b supported
+    return <CellFrame { ...props } /> 
 
 }

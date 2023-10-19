@@ -48,8 +48,8 @@ const ViewportController = (props) => {
 
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
-        viewportFrameElementRef = useRef(null),
-        outerViewportElementRef = useRef(null)
+        viewportFrameElementRef = useRef(null)
+        // outerViewportElementRef = useRef(null)
 
     if (scrollerDndContext.dndOptions.enabled) {
 
@@ -57,7 +57,7 @@ const ViewportController = (props) => {
 
     } else {
 
-        const enhancedProps = {...props,viewportFrameElementRef,outerViewportElementRef}
+        const enhancedProps = {...props,viewportFrameElementRef} //,outerViewportElementRef}
 
         return <Viewport {...enhancedProps} />
 
@@ -75,7 +75,7 @@ export const Viewport = ({
     scrollerID,
     VIEWPORT_RESIZE_TIMEOUT,
     useScrollTracker,
-    outerViewportElementRef,
+    // outerViewportElementRef,
     viewportFrameElementRef,
     showScrollTabs,
     SCROLLTAB_INTERVAL_MILLISECONDS,
@@ -93,8 +93,10 @@ export const Viewport = ({
             orientation,
 
         } = gridSpecs,
-        [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
+        [viewportState,setViewportState] = useState('setup'), // setup, resizing, resized, ready
     
+        outerViewportElementRef = useRef(null)
+
     if (masterDndContext.installed 
         && (scrollerID === masterDndContext.scrollerID) 
         && !masterDndContext.setViewportState) {

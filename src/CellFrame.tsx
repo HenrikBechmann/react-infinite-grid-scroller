@@ -61,7 +61,7 @@ import DndDragIcon from './CellFrame/DndDragIcon'
 import DndDisplaceIcon from './CellFrame/DndDisplaceIcon'
 
 // called to choose between dnd or no dnd for CellFrame
-export const CellFrameController = props => {
+const CellFrameController = props => {
 
     const scrollerDndContext = useContext(ScrollerDndContext)
 
@@ -71,26 +71,29 @@ export const CellFrameController = props => {
 
     } else {
 
-        const contentHolderElementRef = useRef(null)
-        const enhancedProps  = {...props, contentHolderElementRef}
+        const 
+            contentHolderElementRef = useRef(null),
+            enhancedProps  = {...props, contentHolderElementRef, isDndEnabled:false }
 
-        return <CellFrameWrapper {...enhancedProps} />
+        return <CellFrame {...enhancedProps} />
 
     }
 
 }
 
+export default CellFrameController
+
 // provide targetConnector source when not required for DnD
-const CellFrameWrapper = (props) => {
+// const CellFrameWrapper = (props) => {
 
-    const 
-        targetConnector = (element) => {}, // no-op
-        frameRef = useRef(null),
+//     const 
+//         targetConnector = (element) => {}, // no-op
+//         frameRef = useRef(null),
 
-        enhancedProps = {...props, isDndEnabled:false }
+//         enhancedProps = {...props, isDndEnabled:false }
 
-    return <CellFrame {...enhancedProps}/>
-} 
+//     return <CellFrame {...enhancedProps}/>
+// } 
 
 // =================[ end of dnd support ]=================
 

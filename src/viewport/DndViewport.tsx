@@ -355,7 +355,7 @@ const DndViewport = (props) => {
     const enhancedProps = {
         ...props,
         viewportFrameElementRef, 
-        outerViewportElementRef, 
+        // outerViewportElementRef, 
         showScrollTabs:showScrollTabsRef.current
     }
 
