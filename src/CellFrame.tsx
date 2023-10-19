@@ -533,7 +533,7 @@ export const CellFrame = ({
 
                             returnvalue = usercontent = undefined
                             if (!itempack) {
-                                console.log('error', e)
+                                // console.log('error', e)
                                 error = new Error ('no data ( ' + e.message +')')
                             } else {
                                 error = e
