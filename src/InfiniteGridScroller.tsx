@@ -780,6 +780,8 @@ const InfiniteGridScroller = (props) => {
 
     }
 
+    // console.log('InfiniteGridScroller: profile',profile)
+
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
     return <ScrollerDndContext.Provider value = {scrollerDndContextRef.current} >
     <ErrorBoundary

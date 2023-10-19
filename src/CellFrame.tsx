@@ -478,7 +478,7 @@ export const CellFrame = ({
                                         contextType:'dndFetchRequest',
                                         accept:scrollerDndContext.dndOptions.accept,
                                         scrollerID,
-                                        scrollerProfile:cradleContext.profile,
+                                        scrollerProfile:cradleContext.scrollerProfile,
                                         item:scrollerDndContext.dndFetchItem,
 
                                     }
@@ -490,21 +490,23 @@ export const CellFrame = ({
 
                                 } else if (masterDndContext.installed) {
 
+
                                     context = {
 
                                         contextType:'dndFetch',
                                         accept:scrollerDndContext.dndOptions.accept,
                                         scrollerID,
-                                        scrollerProfile:cradleContext.profile,
+                                        scrollerProfile:cradleContext.scrollerProfile,
 
                                     }
 
                                 } else {
 
+                                    // console.log('fetch cradleContext',cradleContext)
                                     context = {
 
                                         contextType:'fetch',
-                                        scrollerProfile:cradleContext.profile,
+                                        scrollerProfile:cradleContext.scrollerProfile,
                                         scrollerID,
                                         
                                     }
@@ -531,7 +533,7 @@ export const CellFrame = ({
 
                             returnvalue = usercontent = undefined
                             if (!itempack) {
-                                // console.log('error', e)
+                                console.log('error', e)
                                 error = new Error ('no data ( ' + e.message +')')
                             } else {
                                 error = e

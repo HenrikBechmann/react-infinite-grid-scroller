@@ -172,7 +172,12 @@ export const Cradle = ({ // exported for DndCradle
 
 }) => {
 
+    // console.log('Cradle: scrollerProfile',scrollerProfile)
+
     // ========================[ 1. DATA SETUP ]========================
+
+    // const scrollerProfileRef = useRef(scrollerProfile)
+    // scrollerProfileRef.current = scrollerProfile
 
     // unpack core list specs
     const 
@@ -701,14 +706,24 @@ export const Cradle = ({ // exported for DndCradle
         triggercellTriggerlineTailStyle
     ])
 
-    const cradleContextRef = useRef({
-        scrollerPropertiesRef, 
-        cacheAPI, 
-        scrollerProfile,
-        itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
-        IDLECALLBACK_TIMEOUT,
-        triggercellTriggerlinesRef,
-    })
+    const cradleContextRef = useRef(null)
+
+    cradleContextRef.current = useMemo(()=>{
+
+        const context = {
+            scrollerPropertiesRef, 
+            cacheAPI, 
+            scrollerProfile,
+            itemExceptionCallback:serviceHandler.callbacks.itemExceptionCallback,
+            IDLECALLBACK_TIMEOUT,
+            triggercellTriggerlinesRef,
+        }
+        // cradleContextRef.current.scrollerProfile = scrollerProfile
+        return context
+
+    },[scrollerProfile])
+
+    // console.log('cradleContextRef.current',cradleContextRef.current)
 
 
     // display the cradle components or the ScrollTracker (from Viewport), not both
