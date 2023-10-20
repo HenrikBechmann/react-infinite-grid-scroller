@@ -49,9 +49,13 @@ const DndDragBar = (props) => {
             index,
             dndOptions,
 
-        } = dragContext,
+        } = dragContext
 
-        dragText = dndOptions.dragText || `Dragging itemID ${itemID}, index ${index}`,
+        // console.log('dragContext',dragContext)
+
+    const
+        // the need for a conditional ? here seems to be fleeting and related to timing
+        dragText = dndOptions?.dragText || `Dragging itemID ${itemID}, index ${index}`,
 
         [dragState, setDragBarState] = useState('ready'),
 
@@ -103,6 +107,7 @@ const DndDragBar = (props) => {
 
     },[])
 
+    // console.log('scrollerID, masterDndContext.scrollerID',scrollerID, masterDndContext.scrollerID)
     if ((scrollerID === masterDndContext.scrollerID) && !masterDndContext.setDragBarState) {
 
         masterDndContext.setDragBarState = setDragBarState

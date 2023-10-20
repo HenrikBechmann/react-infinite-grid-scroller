@@ -153,7 +153,11 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
     useEffect(()=>{
         let isEnabled = dndOptions?.master?.enabled
 
+        // console.log('RigsDnd 1', isEnabled, dndOptions)
+
         isEnabled = isEnabled ?? true
+
+        // console.log('RigsDnd 2', isEnabled)
 
         if (!(masterDndContext.enabled === isEnabled)) {
 
@@ -161,6 +165,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         }
 
+        // console.log('RigsDnd 3', masterDndContext.enabled)
         // console.log('RigsDnd masterDndContext.enabled, isEnabled, dndOptions', masterDndContext.enabled, isEnabled, dndOptions)
 
         if (masterDndContext.getDropEffect !== getDropEffect) {

@@ -237,6 +237,7 @@ const InfiniteGridScroller = (props) => {
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
             isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
+            // isDndMaster && console.log('setting masterDndContext.scrollerID',masterDndContext.scrollerID)
         }
 
         return () => {
@@ -737,25 +738,11 @@ const InfiniteGridScroller = (props) => {
 
         scrollerDndContextRef.current.dndOptions = dndOptions
 
-        let changes = 0
+        // console.log('opening enabled values:scroller, master,',scrollerDndContextRef.current.dndOptions.enabled, masterDndContext.enabled)
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? masterDndContext.enabled
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
             scrollerDndContextRef.current.dndOptions.enabled = enabled
-            changes++
-            // scrollerDndContextRef.current = {...scrollerDndContextRef.current}
-        }
-
-        const masterenabled = dndOptions.master?.enabled ?? true
-        if (masterDndContext.enabled !== masterenabled) {
-            masterDndContext.enabled = masterenabled
-            changes ++
-        }
-
-        if (changes) {
-
-            console.log('setting scrollerDndContext dndOptions', dndOptions)
             setScrollerState('update')
-
         }
 
     },[dndOptions])

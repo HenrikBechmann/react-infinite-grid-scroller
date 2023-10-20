@@ -238,11 +238,11 @@ export const CellFrame = ({
 
                 const classname = 'rigs-dropped-highlight'
 
-                if (contentHolderElementRef.current) { // may have crossed axis
+                if (contentHolderElementRef?.current) { // may have crossed axis
                     scrollerDndContext.droppedIndex = null
                     contentHolderElementRef.current.classList.add(classname)
                     setTimeout(()=>{
-                        if (contentHolderElementRef.current) contentHolderElementRef.current.classList.remove(classname)
+                        if (contentHolderElementRef?.current) contentHolderElementRef.current.classList.remove(classname)
                     },2000)
     
                 }
@@ -259,7 +259,7 @@ export const CellFrame = ({
             const classname = 'rigs-target-finish'
             contentHolderElementRef.current.classList.add(classname)
             setTimeout(()=>{
-                if (frameRef.current) contentHolderElementRef.current.classList.remove(classname)
+                if (frameRef?.current) contentHolderElementRef.current.classList.remove(classname)
             },2000)
         }
 
