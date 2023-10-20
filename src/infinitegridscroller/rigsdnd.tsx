@@ -120,6 +120,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         [rigsdndState, setRigsdndState] = useState('setup'),
         masterDndContext = useContext(MasterDndContext)
 
+    // let masterDndEnabledContext = useContext(MasterDndEnabledContext)
+
     if (!masterDndContext.installed) masterDndContext.installed = true
 
     let { dndOptions, getDropEffect } = props
@@ -144,8 +146,6 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
             Object.assign(masterDndContext,{...masterDndContextBase})
 
-            // console.log('RigsDnd: clearing masterDndContext', {...masterDndContext})
-
         }
 
     },[])
@@ -153,11 +153,7 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
     useEffect(()=>{
         let isEnabled = dndOptions?.master?.enabled
 
-        // console.log('RigsDnd 1', isEnabled, dndOptions)
-
         isEnabled = isEnabled ?? true
-
-        // console.log('RigsDnd 2', isEnabled)
 
         if (!(masterDndContext.enabled === isEnabled)) {
 
@@ -165,17 +161,11 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
         }
 
-        // console.log('RigsDnd 3', masterDndContext.enabled)
-        // console.log('RigsDnd masterDndContext.enabled, isEnabled, dndOptions', masterDndContext.enabled, isEnabled, dndOptions)
-
         if (masterDndContext.getDropEffect !== getDropEffect) {
 
             masterDndContext.getDropEffect = getDropEffect
 
         }
-
-        // reset masterDndContext on unmount. 
-        // For next mount, 'setup' state gives previous unmount reset time to finish
 
     },[dndOptions, getDropEffect])
 
