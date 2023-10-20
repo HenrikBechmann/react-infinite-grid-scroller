@@ -63,9 +63,14 @@ import DndDisplaceIcon from './CellFrame/DndDisplaceIcon'
 // called to choose between dnd or no dnd for CellFrame
 const CellFrameController = props => {
 
-    const scrollerDndContext = useContext(ScrollerDndContext)
+    const 
+        scrollerDndContext = useContext(ScrollerDndContext),
+        masterDndContext = useContext(MasterDndContext)
 
-    if (scrollerDndContext.dndOptions.enabled) {
+    // console.log('CellFrameController: masterDndContext.installed && scrollerDndContext.dndOptions.enabled\n',
+    //     props.scrollerID, masterDndContext.installed, scrollerDndContext.dndOptions.enabled)
+
+    if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
 
         return <DndCellFrame {...props}/>
 
@@ -307,7 +312,7 @@ export const CellFrame = ({
         if (!usePlaceholder) return null
 
         const 
-            dndEnabled = scrollerDndContext.dndOptions.enabled
+            dndEnabled = scrollerDndContext.dndOptions?.enabled
 
         return placeholder
             ?React.createElement(placeholder, 
@@ -336,7 +341,7 @@ export const CellFrame = ({
                     listsize = { listsize } 
                     message = { messageRef.current }
                     error = { errorRef.current }
-                    dndEnabled = {scrollerDndContext.dndOptions.enabled}
+                    dndEnabled = {scrollerDndContext.dndOptions?.enabled}
                     userFrameStyles = { placeholderFrameStyles }
                     userLinerStyles = { placeholderLinerStyles }
                     userErrorFrameStyles = { placeholderErrorFrameStyles }

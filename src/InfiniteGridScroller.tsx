@@ -133,6 +133,7 @@ import PortalCache from './PortalCache'
 
 // global session ID generator
 let globalScrollerID = 0
+let rigsDndRoot = true
 
 export const MasterDndContext = React.createContext({...masterDndContextBase}) // inform children; tree scope
 
@@ -705,7 +706,7 @@ const InfiniteGridScroller = (props) => {
         // console.log('clearing scrollerDndContext, scrollerID',scrollerID)
         scrollerDndContextRef.current = {
             scrollerID:null,
-            dndOptions:{}, // scroller scoped
+            dndOptions:null, // scroller scoped
             profile:null,
             droppedIndex:null, // polled by CellFrames
             displacedIndex:null, // polled by CellFrames
@@ -736,16 +737,28 @@ const InfiniteGridScroller = (props) => {
 
     useEffect (() => {
 
+        if (!masterDndContext.installed) {
+            if (scrollerDndContextRef.current.dndOptions) {
+                clearScrollerDndContext()
+            }
+            return
+        }
+
+        const wasEnabled = scrollerDndContextRef.current.dndOptions?.enabled
+
         scrollerDndContextRef.current.dndOptions = dndOptions
 
         // console.log('opening enabled values:scroller, master,',scrollerDndContextRef.current.dndOptions.enabled, masterDndContext.enabled)
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? masterDndContext.enabled
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
             scrollerDndContextRef.current.dndOptions.enabled = enabled
+        }
+        // console.log('wasEnabled, enabled',wasEnabled, enabled)
+        if (wasEnabled !== enabled) {
             setScrollerState('update')
         }
 
-    },[dndOptions])
+    },[dndOptions, masterDndContext.installed])
 
     const setVirtualListRange = useCallback((listrange) =>{
 
@@ -865,7 +878,6 @@ const InfiniteGridScroller = (props) => {
                     gapProps = { gapProps }
                     styles = { stylesRef.current }
                     virtualListSpecs = {virtualListSpecsRef.current}
-                    // setVirtualListSize = { setVirtualListSize }
                     setVirtualListRange = { setVirtualListRange }
                     cache = { cache }
                     cacheMax = { cacheMax }
