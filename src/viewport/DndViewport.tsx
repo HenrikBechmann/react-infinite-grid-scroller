@@ -28,7 +28,7 @@ const DndViewport = (props) => {
         scrollerDndContext = useContext(ScrollerDndContext),
 
         viewportFrameElementRef = useRef(null),
-        outerViewportElementRef = useRef(null),
+        // outerViewportElementRef = useRef(null),
 
         showScrollTabsRef = useRef(false)
 
@@ -86,6 +86,8 @@ const DndViewport = (props) => {
         },
 
     })
+
+    // console.log('DndViewport isOver, canDrop',targetData.isOver, targetData.canDrop)
 
     // TODO take gap into account
     const isOnDroppableWhitespace = (clientOffset:{x:number, y:number}) => {
@@ -337,6 +339,7 @@ const DndViewport = (props) => {
 
     useEffect(()=>{
 
+        // console.log('viewportFrameElementRef',{...viewportFrameElementRef})
         targetConnector(viewportFrameElementRef.current)
 
     },[])

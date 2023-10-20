@@ -64,7 +64,7 @@ const DndCellFrame = (props) => {
         },
     })
 
-    // console.log('DndCellFrame didDrop',targetData.didDrop)
+    // console.log('DndCellFrame canDrop',targetData.canDrop)
 
     const 
         cellCanDropRef = useRef(false),

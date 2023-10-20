@@ -61,6 +61,8 @@ const ViewportController = (props) => {
         && (masterDndContext.scrollerID == scrollerID // root viewport is needed for DndDragBar
             || scrollerDndContext.dndOptions.enabled)) {
 
+        // console.log('loading DndViewport')
+    
         return <DndViewport {...props}/>
 
     } else {

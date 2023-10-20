@@ -525,6 +525,7 @@ export const CellFrame = ({
                                 ({ dndOptions, profile} = itempack)
                                 dndOptions = dndOptions ?? {}
                                 profile = profile ?? {}
+                                // console.log('cell dndOptions',dndOptions)
                                 dndOptionsRef.current = dndOptions
                                 usercontent = await itempack.component
 
