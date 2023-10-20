@@ -426,6 +426,8 @@ With dnd enabled, the `context` parameter of the `getItemPack` function sent to 
 
 ## Configuration
 
+## Performance
+
 ## `canDrop` and `dropEffect`
 
 `canDrop` is initially controlled by `react-dnd` by comparing the dragged item's `type` property to the list of `accept` values of the target scroller. If there is a match, then the item can be dropped on the scroller.
