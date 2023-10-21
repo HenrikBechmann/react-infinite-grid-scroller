@@ -234,7 +234,6 @@ Functions with no return values:
 |scrollToIndex(index:integer): _void_|places the requested index item at the top visible row or left visible column of the scroller, depending on orientation|
 |scrollToPixel(pixel:integer[,behavior:string = 'smooth']): _void_|scrolls the scroller to the provided pixel, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` must be >=0 |
 |scrollByPixel(pixel:integer[,behavior:string = 'smooth']): _void_|scrolls the scroller up or down by the number of provided pixels, along the current orientation. `behavior` = 'smooth' \| 'instant' \| 'auto'; default = 'smooth'. `pixel` can be positive (scroll down) or negative (scroll up) |
-|setListSize(index:integer): _void_|changes the list size, by adjusting the list range high index. Favour use of `setListRange` instead|
 |setListRange(array [lowindex, highindex] \| []): _void_|lowindex must be <= highindex; lowindex and highindex can be positive or negative integers. [] (empty array) creates an empty virtual list|
 |prependIndexCount(count:integer): _void_|the number of indexes to expand the start of the virtual list|
 |appendIndexCount(count:integer): _void_|the number of indexes to expand the end of the virtual list|
