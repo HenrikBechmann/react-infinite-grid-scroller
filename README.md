@@ -372,12 +372,15 @@ The following are the basic steps to implement drag and drop on RIGS. Note that 
 
 - design a type system for scroller items and scrollers. Scroller item types must be included in scroller `accept` type lists
 - install the dnd system by invoking the specialized `RigsDnd` root component
-- provide every scroller with a scroller `dndOptions` object as a scroller parameter
-- provide every item fetched using `getItemPack` with a cell `dndOptions` property through the returned object (remember that subscrollers require both a direct scroller `dndOptions` property, and a cell `dndOptions` object returned by `getItemPack`. Sub-scrollers are both repositories and scroller items
-- request a `scrollerContext` object from the host scroller for each of your scroller items so that the items will be aware of dnd status in their hosts (see `scrollerContext` section)
+- provide every scroller with a scroller `dndOptions` object as a scroller parameter. Also providing a scroller `profile` object is highly recommended, for use during interaction with the system
+- provide every item fetched using `getItemPack` with a cell `dndOptions` property through the returned object (remember that subscrollers require both a direct scroller `dndOptions` property, and a cell `dndOptions` object returned by `getItemPack`. Sub-scrollers are both repositories and scroller items. Also providing items with a cell `profile` object is highly recommended, for use during interaction with the system
+- prepare to respond to 'dndFetchRequest' getItemPack requests, which are for copies of existing items, or replacements for moved items that have gone out of scope as the result of scrolling during the drag activity
+- request a `scrollerContext` object from the host scroller for each of your scroller content items so that the items will be aware of dnd status in their host scrollers for layout purposes (see `scrollerContext` section)
 - design and implement layout features on your cell components
-- design and implement configuration options as required
+- design and implement dnd configuration options as required
 - create a `getDropEffect` function if needed, and pass this to the `RigsDnd` root component
+
+See below for details.
 
 ## Installation
 
@@ -427,6 +430,8 @@ return {
 RIGS does not check for matches of `type` values returned with `getItemPack`, with `accept` values sent to scrollers via the `dndOptions` scroller property.
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
+
+## `dndFetchRequest` specialized `getItemPack` call
 
 ## Layout
 
