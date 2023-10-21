@@ -108,7 +108,6 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |useScrollTracker:boolean| default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
 |placeholder:React.FC|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error, dndEnabled. Arguments set by system|
 |usePlaceholder:boolean| default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
-|cacheAPI:null|property is requested by user components by being set to null by user; instantiated with a class instance by system; passed to RIGS scroller by the user component|Required for drag and drop to share portal data among scrollers. If present, root scroller instantiates the property with its cacheAPI instance, which causes any child scroller given the property to share the parent scroller cache.|
 |[_**OBJECT PROPERTIES**_]|
 |styles:object| collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
 |placeholderMessages:object| messages presented by the placeholder|optional, to replace default messages. See below for details|
@@ -396,9 +395,7 @@ const dndOptions = {
     // undefined dropEffect means default = 'move', posibly modified to 'copy' by pressing the altKey on desktop systems
 }
 ```
-3. Sub-scrollers must be provided with the `cacheAPI` property of their parents to support inter-list drag and drop (by sharing the cache). This API object is obtained from the parent scroller by having the child component (the one returned to RIGS through the `getItemPack` function) set up a `cacheAPI = {null}` property. This will cause the parent scroller to instantiate the property, so the child can then pass the property to its sub-scroller.
-
-4. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). The `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
+3. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). The `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
 
 ```
 // in host getItemPack function
