@@ -88,24 +88,11 @@ const CellFrameController = props => {
 
 export default CellFrameController
 
-// provide targetConnector source when not required for DnD
-// const CellFrameWrapper = (props) => {
-
-//     const 
-//         targetConnector = (element) => {}, // no-op
-//         frameRef = useRef(null),
-
-//         enhancedProps = {...props, isDndEnabled:false }
-
-//     return <CellFrame {...enhancedProps}/>
-// } 
-
 // =================[ end of dnd support ]=================
 
 const defaultPlaceholderMessages = {
     loading:'(loading...)',
     retrieving:'(retrieving from cache)',
-    null:'end of list',
     undefined:'host returned "undefined"',
     invalid:'invalid React element',
 }
@@ -203,19 +190,9 @@ export const CellFrame = ({
         cellFramePropertiesRef = useRef(null),
         isDndEnabledRef = useRef(isDndEnabled)
 
-    // useEffect( () => {
-
-    //     let enabled = dndOptionsRef.current?.enabled
-    //     enabled = enabled ?? true
-    //     const isLocalDnd = isDnd && enabled
-
-    //     isDndRef.current = isLocalDnd 
-    // },[isDnd,dndOptionsRef.current?.enabled])
-
     cellFramePropertiesRef.current = {
         itemID,
         index,
-        // updateDndOptions,
     }
     // fetch error
     const 
