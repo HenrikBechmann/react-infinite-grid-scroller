@@ -431,29 +431,6 @@ RIGS does not check for matches of `type` values returned with `getItemPack`, wi
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
 
-## `dndFetchRequest` specialized `getItemPack` call
-
-When the user drags and drops an item which exists in the RIGS cache, and with a 'move' `dropEffect`, then RIGS takes care of the data trasnsfer itself. 
-
-However, if the drop involves a `copy` (a RIGS cache item can only be used for one display instance), then the host has to supply what it considers to be a copy of the item. Also, if the item has been moved, but has gone out of scope (as the result of scrolling during the drag operation) and therefore removed from the cache, then a fresh instance of the moved item has to be obtained from the host. In those cases, RIGS sends out a specialized `getItemPack(index, itemID, context)` call with sufficient information for the host to respond appropriately. In this case, the `context` parameter contains the following:
-
-```
-context:{
-  contextType:'dndFetchRequest', // identifiaction of the specialized request
-  accept, // the accept list of the target scroller
-  scrollerID, // the target scroller ID
-  scrollerProfile, // the target scroller profile, as provided by the host as the scroller property
-  item:{
-    scrollerID, // the source scrollerID
-    index, // the item index at source
-    itemID, // the itemID at the start of drag (now to be replaced)
-    profile, // the item profile as passed to RIGS through the original instantiating getItemPack response (could include host item ID)
-    dndOptions, // the original item dndOptions from getItemPack
-    dropEffect, // the final dropEffect at the point of drop
-  },
-}
-```
-
 ## Layout
 
 ## Configuration
@@ -462,11 +439,11 @@ context:{
 
 ## `canDrop` and `dropEffect`
 
-`canDrop` is controlled by `react-dnd` by comparing the dragged item's `type` property (from the cell `dndOptions` property) to the list of `accept` values (from the scroller `dndOptions` property) of the target scroller. If there is a match, then the item can be dropped on the scroller.
+`canDrop` is controlled by `react-dnd` by comparing the dragged item's `type` property (from the cell `dndOptions` property) to the list of `accept` values (from the scroller `dndOptions` property) of the target scroller. If a match is found, then `react-dnd` signals that the item can be dropped on the scroller.
 
-`canDrop` can be further constrained by the host-provided `getDropEffect` function, as follows.
+`canDrop` can be further constrained by the host-provided `getDropEffect` function, by returning 'none'.
 
-`dropEffect` can be constrained by the return value of the host-provided function `getDropEffect` (see _Scroller Properties_ above) . This function has three parameters: `sourceScrollerID` (the `scrollerID` from the source of the drag), `targetScrollerID` (the `scrollerID` from the target of the drag), and `context`. `getDropEffect` is called by RIGS whenever the drag location crosses into a scroller for which `isOver` and `canDrop` are both true. Here are the properties of the `context` parameter:
+`dropEffect` can be constrained by the return value of the host-provided function `getDropEffect` (see _Scroller Properties_ above). This function has three parameters: `sourceScrollerID` (the `scrollerID` from the source of the drag), `targetScrollerID` (the `scrollerID` from the target of the drag), and `context`. `getDropEffect` (if provided by the host) is called by RIGS whenever the drag location crosses into a scroller for which `isOver` and `canDrop` are both true. Here are the properties of the `context` parameter:
 
 ```
 context: {
@@ -492,7 +469,30 @@ context: {
   }
 }
 ```
-The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffect` function. 'none' prevents a drop, 'move' and 'copy' override the item's `dropEffect` value, and `undefined` yields to the value of the scroller's `dropEffect` property.
+The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffect` function. 'none' prevents a drop, 'move' and 'copy' override the item's `dropEffect` value, and `undefined` yields to the value of the scroller's calculated `dropEffect` property.
+
+## `dndFetchRequest` specialized `getItemPack` call
+
+When the user drags and drops an item which exists in the RIGS cache, and with a 'move' `dropEffect`, then RIGS takes care of the data trasnsfer itself. 
+
+However, if the drop involves a `copy` (a RIGS cache item can only be used for one display instance), then the host has to supply what it considers to be a copy of the item. Also, if the item has been moved, but has gone out of scope (as the result of scrolling during the drag operation) and therefore removed from the cache, then a fresh instance of the moved item has to be obtained from the host. In those cases, RIGS sends out a specialized `getItemPack(index, itemID, context)` call with sufficient information for the host to respond appropriately. In this case, the `context` parameter contains the following:
+
+```
+context:{
+  contextType:'dndFetchRequest', // identifiaction of the specialized request
+  accept, // the accept list of the target scroller
+  scrollerID, // the target scroller ID
+  scrollerProfile, // the target scroller profile, as provided by the host as the scroller property
+  item:{
+    scrollerID, // the source scrollerID
+    index, // the item index at source
+    itemID, // the itemID at the start of drag (now to be replaced)
+    profile, // the item profile as passed to RIGS through the original instantiating getItemPack response (could include host item ID)
+    dndOptions, // the original item dndOptions from getItemPack
+    dropEffect, // the final dropEffect at the point of drop
+  },
+}
+```
 
 # Restoring scroll positions coming out of cache
 
