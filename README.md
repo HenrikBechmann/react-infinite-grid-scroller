@@ -494,9 +494,85 @@ context:{
 
 RIGS shows a drag icon for draggable items at the top left of the CellFrame. Since this icon can overlay some of the content of the host provided content, the component may want to move this content out of the way of the drag icon when it is present. Here is how that can be done.
 
+First, obtain a `scrollerContext` object from the host scroller. See the `scrollerContext` section for details.
+
+Then code something like this.
+
+```
+    const isDnd = scrollerContext?.scroller.current.dndEnabled
+
+    const float = useMemo(() => {
+        return <div 
+            style = {{float:'left', height: '28px', width:'34px'}} 
+            data-type = 'dnd-float'
+        />
+    },[])
+
+    return <div 
+        ... // properties
+          >
+            {isDnd && float}
+            ... // content
+    </div>
+```
+
 ## Configuration
 
+Drag and drop can be enabled or disabled for individual scrollers, by setting the scroller's `dndOptions.enabled` property. If the scroller's `enabled` property is `undefined`, then it is set to the `RigsDnd` component's `dndOptions.master.enabled` property (which is itself set to default `true` if `undefined`. The `enabled` property can be set at runtime.
+
+This presents a number of options. For example the user can set the dnd capability of a scroller themselves, something like this:
+
+```
+
+const dndOptionsRef = useRef(dndOptions) // for use elsewhere, below
+dndOptionsRef.current = dndOptions
+...
+const checkdnd = (event:React.ChangeEvent) => {
+  const
+    target = event.target as HTMLInputElement,
+    isChecked = target.checked
+  dndOptionsRef.current.enabled = isChecked
+  setSubscrollerState('revised')
+}
+
+return ...
+<FormControl borderTop = '1px' style = {{clear:'left'}}>
+  <Checkbox 
+    isChecked = {dndOptions.current.enabled} 
+    size = 'sm'
+    mt = {2}
+    onChange = {checkdnd}
+  >
+    Drag and drop
+  </Checkbox>
+</FormControl>}
+...
+<Scroller
+  ...
+  dndOptions = {dndOptionsRef.current}
+  ...
+/>
+```
+
+Or you can create a global React context, say `const DndEnabledContext = React.createContext(true)`. Then control that value through a global checkbox control. Finally, in your scroller component:
+
+```
+const dndEnabledContext = useContext( DndEnabledContext )
+...
+useEffect(()=>{
+
+  dndOptionsRef.current.enabled = dndEnabledContext
+  setSubscrollerState('revised')
+
+},[dndEnabledContext])
+...
+```
+
+The combination of the local and global settings would allow the user much flexibility in terms of how to use drag and drop. This could be particularly useful in settings involving dozens of subscrollers.
+
 ## Performance
+
+If there are dozens of subscrollers on screen (say by zooming out to 50%), then performance of drag and drop (notably for the drag icon) can degrade owing to the pub/sub system of `react-dnd`. One way of dealing with this is to disable all drag and drop (see _Configuration_ above), and let the user selectively enable drag and drop for the scrollers that they want to work with. That way, performance is quite good.
 
 # Restoring scroll positions coming out of cache
 
