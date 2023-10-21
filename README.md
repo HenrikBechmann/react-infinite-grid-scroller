@@ -433,6 +433,27 @@ With dnd enabled, the `context` parameter of the `getItemPack` function sent to 
 
 ## `dndFetchRequest` specialized `getItemPack` call
 
+When the user drags and drops an item which exists in the RIGS cache, and with a 'move' `dropEffect`, then RIGS takes care of the data trasnsfer itself. 
+
+However, if the drop involves a `copy` (a RIGS cache item can only be used for one display instance), then the host has to supply what it considers to be a copy of the item. Also, if the item has been moved, but has gone out of scope (as the result of scrolling during the drag operation) and therefore removed from the cache, then a fresh instance of the moved item has to be obtained from the host. In those cases, RIGS sends out a specialized `getItemPack(index, itemID, context)` call with sufficient information for the host to respond appropriately. In this case, the `context` parameter contains the following:
+
+```
+context:{
+  contextType:'dndFetchRequest', // identifiaction of the specialized request
+  accept, // the accept list of the target scroller
+  scrollerID, // the target scroller ID
+  scrollerProfile, // the target scroller profile, as provided by the host as the scroller property
+  item:{
+    scrollerID, // the source scrollerID
+    index, // the item index at source
+    itemID, // the itemID at the start of drag (now to be replaced)
+    profile, // the item profile as passed to RIGS through the original instantiating getItemPack response (could include host item ID)
+    dndOptions, // the original item dndOptions from getItemPack
+    dropEffect, // the final dropEffect at the point of drop
+  },
+}
+```
+
 ## Layout
 
 ## Configuration
