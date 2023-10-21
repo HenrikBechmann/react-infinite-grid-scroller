@@ -7,7 +7,7 @@ Heavy-duty vertical or horizontal infinite scroller
 
 - intra-list and inter-list drag and drop (optional)
 - vertical or horizontal scrolling
-- designed for both "heavy" and "light" cell content (React components)
+- designed to display both "heavy" and "light" cell content (React components)
 - supports both uniform and variable cell lengths (for both vertical and horizontal)
 - single or multiple rows or columns
 - dynamically variable virtual list size; prepend or append infinitely
