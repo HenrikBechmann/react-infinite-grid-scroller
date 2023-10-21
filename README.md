@@ -95,10 +95,10 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |[_**LIST CONFIGURATION**_]|
 |startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list. Can be modified at runtime. |
 |startingIndex:integer| starting index when the scroller first loads|default = 0|
-|getExpansionCount(position:string, index:ingeger): integer| function optionally provided by host. Called whenever the lowindex or highindex are loaded into the Cradle.| `position` = "SOL" or "EOL"; index = the lowindex or highindex. Should return the number by which to expand the virtual list|
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
 |layout:string| 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
 |padding:integer \| []| number of pixels padding the `Scrollblock`| default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b, r/l]. 3-item array = [t, r/l, b]. 4-item array = [t, r, b, l]|
+|getExpansionCount(position:string, index:ingeger): integer| function optionally provided by host. Called whenever the lowindex or highindex are loaded into the Cradle.| `position` = "SOL" or "EOL"; index = the lowindex or highindex. Should return the number by which to expand the virtual list|
 |getDropEffect(sourceScrollerID, targetScrollerID, context): 'move' \| 'copy'\| 'none' \| `undefined`|function, optional, for `RigsDnd` component only|called whenever drag `isOver` and `canDrop` are true on a list; returns drop constraint. See Drag and Drop below. |
 |[_**SYSTEM SETTINGS**_]|
 |dndOptions:object|scroller settings for drag and drop|required if drag and drop is enabled. See Drag and Drop section|
@@ -108,7 +108,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |useScrollTracker:boolean| default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
 |placeholder:React.FC|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error, dndEnabled. Arguments set by system|
 |usePlaceholder:boolean| default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
-|cacheAPI:null|requested by user components by being set to null by user; instantiated with a class instance by system|Required for drag and drop to share portal data among scrollers. If present, parent scroller instantiates the property with its cacheAPI instance, which causes any child scroller given the property to share the parent scroller cache.|
+|cacheAPI:null|property is requested by user components by being set to null by user; instantiated with a class instance by system; passed to RIGS scroller by the user component|Required for drag and drop to share portal data among scrollers. If present, root scroller instantiates the property with its cacheAPI instance, which causes any child scroller given the property to share the parent scroller cache.|
 |[_**OBJECT PROPERTIES**_]|
 |styles:object| collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
 |placeholderMessages:object| messages presented by the placeholder|optional, to replace default messages. See below for details|
@@ -119,7 +119,7 @@ Notes: For explicit cache management capability, a unique session `itemID` (inte
 
 The `itemID` for a user component is given to the host with the `getItemPack` call to obtain the component, so that the host can track the user component in the cache. If the user component is assigned to a new `index` number (see the **returned function object** cache management section below) the host will still be able to track the user component with the `itemID`. 
 
-The host can track removal of a user component and its `itemID` from the cache through tracking its associated index removal through the `deleteListCallback` return values, and the return values from cache management functions. These feedback mechanisms also return the host's `profile` object for further identification. See callback documentation below.
+The host can track removal of a user component and its `itemID` from the cache through tracking its associated index removal through the `deleteListCallback` return values, and the return values from cache management functions. These feedback mechanisms also return the host's item `profile` object for further identification. See callback documentation below.
 
 Most of the time the `itemID` can be ignored.
 
@@ -163,7 +163,6 @@ Replace any of the default messages used by the placeholder.
 const placeholderMessages = {
     loading:'(loading...)',
     retrieving:'(retrieving from cache)',
-    null:'end of list', // is returned with itemExceptionCallback
     undefined:'host returned "undefined"', // displayed, and returned with itemExceptionCallback
     invalid:'invalid React element', // displayed, and returned with itemExceptionCallback
 }
