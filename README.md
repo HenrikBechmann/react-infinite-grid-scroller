@@ -184,11 +184,10 @@ callbacks: {
      itemExceptionCallback, // (index, context) - details about failed getItemPack calls
 
      // operations tracking, called when triggered
-     changeListSizeCallback, // (newlistsize, context) - triggered when the listsize changes for any reason
      changeListRangeCallback, // (listrange, context) two part array lowindex, highindex 
      deleteListCallback, // (deleteList, context) - data about which items have been deleted from the cache
-     repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning,
      boundaryCallback, // (position, index, context) - position is "SOL" or "EOL", index is the corresponding boundary index
+     repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning,
 }
 ~~~
 
@@ -219,7 +218,6 @@ Details about the callbacks:
 |deleteListCallback(deleteList: array, context:object)|contextType: 'deleteList', scrollerID, message |gives an array of objects with `index` numbers that have been deleted from the cache, together with `itemID` and `profile`.`message` gives the reason for the deletion(s)|
 |itemExceptionCallback(index: integer, context:object)|contextType: 'itemException', itemID, scrollerID, profile, dndOptions, component, action, error |`action` can be 'preload' or 'fetch'. Triggered whenever getItemPack does not return a valid React component|
 |[_**TRACK OPERATIONS**_]|
-|changeListsizeCallback(newlistsize: integer, context:object)|contextType: 'changeListSize', scrollerID|notification of a change of list size. Could be from an API call that results in change of list size|
 |changeListRangeCallback(listrange:array, context:object) |contextType: 'changeListRange', scrollerID| notification of a change of list range. `listrange` is a two part array = lowindex, highindex |
 |boundaryCallback(position:string, index:integer, context:object) |contextType: 'boundary', scrollerID| called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
 |repositioningFlagCallback(flag: boolean, context:object)|contextType: 'repositioningIndex', scrollerID | called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
@@ -249,8 +247,8 @@ Functions with return values
 |function(parameters: datatypes):return value: datatype|context object properties|notes|
 |---|---|---|
 |[_**SNAPSHOTS**_]|
-|getCacheIndexMap(): [Map, context]|contextType: 'cacheIndexMap', scrollerID|snapshot of cache index (=key) to itemID (=value) map|
-|getCacheItemMap(): [Map, context]|contextType: 'cacheItemMap', scrollerID|snapshot of cache itemID (=key) to object (=value) map. Object = {index, component} where component = user component|
+|getCacheIndexMap(): [Map, context]|contextType: 'cacheIndexMap', scrollerID|snapshot of cache index (=key) to itemID (=value) map for the subject scroller|
+|getCacheItemMap(): [Map, context]|contextType: 'cacheItemMap', scrollerID|snapshot of cache itemID (=key) to object (=value) map for the subject scroller. Object = {index, component} where component = user component|
 |getCradleIndexMap(): [Map, context]|contextType: 'cradleIndexMap', scrollerID|snapshot of `Cradle` index (=key) to itemID (=value) map|
 |getPropertiesSnapshot():[object, context]|contextType: 'propertiesSnapshot', scrollerID|`object` is a copy of `scroller.current` from `scrollerContext` object. See below.|
 |[_**CACHE MANAGEMENT**_]|
@@ -429,7 +427,7 @@ With dnd enabled, the `context` parameter of the `getItemPack` function sent to 
 
 ## `canDrop` and `dropEffect`
 
-`canDrop` is initially controlled by `react-dnd` by comparing the dragged item's `type` property to the list of `accept` values of the target scroller. If there is a match, then the item can be dropped on the scroller.
+`canDrop` is controlled by `react-dnd` by comparing the dragged item's `type` property (from the cell `dndOptions` property) to the list of `accept` values (from the scroller `dndOptions` property) of the target scroller. If there is a match, then the item can be dropped on the scroller.
 
 `canDrop` can be further constrained by the host-provided `getDropEffect` function, as follows.
 
