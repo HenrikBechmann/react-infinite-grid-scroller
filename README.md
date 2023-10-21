@@ -224,7 +224,7 @@ Details about the callbacks:
 
 ### returned API `functions` object
 
-Details about the functions returned in an object by `functionsCallback`:
+Details about the functions returned in an object by `functionsCallback`.
 
 Functions with no return values:
 
