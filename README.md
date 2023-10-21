@@ -374,7 +374,7 @@ The following are the basic steps to implement drag and drop on RIGS. Note that 
 - install the dnd system by invoking the specialized `RigsDnd` root component
 - provide every scroller with a scroller `dndOptions` object as a scroller parameter. Also providing a host-defined scroller `profile` object is highly recommended, for use during interaction with the system
 - provide every item fetched using `getItemPack` with a cell `dndOptions` property through the returned object (remember that subscrollers require both a direct scroller `dndOptions` property, and a cell `dndOptions` object returned by `getItemPack`. Sub-scrollers are both repositories and scroller items. Also providing items with a host-defined cell `profile` object is highly recommended, for use during interaction with the system
-- prepare to respond to 'dndFetchRequest' getItemPack requests, which are for copies of existing items, or replacements for moved items that have gone out of scope as the result of scrolling during the drag activity
+- prepare to respond to 'dndFetchRequest' `getItemPack` requests, which are for dropped copies of existing items, or replacements for dropped moved items that have gone out of scope as the result of scrolling during the drag activity
 - request a `scrollerContext` object from the host scroller for each of your scroller content items so that the items will be aware of dnd status in their host scrollers for layout purposes (see `scrollerContext` section)
 - design and implement layout features on your cell components
 - design and implement dnd configuration options as required
