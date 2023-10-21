@@ -366,6 +366,19 @@ _paddingProps_ is an object with the following properties:
 
 # Drag and Drop
 
+## Overview
+
+The following are the basic steps to implement drag and drop on RIGS. Note that RIGS drags and drops its CellFrame components. The user content (React components) come along for the ride. The following assumes multiple sub-scrollers, although using just the main scroller is fine.
+
+- design a type system for scroller items and scrollers. Scroller item types must be included in scroller `accept` type lists
+- install the dnd system by invoking the specialized `RigsDnd` root component
+- provide every scroller with a scroller `dndOptions` object as a scroller parameter
+- provide every item fetched using `getItemPack` with a cell `dndOptions` property through the returned object (remember that subscrollers require both a direct scroller `dndOptions` property, and a cell `dndOptions` object returned by `getItemPack`. Sub-scrollers are both repositories and scroller items
+- request a `scrollerContext` object from the host scroller for each of your scroller items so that the items will be aware of dnd status in their hosts (see `scrollerContext` section)
+- design and implement layout features on your cell components
+- design and implement configuration options as required
+- create a `getDropEffect` function if needed, and pass this to the `RigsDnd` root component
+
 ## Installation
 
 To install drag and drop ('dnd') capability, 
