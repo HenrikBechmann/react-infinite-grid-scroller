@@ -467,7 +467,7 @@ context: {
 ```
 The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffect` function. 'none' prevents a drop, 'move' and 'copy' override the item's `dropEffect` value, and `undefined` yields to the value of the scroller's calculated `dropEffect` property.
 
-## `dndFetchRequest` specialized `getItemPack` call
+## the `dndFetchRequest` specialized `getItemPack` call
 
 When the user drags and drops an item which exists in the RIGS cache, and with a 'move' `dropEffect`, then RIGS takes care of the data transfer itself. 
 
