@@ -431,12 +431,6 @@ RIGS does not check for matches of `type` values returned with `getItemPack`, wi
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
 
-## Layout
-
-## Configuration
-
-## Performance
-
 ## `canDrop` and `dropEffect`
 
 `canDrop` is controlled by `react-dnd` by comparing the dragged item's `type` property (from the cell `dndOptions` property) to the list of `accept` values (from the scroller `dndOptions` property) of the target scroller. If a match is found, then `react-dnd` signals that the item can be dropped on the scroller.
@@ -473,7 +467,7 @@ The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffe
 
 ## `dndFetchRequest` specialized `getItemPack` call
 
-When the user drags and drops an item which exists in the RIGS cache, and with a 'move' `dropEffect`, then RIGS takes care of the data trasnsfer itself. 
+When the user drags and drops an item which exists in the RIGS cache, and with a 'move' `dropEffect`, then RIGS takes care of the data transfer itself. 
 
 However, if the drop involves a `copy` (a RIGS cache item can only be used for one display instance), then the host has to supply what it considers to be a copy of the item. Also, if the item has been moved, but has gone out of scope (as the result of scrolling during the drag operation) and therefore removed from the cache, then a fresh instance of the moved item has to be obtained from the host. In those cases, RIGS sends out a specialized `getItemPack(index, itemID, context)` call with sufficient information for the host to respond appropriately. In this case, the `context` parameter contains the following:
 
@@ -493,6 +487,12 @@ context:{
   },
 }
 ```
+
+## Layout
+
+## Configuration
+
+## Performance
 
 # Restoring scroll positions coming out of cache
 
