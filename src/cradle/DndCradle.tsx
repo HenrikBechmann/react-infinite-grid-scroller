@@ -17,6 +17,7 @@ import React, { useEffect, useContext, useRef, useState } from 'react'
 
 import { useDrop, DropTargetMonitor } from 'react-dnd'
 
+import { masterDndDragContextBase } from '../InfiniteGridScroller/RigsDnd'
 import { MasterDndContext, ScrollerDndContext, GenericObject } from '../InfiniteGridScroller'
 import { ViewportContext } from '../Viewport'
 
@@ -102,6 +103,16 @@ const DndCradle = (props) => {
                         && !masterDndContext.onDroppableWhitespace)
 
             ) {
+                // reset dragContext
+                Object.assign(masterDndContext.dragContext, masterDndDragContextBase)
+                Object.assign(masterDndContext,{
+                    prescribedDropEffect:null,
+                    dynamicDropEffect:null,        
+                    altKey:null,
+                    onDroppableWhitespace:false,
+                    whitespacePosition:null
+                })
+
                 return
             }
 
@@ -316,6 +327,15 @@ const DndCradle = (props) => {
                     },100)
                 }
             }
+            // reset dragContext
+            Object.assign(masterDndContext.dragContext, masterDndDragContextBase)
+            Object.assign(masterDndContext,{
+                prescribedDropEffect:null,
+                dynamicDropEffect:null,        
+                altKey:null,
+                onDroppableWhitespace:false,
+                whitespacePosition:null
+            })
             
         },
     })

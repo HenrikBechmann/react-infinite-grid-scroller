@@ -104,11 +104,11 @@ export const masterDndContextBase = {
     // current drag status
     prescribedDropEffect:null,
     dynamicDropEffect:null,        
-    dropCount:0,
     altKey:null,
     onDroppableWhitespace:false,
     whitespacePosition:null,
     // source data
+    dropCount:0,
     dragContext:{...masterDndDragContextBase},
     // functions
     setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render

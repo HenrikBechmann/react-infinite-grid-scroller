@@ -61,8 +61,6 @@ const DndDragIcon = props => {
                 ?{dropEffect}
                 :{} // must be no property: undefined existing dropEffect property value interpreted as 'copy' on Chrome Mac
 
-        masterDndContext.prescribedDropEffect = computedOptions.dropEffect
-
         return computedOptions
 
     },[dropEffect])
@@ -113,8 +111,10 @@ const DndDragIcon = props => {
                 sourceStateHandler:scrollerDndContext.stateHandler,
                 sourceServiceHandler:scrollerDndContext.serviceHandler,
                 setDndCellFrameState,
+
             }
         )
+        masterDndContext.prescribedDropEffect = options.dropEffect
         masterDndContext.setViewportState('startdragbar')
     }
 
