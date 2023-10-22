@@ -194,7 +194,7 @@ const InfiniteGridScroller = (props) => {
         profile, // host provided scroller data
         isDndMaster, // internal, set for root dnd only
 
-        platformComponent, // ** planned supercedes most other properties
+        platformComponent, // ** planned; supercedes most other properties with layout == 'platform'
 
     }:RIGS = props
 
@@ -545,7 +545,7 @@ const InfiniteGridScroller = (props) => {
         startingIndex = Math.max(lowindex,startingIndex)
     }
 
-    // placing cradlePositionData here preserves values with switch from dnd enabled to not enabled
+    // placing cradlePositionData in the root here preserves values for switch from dnd enabled to not enabled
     // it is passed to the layoutHandler through the cradle
     // the switch causes scroller controllers to load alternate components, causing new setup and initialization processes
     // this includes viewport, cradle and cellframe. See notes in RigsDnd for more detail
