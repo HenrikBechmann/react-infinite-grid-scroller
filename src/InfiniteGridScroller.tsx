@@ -683,9 +683,13 @@ const InfiniteGridScroller = (props) => {
         // console.log('using local cacheAPI')
         cacheAPIRef.current = cacheAPI
         if (isDndMaster) {
+
             rigsGlobalContext.cacheAPI = cacheAPI
+
         } else {
-            rigsGlobalContext.cacheAPI = null
+
+            if (rigsGlobalContext.cacheAPI) rigsGlobalContext.cacheAPI = null
+                
         }
 
     }
