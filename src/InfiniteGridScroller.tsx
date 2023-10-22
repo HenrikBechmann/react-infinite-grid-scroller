@@ -130,6 +130,7 @@ import PortalCache from './PortalCache'
 // global session ID generator
 let globalScrollerID = 0
 
+// contexts
 export const RigsGlobalContext = React.createContext({cacheAPI:null}) // global cache for drag and drop
 export const MasterDndContext = React.createContext({...masterDndContextBase}) // tree scope
 export const ScrollerDndContext = React.createContext(null) // scroller scope
@@ -140,7 +141,7 @@ const InfiniteGridScroller = (props) => {
     //    is still true. In this case RigsDnd needs another cycle to reset masterDndContext. see useLocalCache
     const [scrollerState, setScrollerState] = useState('initialize') // initialize, setup, setlistprops, ready
 
-    // ------------------[ initialize properties ]--------------------
+    // ------------------[ collect properties ]--------------------
 
     let { 
 
@@ -194,9 +195,9 @@ const InfiniteGridScroller = (props) => {
 
     }:RIGS = props
 
+    // -----------------------[ normalize data ]---------------------
+
     // initialize with defaults if values are empty
-    // startingListSize = startingListSize ?? 0
-    // startingListRange = startingListRange ?? []
     orientation = orientation ?? 'vertical'
     gap = gap ?? 0
     padding = padding ?? 0
@@ -222,19 +223,6 @@ const InfiniteGridScroller = (props) => {
         scrollerSessionIDRef = useRef(null),
         scrollerID = scrollerSessionIDRef.current
 
-    useEffect (() => {
-
-        if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
-            scrollerSessionIDRef.current = globalScrollerID++
-            isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
-        }
-
-        return () => {
-            clearScrollerDndContext()
-        }
-
-    },[]);
-
     // minimal constraints
     let isMinimalPropsFail = false
 
@@ -255,9 +243,34 @@ const InfiniteGridScroller = (props) => {
         }
     }
 
-    // ---------------------[ Data setup ]----------------------
+    // check enums for runtime
+    if (!['horizontal','vertical'].includes(orientation)) { 
+        orientation = 'vertical'
+    }
+    if (!['preload','keepload','cradle'].includes(cache)) {
+        cache = 'cradle'
+    }
+    if (!['uniform', 'variable'].includes(layout)) {
+        layout = 'uniform'
+    }
 
-    // initialize
+    // type checks for runtime
+    if (typeof usePlaceholder !== 'boolean') usePlaceholder = true
+    if (typeof useScrollTracker !== 'boolean') useScrollTracker = true
+    if (typeof technical !== 'object') technical = {}
+
+    if (typeof styles !== 'object') styles = {}
+    if (typeof callbacks !== 'object') callbacks = {}
+    if (typeof placeholderMessages !== 'object') placeholderMessages = {}
+
+    const // persist
+        stylesRef = useRef(styles),
+        callbacksRef = useRef(callbacks),
+        placeholderMessagesRef = useRef(placeholderMessages)
+
+    // ---------------------[ padding and gap data setup ]----------------------
+
+    // padding
     const paddingPropsRef = useRef({
         top:null,
         right:null,
@@ -316,7 +329,7 @@ const InfiniteGridScroller = (props) => {
         paddingPropsRef.current = paddingProps = {...paddingProps} // signal change to React
     }
 
-    // initialize
+    // gap
     const gapPropsRef = useRef({
         column:null,
         row:null,
@@ -365,6 +378,8 @@ const InfiniteGridScroller = (props) => {
         gapPropsRef.current = gapProps = {...gapProps} // signal change to React
     }
 
+    // ------------------------[ verify numeric values ]----------------
+
     // verify numbers for runtime
     const originalValues = {
         cellMinHeight,
@@ -378,7 +393,6 @@ const InfiniteGridScroller = (props) => {
         cellMinHeight,
         cellMinWidth,
         startingIndex,
-        // startingListSize,
         runwaySize,
         cacheMax,        
     }
@@ -395,7 +409,8 @@ const InfiniteGridScroller = (props) => {
             originalValues, verifiedValues)
     }
 
-    // apply constraints
+    // ----------------[ apply constraints ]----------------
+
     if (!problemCount) {
 
         cellMinHeight = Math.max(cellMinHeight, 25)
@@ -405,11 +420,10 @@ const InfiniteGridScroller = (props) => {
 
         // prop constraints - non-negative values
         runwaySize = Math.max(1,runwaySize) // runwaysize must be at least 1
-        // startingListSize = Math.max(0,startingListSize)
 
     }
 
-    // rationalize startingListsize and startingListRange
+    // rationalize startingListRange
     if (!problemCount && scrollerState == 'setup') {
 
         let goodrange = true
@@ -434,42 +448,7 @@ const InfiniteGridScroller = (props) => {
         }
     }
 
-    // check enums for runtime
-    if (!['horizontal','vertical'].includes(orientation)) { 
-        orientation = 'vertical'
-    }
-    if (!['preload','keepload','cradle'].includes(cache)) {
-        cache = 'cradle'
-    }
-    if (!['uniform', 'variable'].includes(layout)) {
-        layout = 'uniform'
-    }
-
-    // type checks for runtime
-    if (typeof usePlaceholder !== 'boolean') usePlaceholder = true
-    if (typeof useScrollTracker !== 'boolean') useScrollTracker = true
-    if (typeof styles !== 'object') styles = {}
-    if (typeof placeholderMessages !== 'object') placeholderMessages = {}
-    if (typeof callbacks !== 'object') callbacks = {}
-    if (typeof technical !== 'object') technical = {}
-
-    // package gridSpecs
-    const gridSpecs = {
-        orientation,
-        cellHeight,
-        cellWidth,
-        cellMinHeight,
-        cellMinWidth,
-        layout,
-    }
-
-    const gridSpecsRef = useRef(gridSpecs)
-
-    // system
-    const 
-        stylesRef = useRef(styles),
-        callbacksRef = useRef(callbacks),
-        placeholderMessagesRef = useRef(placeholderMessages)
+    // -----------------[ system settings ]------------------
 
     let {
 
@@ -502,9 +481,19 @@ const InfiniteGridScroller = (props) => {
 
     triggerlineOffset = triggerlineOffset ?? 10
 
-    const 
+    // ------------------------[ control data ]----------------------
 
-        // for children
+    const 
+        // package gridSpecs
+        gridSpecs = {
+            orientation,
+            cellHeight,
+            cellWidth,
+            cellMinHeight,
+            cellMinWidth,
+            layout,
+        },
+
         cacheAPIRef = useRef(null),
 
         portalCacheForceUpdateFunctionRef = useRef(null),
@@ -527,7 +516,7 @@ const InfiniteGridScroller = (props) => {
 
         virtualListSpecsRef = useRef(virtualListSpecs),
 
-        // scroller scoped dnd data
+        // scroller scoped dnd data update
         scrollerDndContextRef = useRef({
             scrollerID,
             dndOptions, // scroller scoped
@@ -545,7 +534,10 @@ const InfiniteGridScroller = (props) => {
             cradleParameters:null,
         })
 
-    const [lowindex,highindex] = listRangeRef.current
+    const 
+        gridSpecsRef = useRef(gridSpecs),
+        [lowindex, highindex] = listRangeRef.current
+
     if (lowindex !== undefined) {
         startingIndex = Math.max(lowindex,startingIndex)
     }
@@ -613,25 +605,10 @@ const InfiniteGridScroller = (props) => {
     // assure that cradlePositionData is always the same object
     const cradlePositionData = cradlePositionDataRef.current
 
-    useEffect (()=>{
-
-        if (listsize) { // only applies to startup; no change tracking required
-
-            startingIndex = Math.max(startingIndex, lowindex)
-            startingIndex = Math.min(startingIndex, highindex)
-
-            cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
-
-        } else {
-
-            cradlePositionData.targetAxisReferencePosition = 0
-        }
-
-        cradlePositionData.targetPixelOffsetAxisFromViewport = 0
-
-    },[])
+    // --------------------[ test for changed properties ]-----------------------
 
     // tests for React with Object.is for changed properties; avoid re-renders with no change
+
     if (!compareProps(virtualListSpecs, virtualListSpecsRef.current)) {
         virtualListSpecsRef.current = virtualListSpecs
     }
@@ -650,22 +627,10 @@ const InfiniteGridScroller = (props) => {
         placeholderMessagesRef.current = placeholderMessages
     }
 
-    // -------------------------[ system initialization ]--------------------------
+    // ---------------------[ system initialization resources ]-------------------
 
     // prevent unregistering in strict dev mode (React double setup)
     const isMountedRef = useRef(true)
-
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        return () => {
-
-            isMountedRef.current = false
-
-        }
-
-    },[])
 
     // set cacheAPI global or local. getCacheAPI is called with isLocalCache on 'setup' cycle
     const getCacheAPI = (cacheAPI) => {
@@ -720,10 +685,72 @@ const InfiniteGridScroller = (props) => {
         }
     }
 
-    // rationalize scroller dnd setting changes
+    // ------------------------[ system initialization effects ]--------------------
+
+    // isMounted
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        return () => {
+
+            isMountedRef.current = false
+
+        }
+
+    },[])
+
+    // scrollerID
     useEffect (() => {
 
-        // early reset if reset still underway from previous dnd
+        if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
+            scrollerSessionIDRef.current = globalScrollerID++
+            isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
+        }
+
+        return () => {
+            clearScrollerDndContext()
+        }
+
+    },[]);
+
+    // default cradlePositionData
+    useEffect (()=>{
+
+        if (listsize) { // only applies to startup; no change tracking required
+
+            startingIndex = Math.max(startingIndex, lowindex)
+            startingIndex = Math.min(startingIndex, highindex)
+
+            cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
+
+        } else {
+
+            cradlePositionData.targetAxisReferencePosition = 0
+        }
+
+        cradlePositionData.targetPixelOffsetAxisFromViewport = 0
+
+    },[])
+
+    // CSS highlights
+    useEffect(()=>{
+        const { dndHighlights } = stylesRef.current
+        if (dndHighlights) {
+            const root:HTMLElement = document.querySelector(':root')
+            dndHighlights.source && root.style.setProperty('--rigs-highlight-source',dndHighlights.source)
+            dndHighlights.target && root.style.setProperty('--rigs-highlight-target',dndHighlights.target)
+            dndHighlights.dropped && root.style.setProperty('--rigs-highlight-dropped',dndHighlights.dropped)
+            dndHighlights.scroller && root.style.setProperty('--rigs-highlight-scrollercandrop',dndHighlights.scroller)
+            dndHighlights.scrolltab && root.style.setProperty('--rigs-highlight-scrolltab',dndHighlights.scrolltab)
+        }
+    },[])
+
+    // --------------------[ rationalize scroller drag and drop settings ]--------------------
+
+    useEffect (() => {
+
+        // early reset if reset still underway from previous dnd iteration
         if (!masterDndContext.installed) {
             if (scrollerDndContextRef.current.dndOptions) { // lag in reset for subscrollers
                 clearScrollerDndContext()
@@ -748,19 +775,9 @@ const InfiniteGridScroller = (props) => {
 
     },[dndOptions, masterDndContext.installed])
 
-    useEffect(()=>{
-        const { dndHighlights } = stylesRef.current
-        if (dndHighlights) {
-            const root:HTMLElement = document.querySelector(':root')
-            dndHighlights.source && root.style.setProperty('--rigs-highlight-source',dndHighlights.source)
-            dndHighlights.target && root.style.setProperty('--rigs-highlight-target',dndHighlights.target)
-            dndHighlights.dropped && root.style.setProperty('--rigs-highlight-dropped',dndHighlights.dropped)
-            dndHighlights.scroller && root.style.setProperty('--rigs-highlight-scrollercandrop',dndHighlights.scroller)
-            dndHighlights.scrolltab && root.style.setProperty('--rigs-highlight-scrolltab',dndHighlights.scrolltab)
-        }
-    },[])
+    // ---------------------[ propagate list range change ]--------------------
 
-    // utility to ripple through
+    // utility to ripple through list range change
     const setVirtualListRange = useCallback((listrange) =>{
 
         let listsize
@@ -898,7 +915,6 @@ const InfiniteGridScroller = (props) => {
 
                     cacheAPI = { cacheAPIRef.current }
                     usePlaceholder = { usePlaceholder }
-                    // useScrollTracker = { useScrollTracker }
                     showAxis = { showAxis }
                     ONAFTERSCROLL_TIMEOUT = { ONAFTERSCROLL_TIMEOUT }
                     IDLECALLBACK_TIMEOUT = { IDLECALLBACK_TIMEOUT }
