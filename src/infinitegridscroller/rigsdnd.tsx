@@ -144,7 +144,6 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
             if (isMountedRef.current) return
 
-            // console.log('resetting masterDndContext')
             Object.assign(masterDndContext,{...masterDndContextBase})
 
         }

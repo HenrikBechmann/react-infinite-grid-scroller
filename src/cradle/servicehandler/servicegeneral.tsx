@@ -234,68 +234,6 @@ export default class ServiceGeneral {
         
     }
 
-    // TODO delete public setListSize = (newlistsize) => {
-
-    //     newlistsize = +newlistsize
-
-    //     const isInvalid = (!isInteger(newlistsize) || !isValueGreaterThanOrEqualToMinValue(newlistsize, 0))
-
-    //     if (isInvalid) {
-
-    //         console.log('RIGS ERROR setListSize(newlistsize)', newlistsize, errorMessages.setListSize)
-    //         return
-
-    //     }
-
-    //     const 
-    //         { 
-
-    //             cacheAPI, 
-    //             contentHandler, 
-    //             stateHandler 
-
-    //         } = this.cradleParameters.handlersRef.current,
-
-    //         { 
-
-    //             deleteListCallback, 
-
-    //         } = this.callbacks,
-
-    //         currentlistsize = this.cradleParameters.cradleInternalPropertiesRef.current.virtualListProps.size,
-    //         {scrollerID} = this.cradleParameters.cradleInternalPropertiesRef.current,
-
-    //         { cache } = this.cradleParameters.cradleInheritedPropertiesRef.current
-
-    //     let deleteListCallbackWrapper
-    //     if (deleteListCallback) {
-    //         deleteListCallbackWrapper = (deleteList) => {
-
-    //             deleteListCallback(deleteList,
-    //                 {
-    //                     contextType:'deleteList',
-    //                     scrollerID,
-    //                     message:'change list size intervention',
-    //                 }
-    //             )
-
-    //         }
-
-    //     }
-
-    //     contentHandler.updateVirtualListSize(newlistsize)
-    //     cacheAPI.changeCacheListSize(newlistsize, deleteListCallbackWrapper)
-
-    //     cacheAPI.renderPortalLists()
-
-    //     if ((cache == 'preload') && (newlistsize > currentlistsize)) {
-
-    //         stateHandler.setCradleState('startpreload')
-
-    //     }
-
-    // }
-
     public setListRange = (newlistrange) => {
 
         let isInvalid = !Array.isArray(newlistrange)

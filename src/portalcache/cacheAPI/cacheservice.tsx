@@ -293,14 +293,7 @@ export default class CacheService {
             listrange,
         })
 
-        // console.log('getInsertRemoveParameters result: shiftStartIndex, rangeIncrement, changeStartIndex\n', 
-        //     shiftStartIndex, rangeIncrement, changeStartIndex)
-
         // ---------- get list of operations ------------
-
-        // console.log(
-        //     'assembleRequiredOperations INPUT: indexToItemIDMap, shiftStartIndex, lowchangeIndex, highchangeIndex, isInserting\n',
-        //     indexToItemIDMap, shiftStartIndex, index, highrange, isInserting)
 
         const {
             cacheIndexesToShiftList,
@@ -315,10 +308,6 @@ export default class CacheService {
             isInserting
         })
 
-        // console.log(
-        //     'assembleRequiredOperations OUTPUT: cacheIndexesToShiftList, cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList\n',
-        //         cacheIndexesToShiftList, cacheIndexesToReplaceList, cacheIndexesToRemoveList, cacheItemsToRemoveList)
-            
         // ---------- apply operations ------------
 
         // increment higher from top of list to preserve lower values for subsequent increment
@@ -370,8 +359,6 @@ export default class CacheService {
 
             }
 
-            // console.log('cacheIndexesDeletedList',cacheIndexesDeletedList)
-
             // abandoned indexes from remove process
             const orphanedIndexesTransferredList = Array.from(cacheIndexesTransferredSet)
 
@@ -386,8 +373,6 @@ export default class CacheService {
         }
 
         if (isInserting) cacheIndexesShiftedList.reverse() // return to ascending order
-
-        // console.log('itemMetadataMap',itemMetadataMap)
 
         return [
             changeStartIndex, // for caller

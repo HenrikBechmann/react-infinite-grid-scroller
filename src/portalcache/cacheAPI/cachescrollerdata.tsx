@@ -83,46 +83,6 @@ export default class ScrollerData {
 
     // ----------------------------[ basic operations ]--------------------------
 
-    // TODO delete// called from serviceHandler.setListSize
-    // private changeCacheListSize = (scrollerID, newlistsize, deleteListCallbackWrapper) => {
-
-    //     // console.log('changeCacheListSize: scrollerID, newlistsize, deleteListCallbackWrapper',
-    //     //     scrollerID, newlistsize, deleteListCallbackWrapper)
-
-    //     if (newlistsize.length == 0) {
-    //         this.clearCache(scrollerID) 
-    //         return
-    //     }
-
-    //     // match cache to newlistsize
-    //     const 
-    //         portalIndexMap:Map<number,number> = this.scrollerDataMap.get(scrollerID).indexToItemIDMap,
-    //         mapkeysList = Array.from(portalIndexMap.keys())
-
-    //     mapkeysList.sort((a,b) => a - b) // ascending
-
-    //     const 
-    //         { cradleParameters } = this.scrollerDataMap.get(scrollerID),
-
-    //         { virtualListProps } = cradleParameters.cradleInternalPropertiesRef.current,
-
-    //         { lowindex } = virtualListProps,
-
-    //         highestindex = mapkeysList.at(-1)
-
-    //     if (highestindex > ((newlistsize + lowindex) -1)) { // pare the cache
-
-    //         const parelist = mapkeysList.filter((index)=>{
-    //             const comparehighindex = newlistsize + lowindex - 1
-    //             return index > (comparehighindex)
-    //         })
-
-    //         this.cachePortalData.deletePortalByIndex(scrollerID, parelist, deleteListCallbackWrapper)
-
-    //     }
-
-    // }
-
     private changeCacheListRange = (scrollerID, newlistrange, deleteListCallbackWrapper) => { 
 
         if (newlistrange.length == 0) {

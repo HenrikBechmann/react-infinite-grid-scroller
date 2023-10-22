@@ -198,8 +198,6 @@ const InfiniteGridScroller = (props) => {
 
     }:RIGS = props
 
-    // console.log('InfiniteGridScroller dndOptions', dndOptions)
-
     // initialize with defaults if values are empty
     // startingListSize = startingListSize ?? 0
     // startingListRange = startingListRange ?? []
@@ -234,7 +232,6 @@ const InfiniteGridScroller = (props) => {
         if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
             scrollerSessionIDRef.current = globalScrollerID++
             isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
-            // isDndMaster && console.log('setting masterDndContext.scrollerID',masterDndContext.scrollerID)
         }
 
         return () => {
@@ -242,11 +239,6 @@ const InfiniteGridScroller = (props) => {
         }
 
     },[]);
-
-    // console.log('InfiniteGridScroller: scrollerID, scrollerState, masterDndContext.installed, dndOptions',
-    //     scrollerID, scrollerState, masterDndContext.installed, {...dndOptions})
-
-    // if (!masterDndContext.installed) dndOptions = null
 
     // minimal constraints
     let isMinimalPropsFail = false
@@ -630,9 +622,6 @@ const InfiniteGridScroller = (props) => {
 
         if (listsize) { // only applies to startup; no change tracking required
 
-            // console.log('listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition\n',
-            //     listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition)
-
             startingIndex = Math.max(startingIndex, lowindex)
             startingIndex = Math.min(startingIndex, highindex)
 
@@ -686,7 +675,6 @@ const InfiniteGridScroller = (props) => {
     // set cacheAPI global or local
     const getCacheAPI = (cacheAPI) => {
 
-        // console.log('using local cacheAPI')
         cacheAPIRef.current = cacheAPI
         if (isDndMaster) {
 
@@ -719,7 +707,6 @@ const InfiniteGridScroller = (props) => {
 
     // prepare to reset with clearScrollerDndContext
     const clearScrollerDndContext = () => {
-        // console.log('clearing scrollerDndContext, scrollerID',scrollerID)
         scrollerDndContextRef.current = {
             scrollerID:null,
             dndOptions:null, // scroller scoped
@@ -856,8 +843,6 @@ const InfiniteGridScroller = (props) => {
         return <div>error: see console.</div>
 
     }
-
-    // console.log('InfiniteGridScroller: profile',profile)
 
     // component calls are deferred by scrollerState to give cacheAPI a chance to initialize
     return <ScrollerDndContext.Provider value = {scrollerDndContextRef.current} >

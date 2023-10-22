@@ -118,9 +118,6 @@ const CradleController = props => {
         masterDndContext = useContext(MasterDndContext),
         handlerListRef = useRef(null)
 
-    // console.log('CradleController: installed, enabled',
-    //     props.scrollerID, masterDndContext.installed, scrollerDndContext.dndOptions.enabled)
-
     if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
 
         return <DndCradle {...props}/>
@@ -174,8 +171,6 @@ export const Cradle = ({ // exported for DndCradle
     scrollerProfile,
 
 }) => {
-
-    // console.log('Cradle: scrollerProfile',scrollerProfile)
 
     // ========================[ 1. DATA SETUP ]========================
 
@@ -720,12 +715,9 @@ export const Cradle = ({ // exported for DndCradle
             IDLECALLBACK_TIMEOUT,
             triggercellTriggerlinesRef,
         }
-        // cradleContextRef.current.scrollerProfile = scrollerProfile
         return context
 
     },[scrollerProfile])
-
-    // console.log('cradleContextRef.current',cradleContextRef.current)
 
 
     // display the cradle components or the ScrollTracker (from Viewport), not both

@@ -226,7 +226,6 @@ export const useCradleStateLayoutEffects = ({
                 }
 
                 const listsize = cradleInternalPropertiesRef.current.virtualListProps.size
-                // console.log('listsize',listsize)
                 // set data
                 if (listsize) contentHandler.setCradleContent( cradleState )
 
@@ -466,15 +465,11 @@ export const useCradleStateLayoutEffects = ({
 
             case 'changelistsizeafterinsertremove': {
 
-                // const newListSize = serviceHandler.newListSize
                 const { newListRange } = serviceHandler
-                // console.log('changelistsizeafterinsertremove: newListRange',newListRange)
-                // serviceHandler.newListSize = null
+
                 serviceHandler.newListRange = null
 
-                // console.log('changelistsizeafterinsertremove:newlistsize',newlistsize)
-
-                setCradleState('ready') // TODO: why before setlistsize?
+                setCradleState('ready')
 
                 // service handler called because this is a followon of a user intervention
                 // serviceHandler.setListSize(newListSize)

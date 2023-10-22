@@ -119,7 +119,6 @@ const DndCradle = (props) => {
                     || 'move', // default for mobile
                 onDroppableWhitespace = masterDndContext.onDroppableWhitespace,
                 whitespacePosition = masterDndContext.whitespacePosition
-            // console.log('DndCradle dropEffect',dropEffect)
 
             item.dropEffect = dropEffect
 
@@ -154,7 +153,6 @@ const DndCradle = (props) => {
                 masterDndContext.onDroppableWhitespace = false
                 masterDndContext.whitespacePosition = null
 
-                // console.log('whitespacePosition',whitespacePosition)
                 switch (whitespacePosition) {
                     case 'all':{ // empty list
 
@@ -196,9 +194,6 @@ const DndCradle = (props) => {
 
             }
 
-            // console.log('fromIndex, fromScrollerID, toIndex, toScrollerID, itemID, dropEffect, onDroppableWhitespace, whitespacePosition\n',
-            //     fromIndex, fromScrollerID, toIndex, toScrollerID, itemID, dropEffect, onDroppableWhitespace, whitespacePosition)
-
             // -------------------------[ intra-list drop ]------------------------
             if (fromScrollerID === toScrollerID) {
 
@@ -230,9 +225,6 @@ const DndCradle = (props) => {
                     }
                 }
 
-                // console.log('AFTER INTRA serviceHandler.getCacheIndexMap, getCacheItemMap\n',
-                //     serviceHandler.getCacheIndexMap(), serviceHandler.getCacheItemMap())
-
             // -------------------------[ inter-list drop ]------------------------
             } else {
                 
@@ -263,20 +255,10 @@ const DndCradle = (props) => {
                     // ------------ resolve target data
                     incrementDirection = +1 // insert
                     
-                    // console.log('insertOrRemoveCacheIndexes input: toIndex, toIndex, incrementDirection, listrange\n',
-                    //     toIndex, toIndex, incrementDirection, listrange)
-
                     const [startChangeIndex, rangeincrement, cacheIndexesShiftedList] = 
                         cacheAPI.insertOrRemoveCacheIndexes(toIndex, toIndex, incrementDirection, listrange)
 
-                    // console.log('insertOrRemoveCacheIndexes result: startChangeIndex, rangeincrement, cacheIndexesShiftedList\n',
-                    //     startChangeIndex, rangeincrement, cacheIndexesShiftedList)
-
-                    // console.log('addCacheItemToScroller: itemID, toIndex',itemID, toIndex)
-
                     cacheAPI.addCacheItemToScroller( itemID, toIndex ) // move item to scroller
-
-                    // console.log('ITEM addCacheItemToScroller: cacheAPI.itemMetadataMap.get(itemID)',cacheAPI.itemMetadataMap.get(itemID))
 
                     contentHandler.synchronizeCradleItemIDsToCache( // sync cradle
                         cacheIndexesShiftedList, rangeincrement, startChangeIndex) 
@@ -337,8 +319,6 @@ const DndCradle = (props) => {
             
         },
     })
-
-    // console.log('targetData.canDrop, didDrop',targetData.canDrop, targetData.didDrop)
 
     useEffect(()=>{
 

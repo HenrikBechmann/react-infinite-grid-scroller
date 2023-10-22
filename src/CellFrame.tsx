@@ -67,9 +67,6 @@ const CellFrameController = props => {
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext)
 
-    // console.log('CellFrameController: masterDndContext.installed && scrollerDndContext.dndOptions.enabled\n',
-    //     props.scrollerID, masterDndContext.installed, scrollerDndContext.dndOptions.enabled)
-
     if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
 
         return <DndCellFrame {...props}/>
@@ -413,8 +410,6 @@ export const CellFrame = ({
 
                 if (cached) {
 
-                    // console.log('retrieving from cache: itemID', itemID)
-
                     messageRef.current = placeholderMessagesRef.current.retrieving
 
                     if (isMountedRef.current) {
@@ -437,8 +432,6 @@ export const CellFrame = ({
                     }
 
                 } else {
-
-                    // console.log('fetching new: itemID',itemID)
 
                     messageRef.current = placeholderMessagesRef.current.loading
 
@@ -468,8 +461,6 @@ export const CellFrame = ({
 
                                     }
 
-                                    // console.log('dndFetchRequest',context)
-
                                     scrollerDndContext.dndFetchIndex = null
                                     scrollerDndContext.dndFetchItem = null
 
@@ -487,7 +478,6 @@ export const CellFrame = ({
 
                                 } else {
 
-                                    // console.log('fetch cradleContext',cradleContext)
                                     context = {
 
                                         contextType:'fetch',
@@ -502,7 +492,6 @@ export const CellFrame = ({
                                 ({ dndOptions, profile} = itempack)
                                 dndOptions = dndOptions ?? {}
                                 profile = profile ?? {}
-                                // console.log('cell dndOptions',dndOptions)
                                 dndOptionsRef.current = dndOptions
                                 usercontent = await itempack.component
 
@@ -519,7 +508,6 @@ export const CellFrame = ({
 
                             returnvalue = usercontent = undefined
                             if (!itempack) {
-                                // console.log('error', e)
                                 error = new Error ('no data ( ' + e.message +')')
                             } else {
                                 error = e
@@ -558,7 +546,7 @@ export const CellFrame = ({
                                 } else {
 
                                     component = usercontent
-                                    
+
                                 }
 
                                 portalMetadataRef.current = 

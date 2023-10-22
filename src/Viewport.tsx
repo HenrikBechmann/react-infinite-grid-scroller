@@ -51,18 +51,12 @@ const ViewportController = (props) => {
         masterDndContext = useContext(MasterDndContext),
         viewportFrameElementRef = useRef(null),
         { scrollerID } = props
-        // outerViewportElementRef = useRef(null)
-
-    // console.log('ViewportController: scrollerDndContext.dndOptions.enabled, scrollerDndContext\n',
-    //     scrollerDndContext.dndOptions.enabled, scrollerDndContext)
 
     if (
         masterDndContext.installed 
         && (masterDndContext.scrollerID == scrollerID // root viewport is needed for DndDragBar
             || scrollerDndContext.dndOptions.enabled)) {
 
-        // console.log('loading DndViewport')
-    
         return <DndViewport {...props}/>
 
     } else {
@@ -289,7 +283,6 @@ export const Viewport = ({
     },[viewportState])
 
     // ----------------------[ render ]--------------------------------
-    // console.log('viewport showScrollTabs', showScrollTabs)
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
         { (masterDndContext.installed 

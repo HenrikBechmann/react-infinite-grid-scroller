@@ -588,7 +588,7 @@ export const useListRangeEffect = ({
 
         if (cradleStateRef.current == 'setup') return
 
-        if (isCachedRef.current) return // TODO: ??
+        if (isCachedRef.current) return
 
         interruptHandler.pauseInterrupts()
 
@@ -714,7 +714,7 @@ export const usePivotEffect = ({
 
         setCradleState('pivot')
 
-    },[orientation, layout]) // TODO: check for side-effects of layout-only change
+    },[orientation, layout])
 }
 
 export const useCradleStyles = ({

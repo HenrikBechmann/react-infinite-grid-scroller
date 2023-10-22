@@ -80,8 +80,6 @@ export default class ContentHandler {
     // =============================[ UPDATE VIRTUAL LIST RANGE ]==========================
     public updateVirtualListRange = (newlistrange) => {
 
-        // console.log('contentHandler.updateVirtualListRange: newlistrange', newlistrange)
-
         const
             { cradleParameters } = this,
 
@@ -316,9 +314,6 @@ export default class ContentHandler {
     // updates cradle contiguous items from startChangeIndex or start of cradle
     public synchronizeCradleItemIDsToCache(updatedIndexList, isInsertRemove = 0, startChangeIndex = null) { // 0 = move
 
-        // console.log('synchronizeCradleItemIDsToCache: updatedIndexList, isInsertRemove, startChangeIndex\n',
-        //     updatedIndexList, isInsertRemove, startChangeIndex)
-
         // assemble resources
         const 
             { cacheAPI } = this.cradleParameters.handlersRef.current,
@@ -332,8 +327,6 @@ export default class ContentHandler {
         if (cradleContentProps.size == 0) return
 
         const { lowindex:lowSpan, highindex:highSpan } = cradleContentProps
-
-        // console.log('lowSpan, highSpan',lowSpan, highSpan)
 
         let startIndex, endIndex
         if (isInsertRemove) {
@@ -374,15 +367,11 @@ export default class ContentHandler {
                 index = component.props.index,
                 cacheItemID = indexToItemIDMap.get(index)
 
-            // console.log('index, cacheItemID', index, cacheItemID)
-
             // if cache has no component for cradle item, then get one
             if (cacheItemID === undefined) {
 
                 const newItemID = cacheAPI.getNewItemID()
                 componentarray[componentptr] = React.cloneElement(component, {itemID:newItemID})
-
-                // console.log('getting new itemID',newItemID)
 
                 return
 
@@ -390,7 +379,7 @@ export default class ContentHandler {
 
                 const 
                     cradleItemID = component.props.itemID,
-                    updateptr = updatedIndexList.indexOf(index) // TODO verify need for updatelist
+                    updateptr = updatedIndexList.indexOf(index)
 
                 if (updateptr != -1) { // update list confirms there is a cache item for this index
 

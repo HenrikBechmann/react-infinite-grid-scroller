@@ -64,8 +64,6 @@ const DndCellFrame = (props) => {
         },
     })
 
-    // console.log('DndCellFrame canDrop',targetData.canDrop)
-
     const 
         cellCanDropRef = useRef(false),
 
@@ -78,9 +76,6 @@ const DndCellFrame = (props) => {
                 && (calculatedDropEffect == 'copy')),
 
         highlightClassname = 'rigs-target-highlight'
-
-    // console.log('DndCellFrame: index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect\n',
-    //     index, isLocation, targetData.isOver, targetData.canDrop, calculatedDropEffect)
 
     if (isLocation 
         && targetData.isOver 

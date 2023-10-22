@@ -71,8 +71,6 @@ const DndDragIcon = props => {
     // sourceConnector is connected to the dragicon div below
     const [ sourceData, sourceConnector, previewConnector ] = useDrag(() => {
 
-        // console.log('DndDragIcon, scrollerDndContext',scrollerDndContext)
-
         return {
 
             type:(dndOptions.type || '-x-x-x-'), // must be defined
@@ -89,7 +87,6 @@ const DndDragIcon = props => {
             },
 
             collect: (monitor:DragSourceMonitor) => {
-                // console.log('collecting content')
                 return {
                     isDragging:!!monitor.isDragging(),
                 }
@@ -97,8 +94,6 @@ const DndDragIcon = props => {
 
         }
     },[itemID, dndOptions, options])
-
-    // console.log('DndDragIcon scrollerID, index, isDragging', scrollerID, index, sourceData.isDragging)
 
     const 
         { isDragging } = sourceData,

@@ -61,23 +61,6 @@ export default class LayoutHandler {
 
             } = virtualListProps
 
-        // if (listsize) {
-
-        //     // console.log('listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition\n',
-        //     //     listsize, startingIndex,this.cradlePositionData.targetAxisReferencePosition)
-
-        //     startingIndex = Math.max(startingIndex, lowindex)
-        //     startingIndex = Math.min(startingIndex, highindex)
-
-        //     this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
-
-        // } else {
-
-        //     this.cradlePositionData.targetAxisReferencePosition = 0
-        // }
-
-        // this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
-
         this.cradlePositionData = cradlePositionData
 
     } // constructor

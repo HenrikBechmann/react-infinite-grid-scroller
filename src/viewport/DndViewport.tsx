@@ -64,8 +64,6 @@ const DndViewport = (props) => {
 
             const [onDroppableWhitespace, position] = isOnDroppableWhitespace(monitor.getClientOffset())
 
-            // console.log('onDroppableWhitespace, position', onDroppableWhitespace, position)
-
             if (onDroppableWhitespace !== masterDndContext.onDroppableWhitespace) {
 
                 masterDndContext.onDroppableWhitespace = onDroppableWhitespace as boolean
@@ -87,9 +85,6 @@ const DndViewport = (props) => {
 
     })
 
-    // console.log('DndViewport isOver, canDrop',targetData.isOver, targetData.canDrop)
-
-    // TODO take gap into account
     const isOnDroppableWhitespace = (clientOffset:{x:number, y:number}) => {
         const 
             { cradleParameters } = scrollerDndContext,
@@ -113,7 +108,6 @@ const DndViewport = (props) => {
                         : null) 
                     || 'move'
 
-        // console.log('listsize',listsize)
         if (listsize === 0) {
 
             return [true,'all'] // nothing but whitespace
@@ -257,7 +251,6 @@ const DndViewport = (props) => {
         }
 
         // beyond blank cell row
-        // TODO take gap into account
         isWhitespace = 
             orientation == 'vertical'
                 ?clientOffset.y > (lastChildClientOffset.y + lastChildClientOffset.height)
@@ -339,7 +332,6 @@ const DndViewport = (props) => {
 
     useEffect(()=>{
 
-        // console.log('viewportFrameElementRef',{...viewportFrameElementRef})
         targetConnector(viewportFrameElementRef.current)
 
     },[])

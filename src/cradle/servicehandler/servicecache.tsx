@@ -53,7 +53,7 @@ export default class ServiceCache {
 
             { lowindex:listlowindex, size } = virtualListProps
 
-        if (!size) return
+        if (!size) return undefined
 
         // ------------ confirm validity of arguments -------------
 
@@ -76,13 +76,12 @@ export default class ServiceCache {
         fromlowindex = +fromlowindex
         fromhighindex = +fromhighindex
 
-        // TODO return error array instead
         if (isToindexInvalid || isFromindexInvalid || isHighrangeInvalid) {
             console.log('RIGS ERROR moveIndex(toindex, fromindex, fromhighrange)')
             isToindexInvalid && console.log(tolowindex, errorMessages.moveTo)
             isFromindexInvalid && console.log(fromlowindex, errorMessages.moveFrom)
             isHighrangeInvalid && console.log(fromhighindex, errorMessages.moveRange)
-            return []
+            return false
         }
 
         tolowindex = Math.max(listlowindex,tolowindex)
