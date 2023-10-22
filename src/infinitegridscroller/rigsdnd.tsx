@@ -60,9 +60,12 @@ import { TouchBackend } from 'react-dnd-touch-backend'
 
 export const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
-const DndBackend = isMobile?TouchBackend:HTML5Backend
+const DndBackend = 
+    isMobile
+        ? TouchBackend
+        : HTML5Backend
 
-// recommended...
+// recommended by TouchBackend...
 const hasNativeElementsFromPoint =
   document && (document['elementsFromPoint'] || document['msElementsFromPoint'])
 
@@ -119,8 +122,6 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
     const 
         [rigsdndState, setRigsdndState] = useState('setup'),
         masterDndContext = useContext(MasterDndContext)
-
-    // let masterDndEnabledContext = useContext(MasterDndEnabledContext)
 
     if (!masterDndContext.installed) masterDndContext.installed = true
 

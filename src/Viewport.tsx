@@ -31,7 +31,6 @@ import {
 } from 'react-dnd'
 
 import DndViewport from './Viewport/DndViewport'
-
 import DndDragBar from './Viewport/DndDragBar'
 import DndScrollTab from './Viewport/DndScrollTab'
 
@@ -61,7 +60,7 @@ const ViewportController = (props) => {
 
     } else {
 
-        const enhancedProps = {...props,viewportFrameElementRef} //,outerViewportElementRef}
+        const enhancedProps = {...props,viewportFrameElementRef}
 
         return <Viewport {...enhancedProps} />
 
@@ -92,12 +91,8 @@ export const Viewport = ({
     const 
         masterDndContext = useContext(MasterDndContext),
         { dragContext } = masterDndContext,
-        {
-
-            orientation,
-
-        } = gridSpecs,
-        [viewportState,setViewportState] = useState('setup'), // setup, resizing, resized, ready
+        { orientation } = gridSpecs,
+        [ viewportState, setViewportState ] = useState('setup'), // setup, resizing, resized, ready
     
         outerViewportElementRef = useRef(null)
 

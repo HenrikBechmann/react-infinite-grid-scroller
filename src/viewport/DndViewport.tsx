@@ -3,8 +3,10 @@
 
 /*
 
-    The role of DndViewport is to calculate whether DndScrollTabs should be shown (isOver && canDrop viewport)
-    Obtain dnd targetConnector (viewportFrameElementRef.current) from Viewport
+    The role of DndViewport is to calculate whether DndScrollTabs should be shown (isOver && canDrop viewport),
+    and to obtain getDndDropEffect if the function has been provided by host,
+    and to set onDroppableWhitespace and whitespacePosition in masterDndContext.
+    Obtains dnd targetConnector (viewportFrameElementRef.current) from Viewport
 
 */
 
@@ -154,8 +156,8 @@ const DndViewport = (props) => {
             // determine which grid is under cursor
             isInHeadGrid = // otherwise tail grid
                 orientation == 'vertical'
-                    ?clientOffset.x < axisClientOffset.x
-                    :clientOffset.y < axisClientOffset.y
+                    ? clientOffset.x < axisClientOffset.x
+                    : clientOffset.y < axisClientOffset.y
 
         // collect reference grid cells
         let firstChildCellElement, lastChildCellElement
@@ -186,17 +188,17 @@ const DndViewport = (props) => {
         // check whitespace in blank cells
         let isWhitespace = 
             orientation == 'vertical'
-                ?clientOffset.x < firstChildClientOffset.x 
+                ? clientOffset.x < firstChildClientOffset.x 
                     && clientOffset.y < (firstChildClientOffset.y + firstChildClientOffset.height)
-                :clientOffset.y < firstChildClientOffset.y 
+                : clientOffset.y < firstChildClientOffset.y 
                     && clientOffset.x < (firstChildClientOffset.x + firstChildClientOffset.width)
 
         if (!isWhitespace) { // check for position before list (such as in padding area)
 
             isWhitespace = 
                 (orientation == 'vertical')
-                    ?clientOffset.y < firstChildClientOffset.y
-                    :clientOffset.x < firstChildClientOffset.x
+                    ? clientOffset.y < firstChildClientOffset.y
+                    : clientOffset.x < firstChildClientOffset.x
         
         }
 
@@ -230,9 +232,9 @@ const DndViewport = (props) => {
             
         isWhitespace = 
             orientation == 'vertical'
-                ?clientOffset.x > lastChildClientOffset.x 
+                ? clientOffset.x > lastChildClientOffset.x 
                     && clientOffset.y > lastChildClientOffset.y
-                :clientOffset.y > lastChildClientOffset.y 
+                : clientOffset.y > lastChildClientOffset.y 
                     && clientOffset.x > lastChildClientOffset.x
 
         if (isWhitespace) {
@@ -253,8 +255,8 @@ const DndViewport = (props) => {
         // beyond blank cell row
         isWhitespace = 
             orientation == 'vertical'
-                ?clientOffset.y > (lastChildClientOffset.y + lastChildClientOffset.height)
-                :clientOffset.x > (lastChildClientOffset.x + lastChildClientOffset.width)
+                ? clientOffset.y > (lastChildClientOffset.y + lastChildClientOffset.height)
+                : clientOffset.x > (lastChildClientOffset.x + lastChildClientOffset.width)
 
         if (isWhitespace) {
 
