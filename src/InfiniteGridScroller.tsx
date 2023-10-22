@@ -74,10 +74,6 @@ type RIGS = {
     dndOptions:GenericObject,
     profile:GenericObject,
 
-    // isOwnProperty causes scrollerContext and cacheAPI to be set by the system in CellFrame
-    scrollerContext:null | undefined | GenericObject,
-    cacheAPI:null | undefined | GenericObject,
-
     // functions
     placeholder:FC
     // getItemPack is required
@@ -136,13 +132,14 @@ let globalScrollerID = 0
 let rigsDndRoot = true
 
 export const MasterDndContext = React.createContext({...masterDndContextBase}) // inform children; tree scope
-export const RigsGlobalContext = React.createContext({cacheAPI:null})
+export const RigsGlobalContext = React.createContext({cacheAPI:null}) // global cache for drag and drop
 
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 
 const InfiniteGridScroller = (props) => {
 
-    // state
+    // state. Start with 'initialize' for the case in which root is !isDndMaster but masterDndContext.installed 
+    //    is still true. In this case RigsDnd needs another cycle to reset masterDndContext
     const [scrollerState, setScrollerState] = useState('initialize') // initialize, setup, setlistprops, ready
 
     // console.log('scroller state', scrollerState)
@@ -193,11 +190,8 @@ const InfiniteGridScroller = (props) => {
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         technical, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
-        // cacheAPI,
-        dndOptions, // **
+        dndOptions, // ** for drag and drop
         profile, // host provided scroller data
-        // information for host cell content
-        scrollerContext, // parent scroller settings
         isDndMaster, // internal, set for root dnd only
 
         platformComponent, // ** planned supercedes most other properties
@@ -225,9 +219,7 @@ const InfiniteGridScroller = (props) => {
     placeholderMessages = placeholderMessages ?? {}
     callbacks = callbacks ?? {}
     technical = technical ?? {}
-    // cacheAPI = cacheAPI ?? null
     isDndMaster = isDndMaster ?? false
-    // dndOptions = dndOptions ?? {}
 
     const 
         masterDndContext = useContext(MasterDndContext),
@@ -473,8 +465,6 @@ const InfiniteGridScroller = (props) => {
     if (typeof placeholderMessages !== 'object') placeholderMessages = {}
     if (typeof callbacks !== 'object') callbacks = {}
     if (typeof technical !== 'object') technical = {}
-    // if (typeof dndOptions !== 'object') dndOptions = {}
-    // if ((cacheAPI !== null) && (typeof cacheAPI !== 'object')) cacheAPI = null
 
     // package gridSpecs
     const gridSpecs = {
@@ -676,8 +666,24 @@ const InfiniteGridScroller = (props) => {
         placeholderMessagesRef.current = placeholderMessages
     }
 
-    // -------------------------[ Initialization ]-------------------------------
+    // -------------------------[ system initialization ]--------------------------
 
+    // prevent unregistering in strict dev mode (React double setup)
+    const isMountedRef = useRef(true)
+
+    useEffect(()=>{
+
+        isMountedRef.current = true
+
+        return () => {
+
+            isMountedRef.current = false
+
+        }
+
+    },[])
+
+    // set cacheAPI global or local
     const getCacheAPI = (cacheAPI) => {
 
         // console.log('using local cacheAPI')
@@ -694,33 +700,24 @@ const InfiniteGridScroller = (props) => {
 
     }
 
+    // made available if useLocalCache is true
     const getPortalCacheUpdateFunction = (fn) => {
 
         portalCacheForceUpdateFunctionRef.current = fn
 
     }
 
-    const useLocalCache = !masterDndContext.installed || isDndMaster //!cacheAPI
+    // useLocalCache for root only with drag and drop
+    const useLocalCache = !masterDndContext.installed || isDndMaster
 
+    // if use global cache, obtain from rigsGlobalContext
     if (scrollerState == 'setup' && !useLocalCache) {
-        // console.log('using global cacheAPI')
+
         cacheAPIRef.current = rigsGlobalContext.cacheAPI
+
     }
 
-    const isMountedRef = useRef(true)
-
-    useEffect(()=>{
-
-        isMountedRef.current = true
-
-        return () => {
-
-            isMountedRef.current = false
-
-        }
-
-    },[])
-
+    // prepare to reset with clearScrollerDndContext
     const clearScrollerDndContext = () => {
         // console.log('clearing scrollerDndContext, scrollerID',scrollerID)
         scrollerDndContextRef.current = {
@@ -741,23 +738,10 @@ const InfiniteGridScroller = (props) => {
         }
     }
 
-    useEffect(()=>{
-        const { dndHighlights } = stylesRef.current
-        if (dndHighlights) {
-            const root:HTMLElement = document.querySelector(':root')
-            dndHighlights.source && root.style.setProperty('--rigs-highlight-source',dndHighlights.source)
-            dndHighlights.target && root.style.setProperty('--rigs-highlight-target',dndHighlights.target)
-            dndHighlights.dropped && root.style.setProperty('--rigs-highlight-dropped',dndHighlights.dropped)
-            dndHighlights.scroller && root.style.setProperty('--rigs-highlight-scrollercandrop',dndHighlights.scroller)
-            dndHighlights.scrolltab && root.style.setProperty('--rigs-highlight-scrolltab',dndHighlights.scrolltab)
-        }
-    },[])
-
-
+    // rationalize scroller dnd setting changes
     useEffect (() => {
 
-        // console.log('installed, dndOptions',masterDndContext.installed, {...dndOptions})
-
+        // early reset if reset still underway from previous dnd
         if (!masterDndContext.installed) {
             if (scrollerDndContextRef.current.dndOptions) {
                 clearScrollerDndContext()
@@ -771,18 +755,29 @@ const InfiniteGridScroller = (props) => {
 
         scrollerDndContextRef.current.dndOptions = dndOptions
 
-        // console.log('opening enabled values:scroller, master,',scrollerDndContextRef.current.dndOptions.enabled, masterDndContext.enabled)
         const enabled = scrollerDndContextRef.current.dndOptions.enabled ?? masterDndContext.enabled
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
             scrollerDndContextRef.current.dndOptions.enabled = enabled
         }
-        // console.log('wasEnabled, enabled',wasEnabled, enabled)
         if (wasEnabled !== enabled) {
             setScrollerState('update')
         }
 
     },[dndOptions, masterDndContext.installed])
 
+    useEffect(()=>{
+        const { dndHighlights } = stylesRef.current
+        if (dndHighlights) {
+            const root:HTMLElement = document.querySelector(':root')
+            dndHighlights.source && root.style.setProperty('--rigs-highlight-source',dndHighlights.source)
+            dndHighlights.target && root.style.setProperty('--rigs-highlight-target',dndHighlights.target)
+            dndHighlights.dropped && root.style.setProperty('--rigs-highlight-dropped',dndHighlights.dropped)
+            dndHighlights.scroller && root.style.setProperty('--rigs-highlight-scrollercandrop',dndHighlights.scroller)
+            dndHighlights.scrolltab && root.style.setProperty('--rigs-highlight-scrolltab',dndHighlights.scrolltab)
+        }
+    },[])
+
+    // utility to ripple through
     const setVirtualListRange = useCallback((listrange) =>{
 
         let listsize
@@ -917,7 +912,6 @@ const InfiniteGridScroller = (props) => {
                     placeholderMessages = { placeholderMessagesRef.current }
                     runwaySize = { runwaySize }
                     triggerlineOffset = { triggerlineOffset }
-                    scrollerContext = { scrollerContext }
                     cradlePositionData = {  cradlePositionData}
                     scrollerProfile = { profile }
 
