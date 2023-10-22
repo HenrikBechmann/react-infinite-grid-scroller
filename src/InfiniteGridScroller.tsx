@@ -136,13 +136,16 @@ let globalScrollerID = 0
 let rigsDndRoot = true
 
 export const MasterDndContext = React.createContext({...masterDndContextBase}) // inform children; tree scope
+export const RigsGlobalContext = React.createContext({cacheAPI:null})
 
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 
 const InfiniteGridScroller = (props) => {
 
     // state
-    const [scrollerState, setScrollerState] = useState('setup') // setup, setlistprops, ready
+    const [scrollerState, setScrollerState] = useState('initialize') // initialize, setup, setlistprops, ready
+
+    // console.log('scroller state', scrollerState)
 
     // ------------------[ normalize properties ]--------------------
 
@@ -190,7 +193,7 @@ const InfiniteGridScroller = (props) => {
             // can contain functionsCallback, which provides access to internal scroller functions 
             //(mostly cache management)
         technical, // optional. technical settings like VIEWPORT_RESIZE_TIMEOUT
-        cacheAPI,
+        // cacheAPI,
         dndOptions, // **
         profile, // host provided scroller data
         // information for host cell content
@@ -222,12 +225,13 @@ const InfiniteGridScroller = (props) => {
     placeholderMessages = placeholderMessages ?? {}
     callbacks = callbacks ?? {}
     technical = technical ?? {}
-    cacheAPI = cacheAPI ?? null
+    // cacheAPI = cacheAPI ?? null
     isDndMaster = isDndMaster ?? false
-    dndOptions = dndOptions ?? {}
+    // dndOptions = dndOptions ?? {}
 
     const 
         masterDndContext = useContext(MasterDndContext),
+        rigsGlobalContext = useContext(RigsGlobalContext),
 
         // for mount version
         scrollerSessionIDRef = useRef(null),
@@ -469,8 +473,8 @@ const InfiniteGridScroller = (props) => {
     if (typeof placeholderMessages !== 'object') placeholderMessages = {}
     if (typeof callbacks !== 'object') callbacks = {}
     if (typeof technical !== 'object') technical = {}
-    if (typeof dndOptions !== 'object') dndOptions = {}
-    if ((cacheAPI !== null) && (typeof cacheAPI !== 'object')) cacheAPI = null
+    // if (typeof dndOptions !== 'object') dndOptions = {}
+    // if ((cacheAPI !== null) && (typeof cacheAPI !== 'object')) cacheAPI = null
 
     // package gridSpecs
     const gridSpecs = {
@@ -524,7 +528,7 @@ const InfiniteGridScroller = (props) => {
     const 
 
         // for children
-        cacheAPIRef = useRef(cacheAPI),
+        cacheAPIRef = useRef(null),
 
         portalCacheForceUpdateFunctionRef = useRef(null),
 
@@ -676,7 +680,13 @@ const InfiniteGridScroller = (props) => {
 
     const getCacheAPI = (cacheAPI) => {
 
+        // console.log('using local cacheAPI')
         cacheAPIRef.current = cacheAPI
+        if (isDndMaster) {
+            rigsGlobalContext.cacheAPI = cacheAPI
+        } else {
+            rigsGlobalContext.cacheAPI = null
+        }
 
     }
 
@@ -686,7 +696,12 @@ const InfiniteGridScroller = (props) => {
 
     }
 
-    const useLocalCache = !cacheAPI
+    const useLocalCache = !masterDndContext.installed || isDndMaster //!cacheAPI
+
+    if (scrollerState == 'setup' && !useLocalCache) {
+        // console.log('using global cacheAPI')
+        cacheAPIRef.current = rigsGlobalContext.cacheAPI
+    }
 
     const isMountedRef = useRef(true)
 
@@ -737,12 +752,16 @@ const InfiniteGridScroller = (props) => {
 
     useEffect (() => {
 
+        // console.log('installed, dndOptions',masterDndContext.installed, {...dndOptions})
+
         if (!masterDndContext.installed) {
             if (scrollerDndContextRef.current.dndOptions) {
                 clearScrollerDndContext()
             }
             return
         }
+
+        scrollerDndContextRef.current.dndOptions = scrollerDndContextRef.current.dndOptions ?? {}
 
         const wasEnabled = scrollerDndContextRef.current.dndOptions?.enabled
 
@@ -793,6 +812,11 @@ const InfiniteGridScroller = (props) => {
         if (isMinimalPropsFail || problemCount) return
 
         switch (scrollerState) {
+
+            case 'initialize':{
+                setScrollerState('setup')
+                break
+            }
 
             case 'setup':{
                 // replace cacheAPI with facade which includes hidden scrollerID
@@ -848,7 +872,7 @@ const InfiniteGridScroller = (props) => {
         // }}
     >
 
-        {(scrollerState != 'setup') 
+        {(!['setup','initialize'].includes(scrollerState)) 
         && <Viewport
 
             gridSpecs = { gridSpecsRef.current }
@@ -905,7 +929,7 @@ const InfiniteGridScroller = (props) => {
                 />
             </Scrollblock>
         </Viewport>}
-        <div data-type = 'cachewrapper'>
+        {(scrollerState !== 'initialize') && <div data-type = 'cachewrapper'>
             {useLocalCache 
             && <div data-type = 'cacheroot' style = { cacherootstyle }>
                 <PortalCache 
@@ -915,7 +939,7 @@ const InfiniteGridScroller = (props) => {
                     CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
 
             </div>}
-        </div>
+        </div>}
     </ErrorBoundary>
     </ScrollerDndContext.Provider>
 }

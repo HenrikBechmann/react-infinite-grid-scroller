@@ -551,15 +551,16 @@ export const CellFrame = ({
                                     scroller:scrollerPropertiesRef,
                                 }
                                 let addinCount = 0
-                                const addinProps:{scrollerContext?:object, cacheAPI?:object} = {}
+                                // const addinProps:{scrollerContext?:object, cacheAPI?:object} = {}
+                                const addinProps:{scrollerContext?:object} = {}
                                 if (usercontent.props?.hasOwnProperty('scrollerContext')) {
                                     addinProps.scrollerContext = scrollerContext
                                     addinCount++
                                 }
-                                if (usercontent.props?.hasOwnProperty('cacheAPI')) {
-                                    addinProps.cacheAPI = cacheAPI.instance
-                                    addinCount++
-                                }
+                                // if (usercontent.props?.hasOwnProperty('cacheAPI')) {
+                                //     addinProps.cacheAPI = cacheAPI.instance
+                                //     addinCount++
+                                // }
                                 if (addinCount) {
                                     component = React.cloneElement(usercontent, addinProps)
                                 } else {
