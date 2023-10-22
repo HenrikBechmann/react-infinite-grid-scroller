@@ -724,18 +724,18 @@ export const Cradle = ({ // exported for DndCradle
     return <CradleContext.Provider value = { cradleContextRef.current }>
 
         {(cradleState == 'repositioningRender')
-            ?null
-            :<div 
+            ? null
+            : <div 
             data-type = 'cradle-axis'
             style = { cradleAxisStyle } 
             ref = { axisCradleElementRef }
         >
             { showAxis
-                ?<div // for debug
+                ? <div // for debug
                     data-type = 'cradle-divider' 
                     style = { cradleDividerStyle }
                  ></div>
-                :null
+                : null
             }
             <div 
             
@@ -746,8 +746,8 @@ export const Cradle = ({ // exported for DndCradle
             >
             
                 {(cradleState != 'setup')
-                    ?cradleContent.headDisplayComponents
-                    :null
+                    ? cradleContent.headDisplayComponents
+                    : null
                 }
             
             </div>
@@ -760,8 +760,8 @@ export const Cradle = ({ // exported for DndCradle
             >
             
                 {(cradleState != 'setup')
-                    ?cradleContent.tailDisplayComponents
-                    :null
+                    ? cradleContent.tailDisplayComponents
+                    : null
                 }
             
             </div>

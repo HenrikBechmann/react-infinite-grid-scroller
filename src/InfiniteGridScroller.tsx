@@ -92,6 +92,8 @@ import { RigsDnd, masterDndContextBase } from './InfiniteGridScroller/RigsDnd'
 
 export { RigsDnd } // RigsDnd is called as root instead of InfiniteGridScroller if dnd is being invoked
 
+import './InfiniteGridScroller/rigs.css'
+
 // isSafariIOS
 const isSafariIOSFn = () => {
     const

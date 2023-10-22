@@ -8,22 +8,16 @@
     to present the error to the user. If a new itemID is set by the parent (to synchronize with an altered
     cache), then CellFrame replaces the old item with the new item.
 
-    getItemPack (which is a function provided by the host) can return one of several values:
-        - a React component
-        - a promise of a component
-        - null
-        - undefined
-    Anything else is treated as an error
-
-    if a promise is returned, then the promise returns a React component, null or undefined.
+    getItemPack (which is a function provided by the host) returns an object which contains:
+        component: a react component, or a promist of a react component
+        profile: a host defined set of properties to aid in identifaction in later interactions
+        dndOptions: type and dragText, if dnd is active
 
     If a valid react component is returned from getItemPack, then it is instantiated in the cache, and rendered in the
-    CellFrame. If null is returned, then CellFrame sends a message to its scroller that the host has 
-    indicated the the item being fetched instead represents the end of the list, and the listsize should
-    be adjusted accordingly. Any other value that is returned is treated as an error, and presented
-    as such to the user through the placeholder component.
+    CellFrame. Errors are returned to the host through itemExceptionCallback.
+    Errors are presented to the user through the placeholder component.
 
-    getItemPack sends the index (logical index in the list) and a session itemID to the host, so that
+    getItemPack sends the index (logical index in the list) a session itemID to the host, with a context object, so that
     the host can sync its own tracking with the scroller.
 
     One CellFrame at a time is designated as the host of the two triggerLines with the isTriggerCell flag. 
@@ -46,9 +40,7 @@ import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // p
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
 
 import Placeholder from './CellFrame/Placeholder' // default
-import './InfiniteGridScroller/rigs.css'
 
-// import { ViewportContext } from './Viewport'
 import DndCellFrame from './CellFrame/DndCellFrame'
 
 import { getFrameStyles, getContentHolderStyles, setContainerStyles } from './CellFrame/cellfunctions'

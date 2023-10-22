@@ -3,7 +3,7 @@
 
 /*
 
-    The role of DndCradle is to initiate operations based on dropping of a source on a legitimate target.
+    The role of DndCradle is to initiate transfer operations based on dropping of a source on a legitimate target.
     For intra-list drop it's straighforward: serviceHandler.moveIndex
     Special cases:
         - intra-list or inter-list drop over or with failed CellFrames
@@ -147,7 +147,7 @@ const DndCradle = (props) => {
                         ?toIndex + 1
                         :toIndex - 1
 
-            } else { // toIndex and displaceIndex for datatype == 'viewport'
+            } else { // toIndex and displacedIndex for datatype == 'viewport'
 
                 // reset
                 masterDndContext.onDroppableWhitespace = false

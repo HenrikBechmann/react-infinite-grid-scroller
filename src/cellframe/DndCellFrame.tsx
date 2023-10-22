@@ -1,6 +1,13 @@
 // DndCellFrame.tsx
 // copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
 
+/*
+
+    DndCellFrame's role is to detect a drop (and delegate to DndCradle), and present highlights in relation to potential 
+    drop locations, and indicate whether the DragIcon or DisplaceIcon should be shown
+
+*/
+
 import React, {
     useRef, 
     useEffect, 
