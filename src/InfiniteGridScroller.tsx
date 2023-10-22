@@ -138,8 +138,11 @@ export const ScrollerDndContext = React.createContext(null) // scroller scope
 const InfiniteGridScroller = (props) => {
 
     // state. Start with 'initialize' for the case in which root is !isDndMaster but masterDndContext.installed 
-    //    is still true. In this case RigsDnd needs another cycle to reset masterDndContext. see useLocalCache
+    //    is still true after rapid switch of root. In this case RigsDnd needs another cycle to reset masterDndContext. 
+    //    see useLocalCache
     const [scrollerState, setScrollerState] = useState('initialize') // initialize, setup, setlistprops, ready
+    
+    // console.log('rigs scrollerState', scrollerState)
 
     // ------------------[ collect properties ]--------------------
 
@@ -516,10 +519,10 @@ const InfiniteGridScroller = (props) => {
 
         virtualListSpecsRef = useRef(virtualListSpecs),
 
-        // scroller scoped dnd data update
+        // scroller scoped dnd data initialization
         scrollerDndContextRef = useRef({
-            scrollerID,
-            dndOptions, // scroller scoped
+            scrollerID, // placeholder, but assertion with scrollerID useEffect below
+            dndOptions, // scroller scoped, but assertion with dndOptions useEffect below
             profile,
             droppedIndex:null, // polled by CellFrames
             displacedIndex:null, // polled by CellFrames
@@ -748,11 +751,12 @@ const InfiniteGridScroller = (props) => {
 
     // --------------------[ rationalize scroller drag and drop settings ]--------------------
 
+    // dndOptions
     useEffect (() => {
 
-        // early reset if reset still underway from previous dnd iteration
+        // assert reset if dndOptions is set without dnd
         if (!masterDndContext.installed) {
-            if (scrollerDndContextRef.current.dndOptions) { // lag in reset for subscrollers
+            if (scrollerDndContextRef.current.dndOptions) {
                 clearScrollerDndContext()
             }
             return
