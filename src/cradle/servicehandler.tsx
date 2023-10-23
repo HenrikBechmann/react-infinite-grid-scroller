@@ -110,12 +110,12 @@ export default class ServiceHandler {
            referenceIndexCallback, // (index, callback)
            preloadIndexCallback, // (index, context)
            deleteListCallback, // (deleteList, context)
-           // changeListSizeCallback, // (newlistsize, context)
            changeListRangeCallback, // (listrange, context) two part array lowindex, highindex 
            itemExceptionCallback, // (index, context)
            repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning
            repositioningIndexCallback, // (index, context) - current virtual index number during rapid repositioning
            boundaryCallback, // (position, index, context) - position is "SOL" or "EOL", index is the corresponding boundary index
+           dragDropTransferCallback, // (sourceScrollerID, sourceIndex, targetScrollerID, targetIndex, context)
            
        } = cradleParameters.externalCallbacksRef.current,
 
@@ -123,12 +123,12 @@ export default class ServiceHandler {
            referenceIndexCallback,
            preloadIndexCallback,
            deleteListCallback,
-           // changeListSizeCallback,
            changeListRangeCallback,
            itemExceptionCallback,
            repositioningFlagCallback,
            repositioningIndexCallback,
            boundaryCallback,
+           dragDropTransferCallback,
        }
 
        this.callbacks = callbacks

@@ -336,7 +336,21 @@ const DndCradle = (props) => {
                 onDroppableWhitespace:false,
                 whitespacePosition:null
             })
+
+            const { dragDropTransferCallback } = serviceHandler.callbacks
             
+            if (dragDropTransferCallback) {
+
+                const context = {
+                    contextType:'dragDropTransfer',
+                    scrollerID:toScrollerID,
+                    item,
+                }
+
+                dragDropTransferCallback(fromScrollerID, fromIndex, toScrollerID, toIndex, context)
+
+            }
+
         },
     })
 
