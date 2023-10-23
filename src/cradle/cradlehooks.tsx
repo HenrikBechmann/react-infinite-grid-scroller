@@ -629,7 +629,7 @@ export const usePivotEffect = ({
     interruptHandler,
     setCradleState,
 }) => {
-    useEffect(()=> {
+    useLayoutEffect(()=> {
 
         layoutHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")
