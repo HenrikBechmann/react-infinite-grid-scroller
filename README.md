@@ -177,6 +177,7 @@ callbacks: {
      functionsCallback, // (functions) - get an object that has api functions
      
      // index tracking, called when triggered...
+     dragDropTransferCallback, // (fromScrollerID, fromIndex, toScrollerID, toIndex, context) - information about successful drop
      referenceIndexCallback, // (index, context) - change of index adjacent to the axis
      repositioningIndexCallback, // (index, context) - current virtual index number during rapid repositioning
      preloadIndexCallback, // (index, context) - current index being preloaded
@@ -211,6 +212,7 @@ Details about the callbacks:
 |[_**GET FUNCTIONS**_]|
 |functionsCallback(functions: object)||the object returned contains `Cradle` functions that the host can call directly. This is the API. `functionsCallback` is called once at startup. See below for details|
 |[_**TRACK INDEXES**_]|
+|dragDropTransferCallback(fromScrollerID:number, fromIndex:number, toScrollerID:number, toIndex:number, content:object)|contextType:'dragDropTransfer', scrollerID, item |item contains item source data: dndOptions (type, dragText), dropEffect, index, itemID, profile, scrollerID|
 |referenceIndexCallback(index: integer, context:object)|contextType: 'referenceIndex', action, cradleState, scrollerID|`action` can be 'setCradleContent' or 'updateCradleContent'. `cradleState` is the state change that triggered the action. Keeps the host up to date on the index number adjacent to the `Cradle` axis|
 |repositioningIndexCallback(index: integer, context:object)|contextType: 'repositioningIndex', scrollerID|the current index during repositioning. Useful for feedback to user when host sets `useScrollTracker` property to false|
 |preloadIndexCallback(index: integer, conext:object)|contextType: 'preloadIndex', scrollerID|during a preload operation, this stream gives the index number being preloaded|
@@ -379,6 +381,7 @@ The following are the basic steps to implement drag and drop on RIGS. Note that 
 - design and implement layout features on your cell components
 - design and implement dnd configuration options as required
 - create a `getDropEffect` function if needed, and pass this to the `RigsDnd` root component
+- track drag and drop transfers with `dragDropTransferCallback` if desired
 
 See below for details.
 
