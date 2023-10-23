@@ -48,7 +48,6 @@ const ViewportController = (props) => {
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext),
-        viewportFrameElementRef = useRef(null),
         { scrollerID } = props
 
     if (
@@ -60,7 +59,9 @@ const ViewportController = (props) => {
 
     } else {
 
-        const enhancedProps = {...props,viewportFrameElementRef}
+        const 
+            viewportFrameElementRef = useRef(null),
+            enhancedProps = {...props,viewportFrameElementRef}
 
         return <Viewport {...enhancedProps} />
 

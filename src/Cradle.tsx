@@ -115,8 +115,7 @@ const CradleController = props => {
 
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
-        masterDndContext = useContext(MasterDndContext),
-        handlerListRef = useRef(null)
+        masterDndContext = useContext(MasterDndContext)
 
     if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
 
@@ -124,7 +123,9 @@ const CradleController = props => {
 
     } else {
 
-        const enhancedProps = {...props, handlerListRef}
+        const 
+            handlerListRef = useRef(null),
+            enhancedProps = {...props, handlerListRef}
 
         return <Cradle {...enhancedProps} />
 

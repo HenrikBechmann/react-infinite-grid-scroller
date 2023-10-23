@@ -30,7 +30,6 @@ const DndViewport = (props) => {
         scrollerDndContext = useContext(ScrollerDndContext),
 
         viewportFrameElementRef = useRef(null),
-        // outerViewportElementRef = useRef(null),
 
         showScrollTabsRef = useRef(false)
 
@@ -352,7 +351,6 @@ const DndViewport = (props) => {
     const enhancedProps = {
         ...props,
         viewportFrameElementRef, 
-        // outerViewportElementRef, 
         showScrollTabs:showScrollTabsRef.current
     }
 
