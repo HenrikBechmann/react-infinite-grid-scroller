@@ -83,6 +83,8 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 
 # Scroller properties
 
+## Table of properties
+
 | property | value | notes |
 |---|---|---|
 |[_**CELL CONFIGURATION**_]|
