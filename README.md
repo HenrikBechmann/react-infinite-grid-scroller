@@ -49,7 +49,7 @@ Not shown are two triggerlines (0 `width` or `height` `div`s, depending on orien
 
 This is the minimum configuration.
 
-~~~typescript
+```tsx
 import Scroller from 'react-infinite-grid-scroller'
 
 // ...
@@ -64,7 +64,7 @@ const lowindex = -50, highindex = 50 // random range values
       getItemPack = { getItemPack } // a function called by RIGS to obtain a specified user component by index number
   />
 </div>
-~~~
+```
 See below for drag and drop configuration.
 
 The scroller's highest level component, the `Viewport`, is a `div` with `position:absolute`, and `inset:0`, so the host container should be styled accordingly.
@@ -128,8 +128,8 @@ Also, note that the cache is reloaded with a new `getItemPack` function.
 
 Create a style object for each of the elements you want to modify. The styles are not screened, though the RIGS essential styles pre-empt user styles. Be careful to only include "passive" styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
 
-~~~typescript
-styles = {
+```tsx
+const styles = {
   viewport: {}, 
   scrollblock: {}, 
   cradle: {},
@@ -146,7 +146,7 @@ styles = {
     scroller, // default "red", canDrop but not isOver scroller
     scrolltab, // default "brown", also used for isOver and canDrop scroller
   },
-~~~
+```
 
 You may want to add `overscrollBehavior:'none'` to the top level viewport styles to prevent inadvertent reloading of your app in certain browsers when users scroll past the top of a vertical list. Also note that dndDragIcon needs `zIndex` to be at least `1`.
 
@@ -158,20 +158,20 @@ The placeholder styles are applied only to the default placeholder.
 
 Replace any of the default messages used by the placeholder.
 
-~~~typescript
+```tsx
 const placeholderMessages = {
     loading:'(loading...)',
     retrieving:'(retrieving from cache)',
     undefined:'host returned "undefined"', // displayed, and returned with itemExceptionCallback
     invalid:'invalid React element', // displayed, and returned with itemExceptionCallback
 }
-~~~
+```
 
 ### The `callbacks` object
 
 Callbacks are host-defined closure functions which RIGS calls to provide data back to the host. RIGS returns data by setting the arguments of the callbacks. Include only the callbacks in the `callbacks` object that you want RIGS to use. The following callbacks are recognized by RIGS:
-~~~typescript
-callbacks: {
+```tsx
+const callbacks = {
 
      // called at setup...
      functionsCallback, // (functions) - get an object that has api functions
@@ -189,10 +189,10 @@ callbacks: {
      boundaryCallback, // (position, index, context) - position is "SOL" or "EOL", index is the corresponding boundary index
      repositioningFlagCallback, // (flag, context) - notification of start (true) or end (false) of rapid repositioning,
 }
-~~~
+```
 
 An example of a callback closure (`functionsCallback`):
-~~~typescript
+```tsx
 const scrollerFunctionsRef = useRef(null)
 
 const functionsCallback = (functions) => {
@@ -204,7 +204,7 @@ const functionsCallback = (functions) => {
 //...
 
 scrollerFunctionsRef.current.scrollToIndex(targetIndex)
-~~~
+```
 Details about the callbacks:
 
 |callback function (parameters:datatypes)|context object parameter|notes|
@@ -285,33 +285,33 @@ Cell components can get access to dynamically updated parent RIGS properties, by
 
 The `scrollerContext` object is requested by host components by initializing a `scrollerContext` component property to `null`. The property is then recognized by RIGS and set to the scrollerContext object by the system on loading of the component to a CellFrame. Like this:
 
-~~~typescript
+```tsx
 if (usercontent.props.hasOwnProperty('scrollerContext')) {
   component = React.cloneElement(usercontent, {scrollerContext})
 } else {
   component = usercontent
 }
-~~~
+```
 
 The scrollerContext object contains two properties:
 
-~~~typescript
+```tsx
 {
   cell,
   scroller,
 }
-~~~
+```
 
 Each of these is a _reference_ object, with values found in `propertyRef.current`.
 
 The `cell.current` object is instantiated only when a component is instantiated in the Cradle. It contains two properties:
 
-~~~typescript
+```tsx
 {
   itemID, // session cache itemID
   index, // place in virtual list
 }
-~~~
+```
 
 The `scroller.current` object contains the following properties, which are identical to the properties set for the scroller (they are passed through):
 
@@ -322,7 +322,7 @@ It also contains `scrollerID`, the internal session id (integer) of the current 
 Finally, it contains four objects with bundled properties: `virtualListProps`, `cradleContentProps`, `gapProps`, and `paddingProps`.
 
 `virtualListProps` is an object with the following properties:
-```
+```tsx
 {
    size, // the length (number of virtual cells) of the virtual list
    range, // a two-part array [lowindex,highindex]
@@ -336,7 +336,7 @@ Finally, it contains four objects with bundled properties: `virtualListProps`, `
 }
 ```
 `cradleContentProps` is an object with the following properties:
-```
+```tsx
 {
    cradleRowcount, // number of rows in the cradle (including any blank cells)
    viewportRowcount, // number of full rows that can be shown in the viewport
@@ -350,7 +350,7 @@ Finally, it contains four objects with bundled properties: `virtualListProps`, `
 }
 ```
 `gapProps` is an object with the following properties:
-```
+```tsx
 {
   CSS, // the CSS to be applied to the grid
   column, // column gap
@@ -361,7 +361,7 @@ Finally, it contains four objects with bundled properties: `virtualListProps`, `
 }
 ```
 `paddingProps` is an object with the following properties:
-```
+```tsx
 {
   CSS, the CSS to be applied to the Scrollblock
   top, // top padding
@@ -399,7 +399,7 @@ To install drag and drop ('dnd') capability,
 
 1. first invoke the `RigsDnd` component (instead of the default component) for the root of the RIGS tree to install the dnd `Provider`. This can only be done once per environment. For embedded lists (sub-scrollers), use the default RIGS component.
 
-~~~typescript
+```tsx
 import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
 ...
 <div style = { containerstyle }>
@@ -411,20 +411,20 @@ import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
       dndOptions = { dndOptions } // required for both the root instance and all child RIGS instances
   />
 </div>
-~~~
+```
 2. `dndOptions` is a required property for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property, and a `profile` property with a simple object to help identify the scroller when the host responds to the `getDropEffect` function. A complete list here:
-~~~typescript
+```tsx
 const dndOptions = {
-  accept:['type1','type2','type3',...] // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
+  accept:['type1','type2','type3',...], // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
   master:{enabled}, // optional, default true, for root `RigsDnd` component only. Serves as default for scroller enabled setting.
   enabled, // optional for all participating scrollers, default set by master.enabled
   dropEffect, // optional. the prescribed value ('move' or 'copy') for dragged scroller items; can be overridden by getDropEffect.
     // undefined dropEffect means default = 'move', posibly modified to 'copy' by pressing the altKey on desktop systems
 }
-~~~
+```
 3. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). The `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
 
-~~~typescript
+```tsx
 // in host getItemPack function
 ...
 return {
@@ -435,7 +435,7 @@ return {
   }
   profile, // recommended. Simple object created by host, returned to host for item identification in various contexts
 }
-~~~
+```
 
 RIGS does not check for matches of `type` values returned with `getItemPack`, with `accept` values sent to scrollers via the `dndOptions` scroller property.
 
@@ -451,8 +451,8 @@ With dnd enabled, the `context` parameter of the `getItemPack` function sent to 
 
 `dropEffect` can be further constrained by the return value of the host-provided function `getDropEffect` (see _Scroller Properties_ above). `getDropEffect` (if provided by the host) is called by RIGS whenever the drag location crosses into a scroller for which `isOver` and `canDrop` are both true. This function has three parameters: `sourceScrollerID` (the `scrollerID` from the source of the drag), `targetScrollerID` (the `scrollerID` from the target of the drag), and `context`. Here are the properties of the `context` parameter:
 
-```
-context: {
+```tsx
+const context = {
   sourceDndOptions:{ // taken from the source scroller
     accept, // the array of strings signifying the types of content items accepted by drop
     enabled, // the current state of dnd for the scroller
@@ -483,8 +483,8 @@ When the user drags and drops an item which exists in the RIGS cache, and with a
 
 However, if the drop involves a 'copy' (a RIGS cache item can only be used for one display instance), then the host has to supply what it considers to be a copy of the item. Also, if the item has been moved, but has gone out of scope (as the result of scrolling during the drag operation) and therefore removed from the cache, then a fresh instance of the moved item has to be obtained from the host. In those cases, RIGS sends out a specialized `getItemPack(index, itemID, context)` call with sufficient information for the host to respond appropriately. In this case, the `context` parameter contains the following:
 
-```
-context:{
+```tsx
+const context = {
   contextType:'dndFetchRequest', // identifiaction of the specialized request
   accept, // the accept list of the target scroller
   scrollerID, // the target scroller ID
@@ -508,7 +508,7 @@ First, obtain a `scrollerContext` object from the host scroller. See the `scroll
 
 Then code something like this.
 
-~~~typescript
+```tsx
 const isDnd = scrollerContext?.scroller.current.dndEnabled
 
 const float = useMemo(() => {
@@ -524,7 +524,7 @@ return <div
   {isDnd && float}
   ... // content
 </div>
-~~~
+```
 
 ## Configuration
 
@@ -532,7 +532,7 @@ Drag and drop can be enabled or disabled for individual scrollers, by setting th
 
 This presents a number of options. For example the user can set the dnd capability of a scroller themselves, something like this:
 
-~~~typescript
+```tsx
 const dndOptionsRef = useRef(dndOptions) // for use elsewhere, below
 dndOptionsRef.current = dndOptions
 ...
@@ -561,11 +561,11 @@ return ...
   dndOptions = {dndOptionsRef.current}
   ...
 />
-~~~
+```
 
 Or you can create a global React context, say `const DndEnabledContext = React.createContext(true)`. Then control that value through a global checkbox control. Finally, in your scroller component:
 
-~~~typescript
+```tsx
 const dndEnabledContext = useContext( DndEnabledContext )
 ...
 useEffect(()=>{
@@ -575,7 +575,7 @@ useEffect(()=>{
 
 },[dndEnabledContext])
 ...
-~~~
+```
 
 The combination of the local and global settings would allow the user much flexibility in terms of how to use drag and drop. This could be particularly useful in settings involving dozens of subscrollers.
 
@@ -593,7 +593,7 @@ Here is one way of restoring scroll positions. Basically, save scroll positions 
 
 This code is Typescript, in a function component.
 
-~~~typescript
+```tsx
     // ------------------------[ handle scroll position recovery ]---------------------
 
     // define required data repo
@@ -664,7 +664,7 @@ This code is Typescript, in a function component.
     return <div ref = {scrollerElementRef} style = {scrollerstyles}>
         {scrollercontent}
     </div>
-~~~
+```
 
 # Licence
 
