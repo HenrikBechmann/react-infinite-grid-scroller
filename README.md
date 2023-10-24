@@ -283,7 +283,7 @@ These properties would rarely be changed.
 
 Cell components can get access to dynamically updated parent RIGS properties, by requesting the scrollerContext object.
 
-The `scrollerContext` object is requested by host components by initializing a `scrollerContext` component property to `null`. The property is then recognized by RIGS and set to the scrollerContext object by the system on loading of the component to a CellFrame. Like this:
+The `scrollerContext` object is requested by host components by initializing a `scrollerContext` component property to `null`. The property is then recognized by RIGS and set to the scrollerContext object by the system on loading of the component to a CellFrame. Here is the internal code that does this:
 
 ```tsx
 if (usercontent.props.hasOwnProperty('scrollerContext')) {
@@ -443,13 +443,13 @@ With dnd enabled, the `context` parameter of the `getItemPack` function sent to 
 
 ## The `canDrop` and `dropEffect` properties, and the `getDropEffect` function
 
-`canDrop` is controlled by `react-dnd` by comparing the dragged item's `type` property (from the cell `dndOptions` property) to the list of `accept` values (from the scroller `dndOptions` property) of the target scroller. If a match is found, then `react-dnd` signals that the item can be dropped on the scroller.
+`canDrop` is an internal property controlled by `react-dnd`, by comparing the dragged item's `type` property (from the cell `dndOptions` property) to the list of `accept` values (from the scroller `dndOptions` property) of the target scroller. If a match is found, then `react-dnd` signals that the item can be dropped on the scroller.
 
 `canDrop` can be further constrained by the host-provided `getDropEffect` function, by returning 'none'.
 
-`dropEffect` for a dragged item can be set by the `dropEffect` property of the `dndOptions` of the source scroller, or if this is `undefined`, then as the default 'move' operation of the browser, or as a 'copy' operation when the `altKey` is pressed by the user on most browsers.
+The internal `dropEffect` property for a dragged item can be set by the `dropEffect` property of the `dndOptions` of the source scroller. If this is `undefined`, then it becomes the default 'move' operation, or the 'copy' operation when the `altKey` is pressed by the user on most browsers.
 
-`dropEffect` can be further constrained by the return value of the host-provided function `getDropEffect` (see _Scroller Properties_ above). `getDropEffect` (if provided by the host) is called by RIGS whenever the drag location crosses into a scroller for which `isOver` and `canDrop` are both true. This function has three parameters: `sourceScrollerID` (the `scrollerID` from the source of the drag), `targetScrollerID` (the `scrollerID` from the target of the drag), and `context`. Here are the properties of the `context` parameter:
+`dropEffect` can be further constrained by the return value of the host-provided function `getDropEffect` (see _Scroller Properties_ above). `getDropEffect` (if provided by the host) is called by RIGS whenever the drag location crosses into a scroller for which the internal `isOver` and `canDrop` properties are both true. This function has three parameters: `sourceScrollerID` (the `scrollerID` from the source of the drag), `targetScrollerID` (the `scrollerID` from the target of the drag), and `context`. Here are the properties of the `context` parameter:
 
 ```tsx
 const context = {
@@ -481,7 +481,7 @@ The host can return 'move', 'copy', 'none', or `undefined` from the `getDropEffe
 
 When the user drags and drops an item which exists in the RIGS cache, and with a 'move' `dropEffect`, then RIGS takes care of the data transfer itself. 
 
-However, if the drop involves a 'copy' (a RIGS cache item can only be used for one display instance), then the host has to supply what it considers to be a copy of the item. Also, if the item has been moved, but has gone out of scope (as the result of scrolling during the drag operation) and therefore removed from the cache, then a fresh instance of the moved item has to be obtained from the host. In those cases, RIGS sends out a specialized `getItemPack(index, itemID, context)` call with sufficient information for the host to respond appropriately. In this case, the `context` parameter contains the following:
+However, if the drop involves a 'copy', then the host has to supply what it considers to be a copy of the item (a RIGS cache item can only be used for one display instance). Also, if the item has been moved, but has gone out of scope as the result of scrolling during the drag operation and therefore removed from the cache, then a fresh instance of the moved item has to be obtained from the host. In those cases, RIGS sends out a specialized `getItemPack(index, itemID, context)` call with sufficient information for the host to respond appropriately. In this case, the `context` parameter contains the following:
 
 ```tsx
 const context = {
@@ -502,7 +502,7 @@ const context = {
 
 ## Layout
 
-RIGS shows a drag icon for draggable items at the top left of the CellFrame. Since this icon can overlay some of the content of the host provided content, the component may want to move this content out of the way of the drag icon when it is present. Here is how that can be done.
+RIGS shows a drag icon for draggable items at the top left of each CellFrame. Since this icon can overlay some of the content of the host provided content, the component may want to move this content out of the way of the drag icon when it is present. Here is how that can be done.
 
 First, obtain a `scrollerContext` object from the host scroller. See the `scrollerContext` section for details.
 
