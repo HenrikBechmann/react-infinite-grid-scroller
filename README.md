@@ -126,7 +126,7 @@ Most of the time the `itemID` can be ignored.
 
 Also, note that the cache is reloaded with a new `getItemPack` function.
 
-### The `styles` object
+## The `styles` object
 
 Create a style object for each of the elements you want to modify. The styles are not screened, though the RIGS essential styles pre-empt user styles. Be careful to only include "passive" styles (like color, backgroundColor) so as not to confuse the scroller. Do not add structural items like borders, padding etc.
 
@@ -156,7 +156,7 @@ The scrolltracker is the small rectangular component that appears at the top lef
 
 The placeholder styles are applied only to the default placeholder.
 
-### The `placeholderMessages` object
+## The `placeholderMessages` object
 
 Replace any of the default messages used by the placeholder.
 
@@ -169,7 +169,7 @@ const placeholderMessages = {
 }
 ```
 
-### The `callbacks` object
+## The `callbacks` object
 
 Callbacks are host-defined closure functions which RIGS calls to provide data back to the host. RIGS returns data by setting the arguments of the callbacks. Include only the callbacks in the `callbacks` object that you want RIGS to use. The following callbacks are recognized by RIGS:
 ```tsx
@@ -225,7 +225,7 @@ Details about the callbacks:
 |boundaryCallback(position:string, index:integer, context:object) |contextType: 'boundary', scrollerID| called whenever the `lowindex` or `highindex` are loaded into the `Cradle`. `position` is "SOL" or "EOL", `index` is the corresponding boundary index|
 |repositioningFlagCallback(flag: boolean, context:object)|contextType: 'repositioningIndex', scrollerID | called with `true` when repositioning starts, and `false` when repositioning ends. Useful for feedback to user when host sets `useScrollTracker` property to false|
 
-### The returned API `functions` object
+## The returned API `functions` object
 
 Details about the functions returned in an object by `functionsCallback`.
 
@@ -264,7 +264,7 @@ Cache management functions operate on indexes and itemIDs in the cache, and gene
 
 This is a sparse in-memory cache, and indexes in the cache are not guaranteed to be contiguous.
 
-### The `technical` object
+## The `technical` object
 
 These properties would rarely be changed.
 
@@ -281,7 +281,7 @@ These properties would rarely be changed.
 |SCROLLTAB_INTERVAL_MILLISECONDS:number = 100|SetInterval milliseconds for ScrollTab|
 |SCROLLTAB_INTERVAL_PIXELS:number = 100|SetInterval scrollBy pixels for dnd ScrollTab|
 
-### The cell component's acquired `scrollerContext` property
+## The cell component's acquired `scrollerContext` property
 
 Cell components can get access to dynamically updated parent RIGS properties, by requesting the scrollerContext object.
 
