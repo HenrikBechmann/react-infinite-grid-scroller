@@ -10,7 +10,7 @@ Heavy-duty vertical or horizontal infinite scroller
 - designed to display both "heavy" and "light" cell content (React components)
 - supports both uniform and variable cell lengths (for both vertical and horizontal)
 - single or multiple rows or columns
-- dynamically variable virtual list size; prepend or append infinitely
+- dynamically variable virtual list size; prepend or append indefinitely
 - limited sparse in-memory cache, to preserve content state, with an API
 - repositioning mode when rapidly scrolling
 - dynamic pivot (horizontal/vertical back and forth) while maintaining position in list
