@@ -441,7 +441,7 @@ RIGS does not check for matches of `type` values returned with `getItemPack`, wi
 
 With dnd enabled, the `context` parameter of the `getItemPack` function sent to the host will include the `accept` list of the enclosing scroller, for convenience.
 
-## The `canDrop`, `dropEffect` properties, and the `getDropEffect` function
+## The `canDrop` and `dropEffect` properties, and the `getDropEffect` function
 
 `canDrop` is controlled by `react-dnd` by comparing the dragged item's `type` property (from the cell `dndOptions` property) to the list of `accept` values (from the scroller `dndOptions` property) of the target scroller. If a match is found, then `react-dnd` signals that the item can be dropped on the scroller.
 
