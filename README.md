@@ -83,6 +83,8 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 
 # Scroller properties
 
+<details>
+
 ## Table of properties
 
 | property | value | notes |
@@ -375,8 +377,11 @@ Finally, it contains four objects with bundled properties: `virtualListProps`, `
   source, // original parameter value
 }
 ```
+</details>
 
 # Drag and Drop
+
+<details>
 
 ## Overview
 
@@ -585,7 +590,11 @@ The combination of the local and global settings would allow the user much flexi
 
 If there are dozens of subscrollers on screen (say by zooming out to 50%), then performance of drag and drop (notably for the drag icon) can degrade owing to the pub/sub system of `react-dnd`. One way of dealing with this is to disable all drag and drop (see _Configuration_ above), and let the user selectively enable drag and drop for the scrollers that they want to work with. That way, performance is quite good.
 
+</details>
+
 # Restoring scroll positions coming out of cache
+
+<details>
 
 This is only of concern if your cell components support scrolling.
 
@@ -667,6 +676,8 @@ This code is Typescript, in a function component.
         {scrollercontent}
     </div>
 ```
+
+</details>
 
 # Licence
 
