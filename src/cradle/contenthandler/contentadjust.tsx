@@ -7,7 +7,7 @@ export const contentAdjust = (source, cradleParameters) => {
 
     // resources...
     const
-        // acquire repositories
+        // acquire data sources
         cradleHandlers = cradleParameters.handlersRef.current,
         viewportContext = cradleParameters.viewportContextRef.current,
         cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
@@ -48,7 +48,6 @@ export const contentAdjust = (source, cradleParameters) => {
         {
 
             orientation, 
-            // gap, 
             cellHeight,
             cellWidth,
 
@@ -71,6 +70,9 @@ export const contentAdjust = (source, cradleParameters) => {
 
         } = virtualListProps
 
+    // ---------------------[ set up resize observer for variable expansion ]-------------------
+    // once the expansion has settled, make final position adjustments
+
     // resize observer embedded to provide access to variables
     let gridResizeObserver
 
@@ -90,7 +92,6 @@ export const contentAdjust = (source, cradleParameters) => {
 
             const
                 viewportContext = cradleParameters.viewportContextRef.current,
-                // { serviceHandler } = cradleHandlers,
                 viewportElement = viewportContext.elementRef.current,
                 scrollblockElement = viewportElement.firstChild,
                 cradleInheritedProperties = cradleParameters.cradleInheritedPropertiesRef.current,
@@ -159,7 +160,7 @@ export const contentAdjust = (source, cradleParameters) => {
             }
 
         }, 500)
-    }
+    } // end of gridResizeObserverCallback
 
     // cancel end of list reconciliation if scrolling re-starts
     if (scrollHandler.isScrolling && gridResizeObserver) {
@@ -189,8 +190,8 @@ export const contentAdjust = (source, cradleParameters) => {
 
         gaplength = 
             orientation == 'vertical'
-                ?gapProps.column
-                :gapProps.row,
+                ?gapProps.row
+                :gapProps.column,
 
         // base pixel values
         baseCellLength = 
@@ -212,7 +213,7 @@ export const contentAdjust = (source, cradleParameters) => {
                 :paddingProps.right,
 
         totalPostAxisScrollblockPixelLength = 
-            postCradleRowsPixelLength + measuredTailPixelLength + paddingTailOffset,
+            postCradleRowsPixelLength + measuredTailPixelLength, //+ paddingTailOffset,
 
         paddingHeadOffset = 
             orientation == 'vertical'
@@ -221,49 +222,42 @@ export const contentAdjust = (source, cradleParameters) => {
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         totalPreAxisScrollblockPixelLength = 
-            ((preCradleRowCount + headRowCount) * baseCellLength) + paddingHeadOffset
-
-    // this.latestAxisReferenceIndex = axisReferenceIndex
+            ((preCradleRowCount + headRowCount) * baseCellLength) //+ paddingHeadOffset
 
     // ------------------------[ layout adjustments ]----------------------
 
     interruptHandler.signals.pauseCradleIntersectionObserver = true
 
     const 
-        totalScrollblockPixelLength = totalPreAxisScrollblockPixelLength + totalPostAxisScrollblockPixelLength,
-        trackingBlockScrollPos = totalPreAxisScrollblockPixelLength - pixelOffsetAxisFromViewport,
-        newPixelOffsetAxisFromScrollblock = trackingBlockScrollPos + pixelOffsetAxisFromViewport // ie. totalPreAxisPixelLength, but semantics
+        totalScrollblockPixelLength = totalPreAxisScrollblockPixelLength + totalPostAxisScrollblockPixelLength 
+            + paddingHeadOffset + paddingTailOffset,
+
+        trackingAdjustment = 
+            headRowCount
+                ? paddingHeadOffset
+                : 0, // prevent bounce at top
+
+        trackingBlockScrollPos = totalPreAxisScrollblockPixelLength + trackingAdjustment - pixelOffsetAxisFromViewport,
+
+        newPixelOffsetAxisFromScrollblock = 
+            trackingBlockScrollPos + 
+            pixelOffsetAxisFromViewport - 
+            trackingAdjustment // doesn't apply to axis offset which is relative to padding
 
     if (orientation == 'vertical') {
 
-        axisElement.style.top = (newPixelOffsetAxisFromScrollblock - paddingProps.top) + 'px'
+        axisElement.style.top = newPixelOffsetAxisFromScrollblock + 'px'
 
         scrollblockElement.style.height = (totalScrollblockPixelLength) + 'px'
 
     } else { // 'horizontal'
 
-        axisElement.style.left = (newPixelOffsetAxisFromScrollblock - paddingProps.left) + 'px'
+        axisElement.style.left = newPixelOffsetAxisFromScrollblock + 'px'
 
         scrollblockElement.style.width = totalScrollblockPixelLength + 'px'
 
     }
     // -----------------------[ scrollPos adjustment ]-------------------------
-
-    if (orientation == 'vertical') {
-
-        headGridElement.style.padding = 
-            headRowCount
-                ?`0px 0px ${gapProps.column}px 0px`
-                :`0px`
-
-    } else {
-
-        headGridElement.style.padding = 
-            headRowCount
-                ?`0px ${gapProps.row}px 0px 0px`
-                :`0px`
-
-    }
 
     // temporarily adjust scrollblockElement offset; onAfterScrollForVariable transfers shift to trackingBlockScrollPos
     const 
