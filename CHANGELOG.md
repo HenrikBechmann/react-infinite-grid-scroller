@@ -7,7 +7,7 @@ Added:
 - scroller `dndOptions` property, containing `accept` list of content types
 - scroller host-defined `profile` property to help with response to certain functions
 - host provided `getDropEffect` function (for `RigsDnd` higher order component only) which provides the host the opportunity to constrain the drop effect on scrollers, based on `sourceScrollerID`, `targetScrollerID`, and `context` data.
-- host-provided `dragDropTransferCallback` function to notify host of completed drag and drop operation
+- host-provided `dragDropTransferCallback` function to notify host of completed drag and drop operations
 - `getItemPack` (replaces `getItem`). The return object of `getItemPack` from the host includes the host-defined `component` function, and a data `profile` object with host-defined properties; for dnd, it includes a cell `dndOptions` object with `dragText` and `type`
 
 Renamed:
