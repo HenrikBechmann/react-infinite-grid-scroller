@@ -379,7 +379,7 @@ Finally, it contains four objects with bundled properties: `virtualListProps`, `
 ```
 </details>
 
-# Drag and Drop
+# Drag and drop
 
 <details>
 
