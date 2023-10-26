@@ -11,7 +11,7 @@
     viewportResizing interrupts are handled by viewport
 */
 
-import { generateShiftInstruction } from './contentfunctions'
+import { getShiftInstruction } from './contenthandler/contentupdatefuncs'
 
 export default class InterruptHandler {
 
@@ -35,7 +35,7 @@ export default class InterruptHandler {
         }
 
         const 
-            viewportElement = this.cradleParameters.ViewportContextPropertiesRef.current.elementRef.current,
+            viewportElement = this.cradleParameters.viewportContextRef.current.elementRef.current,
 
             viewportBoundingRect = viewportElement.getBoundingClientRect()
 
@@ -87,26 +87,26 @@ export default class InterruptHandler {
                 } = virtualListProps,
 
                 scrollPos = 
-                    (orientation == 'vertical')?
-                        viewportElement.scrollTop:
-                        viewportElement.scrollLeft,
+                    (orientation == 'vertical')
+                        ?viewportElement.scrollTop
+                        :viewportElement.scrollLeft,
 
                 contentLength = 
-                    (orientation == 'vertical')?
-                        viewportElement.scrollHeight:
-                        viewportElement.scrollWidth,
+                    (orientation == 'vertical')
+                        ?viewportElement.scrollHeight
+                        :viewportElement.scrollWidth,
 
                 viewportLength = 
-                    (orientation == 'vertical')?
-                        viewportElement.offsetHeight:
-                        viewportElement.offsetWidth
+                    (orientation == 'vertical')
+                        ?viewportElement.offsetHeight
+                        :viewportElement.offsetWidth
 
             // for browser top or bottom bounce
             // fractional pixels can cause this to fail, hence Math.floor)
 
             if ( (scrollPos >= 0) || (Math.floor(scrollPos + viewportLength) <= contentLength)) { 
 
-                const [shiftinstruction, triggerViewportReferencePixelPos] = generateShiftInstruction({
+                const [shiftinstruction, triggerViewportReferencePixelPos] = getShiftInstruction({
 
                     scrollerID: cradleInheritedProperties.scrollerID,
                     orientation,
@@ -153,15 +153,16 @@ export default class InterruptHandler {
 
     private cradleIntersectionObserverCallback = (entries) => {
 
-        const signals = this.signals
-        const { 
+        const 
+            signals = this.signals,
+            { 
 
-            stateHandler, 
-            serviceHandler, 
-            scrollHandler, 
-            layoutHandler 
+                stateHandler, 
+                serviceHandler, 
+                scrollHandler, 
+                layoutHandler 
 
-        } = this.cradleParameters.handlersRef.current
+            } = this.cradleParameters.handlersRef.current
 
         if (signals.pauseCradleIntersectionObserver) {
 
@@ -182,22 +183,22 @@ export default class InterruptHandler {
             const entry = entries[i]
             if (entry.target.dataset.type == 'head') {
                 this.isHeadCradleInView = (
-                    entry.isIntersecting || 
-                        ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
+                    entry.isIntersecting 
+                        || ((entry.rootBounds.width == 0) 
+                            && (entry.rootBounds.height == 0)) // reparenting
                 )
             } else {
                 this.isTailCradleInView = (
-                    entry.isIntersecting  || 
-                        ((entry.rootBounds.width == 0) && (entry.rootBounds.height == 0)) // reparenting
+                    entry.isIntersecting 
+                        || ((entry.rootBounds.width == 0) 
+                            && (entry.rootBounds.height == 0)) // reparenting
                 )
             }
         }
 
         this.signals.repositioningRequired = (!(this.isHeadCradleInView) && !(this.isTailCradleInView))
 
-        // console.log('repositioningRequired',this.signals.repositioningRequired)
-
-        const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+        const viewportContext = this.cradleParameters.viewportContextRef.current
 
         if (this.signals.repositioningRequired) // start reposition if no other interrupts are underway
         {
@@ -210,23 +211,25 @@ export default class InterruptHandler {
 
                     !['repositioningRender','finishreposition',//'repositioningContinuation','finishreposition',
                         'renderupdatedcontent','finishupdatedcontent',
-                        'finishviewportresize'].includes(cradleState) &&
-
-                    !ViewportContextProperties.isResizing
+                        'finishviewportresize'].includes(cradleState) 
+                    && !viewportContext.isResizing
 
                 ) 
             {
                 
-                const viewportElement = ViewportContextProperties.elementRef.current
+                const viewportElement = viewportContext.elementRef.current
 
                 if (!viewportElement) { // defensive; shouldn't happen
                     console.log('SYSTEM: viewport element not set in cradleIntersectionObserverCallback (scrollerID)',
-                        scrollerID,ViewportContextProperties)
+                        scrollerID,viewportContext)
                     return
                 }
 
                 const { repositioningFlagCallback } = serviceHandler.callbacks
-                repositioningFlagCallback && repositioningFlagCallback(true)
+                repositioningFlagCallback && repositioningFlagCallback(true, {
+                    contextType:'repositioningFlag',
+                    scrollerID,
+                })
 
                 if (layout == 'variable') { // restore base config to scrollblock
 
@@ -259,10 +262,13 @@ export default class InterruptHandler {
             if (!this.cradleIntersect.disconnected) {
                 return
             }
-            const observer = this.cradleIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+            const 
+                observer = this.cradleIntersect.observer,
+                cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+
             observer.observe(cradleElements.headRef.current)
             observer.observe(cradleElements.tailRef.current)
+
             this.cradleIntersect.disconnected = false
         },
         disconnect:() => {
@@ -270,10 +276,10 @@ export default class InterruptHandler {
             this.cradleIntersect.disconnected = true
         },
         createObserver:() => {
-            const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+            const viewportContext = this.cradleParameters.viewportContextRef.current
             this.cradleIntersect.observer = new IntersectionObserver(
                 this.cradleIntersect.callback,
-                {root:ViewportContextProperties.elementRef.current, threshold:0}
+                {root:viewportContext.elementRef.current, threshold:0}
             )    
             return this.cradleIntersect.observer
         }
@@ -287,10 +293,12 @@ export default class InterruptHandler {
             if (!this.triggerlinesIntersect.disconnected) {
                 return
             }
-            const observer = this.triggerlinesIntersect.observer
-            const cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
-            if (cradleElements.triggercellTriggerlineHeadRef.current &&
-                cradleElements.triggercellTriggerlineTailRef.current) {
+            const 
+                observer = this.triggerlinesIntersect.observer,
+                cradleElements = this.cradleParameters.handlersRef.current.layoutHandler.elements
+                
+            if (cradleElements.triggercellTriggerlineHeadRef.current 
+                && cradleElements.triggercellTriggerlineTailRef.current) {
                 observer.observe(cradleElements.triggercellTriggerlineHeadRef.current)
                 observer.observe(cradleElements.triggercellTriggerlineTailRef.current)
             }
@@ -301,10 +309,10 @@ export default class InterruptHandler {
             this.triggerlinesIntersect.disconnected = true
         },
         createObserver:() => {
-            const ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current
+            const viewportContext = this.cradleParameters.viewportContextRef.current
             this.triggerlinesIntersect.observer = new IntersectionObserver(
                 this.triggerlinesIntersect.callback,
-                {root:ViewportContextProperties.elementRef.current, threshold:0}
+                {root:viewportContext.elementRef.current, threshold:0}
             )
             return this.triggerlinesIntersect.observer
         }

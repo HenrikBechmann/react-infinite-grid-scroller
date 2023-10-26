@@ -14,8 +14,6 @@
         viewport)
 */
 
-// import { isSafariIOS } from '../InfiniteGridScroller'
-
 export default class LayoutHandler { 
 
     constructor(cradleParameters) {
@@ -52,6 +50,7 @@ export default class LayoutHandler {
             { 
             
                 virtualListProps,
+                cradlePositionData,
 
             } = this.cradleParameters.cradleInternalPropertiesRef.current,
             { 
@@ -62,25 +61,19 @@ export default class LayoutHandler {
 
             } = virtualListProps
 
-        if (listsize) {
+        this.cradlePositionData = cradlePositionData
 
-            startingIndex = Math.max(startingIndex, lowindex)
-            startingIndex = Math.min(startingIndex, highindex)
+    } // constructor
 
-            this.cradlePositionData.targetAxisReferencePosition = startingIndex - lowindex
+    private cradleParameters
 
-        } else {
-
-            this.cradlePositionData.targetAxisReferencePosition = 0
-        }
-
-        this.cradlePositionData.targetPixelOffsetAxisFromViewport = 0
-
-    }
+    public elements
 
     public get scrollerID() { // for debug
         return this.cradleParameters.cradleInheritedPropertiesRef.current.scrollerID
     }
+
+    // control list boundary notifications
 
     public SOLSignal = false
     public EOLSignal = false
@@ -100,7 +93,7 @@ export default class LayoutHandler {
 
     }
 
-    private cradleParameters
+    // triggerline control
 
     public get triggerlineSpan() {
 
@@ -109,12 +102,12 @@ export default class LayoutHandler {
                 orientation, 
             } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
-            span = (orientation == 'vertical')?
-                this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
-                this.elements.triggercellTriggerlineHeadRef.current.offsetTop:
+            span = (orientation == 'vertical')
+                ?this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
+                    this.elements.triggercellTriggerlineHeadRef.current.offsetTop
                 // horizontal
-                this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
-                this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
+                :this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
+                    this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
 
         return span
     }
@@ -184,8 +177,8 @@ export default class LayoutHandler {
     public restoreBaseScrollblockConfig = () => {
 
         const 
-            ViewportContextProperties = this.cradleParameters.ViewportContextPropertiesRef.current,
-            viewportElement = ViewportContextProperties.elementRef.current,
+            viewportContext = this.cradleParameters.viewportContextRef.current,
+            viewportElement = viewportContext.elementRef.current,
             scrollblockElement = viewportElement.firstChild,
 
             { 
@@ -223,20 +216,20 @@ export default class LayoutHandler {
             } = this.cradleParameters.handlersRef.current,
 
             gaplength = 
-                orientation == 'vertical'?
-                    gapProps.column:
-                    gapProps.row,
+                orientation == 'vertical'
+                    ?gapProps.column
+                    :gapProps.row,
 
             cellLength = 
-                ((orientation == 'vertical')?
-                    cellHeight:
-                    cellWidth) 
+                ((orientation == 'vertical')
+                    ?cellHeight
+                    :cellWidth) 
                 + gaplength,
 
             paddingLength = 
-                orientation == 'vertical'?
-                    paddingProps.top + paddingProps.bottom:
-                    paddingProps.left + paddingProps.right,
+                orientation == 'vertical'
+                    ?paddingProps.top + paddingProps.bottom
+                    :paddingProps.left + paddingProps.right,
 
             blocklength = (listRowcount * cellLength) - gaplength // final cell has no trailing gap
                 + paddingLength // leading and trailing padding
@@ -254,13 +247,13 @@ export default class LayoutHandler {
         }
 
         const 
-            { cradlePositionData } = layoutHandler,
+            { cradlePositionData } = this, // layoutHandler,
             axisReferencePosition = cradlePositionData.targetAxisReferencePosition,
             rowReferencePosition = Math.ceil(axisReferencePosition/crosscount),
             paddingOffset = 
-                orientation == 'vertical'?
-                    paddingProps.top:
-                    paddingProps.left,
+                orientation == 'vertical'
+                    ?paddingProps.top
+                    :paddingProps.left,
             calculatedBlockScrollPos = 
                 (rowReferencePosition * cellLength) + paddingOffset
 
@@ -269,9 +262,9 @@ export default class LayoutHandler {
 
             const 
                 originalScrollPos = 
-                    (orientation == 'vertical')?
-                        viewportElement.scrollTop:
-                        viewportElement.scrollLeft,
+                    (orientation == 'vertical')
+                        ?viewportElement.scrollTop
+                        :viewportElement.scrollLeft,
 
                 scrollShift = calculatedBlockScrollPos - originalScrollPos
 
@@ -314,8 +307,6 @@ export default class LayoutHandler {
         scrollHandler.resetScrollData(calculatedBlockScrollPos)
 
     }
-
-    public elements
 
 }
 
