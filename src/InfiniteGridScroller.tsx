@@ -119,8 +119,8 @@ function ErrorFallback({error, resetErrorBoundary}) {
       >
           Cancel error
       </button>
-      {error.name}
-      {error.message}
+      {error.name} <br/>
+      {error.message} <br/>
       {error.stack}
     </div>
   )
