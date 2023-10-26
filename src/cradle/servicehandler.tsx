@@ -1,5 +1,5 @@
 // servicehandler.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module fields service requests from the host. There are two forms

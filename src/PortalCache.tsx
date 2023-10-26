@@ -1,5 +1,5 @@
 // PortalCache.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The role of PortalCache is to hold the React portals in a cache.

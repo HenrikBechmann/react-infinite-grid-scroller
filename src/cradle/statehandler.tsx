@@ -1,5 +1,5 @@
 // statehandler.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
    This module provides access to the cradle state and the state setting for other handlers.
