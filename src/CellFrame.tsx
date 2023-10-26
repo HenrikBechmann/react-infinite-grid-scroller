@@ -250,7 +250,7 @@ export const CellFrame = ({
 
     },[])
 
-    useEffect(()=>{
+    useLayoutEffect(()=>{
 
         if (['inserting','retrieved'].includes(frameState)) {
             setDroppedBorder()
