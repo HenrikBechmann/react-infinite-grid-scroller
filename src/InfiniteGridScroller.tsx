@@ -850,8 +850,7 @@ const InfiniteGridScroller = (props) => {
 
             if (!isMountedRef.current) {
 
-                // TODO failure would constitute a memory leadk
-                const unRegisterScroller = cacheAPIRef?.current?.unRegisterScroller // TODO mobile issue
+                const unRegisterScroller = cacheAPIRef.current.unRegisterScroller
 
                 unRegisterScroller && unRegisterScroller(itemSetRef.current)
 

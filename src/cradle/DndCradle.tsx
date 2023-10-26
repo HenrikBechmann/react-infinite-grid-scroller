@@ -125,9 +125,12 @@ const DndCradle = (props) => {
 
             // collect drop parameters
             const 
-                dropEffect = hostDropEffect 
+                dropEffect = 
+                    hostDropEffect 
+                    || item.dropEffect
                     || dropResult.dropEffect 
                     || 'move', // default for mobile
+
                 onDroppableWhitespace = masterDndContext.onDroppableWhitespace,
                 whitespacePosition = masterDndContext.whitespacePosition
 
@@ -246,11 +249,6 @@ const DndCradle = (props) => {
                     && dropEffect == 'move') {
 
                     // ------------ resolve source data
-                    const 
-                        getPropertiesSnapshot = dragContext?.sourceServiceHandler?.getPropertiesSnapshot
-                        
-                    if (!getPropertiesSnapshot) return // TODO mobile failure
-
                     const
                         [ sourceProps ] = dragContext.sourceServiceHandler.getPropertiesSnapshot(),
                         { size:sourcelistsize, range:sourcelistrange } = sourceProps.virtualListProps

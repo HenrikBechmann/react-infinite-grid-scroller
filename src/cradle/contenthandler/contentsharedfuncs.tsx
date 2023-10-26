@@ -243,10 +243,9 @@ const createCellFrame = ({
         } = cradleInheritedProperties,
 
         listsize = cradleInternalProperties.virtualListProps.size,
-        getNewOrExistingItemID = cacheAPI?.getNewOrExistingItemID
-
-        if (!getNewOrExistingItemID) return null // TODO mobile issue
         // get new or existing itemID
+        getNewOrExistingItemID = cacheAPI.getNewOrExistingItemID
+        
     const
         itemID = cacheAPI.getNewOrExistingItemID(index),
 
