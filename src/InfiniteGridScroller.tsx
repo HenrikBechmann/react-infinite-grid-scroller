@@ -119,7 +119,9 @@ function ErrorFallback({error, resetErrorBoundary}) {
       >
           Cancel error
       </button>
-      {error}
+      {error.name}
+      {error.message}
+      {error.stack}
     </div>
   )
 }
@@ -848,7 +850,10 @@ const InfiniteGridScroller = (props) => {
 
             if (!isMountedRef.current) {
 
-                cacheAPIRef.current.unRegisterScroller(itemSetRef.current)
+                // TODO failure would constitute a memory leadk
+                const unRegisterScroller = cacheAPIRef?.current?.unRegisterScroller // TODO mobile issue
+
+                unRegisterScroller && unRegisterScroller(itemSetRef.current)
 
             }
 

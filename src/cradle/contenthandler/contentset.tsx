@@ -190,8 +190,10 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
     if (cradleContentProps.size) {
 
         const 
-            lowindex = newcontentlist[0].props.index,
+            lowindex = newcontentlist[0]?.props?.index, // TODO mobile issue
             highindex = lowindex + cradleContentProps.size - 1
+
+        if (isNaN(highindex)) return // TODO mobile issue (leaves cradleContentProps undefined)
 
         Object.assign(cradleContentProps,
         {

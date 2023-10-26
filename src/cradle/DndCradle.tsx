@@ -247,6 +247,11 @@ const DndCradle = (props) => {
 
                     // ------------ resolve source data
                     const 
+                        getPropertiesSnapshot = dragContext?.sourceServiceHandler?.getPropertiesSnapshot
+                        
+                    if (!getPropertiesSnapshot) return // TODO mobile failure
+
+                    const
                         [ sourceProps ] = dragContext.sourceServiceHandler.getPropertiesSnapshot(),
                         { size:sourcelistsize, range:sourcelistrange } = sourceProps.virtualListProps
 
