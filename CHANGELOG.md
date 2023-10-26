@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.0.0 October, 2023
+
+Added:
+- intra-list and inter-list drag and drop capability
+- scroller `dndOptions` property, containing `accept` list of content types
+- scroller host-defined `profile` property to help with response to certain functions
+- host provided `getDropEffect` function (for `RigsDnd` higher order component only) which provides the host the opportunity to constrain the drop effect on scrollers, based on `sourceScrollerID`, `targetScrollerID`, and `context` data.
+- host-provided `dragDropTransferCallback` function to notify host of completed drag and drop operations
+- `getItemPack` (replaces `getItem`). The return object of `getItemPack` from the host includes the host-defined `component` function, and a data `profile` object with host-defined properties; for dnd, it includes a cell `dndOptions` object with `dragText` and `type`
+
+Renamed:
+- `scrollerProperties` renamed to `scrollerContext`
+- `scrollerContext` properties renamed from `cellFramePropertiesRef` to `cell`, and from `scrollerPropertiesRef` to `scroller`. Both follow the react `ref` pattern, with data held in the `current` property
+
+Removed:
+- GetItem. Use GetItemPack
+- remapIndexes was removed as a service function, as dead weight
+- startingListSize. Use startingListRange
+- setListSize. Use setListRange
+- changeListSizeCallback. Use changeListRangeCallback
+
+Changed:
+- All API functions with return values have had the shape of those return values changed. Notably all return values now include a `context` object, which contains a `contextType` name, a `scrollerID` number, and sometimes more.
+
 ## 1.4.2 August 24, 2023
 
 fix debug error

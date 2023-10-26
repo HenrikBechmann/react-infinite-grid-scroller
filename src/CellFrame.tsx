@@ -8,22 +8,16 @@
     to present the error to the user. If a new itemID is set by the parent (to synchronize with an altered
     cache), then CellFrame replaces the old item with the new item.
 
-    getItem (which is a function provided by the host) can return one of several values:
-        - a React component
-        - a promise of a component
-        - null
-        - undefined
-    Anything else is treated as an error
+    getItemPack (which is a function provided by the host) returns an object which contains:
+        component: a react component, or a promist of a react component
+        profile: a host defined set of properties to aid in identifaction in later interactions
+        dndOptions: type and dragText, if dnd is active
 
-    if a promise is returned, then the promise returns a React component, null or undefined.
+    If a valid react component is returned from getItemPack, then it is instantiated in the cache, and rendered in the
+    CellFrame. Errors are returned to the host through itemExceptionCallback.
+    Errors are presented to the user through the placeholder component.
 
-    If a valid react component is returned from getItem, then it is instantiated in the cache, and rendered in the
-    CellFrame. If null is returned, then CellFrame sends a message to its scroller that the host has 
-    indicated the the item being fetched instead represents the end of the list, and the listsize should
-    be adjusted accordingly. Any other value that is returned is treated as an error, and presented
-    as such to the user through the placeholder component.
-
-    getItem sends the index (logical index in the list) and a session itemID to the host, so that
+    getItemPack sends the index (logical index in the list) a session itemID to the host, with a context object, so that
     the host can sync its own tracking with the scroller.
 
     One CellFrame at a time is designated as the host of the two triggerLines with the isTriggerCell flag. 
@@ -36,33 +30,71 @@ import React, {
     useLayoutEffect, 
     useState, 
     useMemo, 
-    useContext 
+    useContext,
 } from 'react'
+
+import type { CSSProperties } from 'react'
 
 import {requestIdleCallback, cancelIdleCallback} from 'requestidlecallback' // polyfill if needed
 
 import { OutPortal } from 'react-reverse-portal' // fetch from cache
 
-import Placeholder from './cellframe/Placeholder' // default
+import Placeholder from './CellFrame/Placeholder' // default
+
+import DndCellFrame from './CellFrame/DndCellFrame'
+
+import { getFrameStyles, getContentHolderStyles, setContainerStyles } from './CellFrame/cellfunctions'
 
 import { CradleContext } from './Cradle'
+import { MasterDndContext, ScrollerDndContext, GenericObject } from './InfiniteGridScroller'
+// =====================[ dnd support ]====================
+
+import DndDragIcon from './CellFrame/DndDragIcon'
+import DndDisplaceIcon from './CellFrame/DndDisplaceIcon'
+
+// called to choose between dnd or no dnd for CellFrame
+const CellFrameController = props => {
+
+    const 
+        scrollerDndContext = useContext(ScrollerDndContext),
+        masterDndContext = useContext(MasterDndContext)
+
+    if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
+
+        return <DndCellFrame {...props}/>
+
+    } else {
+
+        const 
+            contentHolderElementRef = useRef(null),
+            enhancedProps  = {...props, contentHolderElementRef, isDndEnabled:false }
+
+        return <CellFrame {...enhancedProps} />
+
+    }
+
+}
+
+export default CellFrameController
+
+// =================[ end of dnd support ]=================
 
 const defaultPlaceholderMessages = {
     loading:'(loading...)',
     retrieving:'(retrieving from cache)',
-    null:'end of list',
     undefined:'host returned "undefined"',
     invalid:'invalid React element',
 }
 
-const CellFrame = ({
+// core component
+export const CellFrame = ({
     orientation, 
     cellHeight, 
     cellWidth, 
     cellMinHeight,
     cellMinWidth,
     layout,
-    getItem, // function provided by host
+    getItemPack,
     listsize, // for feedback in placeholder
     placeholder, // optionally provided by host
     itemID, // session itemID
@@ -74,12 +106,24 @@ const CellFrame = ({
     placeholderLinerStyles,
     placeholderErrorFrameStyles,
     placeholderErrorLinerStyles,
+    dndDragIconStyles,
     placeholderMessages,
     usePlaceholder,
     gridstartstyle,
+    parentframeRef,
+    isDndEnabled,
+    frameRef,
+    contentHolderElementRef,
+    showDndDisplaceIcon,
+    setDndCellFrameState,
 }) => {
 
-    const coreConfigRef = useRef(null)
+    const 
+        scrollerDndContext = useContext(ScrollerDndContext),
+        masterDndContext = useContext(MasterDndContext),
+
+        coreConfigRef = useRef(null)
+
     coreConfigRef.current = {
         orientation,
         layout,
@@ -89,22 +133,19 @@ const CellFrame = ({
 
     // ----------------------[ setup ]----------------------
 
-    const cradleContext = useContext(CradleContext)
-
-    const { 
-        cacheAPI, 
-        scrollerPropertiesRef, // for the user content, if requested
-        nullItemSetMaxListsize, // for internal notification of end-of-list
-        itemExceptionCallback, // for notification to host of error
-        IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
-        triggercellTriggerlinesRef,
-    } = cradleContext
-    
-    // style change generates state refresh
-    const stylesRef = useRef({})
-    const holderStylesRef = useRef({})
-
-    const placeholderMessagesRef = useRef(null)
+    const 
+        cradleContext = useContext(CradleContext),
+        { 
+            cacheAPI, 
+            scrollerPropertiesRef, // for the user content, if requested
+            itemExceptionCallback, // for notification to host of error
+            IDLECALLBACK_TIMEOUT, // to optimize requestIdleCallback
+            triggercellTriggerlinesRef,
+        } = cradleContext,
+        // style change generates state refresh
+        stylesRef = useRef({}),
+        holderStylesRef = useRef({}),
+        placeholderMessagesRef = useRef(null)
 
    placeholderMessagesRef.current = useMemo(() => {
 
@@ -115,30 +156,38 @@ const CellFrame = ({
     },[placeholderMessages])
 
     // processing state
-    const [frameState, setFrameState] = useState('setup')
-    const frameStateRef = useRef(null)
+    const 
+        [frameState, setFrameState] = useState('setup'),
+        frameStateRef = useRef(null)
+
     frameStateRef.current = frameState
 
-    // DOM ref
-    const frameRef = useRef(null)
     // to track unmount interrupt
-    const isMountedRef = useRef(true)
-    // cache data
-    const portalMetadataRef = useRef(null)
-    // the placeholder to use
-    const placeholderRef = useRef(null)
-    // the session itemID to use; could be updated by parent
-    const itemIDRef = useRef(null)
+    const 
+        isMountedRef = useRef(true),
+        // cache data
+        portalMetadataRef = useRef(null),
+        // the placeholder to use
+        placeholderRef = useRef(null),
+        // the session itemID to use; could be updated by parent
+        itemIDRef = useRef(null)
+
     itemIDRef.current = itemID
-    const cellFramePropertiesRef = useRef(null)
+
+    const 
+        dndOptionsRef = useRef<GenericObject>(null),
+        cellFramePropertiesRef = useRef(null),
+        isDndEnabledRef = useRef(isDndEnabled)
+
     cellFramePropertiesRef.current = {
         itemID,
-        index
+        index,
     }
     // fetch error
-    const errorRef = useRef(false)
-    // placeholder message
-    const messageRef = useRef(null)
+    const 
+        errorRef = useRef(false),
+        // placeholder message
+        messageRef = useRef(null)
 
     useEffect(()=>{
 
@@ -152,9 +201,45 @@ const CellFrame = ({
 
     },[])
 
+    const setDroppedBorder = () => {
+
+        setTimeout(()=>{ // for dnd CellFrame could cross axis and lose element (about to be replaced)
+
+            if (scrollerDndContext.droppedIndex === index) {
+
+                const classname = 'rigs-dropped-highlight'
+
+                if (contentHolderElementRef?.current) { // may have crossed axis
+                    scrollerDndContext.droppedIndex = null
+                    contentHolderElementRef.current.classList.add(classname)
+                    setTimeout(()=>{
+                        if (contentHolderElementRef?.current) contentHolderElementRef.current.classList.remove(classname)
+                    },2000)
+    
+                }
+
+            }
+        },100)
+
+    }
+
+    const setDisplacedBorder = () => {
+
+        if (scrollerDndContext.displacedIndex === index) {
+            scrollerDndContext.displacedIndex = null
+            const classname = 'rigs-target-finish'
+            contentHolderElementRef.current.classList.add(classname)
+            setTimeout(()=>{
+                if (frameRef?.current) contentHolderElementRef.current.classList.remove(classname)
+            },2000)
+        }
+
+    }
+
     // for unmount
     useEffect(()=>{
 
+        // setDroppedBorder()
         return () => {
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
@@ -165,12 +250,24 @@ const CellFrame = ({
 
     },[])
 
+    useLayoutEffect(()=>{
+
+        if (['inserting','retrieved'].includes(frameState)) {
+            setDroppedBorder()
+            setDisplacedBorder()
+        }
+
+    },[frameState])
+
     // refresh content if itemID changes
     useLayoutEffect(()=>{
 
         if (frameStateRef.current == 'setup') return
 
-        if (isMountedRef.current) setFrameState('getusercontent')
+
+        if (isMountedRef.current) {
+            setFrameState('getusercontent')
+        }
 
     },[itemID])
 
@@ -178,12 +275,15 @@ const CellFrame = ({
 
     const customplaceholder = useMemo(() => {
 
-        if (!usePlaceholder) return null        
+        if (!usePlaceholder) return null
 
-        return placeholder?
-            React.createElement(placeholder, 
-                {index, listsize, message:messageRef.current, error:errorRef.current}):
-            null
+        const 
+            dndEnabled = scrollerDndContext.dndOptions?.enabled
+
+        return placeholder
+            ?React.createElement(placeholder, 
+                {index, listsize, message:messageRef.current, error:errorRef.current, dndEnabled})
+            :null
             
     },[
         index, 
@@ -199,14 +299,15 @@ const CellFrame = ({
         if (!usePlaceholder) return null
 
         const placeholder = 
-            customplaceholder?
-                customplaceholder:
-                <Placeholder 
+            customplaceholder
+                ?customplaceholder
+                :<Placeholder 
                     key = 'placeholder'
                     index = { index } 
                     listsize = { listsize } 
                     message = { messageRef.current }
                     error = { errorRef.current }
+                    dndEnabled = {scrollerDndContext.dndOptions?.enabled}
                     userFrameStyles = { placeholderFrameStyles }
                     userLinerStyles = { placeholderLinerStyles }
                     userErrorFrameStyles = { placeholderErrorFrameStyles }
@@ -231,14 +332,14 @@ const CellFrame = ({
     // ---------------- [ requestidlecallback config ] ------------------------
 
     const requestidlecallback = // requestIdleCallback
-        window['requestIdleCallback']?
-            window['requestIdleCallback']:
-            requestIdleCallback
+        window['requestIdleCallback']
+            ?window['requestIdleCallback']
+            :requestIdleCallback
 
     const cancelidlecallback = // cancelIdleCallback
-        window['cancelIdleCallback']?
-            window['cancelIdleCallback']:
-            cancelIdleCallback
+        window['cancelIdleCallback']
+            ?window['cancelIdleCallback']
+            :cancelIdleCallback
 
     const requestIdleCallbackIdRef = useRef(null)
 
@@ -289,14 +390,15 @@ const CellFrame = ({
 
             case 'getusercontent': {
 
-                const itemID = itemIDRef.current
-                const cached = cacheAPI.hasPortal(itemID)
-                const {
-                    layout,
-                    orientation,
-                    cellWidth,
-                    cellHeight,
-                } = coreConfigRef.current
+                const 
+                    itemID = itemIDRef.current,
+                    cached = cacheAPI.hasPortal(itemID),
+                    {
+                        layout,
+                        orientation,
+                        cellWidth,
+                        cellHeight,
+                    } = coreConfigRef.current
 
                 if (cached) {
 
@@ -306,10 +408,13 @@ const CellFrame = ({
 
                         // get cache data
                         portalMetadataRef.current = cacheAPI.getPortalMetadata(itemID)
-                        // update cell and scroller properties ref in case of switch in either
-                        portalMetadataRef.current.scrollerProperties.cellFramePropertiesRef = cellFramePropertiesRef
-                        portalMetadataRef.current.scrollerProperties.scrollerPropertiesRef = scrollerPropertiesRef
-                        // get OutPortal node
+                        Object.assign(portalMetadataRef.current.scrollerContext,
+                            {
+                                cell:cellFramePropertiesRef,
+                                scroller:scrollerPropertiesRef
+                            }
+                        )
+                        dndOptionsRef.current = portalMetadataRef.current.dndOptions
                         portalNodeRef.current = portalMetadataRef.current.portalNode
                         setContainerStyles(
                             portalNodeRef.current.element, layout, orientation, cellWidth, cellHeight)
@@ -328,16 +433,65 @@ const CellFrame = ({
                     // enqueue the fetch
                     requestIdleCallbackIdRef.current = requestidlecallback(async ()=>{
 
-                        let returnvalue, usercontent, error
+                        let returnvalue, usercontent, dndOptions, profile, error, itempack
                         // process the fetch
                         try {
 
-                            usercontent = await getItem(index, itemID)
+                            if (getItemPack) {
 
-                            if (usercontent === null) returnvalue = usercontent
+                                let context:GenericObject;
+                                if (masterDndContext.installed 
+                                    && scrollerDndContext.dndFetchIndex === index) {
 
-                            if (usercontent === undefined) {
+                                    context = {
 
+                                        contextType:'dndFetchRequest',
+                                        accept:scrollerDndContext.dndOptions.accept,
+                                        scrollerID,
+                                        scrollerProfile:cradleContext.scrollerProfile,
+                                        item:scrollerDndContext.dndFetchItem,
+
+                                    }
+
+                                    scrollerDndContext.dndFetchIndex = null
+                                    scrollerDndContext.dndFetchItem = null
+
+                                } else if (masterDndContext.installed) {
+
+
+                                    context = {
+
+                                        contextType:'dndFetch',
+                                        accept:scrollerDndContext.dndOptions.accept,
+                                        scrollerID,
+                                        scrollerProfile:cradleContext.scrollerProfile,
+
+                                    }
+
+                                } else {
+
+                                    context = {
+
+                                        contextType:'fetch',
+                                        scrollerProfile:cradleContext.scrollerProfile,
+                                        scrollerID,
+                                        
+                                    }
+
+                                }
+
+                                itempack = await getItemPack(index, itemID, context);
+                                ({ dndOptions, profile} = itempack)
+                                dndOptions = dndOptions ?? {}
+                                profile = profile ?? {}
+                                dndOptionsRef.current = dndOptions
+                                usercontent = await itempack.component
+
+                            }
+                            if (usercontent === null || usercontent === undefined) {
+
+                                if (usercontent === null) usercontent === undefined
+                                    
                                 error = new Error(placeholderMessagesRef.current.undefined)
 
                             }
@@ -345,11 +499,15 @@ const CellFrame = ({
                         } catch(e) {
 
                             returnvalue = usercontent = undefined
-                            error = e
+                            if (!itempack) {
+                                error = new Error ('no data ( ' + e.message +')')
+                            } else {
+                                error = e
+                            }
 
                         }
                         // process the return value
-                        if ((usercontent !== null) && (usercontent !== undefined)) {
+                        if (usercontent !== undefined) {
 
                             const isValidElement = React.isValidElement(usercontent)
                             if (!isValidElement) {
@@ -363,34 +521,30 @@ const CellFrame = ({
                         }
 
                         if (isMountedRef.current) {
-                            // prepare the content
-                            if ((usercontent !== null) && (usercontent !== undefined)) {
+                            // prepare the component
+                            if (usercontent !== undefined) {
 
                                 // if usercontent is otherwise disallowed, let error handling deal with it.
-                                let content 
-                                const scrollerProperties = {
-                                    cellFramePropertiesRef,
-                                    scrollerPropertiesRef,
+                                let component 
+                                const scrollerContext = {
+                                    cell:cellFramePropertiesRef,
+                                    scroller:scrollerPropertiesRef,
                                 }
-                                let addinCount = 0
-                                const addinProps:{scrollerProperties?:object, cacheAPI?:object} = {}
-                                if (usercontent.props?.hasOwnProperty('scrollerProperties')) {
-                                    addinProps.scrollerProperties = scrollerProperties
-                                    addinCount++
-                                }
-                                if (usercontent.props?.hasOwnProperty('cacheAPI')) {
-                                    addinProps.cacheAPI = cacheAPI.instance
-                                    addinCount++
-                                }
-                                if (addinCount) {
-                                    content = React.cloneElement(usercontent, addinProps)
+
+                                if (usercontent.props.hasOwnProperty('scrollerContext')) {
+
+                                    component = React.cloneElement(usercontent, {scrollerContext})
+
                                 } else {
-                                    content = usercontent
+
+                                    component = usercontent
+
                                 }
 
-                                const retval = portalMetadataRef.current = await cacheAPI.createPortal(content, index, itemID, scrollerProperties)
+                                portalMetadataRef.current = 
+                                    await cacheAPI.createPortal(component, index, itemID, scrollerContext, dndOptions, profile)
 
-                                if (retval) {
+                                if (portalMetadataRef.current) {
                                 
                                     portalNodeRef.current = portalMetadataRef.current.portalNode
                                     setContainerStyles(
@@ -400,32 +554,28 @@ const CellFrame = ({
 
                                 isMountedRef.current && setFrameState('inserting')
 
-                            } else { // null or undefined; handle non-component value
+                            } else { // undefined; handle non-component value
 
                                 cacheAPI.unregisterPendingPortal(index) // create portal failed
 
-                                if (usercontent === null) {
+                                // change placeholder message to error message
+                                errorRef.current = error
+                                // notify the host
+                                itemExceptionCallback 
+                                    && itemExceptionCallback(
+                                        index, {
+                                            contextType: 'itemException',
+                                            itemID, 
+                                            scrollerID,
+                                            profile, 
+                                            dndOptions,
+                                            component:returnvalue, 
+                                            action:'fetch', 
+                                            error:error.message
+                                        }
+                                    )
 
-                                    // truncate listsize at this index
-                                    itemExceptionCallback && 
-                                        itemExceptionCallback(
-                                            index, itemID, returnvalue, 'cellFrame', 
-                                                new Error(placeholderMessagesRef.current.null)
-                                        )
-                                    nullItemSetMaxListsize(index)
-
-                                } else { // usercontent === undefined, meaning an error has occurred
-
-                                    // change placeholder message to error message
-                                    errorRef.current = error
-                                    // notify the host
-                                    itemExceptionCallback && 
-                                        itemExceptionCallback(
-                                            index, itemID, returnvalue, 'cellFrame', error
-                                        )
-
-                                    isMountedRef.current && setFrameState('error')
-                                }
+                                isMountedRef.current && setFrameState('nodata')
 
                             }
 
@@ -439,6 +589,7 @@ const CellFrame = ({
             }
 
             case 'inserting':
+            case 'updatedndoptions':
             case 'retrieved': {
 
                 setFrameState('ready')
@@ -451,144 +602,51 @@ const CellFrame = ({
 
     }, [frameState])
 
-    // Note: the contentholder type layer is included to provide an anchor for the triggerlines.
+    // const contentHolderElementRef = useRef(null)
+
     return <div 
 
-        ref = { frameRef } 
+        ref = { frameRef }
         data-type = 'cellframe' 
         data-scrollerid = { scrollerID } 
         data-index = { index } 
         data-instanceid = { instanceID } 
         style = { stylesRef.current }
-
     >
+        {(frameState != 'setup')
+            ?<>
+                <div data-type = 'contentholder' ref = {contentHolderElementRef} style = {holderStylesRef.current}> 
+                    {((frameState != 'ready')
+                        ?placeholderRef.current
+                        :<OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
+                </div>
 
-        {(frameState != 'setup')?
-            (<div data-type = 'contentholder' style = {holderStylesRef.current}> 
-                {((frameState != 'ready')?
-                placeholderRef.current:
-                <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
-            </div>):<div></div>}
-        {(isTriggercell?
-            triggercellTriggerlinesRef.current:
-            null)
+                {(isDndEnabledRef.current 
+                    && (['ready','nodata'].includes(frameState))) 
+                    && <DndDragIcon 
+                        contentHolderElementRef = {contentHolderElementRef} 
+                        itemID = {itemID} 
+                        index = {index} 
+                        setDndCellFrameState = { setDndCellFrameState }
+                        dndOptions = {dndOptionsRef.current} 
+                        profile = {portalMetadataRef.current?.profile} 
+                        dndDragIconStyles = {dndDragIconStyles}
+                        scrollerID = { scrollerID }
+                    />
+                }
+            </>
+
+            :<div></div>}
+
+        {(isTriggercell
+            ?triggercellTriggerlinesRef.current
+            :null)
         }
-
+        {(isDndEnabledRef.current 
+            && showDndDisplaceIcon 
+            && (['ready','nodata'].includes(frameState))) 
+            && <DndDisplaceIcon orientation = {orientation} scrollerID = {scrollerID} index = {index} />
+        }
     </div>
 
-} // CellFrame
-export default CellFrame
-
-// utilities
-const getFrameStyles = 
-    (orientation, cellHeight, cellWidth, cellMinHeight, cellMinWidth, layout, styles) => {
-
-    const styleset = {...styles,position:'relative', overflow:'visible'}
-
-    if (orientation === 'vertical') {
-
-        styleset.width = null
-        if (layout == 'uniform') {
-
-            styleset.height = cellHeight + 'px'
-            styleset.minHeight = null
-            styleset.maxHeight = null
-
-        } else { // 'variable'
-
-            styleset.height = null
-            styleset.minHeight = cellMinHeight + 'px'
-            styleset.maxHeight = cellHeight + 'px'
-
-        }
-        
-    } else { // 'horizontal'
-
-        styleset.height = null
-        if (layout == 'uniform') {
-
-            styleset.width = cellWidth + 'px'
-            styleset.minWidth = null
-            styleset.maxWidth = null
-
-        } else { // 'variable'
-
-            styleset.width = null
-            styleset.minWidth = cellMinWidth + 'px'
-            styleset.maxWidth = cellWidth + 'px'
-
-        }
-
-    }
-
-    return styleset
-
-}
-
-const getContentHolderStyles = (layout,orientation,cellMinWidth, cellMinHeight ) => {
-    let styles:React.CSSProperties = {}
-    if (layout == 'uniform') {
-        styles = {
-            inset:'0px',
-            position:'absolute',
-            height:null,
-            width:null,
-            minWidth:null,
-            minHeight:null,
-        }
-    } else { // variable
-        styles.inset = null
-        styles.position = null
-        if (orientation == 'vertical') {
-            styles.width = '100%'
-            styles.height = null
-            styles.minWidth = null
-            styles.minHeight = cellMinHeight + 'px'
-        } else {
-            styles.width = null
-            styles.height = '100%'
-            styles.minWidth = cellMinWidth + 'px'
-            styles.minHeight = null
-        }
-    }
-    return styles
-}
-
-// see also some base styles set in cacheAPI
-const setContainerStyles = (container, layout, orientation, cellWidth, cellHeight) => {
-
-    container.style.overflow = 'hidden'
-
-    if (layout == 'uniform') {
-
-        container.style.inset = '0px' 
-        container.style.position = 'absolute'
-        container.style.maxWidth = null
-        container.style.maxHeight = null
-        container.style.height = null
-        container.style.width = null
-
-    } else { // variable
-
-        container.style.inset = null 
-        container.style.position = null
-
-        if (orientation == 'vertical') {
-
-            container.style.width = '100%'
-            container.style.height = null
-            container.style.maxWidth = null
-            container.style.maxHeight = cellHeight + 'px'
-
-        } else {
-
-            container.style.width = null
-            container.style.height = '100%'
-            container.style.maxWidth = cellWidth + 'px'
-            container.style.maxHeight = null
-
-        }
-
-    }
-}
-
+} 

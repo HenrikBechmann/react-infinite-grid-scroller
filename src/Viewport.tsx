@@ -5,6 +5,11 @@
     The role of viewport is to provide viewport data to its children (Scrollblock and Cradle) through the
     ViewportContext object, and act as the visible screen portal of the list being shown.
     If Viewport is resized, it notifies the Cradle to reconfigure.
+
+    Also sets setViewportState in masterDndContext if dnd is installed
+
+    shows DndDragBar when dragging according to masterDndContext, 
+        and shows DndScrollTabs on request from DndViewport
 */
 
 import React, {
@@ -14,16 +19,59 @@ import React, {
     useEffect, 
     useLayoutEffect, 
     useMemo, 
-    useCallback, 
+    useCallback,
+    useContext,
+    CSSProperties,
 
 } from 'react'
 
+import { 
+    useDragLayer, 
+    DragLayerMonitor, 
+} from 'react-dnd'
+
+import DndViewport from './Viewport/DndViewport'
+import DndDragBar from './Viewport/DndDragBar'
+import DndScrollTab from './Viewport/DndScrollTab'
+
+import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
+
 // popup position tracker for repositioning
-import ScrollTracker from './cradle/ScrollTracker'
+import ScrollTracker from './Viewport/ScrollTracker'
 
 export const ViewportContext = React.createContext(null) // for children
 
-const Viewport = ({
+
+// determine if DndViewport is required
+const ViewportController = (props) => {
+
+    const 
+        scrollerDndContext = useContext(ScrollerDndContext),
+        masterDndContext = useContext(MasterDndContext),
+        { scrollerID } = props
+
+    if (
+        masterDndContext.installed 
+        && (masterDndContext.scrollerID == scrollerID // root viewport is needed for DndDragBar
+            || scrollerDndContext.dndOptions.enabled)) {
+
+        return <DndViewport {...props}/>
+
+    } else {
+
+        const 
+            viewportFrameElementRef = useRef(null),
+            enhancedProps = {...props,viewportFrameElementRef}
+
+        return <Viewport {...enhancedProps} />
+
+    }
+
+}
+
+export default ViewportController
+
+export const Viewport = ({
 
     children, 
     gridSpecs,
@@ -31,39 +79,51 @@ const Viewport = ({
     scrollerID,
     VIEWPORT_RESIZE_TIMEOUT,
     useScrollTracker,
-    
+    // outerViewportElementRef,
+    viewportFrameElementRef,
+    showScrollTabs,
+    SCROLLTAB_INTERVAL_MILLISECONDS,
+    SCROLLTAB_INTERVAL_PIXELS,
+
 }) => {
 
     // -----------------------[ initialize ]------------------
 
-    const {
+    const 
+        masterDndContext = useContext(MasterDndContext),
+        { dragContext } = masterDndContext,
+        { orientation } = gridSpecs,
+        [ viewportState, setViewportState ] = useState('setup'), // setup, resizing, resized, ready
+    
+        outerViewportElementRef = useRef(null)
 
-        orientation,
+    if (masterDndContext.installed 
+        && (scrollerID === masterDndContext.scrollerID) 
+        && !masterDndContext.setViewportState) {
 
-    } = gridSpecs
+        masterDndContext.setViewportState = setViewportState
 
-    const [viewportState,setViewportState] = useState('setup') // setup, resizing, resized, ready
+    }
 
     const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
-    const isMountedRef = useRef(true)
+    const 
+        isMountedRef = useRef(true),
+        viewportElementRef = useRef(null),
+        scrollTrackerAPIRef = useRef(null),
+        // viewportContextRef is passed as a resizing interrupt (through context) to children
+        viewportContextRef = useRef(
+            {
 
-    const viewportElementRef = useRef(null)
+                isResizing:false, 
+                // viewportDimensions:null,
+                elementRef:null,
+                frameElementRef:null,
+                scrollTrackerAPIRef,
 
-    const scrollTrackerAPIRef = useRef(null)
-
-    // ViewportContextPropertiesRef is passed as a resizing interrupt (through context) to children
-    const ViewportContextPropertiesRef = useRef(
-        {
-
-            isResizing:false, 
-            // viewportDimensions:null,
-            elementRef:null,
-            scrollTrackerAPIRef,
-
-        }
-    )
+            }
+        )
 
     // mark as unmounted
     useEffect(() =>{
@@ -79,9 +139,10 @@ const Viewport = ({
 
     // --------------------[ viewport resizer interrupt ]-----------------------
 
-    const resizeTimeridRef = useRef(null)
-    const isResizingRef = useRef(false)
-    const resizeObserverRef = useRef(null);    
+    const 
+        resizeTimeridRef = useRef(null),
+        isResizingRef = useRef(false),
+        resizeObserverRef = useRef(null)
 
     // set up resizeObserver
     useEffect(()=>{
@@ -118,10 +179,10 @@ const Viewport = ({
         // generate interrupt response, if initiating resize
         if (!isResizingRef.current) {
 
-            ViewportContextPropertiesRef.current.isResizing = isResizingRef.current = true 
+            viewportContextRef.current.isResizing = isResizingRef.current = true 
 
             // new object creation triggers a realtime interrupt message to cradle through context
-            ViewportContextPropertiesRef.current = {...ViewportContextPropertiesRef.current}
+            viewportContextRef.current = {...viewportContextRef.current}
 
             if (isMountedRef.current) setViewportState('resizing')
 
@@ -143,7 +204,12 @@ const Viewport = ({
     // ----------------------------------[ calculate config values ]--------------------------------
 
     // styles
-    const divlinerstyleRef = useRef(null)
+    const 
+        divframestyleRef = useRef<CSSProperties>({
+            position:'absolute',
+            inset:'0',
+        }),
+        divlinerstyleRef = useRef(null)
 
     // initialize with inherited styles
     divlinerstyleRef.current = useMemo(() => {
@@ -176,18 +242,21 @@ const Viewport = ({
 
     },[styles.viewport])
 
-    // update ViewportContextPropertiesRef
-    ViewportContextPropertiesRef.current = useMemo(() => {
+    // update viewportContextRef
+    viewportContextRef.current = useMemo(() => {
 
-        if (viewportState == 'setup') return ViewportContextPropertiesRef.current
+        if (viewportState == 'setup') return viewportContextRef.current
 
-        const localViewportData = {
-            elementRef:viewportElementRef,
-            isResizing:isResizingRef.current,
-        }
+        const 
+            localViewportData = {
+                elementRef:viewportElementRef,
+                frameElementRef:viewportFrameElementRef,
+                outerElementRef:outerViewportElementRef,
+                isResizing:isResizingRef.current,
+            },
 
-        // trigger context change with new object
-        const viewportdataobject = {...ViewportContextPropertiesRef.current, ...localViewportData}
+            // trigger context change with new object
+            viewportdataobject = {...viewportContextRef.current, ...localViewportData}
 
         return  viewportdataobject
 
@@ -199,6 +268,7 @@ const Viewport = ({
         switch (viewportState) {
 
             case 'resized':
+            case 'startdragbar':
             case 'setup': {
                 setViewportState('ready')
                 break
@@ -208,22 +278,49 @@ const Viewport = ({
     },[viewportState])
 
     // ----------------------[ render ]--------------------------------
+    return <ViewportContext.Provider value = { viewportContextRef.current }>
 
-    return <ViewportContext.Provider value = { ViewportContextPropertiesRef.current }>
-        <div 
-            data-type = 'viewport'
-            data-scrollerid = { scrollerID }
-            style = { divlinerstyleRef.current }
-            ref = { viewportElementRef }
-        >
-            { (viewportState != 'setup') && children }
+        { (masterDndContext.installed 
+            && dragContext.isDragging 
+            && (scrollerID === masterDndContext.scrollerID)) 
+            && <DndDragBar 
+                scrollerID = { scrollerID }
+            />
+        }
+        <div ref = {outerViewportElementRef} data-type = 'outer-viewport-frame' style = {divframestyleRef.current}>
+        <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
+            {showScrollTabs 
+                && <>
+                    <DndScrollTab 
+                        position = 'head' 
+                        gridSpecs = {gridSpecs} 
+                        SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                        SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
+                    />
+                    <DndScrollTab 
+                        position = 'tail' 
+                        gridSpecs = {gridSpecs} 
+                        SCROLLTAB_INTERVAL_MILLISECONDS = {SCROLLTAB_INTERVAL_MILLISECONDS} 
+                        SCROLLTAB_INTERVAL_PIXELS = {SCROLLTAB_INTERVAL_PIXELS}
+                    />
+                </>
+            }
+            <div 
+                data-type = 'viewport'
+                data-scrollerid = { scrollerID }
+                style = { divlinerstyleRef.current }
+                ref = { viewportElementRef }
+            >
+                { (viewportState != 'setup') && children }
+            </div>
+            {useScrollTracker 
+                && <ScrollTracker 
+                    scrollTrackerAPIRef = {scrollTrackerAPIRef}
+                    styles = { styles.scrolltracker }
+                />
+            }
         </div>
-        {useScrollTracker && <ScrollTracker 
-            scrollTrackerAPIRef = {scrollTrackerAPIRef}
-            styles = { styles.scrolltracker }
-        />}
+        </div>
     </ViewportContext.Provider>
     
 } // Viewport
-
-export default Viewport

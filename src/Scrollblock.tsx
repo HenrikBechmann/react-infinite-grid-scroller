@@ -37,7 +37,7 @@ const Scrollblock = ({
 
         // -------------------------[ context and state ]-------------------------
 
-        ViewportContextProperties = useContext(ViewportContext),
+        viewportContext = useContext(ViewportContext),
 
         [blockState,setBlockState] = useState('setup'), // to trigger render
 
@@ -58,7 +58,7 @@ const Scrollblock = ({
         divlinerstyleRef = useRef(linerStyle)
 
     const getViewportDimensions = () => {
-        const viewportElement = ViewportContextProperties.elementRef.current
+        const viewportElement = viewportContext.elementRef.current
         return {
             width:viewportElement.offsetWidth,
             height:viewportElement.offsetHeight
@@ -143,9 +143,10 @@ const calcBaseScrollblockLength = ({
 
     // ---------------[ calculate crosscount ]------------------
     //crosscount is also calculated by Cradle
-    let crosslength, cellLength, viewportcrosslength
-
-    let gaplength, gapxlength
+    let 
+        crosslength, cellLength, viewportcrosslength,
+        gaplength, gapxlength
+        
     if (orientation == 'vertical') {
 
         gaplength = gapProps.column
@@ -177,9 +178,9 @@ const calcBaseScrollblockLength = ({
         listrowcount = Math.ceil(listsize/crosscount),
 
         baselength = (listrowcount * cellLength) - 
-            ((listrowcount > 0)?
-                gaplength: // final cell has no trailing gap
-                0)
+            ((listrowcount > 0)
+                ?gaplength // final cell has no trailing gap
+                :0)
     if (orientation == 'vertical') {
         baselength + paddingProps.top + paddingProps.bottom
     } else {

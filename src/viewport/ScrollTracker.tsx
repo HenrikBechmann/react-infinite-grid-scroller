@@ -12,27 +12,30 @@ import React, { useRef, useCallback, useEffect, useState } from 'react'
 
 const ScrollTracker = ({ scrollTrackerAPIRef, styles }) => {
 
-    const [index, setIndex] = useState(null)
-    const indexRef = useRef(null)
+    const 
+        [index, setIndex] = useState(null),
+        indexRef = useRef(null)
     indexRef.current = index
-    const lowindexRef = useRef(null)
-    const listSizeRef = useRef(null)
 
-    const tracktext = `${index} (${index - lowindexRef.current + 1}/${listSizeRef.current})`
+    const 
+        lowindexRef = useRef(null),
+        listSizeRef = useRef(null),
 
-    const stylesRef = useRef({
-        top: '3px',
-        left: '3px',
-        position:'absolute',
-        zIndex:3,
-        backgroundColor:'white',
-        border: '1px solid gray',
-        borderRadius:'10px',
-        fontSize:'smaller',
-        padding:'3px',
-        visibility:'hidden',
-        ...styles
-    })
+        tracktext = `${index} (${index - lowindexRef.current + 1}/${listSizeRef.current})`,
+
+        stylesRef = useRef({
+            top: '3px',
+            left: '3px',
+            position:'absolute',
+            zIndex:3,
+            backgroundColor:'white',
+            border: '1px solid gray',
+            borderRadius:'10px',
+            fontSize:'smaller',
+            padding:'3px',
+            visibility:'hidden',
+            ...styles
+        })
 
     useEffect(()=>{
 
