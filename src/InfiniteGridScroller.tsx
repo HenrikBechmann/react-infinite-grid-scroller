@@ -119,6 +119,7 @@ function ErrorFallback({error, resetErrorBoundary}) {
       >
           Cancel error
       </button>
+      {error}
     </div>
   )
 }
