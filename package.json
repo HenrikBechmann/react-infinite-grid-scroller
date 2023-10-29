@@ -26,7 +26,8 @@
     "list",
     "virtual",
     "IntersectionObserver",
-    "ResizeObserver"
+    "ResizeObserver",
+    "Drag and drop"
   ],
   "repository": {
     "type": "git",
