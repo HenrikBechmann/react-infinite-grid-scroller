@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 October, 2023
+## 2.0.0 October 26, 2023
 
 Added:
 - intra-list and inter-list drag and drop capability
