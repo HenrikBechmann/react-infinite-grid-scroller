@@ -82,7 +82,7 @@ type RIGS = {
     getExpansionCount:GetExpansionCount,
     // internal use only
     isDndMaster:boolean,
-    platformComponent:FC, // pending
+    staticComponent:FC, // pending
 }
 
 // React support
@@ -139,6 +139,20 @@ let globalScrollerID = 0
 export const RigsGlobalContext = React.createContext({cacheAPI:null}) // global cache for drag and drop
 export const MasterDndContext = React.createContext({...masterDndContextBase}) // tree scope
 export const ScrollerDndContext = React.createContext(null) // scroller scope
+
+const RigsController = (props) => {
+    let component
+    if (props.layout == 'static') { 
+        component = props.staticComponent
+    } else {
+        component = <InfiniteGridScroller {...props} />
+    }
+
+    return component
+
+}
+
+export default RigsController
 
 const InfiniteGridScroller = (props) => {
 
@@ -199,7 +213,7 @@ const InfiniteGridScroller = (props) => {
         profile, // host provided scroller data
         isDndMaster, // internal, set for root dnd only
 
-        platformComponent, // ** planned; supercedes most other properties with layout == 'platform'
+        staticComponent, // ** planned; supercedes most other properties with layout == 'platform'
 
     }:RIGS = props
 
@@ -949,8 +963,6 @@ const InfiniteGridScroller = (props) => {
     </ErrorBoundary>
     </ScrollerDndContext.Provider>
 }
-
-export default InfiniteGridScroller
 
 // ----------------------------[ Support ]------------------------------
 
