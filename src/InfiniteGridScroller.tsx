@@ -147,6 +147,7 @@ export const ScrollerDndContext = React.createContext(null) // scroller scope
 
 // The contoller decides between a RIGS instance of a staticComponent instance
 // In any case it sets up the cache
+// TODO the cache is unused with layout == 'static' and !masterDndContext.installed
 const RigsController = (props) => {
 
     const 
