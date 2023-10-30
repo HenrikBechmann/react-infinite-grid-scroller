@@ -87,9 +87,6 @@ const DndScrollTab = (props) => {
                 left = null
                 borderRadius = '8px 0 0 0'
                 scrollByPixel = scrollByPixels
-                    // (orientation == 'vertical')
-                    //     ?scrollByPixels
-                    //     :-scrollByPixels
                 break
             }
             case 'bottomleft': {
