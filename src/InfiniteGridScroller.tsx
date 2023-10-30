@@ -144,6 +144,9 @@ export const RigsGlobalContext = React.createContext({cacheAPI:null}) // global 
 export const MasterDndContext = React.createContext({...masterDndContextBase}) // tree scope
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 
+
+// The contoller decides between a RIGS instance of a staticComponent instance
+// In any case it sets up the cache
 const RigsController = (props) => {
 
     const 
