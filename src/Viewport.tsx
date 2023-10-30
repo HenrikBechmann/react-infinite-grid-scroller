@@ -1,5 +1,5 @@
 // Viewport.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The role of viewport is to provide viewport data to its children (Scrollblock and Cradle) through the

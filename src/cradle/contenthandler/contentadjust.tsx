@@ -1,5 +1,5 @@
 // contentadjust.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 export const contentAdjust = (source, cradleParameters) => {
 

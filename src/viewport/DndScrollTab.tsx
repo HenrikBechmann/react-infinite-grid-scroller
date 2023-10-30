@@ -1,5 +1,5 @@
 // DndScrollTab.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
 
@@ -86,10 +86,7 @@ const DndScrollTab = (props) => {
                 bottom = '0'
                 left = null
                 borderRadius = '8px 0 0 0'
-                scrollByPixel = 
-                    (orientation == 'vertical')
-                        ?scrollByPixels
-                        :-scrollByPixels
+                scrollByPixel = scrollByPixels
                 break
             }
             case 'bottomleft': {
@@ -99,7 +96,7 @@ const DndScrollTab = (props) => {
                 bottom = '0'
                 left = '0'
                 borderRadius = '0 8px 0 0'
-                scrollByPixel = scrollByPixels
+                scrollByPixel = -scrollByPixels
                 break
             }
         }
