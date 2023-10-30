@@ -1,5 +1,5 @@
 // Placeholder.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The role of the default PlaceHolder is to hold the content display until the host content
@@ -16,6 +16,7 @@ const Placeholder = ({
     listsize, 
     message, 
     error, 
+    dndEnabled,
     userFrameStyles, 
     userLinerStyles,
     userErrorFrameStyles, 
@@ -25,14 +26,14 @@ const Placeholder = ({
     const [frameStyles, linerStyles] = useMemo(()=>{
 
         const uFrameStyles = 
-            (!error)?
-                userFrameStyles:
-                userErrorFrameStyles
+            (!error)
+                ?userFrameStyles
+                :userErrorFrameStyles
 
         const uLinerStyles = 
-            (!error)?
-                userLinerStyles:
-                userErrorLinerStyles
+            (!error)
+                ?userLinerStyles
+                :userErrorLinerStyles
 
         const frameStyles = {
             border:'2px solid black',
@@ -45,7 +46,7 @@ const Placeholder = ({
             overflow:'hidden',
         }
         const linerStyles = {
-            position:'absolute',
+            // position:'absolute',
             top:0,
             left:0,
             padding:'3px',
@@ -64,13 +65,21 @@ const Placeholder = ({
         userErrorLinerStyles,
     ])
 
+    const float = useMemo(() => {
+        if (dndEnabled) return <div 
+            style = {{float:'left', height: '28px', width:'31px'}} 
+            data-type = 'dnd-float'
+        />
+        else return null
+    },[dndEnabled])
 
     message = message ?? '(loading...)'
 
     return <div data-type = 'placeholderframe' style = {frameStyles}>
-        { !error?
-            <div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>:
-            <div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
+        {dndEnabled && float}
+        { !error
+            ?<div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>
+            :<div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
         }
         
     </div>

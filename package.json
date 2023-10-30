@@ -26,7 +26,8 @@
     "list",
     "virtual",
     "IntersectionObserver",
-    "ResizeObserver"
+    "ResizeObserver",
+    "Drag and drop"
   ],
   "repository": {
     "type": "git",
@@ -39,6 +40,9 @@
   },
   "homepage": "https://github.com/HenrikBechmann/react-infinite-grid-scroller#readme",
   "dependencies": {
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dnd-touch-backend": "^16.0.1",
     "react-error-boundary": "^4.0.4",
     "react-reverse-portal": "^2.0.1",
     "requestidlecallback": "^0.3.0"
@@ -60,11 +64,14 @@
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "babel-loader": "^9.1.0",
+    "css-loader": "^6.8.1",
     "eslint": "^8.31.0",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "style-loader": "^3.3.3",
     "ts-loader": "^9.2.6",
     "typescript": "^5.0.4",
+    "url-loader": "^4.1.1",
     "webpack": "^5.61.0",
     "webpack-cli": "^5.0.1",
     "webpack-sources": "^3.2.1"

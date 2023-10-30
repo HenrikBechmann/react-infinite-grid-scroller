@@ -1,29 +1,30 @@
 // CachePartition.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useState, useEffect, useRef, useCallback} from 'react'
 
 const CachePartition = ({ partitionProps, partitionID, callback }) => {
 
-    const [portalListCounter, setPortalListCounter] = useState(0)
+    const 
+        [portalListCounter, setPortalListCounter] = useState(0),
 
-    const [partitionState, setPartitionState] = useState('setup')
+        [partitionState, setPartitionState] = useState('setup'),
 
-    const counterRef = useRef(portalListCounter)
+        counterRef = useRef(portalListCounter),
 
-    const isMountedRef = useRef(true)
+        isMountedRef = useRef(true),
 
-    const portalArrayRef = useRef(null)
+        portalArrayRef = useRef(null),
 
-    const partitionMetadata = partitionProps.partitionMetadataMap.get(partitionID)
+        partitionMetadata = partitionProps.partitionMetadataMap.get(partitionID),
 
-    const forceUpdate = useCallback((portalRenderList) => {
+        forceUpdate = useCallback((portalRenderList) => {
 
-        portalArrayRef.current = portalRenderList
+            portalArrayRef.current = portalRenderList
 
-        isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
+            isMountedRef.current && setPortalListCounter(++counterRef.current) // force render
 
-    },[])
+        },[])
 
     useEffect(()=>{
 
