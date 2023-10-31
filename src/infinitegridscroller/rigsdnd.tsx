@@ -128,6 +128,8 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
         [rigsDndState, setRigsDndState] = useState('setup'),
         masterDndContext = useContext(MasterDndContext)
 
+    console.log('rigsDndState',rigsDndState)
+
     if (!masterDndContext.installed) masterDndContext.installed = true
     if (!masterDndContext.setRigsDndState) masterDndContext.setRigsDndState = setRigsDndState
 

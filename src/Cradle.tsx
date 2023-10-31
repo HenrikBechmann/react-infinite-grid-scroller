@@ -221,7 +221,7 @@ export const Cradle = ({ // exported for DndCradle
         })
 
     //  viewport dimensions for cached state determination
-    const { height:viewportheight,width:viewportwidth } = getViewportDimensions({
+    const { height:viewportheight,width:viewportwidth, scrollTop, scrollLeft } = getViewportDimensions({
         viewportElement:viewportContext.elementRef.current
     })
 
@@ -229,11 +229,20 @@ export const Cradle = ({ // exported for DndCradle
 
     // zero width and height means the component must be in portal (cache) state
     const 
-        isInPortal = (
-            (viewportwidth == 0) 
-            && (viewportheight == 0)
-        ),
+        // isInPortal = (
+        //     (viewportwidth == 0) 
+        //     && (viewportheight == 0)
+        // ),
+
+        trackingScrollPos = cradlePositionData.trackingBlockScrollPos ?? 0,
+        isInPortal = 
+            orientation == 'vertical'?
+                scrollTop === 0 && scrollTop !== trackingScrollPos:
+                scrollLeft === 0 && scrollLeft !== trackingScrollPos,
         isCacheChange = (isInPortal != isCachedRef.current)
+
+    console.log('scrollerID, isInPortal, viewportwidth, viewportheight, scrollTop, scrollLeft, cradlePositionData.trackingBlockScrollPos, isCacheChange\n',
+        scrollerID, isInPortal, viewportwidth, viewportheight, scrollTop, scrollLeft, cradlePositionData.trackingBlockScrollPos, isCacheChange)
 
     if (isCacheChange) {
         wasCachedRef.current = isCachedRef.current
@@ -246,7 +255,7 @@ export const Cradle = ({ // exported for DndCradle
         cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+    console.log('--> cradleState','-'+scrollerID+'-', cradleState)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -474,7 +483,10 @@ export const Cradle = ({ // exported for DndCradle
     from the user.
 */
     
+    console.log('isCacheChange, isCachedRef.current',isCacheChange, isCachedRef.current)
     if (isCacheChange && !isCachedRef.current) {
+
+        console.log('restoring scrollPos', scrollerID)
 
         restoreScrollPos({
             viewportElement:viewportContext.elementRef.current,
