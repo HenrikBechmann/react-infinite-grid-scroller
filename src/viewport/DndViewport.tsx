@@ -21,6 +21,8 @@ import { Viewport } from '../Viewport'
 // HoC for DnD functionality
 const DndViewport = (props) => {
 
+    console.log('DndViewport')
+
     const 
         [ dndViewportState, setDndViewportState] = useState('ready'),
 

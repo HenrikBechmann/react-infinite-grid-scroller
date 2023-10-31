@@ -35,8 +35,6 @@ import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
 // popup position tracker for repositioning
 import ScrollTracker from './Viewport/ScrollTracker'
 
-import { getViewportDimensions } from './Cradle/cradlefunctions'
-
 export const ViewportContext = React.createContext(null) // for children
 
 
@@ -114,16 +112,6 @@ export const Viewport = ({
 
             }
         )
-
-    if (viewportState != 'setup') {
-
-        const { height:viewportheight,width:viewportwidth } = getViewportDimensions({
-            viewportElement:viewportElementRef.current
-        })
-        console.log('viewport scrollerID, viewportState, viewportheight, viewportwidth\n',
-            scrollerID, viewportState, viewportheight, viewportwidth)
-        
-    }
 
     // mark as unmounted
     useEffect(() =>{

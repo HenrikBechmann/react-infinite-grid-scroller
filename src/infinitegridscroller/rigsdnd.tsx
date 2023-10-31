@@ -124,6 +124,8 @@ export const masterDndContextBase = {
 // wrapper for Dnd provider
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
+    console.log('RigsDnd')
+
     const 
         [rigsDndState, setRigsDndState] = useState('setup'),
         masterDndContext = useContext(MasterDndContext)

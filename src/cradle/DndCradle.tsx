@@ -35,6 +35,8 @@ type DndItem = {
 // HoC for DnD functionality
 const DndCradle = (props) => {
 
+    console.log('DndCradle')
+
     const 
         masterDndContext = useContext(MasterDndContext),
         scrollerDndContext = useContext(ScrollerDndContext),

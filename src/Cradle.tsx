@@ -236,8 +236,8 @@ export const Cradle = ({ // exported for DndCradle
 
         isCacheChange = (isInPortal != isCachedRef.current)
 
-    console.log('scrollerID, isInPortal, isCachedRef.current, viewportwidth, viewportheight, isCacheChange\n',
-        scrollerID, isInPortal, isCachedRef.current, viewportwidth, viewportheight, isCacheChange)
+    // console.log('scrollerID, isInPortal, isCachedRef.current, viewportwidth, viewportheight, isCacheChange\n',
+    //     scrollerID, isInPortal, isCachedRef.current, viewportwidth, viewportheight, isCacheChange)
 
     if (isCacheChange) {
         wasCachedRef.current = isCachedRef.current
@@ -250,7 +250,7 @@ export const Cradle = ({ // exported for DndCradle
         cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -478,7 +478,7 @@ export const Cradle = ({ // exported for DndCradle
     from the user.
 */
     
-    console.log('scrollerID, isCacheChange, isCachedRef.current',scrollerID, isCacheChange, isCachedRef.current)
+    // console.log('scrollerID, isCacheChange, isCachedRef.current',scrollerID, isCacheChange, isCachedRef.current)
     if (isCacheChange && !isCachedRef.current) {
 
         console.log('restoring scrollPos', scrollerID)
