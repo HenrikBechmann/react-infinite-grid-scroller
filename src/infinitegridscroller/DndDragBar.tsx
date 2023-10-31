@@ -40,7 +40,7 @@ import copyicon from "../../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 const DndDragBar = (props) => {
 
     const 
-        { scrollerID} = props,
+        // { scrollerID } = props,
         masterDndContext = useContext(MasterDndContext),
         { dragContext } = masterDndContext,
         { 
@@ -105,7 +105,7 @@ const DndDragBar = (props) => {
 
     },[])
 
-    if ((scrollerID === masterDndContext.scrollerID) && !masterDndContext.setDragBarState) {
+    if (!masterDndContext.setDragBarState) {
 
         masterDndContext.setDragBarState = setDragBarState
         

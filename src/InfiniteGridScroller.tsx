@@ -233,7 +233,7 @@ const RigsController = (props) => {
 
                 if (props.layout == 'static') { 
                     componentRef.current = 
-                        <div style = {staticdivstyleRef.current}>
+                        <div data-type = 'static-base' style = {staticdivstyleRef.current}>
 
                             { staticComponent }
 

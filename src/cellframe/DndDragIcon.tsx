@@ -115,7 +115,7 @@ const DndDragIcon = props => {
             }
         )
         masterDndContext.prescribedDropEffect = options.dropEffect
-        masterDndContext.setViewportState('startdragbar')
+        masterDndContext.setRigsDndState('startdragbar')
     }
 
     if (isDragging && !contentHolderElementRef.current.classList.contains(classname)) {
