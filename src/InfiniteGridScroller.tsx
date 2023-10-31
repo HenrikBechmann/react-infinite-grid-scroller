@@ -90,7 +90,7 @@ type RIGS = {
 }
 
 // React support
-import React, { useEffect, useState, useCallback, useRef, useContext, FC } from 'react'
+import React, { useEffect, useState, useCallback, useRef, useContext, FC, CSSProperties } from 'react'
 
 import { RigsDnd, masterDndContextBase } from './InfiniteGridScroller/RigsDnd'
 
@@ -145,6 +145,8 @@ export const MasterDndContext = React.createContext({...masterDndContextBase}) /
 export const ScrollerDndContext = React.createContext(null) // scroller scope
 
 
+// ==========================[ RigsController ]=============================
+
 // The contoller decides between a RIGS instance of a staticComponent instance
 // In any case it sets up the cache
 // TODO the cache is unused with layout == 'static' and !masterDndContext.installed
@@ -164,8 +166,12 @@ const RigsController = (props) => {
         portalCacheForceUpdateFunctionRef = useRef(null),
         componentRef = useRef(null),
         // useLocalCache for root only with drag and drop
-        useLocalCache = !masterDndContext.installed || isDndMaster
-
+        useLocalCache = !masterDndContext.installed || isDndMaster,
+        // consistent with viewport
+        staticdivstyleRef = useRef<CSSProperties>({
+            position:'absolute',
+            inset:'0',
+        })
 
     // set cacheAPI global or local. getCacheAPI is called with isLocalCache on 'setup' cycle
     const getCacheAPI = (cacheAPI) => {
@@ -209,11 +215,11 @@ const RigsController = (props) => {
     useEffect(()=>{
 
         switch(controllerState) {
-            case 'initialize': {
+            case 'initialize': { // time for any latent RigsDnd reset
                 setControllerState('setup')
                 break
             }
-            case 'setup': {
+            case 'setup': { // cacheAPI setup
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
 
@@ -226,7 +232,12 @@ const RigsController = (props) => {
                 const enhancedProps = {...props, cacheAPIRef, portalCacheForceUpdateFunctionRef, itemSetRef, scrollerSessionIDRef}
 
                 if (props.layout == 'static') { 
-                    componentRef.current = staticComponent
+                    componentRef.current = 
+                        <div style = {staticdivstyleRef.current}>
+
+                            { staticComponent }
+
+                        </div>
                 } else {
                     componentRef.current = <InfiniteGridScroller {...enhancedProps} />
                 }
@@ -234,13 +245,18 @@ const RigsController = (props) => {
                 setControllerState('ready')
                 break
             }
+            case 'ready':{
+                // noop
+            }
         }
 
-    },[controllerState,props])
+    },[ controllerState, props ])
 
 
     return <>
-    {(controllerState === 'ready') && componentRef.current}
+    {(controllerState === 'ready') && 
+        componentRef.current
+    }
     {(controllerState !== 'initialize') && <div data-type = 'cachewrapper'>
         {useLocalCache 
         && <div data-type = 'cacheroot' style = { cacherootstyle }>
@@ -256,6 +272,8 @@ const RigsController = (props) => {
 }
 
 export default RigsController
+
+// ==========================[ InfiniteGridScroller ]=============================
 
 const InfiniteGridScroller = (props) => {
 
@@ -317,10 +335,12 @@ const InfiniteGridScroller = (props) => {
         isDndMaster, // internal, set for root dnd only
 
         staticComponent, // ** planned; supercedes most other properties with layout == 'platform'
+
+        // passed on from controller
+        scrollerSessionIDRef,
         cacheAPIRef,
         portalCacheForceUpdateFunctionRef,
         itemSetRef,
-        scrollerSessionIDRef,
 
     }:RIGS = props
 
