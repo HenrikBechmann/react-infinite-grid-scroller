@@ -68,8 +68,6 @@ export const getViewportDimensions = ({viewportElement}) => {
     return {
         width:viewportElement.offsetWidth,
         height:viewportElement.offsetHeight,
-        scrollTop:viewportElement.scrollTop,
-        scrollLeft:viewportElement.scrollLeft,
     }
 }
 

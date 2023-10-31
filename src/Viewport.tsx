@@ -35,6 +35,8 @@ import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
 // popup position tracker for repositioning
 import ScrollTracker from './Viewport/ScrollTracker'
 
+import { getViewportDimensions } from './Cradle/cradlefunctions'
+
 export const ViewportContext = React.createContext(null) // for children
 
 
@@ -91,18 +93,9 @@ export const Viewport = ({
         // { dragContext } = masterDndContext,
         { orientation } = gridSpecs,
         [ viewportState, setViewportState ] = useState('setup'), // setup, resizing, resized, ready
-    
-        outerViewportElementRef = useRef(null)
+        outerViewportElementRef = useRef(null),
+        viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
 
-    // if (masterDndContext.installed 
-    //     && (scrollerID === masterDndContext.scrollerID) 
-    //     && !masterDndContext.setViewportState) {
-
-    //     masterDndContext.setViewportState = setViewportState
-
-    // }
-
-    const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
     const 
@@ -121,6 +114,16 @@ export const Viewport = ({
 
             }
         )
+
+    if (viewportState != 'setup') {
+
+        const { height:viewportheight,width:viewportwidth } = getViewportDimensions({
+            viewportElement:viewportElementRef.current
+        })
+        console.log('viewport scrollerID, viewportState, viewportheight, viewportwidth\n',
+            scrollerID, viewportState, viewportheight, viewportwidth)
+        
+    }
 
     // mark as unmounted
     useEffect(() =>{
@@ -266,7 +269,6 @@ export const Viewport = ({
         switch (viewportState) {
 
             case 'resized':
-            case 'startdragbar':
             case 'setup': {
                 setViewportState('ready')
                 break
@@ -275,14 +277,8 @@ export const Viewport = ({
         }
     },[viewportState])
 
-        // { (masterDndContext.installed 
-        //     && dragContext.isDragging 
-        //     && (scrollerID === masterDndContext.scrollerID)) 
-        //     && <DndDragBar 
-        //         scrollerID = { scrollerID }
-        //     />
-        // }
     // ----------------------[ render ]--------------------------------
+
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
         <div ref = {outerViewportElementRef} data-type = 'outer-viewport-frame' style = {divframestyleRef.current}>
