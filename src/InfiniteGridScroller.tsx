@@ -165,6 +165,7 @@ const RigsController = (props) => {
         scrollerSessionIDRef = useRef(null),
         portalCacheForceUpdateFunctionRef = useRef(null),
         componentRef = useRef(null),
+        propsRef = useRef(null),
         // useLocalCache for root only with drag and drop
         useLocalCache = !masterDndContext.installed || isDndMaster,
         // consistent with viewport
@@ -173,6 +174,7 @@ const RigsController = (props) => {
             inset:'0',
         })
 
+    propsRef.current = props
     console.log('rigs controller controllerState', scrollerSessionIDRef.current, controllerState)
 
     // set cacheAPI global or local. getCacheAPI is called with isLocalCache on 'setup' cycle
@@ -216,12 +218,15 @@ const RigsController = (props) => {
 
     useEffect(()=>{
 
+        console.log('processing rigs controller state changes',controllerState)
+
         switch(controllerState) {
             case 'initialize': { // time for any latent RigsDnd reset
                 setControllerState('setup')
                 break
             }
             case 'setup': { // cacheAPI setup
+                const props = propsRef.current
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
 
@@ -241,7 +246,8 @@ const RigsController = (props) => {
 
                         </div>
                 } else {
-                    componentRef.current = <InfiniteGridScroller {...enhancedProps} />
+                    componentRef.current = 
+                        <InfiniteGridScroller {...enhancedProps} />
                 }
 
                 setControllerState('ready')
@@ -252,7 +258,7 @@ const RigsController = (props) => {
             }
         }
 
-    },[ controllerState, props ])
+    },[ controllerState ])//, props ])
 
     return <>
         {(controllerState === 'ready') && 
