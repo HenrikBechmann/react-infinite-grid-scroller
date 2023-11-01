@@ -252,22 +252,21 @@ const RigsController = (props) => {
 
     },[ controllerState, props ])
 
-
     return <>
-    {(controllerState === 'ready') && 
-        componentRef.current
-    }
-    {(controllerState !== 'initialize') && <div data-type = 'cachewrapper'>
-        {useLocalCache 
-        && <div data-type = 'cacheroot' style = { cacherootstyle }>
-            <PortalCache 
+        {(controllerState === 'ready') && 
+            componentRef.current
+        }
+        {(controllerState !== 'initialize') && <div data-type = 'cachewrapper'>
+            {useLocalCache 
+            && <div data-type = 'cacheroot' style = { cacherootstyle }>
+                <PortalCache 
 
-                getCacheAPI = { getCacheAPI } 
-                getPortalCacheUpdateFunction = { getPortalCacheUpdateFunction }
-                CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
+                    getCacheAPI = { getCacheAPI } 
+                    getPortalCacheUpdateFunction = { getPortalCacheUpdateFunction }
+                    CACHE_PARTITION_SIZE = { CACHE_PARTITION_SIZE } />
 
+            </div>}
         </div>}
-    </div>}
     </>
 }
 
