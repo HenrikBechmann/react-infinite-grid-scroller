@@ -176,9 +176,6 @@ export const Cradle = ({ // exported for DndCradle
 
     // ========================[ 1. DATA SETUP ]========================
 
-    // const scrollerProfileRef = useRef(scrollerProfile)
-    // scrollerProfileRef.current = scrollerProfile
-
     // unpack core list specs
     const 
         { 
@@ -236,9 +233,6 @@ export const Cradle = ({ // exported for DndCradle
         ),
 
         isCacheChange = (isInPortal != isCachedRef.current)
-
-    // console.log('scrollerID, isInPortal, isCachedRef.current, viewportwidth, viewportheight, isCacheChange\n',
-    //     scrollerID, isInPortal, isCachedRef.current, viewportwidth, viewportheight, isCacheChange)
 
     if (isCacheChange) {
         wasCachedRef.current = isCachedRef.current
@@ -481,8 +475,6 @@ export const Cradle = ({ // exported for DndCradle
     
     // console.log('scrollerID, isCacheChange, isCachedRef.current',scrollerID, isCacheChange, isCachedRef.current)
     if (isCacheChange && !isCachedRef.current) {
-
-        // console.log('restoring scrollPos', scrollerID)
 
         restoreScrollPos({
             viewportElement:viewportContext.elementRef.current,

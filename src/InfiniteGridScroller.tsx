@@ -165,19 +165,14 @@ const RigsController = (props) => {
         itemSetRef = useRef(null), // used for unRegisterScroller
         scrollerSessionIDRef = useRef(null),
         portalCacheForceUpdateFunctionRef = useRef(null),
-        // componentRef = useRef(null),
-        // propsRef = useRef(null),
         controllerBaseElementRef = useRef(null),
         // useLocalCache for root only with drag and drop
         useLocalCache = !masterDndContext.installed || isDndMaster,
         // consistent with viewport
-        staticdivstyleRef = useRef<CSSProperties>({
+        basedivstyleRef = useRef<CSSProperties>({
             position:'absolute',
             inset:'0',
         })
-
-    // propsRef.current = props
-    // console.log('rigs controller controllerState', scrollerSessionIDRef.current, controllerState)
 
     const getBaseElementDimensions = () => {
         const element = controllerBaseElementRef.current
@@ -198,8 +193,6 @@ const RigsController = (props) => {
     } else {
         isCached = (dimensions.width === 0) && (dimensions.height === 0)
     }
-
-    // console.log('isCached',isCached)
 
     // set cacheAPI global or local. getCacheAPI is called with isLocalCache on 'setup' cycle
     const getCacheAPI = (cacheAPI) => {
@@ -242,8 +235,6 @@ const RigsController = (props) => {
 
     useEffect(()=>{
 
-        // console.log('processing rigs controller state changes',controllerState)
-
         switch(controllerState) {
             case 'initialize': { // time for any latent RigsDnd reset
                 setControllerState('setup')
@@ -259,15 +250,6 @@ const RigsController = (props) => {
 
                 }
 
-                // const props = propsRef.current
-                // const enhancedProps = {...props, cacheAPIRef, portalCacheForceUpdateFunctionRef, itemSetRef, scrollerSessionIDRef}
-
-                // if (props.layout == 'static') { 
-                //     componentRef.current = staticComponent
-                // } else {
-                //     componentRef.current = <InfiniteGridScroller {...enhancedProps} />
-                // }
-
                 setControllerState('ready')
                 break
             }
@@ -282,7 +264,7 @@ const RigsController = (props) => {
 
     return <>
         <CacheContext.Provider value = {isCached}>
-            <div ref = {controllerBaseElementRef} data-type = 'rigs-controller-base' style = {staticdivstyleRef.current}>
+            <div ref = {controllerBaseElementRef} data-type = 'rigs-controller-base' style = {basedivstyleRef.current}>
                 {(controllerState === 'ready') && 
                     ((props.layout == 'static')
                         ? staticComponent
@@ -404,8 +386,6 @@ const InfiniteGridScroller = (props) => {
 
         // scrollerSessionIDRef = useRef(null),
         scrollerID = scrollerSessionIDRef.current
-
-    // console.log('rigs scrollerState', scrollerID, scrollerState)
 
     // minimal constraints
     let isMinimalPropsFail = false
@@ -678,16 +658,14 @@ const InfiniteGridScroller = (props) => {
             layout,
         },
 
-        // cacheAPIRef = useRef(null),
-
         listRangeRef = useRef(startingListRange),
 
         listrange = listRangeRef.current,
         [lowlistrange, highlistrange] = listrange, // ranges undefined if listrange length is 0
         listsize = 
             listrange.length == 0
-                ?0
-                :highlistrange - lowlistrange + 1,
+                ? 0
+                : highlistrange - lowlistrange + 1,
 
         virtualListSpecs = {
             size:listsize,
@@ -814,39 +792,6 @@ const InfiniteGridScroller = (props) => {
     // prevent unregistering in strict dev mode (React double setup)
     const isMountedRef = useRef(true)
 
-    // // set cacheAPI global or local. getCacheAPI is called with isLocalCache on 'setup' cycle
-    // const getCacheAPI = (cacheAPI) => {
-
-    //     cacheAPIRef.current = cacheAPI
-    //     if (isDndMaster) {
-
-    //         rigsGlobalContext.cacheAPI = cacheAPI
-
-    //     } else {
-
-    //         if (rigsGlobalContext.cacheAPI) rigsGlobalContext.cacheAPI = null
-                
-    //     }
-
-    // }
-
-    // // made available if useLocalCache is true; called with isLocalCache on 'setup' cycle
-    // const getPortalCacheUpdateFunction = (fn) => {
-
-    //     portalCacheForceUpdateFunctionRef.current = fn
-
-    // }
-
-    // // useLocalCache for root only with drag and drop
-    // const useLocalCache = !masterDndContext.installed || isDndMaster
-
-    // // if use global cache, obtain from rigsGlobalContext
-    // if (scrollerState == 'setup' && !useLocalCache) {
-
-    //     cacheAPIRef.current = rigsGlobalContext.cacheAPI
-
-    // }
-
     // prepare to reset with clearScrollerDndContext
     const clearScrollerDndContext = () => {
         scrollerDndContextRef.current = {
@@ -882,20 +827,6 @@ const InfiniteGridScroller = (props) => {
         }
 
     },[])
-
-    // scrollerID
-    // useEffect (() => {
-
-    //     if (scrollerSessionIDRef.current === null) { // defend against React.StrictMode double run
-    //         scrollerSessionIDRef.current = globalScrollerID++
-    //         isDndMaster && (masterDndContext.scrollerID = scrollerSessionIDRef.current)
-    //     }
-
-    //     return () => {
-    //         clearScrollerDndContext()
-    //     }
-
-    // },[]);
 
     // default cradlePositionData
     useEffect (()=>{
@@ -988,29 +919,13 @@ const InfiniteGridScroller = (props) => {
 
     // ---------------------[ State handling ]------------------------
 
-    // const itemSetRef = useRef(null) // used for unRegisterScroller
-
     useEffect(() => {
 
         if (isMinimalPropsFail || problemCount) return
 
         switch (scrollerState) {
 
-            // case 'initialize':{
-            //     setScrollerState('setup')
-            //     break
-            // }
-
             case 'setup':{
-                // replace cacheAPI with facade which includes hidden scrollerID
-                // cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
-                // itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
-
-                // if (portalCacheForceUpdateFunctionRef.current) { // obtained from PortalCache
-
-                //     cacheAPIRef.current.partitionRepoForceUpdate = portalCacheForceUpdateFunctionRef.current
-
-                // }
                 setScrollerState('ready')
                 break
             }

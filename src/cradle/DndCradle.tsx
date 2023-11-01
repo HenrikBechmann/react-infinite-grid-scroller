@@ -35,8 +35,6 @@ type DndItem = {
 // HoC for DnD functionality
 const DndCradle = (props) => {
 
-    // console.log('DndCradle')
-
     const 
         masterDndContext = useContext(MasterDndContext),
         scrollerDndContext = useContext(ScrollerDndContext),
@@ -160,8 +158,8 @@ const DndCradle = (props) => {
                 toIndex = dropResult.target.index
                 displacedIndex = 
                     (fromIndex > toIndex)
-                        ?toIndex + 1
-                        :toIndex - 1
+                        ? toIndex + 1
+                        : toIndex - 1
 
             } else { // toIndex and displacedIndex for datatype == 'viewport'
 
@@ -181,8 +179,8 @@ const DndCradle = (props) => {
                         if (toScrollerID === fromScrollerID) {
                             toIndex = 
                                 dropEffect == 'move'
-                                    ?lowindex
-                                    :lowindex - 1
+                                    ? lowindex
+                                    : lowindex - 1
                         } else { // inter-list
 
                             toIndex = lowindex - 1
@@ -195,8 +193,8 @@ const DndCradle = (props) => {
                         if (toScrollerID === fromScrollerID) {
                             toIndex = 
                                 dropEffect == 'move'
-                                    ?highindex
-                                    :highindex + 1
+                                    ? highindex
+                                    : highindex + 1
                         } else { // inter-list
 
                             toIndex = highindex + 1
@@ -264,8 +262,8 @@ const DndCradle = (props) => {
                     const [sourcelowindex, sourcehighindex] = sourcelistrange
                     dragContext.sourceServiceHandler.newListRange = 
                         (sourcelowindex === sourcehighindex)
-                            ?[]
-                            :[sourcelowindex, sourcehighindex - 1]
+                            ? []
+                            : [sourcelowindex, sourcehighindex - 1]
                     dragContext.sourceStateHandler.setCradleState('changelistsizeafterinsertremove')
 
                     // ------------ resolve target data
@@ -282,12 +280,12 @@ const DndCradle = (props) => {
                     const [lowindex, highindex] = listrange
                     serviceHandler.newListRange = 
                         listrange.length === 0
-                            ?[toIndex, toIndex]
-                            :onDroppableWhitespace
-                                ?whitespacePosition == 'head'
-                                    ?[lowindex - 1,highindex]
-                                    :[lowindex, highindex + rangeincrement]
-                                :[lowindex, highindex + rangeincrement]
+                            ? [toIndex, toIndex]
+                            : onDroppableWhitespace
+                                ? whitespacePosition == 'head'
+                                    ? [lowindex - 1,highindex]
+                                    : [lowindex, highindex + rangeincrement]
+                                : [lowindex, highindex + rangeincrement]
 
                     if (onDroppableWhitespace) {
                         scrollerDndContext.displacedIndex = null

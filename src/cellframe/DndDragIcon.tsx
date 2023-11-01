@@ -58,8 +58,8 @@ const DndDragIcon = props => {
 
         const computedOptions = 
             dropEffect
-                ?{dropEffect}
-                :{} // must be no property: undefined existing dropEffect property value interpreted as 'copy' on Chrome Mac
+                ? {dropEffect}
+                : {} // must be no property: undefined existing dropEffect property value interpreted as 'copy' on Chrome Mac
 
         return computedOptions
 
