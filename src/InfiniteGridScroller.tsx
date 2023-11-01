@@ -165,8 +165,8 @@ const RigsController = (props) => {
         itemSetRef = useRef(null), // used for unRegisterScroller
         scrollerSessionIDRef = useRef(null),
         portalCacheForceUpdateFunctionRef = useRef(null),
-        componentRef = useRef(null),
-        propsRef = useRef(null),
+        // componentRef = useRef(null),
+        // propsRef = useRef(null),
         controllerBaseElementRef = useRef(null),
         // useLocalCache for root only with drag and drop
         useLocalCache = !masterDndContext.installed || isDndMaster,
@@ -176,7 +176,7 @@ const RigsController = (props) => {
             inset:'0',
         })
 
-    propsRef.current = props
+    // propsRef.current = props
     // console.log('rigs controller controllerState', scrollerSessionIDRef.current, controllerState)
 
     const getBaseElementDimensions = () => {
@@ -250,7 +250,6 @@ const RigsController = (props) => {
                 break
             }
             case 'setup': { // cacheAPI setup
-                const props = propsRef.current
                 cacheAPIRef.current = cacheAPIRef.current.registerScroller(scrollerSessionIDRef.current)
                 itemSetRef.current = cacheAPIRef.current.itemSet // for unmount unRegisterScroller
 
@@ -260,13 +259,14 @@ const RigsController = (props) => {
 
                 }
 
-                const enhancedProps = {...props, cacheAPIRef, portalCacheForceUpdateFunctionRef, itemSetRef, scrollerSessionIDRef}
+                // const props = propsRef.current
+                // const enhancedProps = {...props, cacheAPIRef, portalCacheForceUpdateFunctionRef, itemSetRef, scrollerSessionIDRef}
 
-                if (props.layout == 'static') { 
-                    componentRef.current = staticComponent
-                } else {
-                    componentRef.current = <InfiniteGridScroller {...enhancedProps} />
-                }
+                // if (props.layout == 'static') { 
+                //     componentRef.current = staticComponent
+                // } else {
+                //     componentRef.current = <InfiniteGridScroller {...enhancedProps} />
+                // }
 
                 setControllerState('ready')
                 break
@@ -278,11 +278,15 @@ const RigsController = (props) => {
 
     },[ controllerState ])
 
+    const enhancedProps = {...props, cacheAPIRef, portalCacheForceUpdateFunctionRef, itemSetRef, scrollerSessionIDRef}
+
     return <>
         <CacheContext.Provider value = {isCached}>
             <div ref = {controllerBaseElementRef} data-type = 'rigs-controller-base' style = {staticdivstyleRef.current}>
                 {(controllerState === 'ready') && 
-                    componentRef.current
+                    ((props.layout == 'static')
+                        ? staticComponent
+                        : <InfiniteGridScroller {...enhancedProps} />)
                 }
             </div>
         </CacheContext.Provider>
