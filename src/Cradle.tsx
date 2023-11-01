@@ -246,7 +246,7 @@ export const Cradle = ({ // exported for DndCradle
         cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations

@@ -229,7 +229,7 @@ const InfiniteGridScroller = (props) => {
         scrollerSessionIDRef = useRef(null),
         scrollerID = scrollerSessionIDRef.current
 
-    console.log('rigs scrollerState', scrollerID, scrollerState)
+    // console.log('rigs scrollerState', scrollerID, scrollerState)
 
     // minimal constraints
     let isMinimalPropsFail = false
