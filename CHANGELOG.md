@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.1.0 November, 2023
+
+- new `layout` property type 'static' which allows insertion of `staticComponent`, and ignores all but `dndOptions`
+- new `staticComponent` property which allows insertion of a static component layer. Ignored unless `layout` is set to `static`
+
+These changes allow RIGS to be a platform. Specifically the inserted component allows for more than one top-level scroller, with drag and drop between them.
+
 ## 2.0.0 October 26, 2023
 
 Added:
