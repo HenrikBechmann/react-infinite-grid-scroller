@@ -116,7 +116,7 @@ const CradleController = props => {
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
         masterDndContext = useContext(MasterDndContext),
-        cacheContext = useContext(CacheContext)
+        cacheContext = useContext(CacheContext) // trigger update with caching change
 
     if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
 
