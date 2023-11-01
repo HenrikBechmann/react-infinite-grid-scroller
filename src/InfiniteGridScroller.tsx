@@ -173,6 +173,8 @@ const RigsController = (props) => {
             inset:'0',
         })
 
+    console.log('rigs controller controllerState', scrollerSessionIDRef.current, controllerState)
+
     // set cacheAPI global or local. getCacheAPI is called with isLocalCache on 'setup' cycle
     const getCacheAPI = (cacheAPI) => {
 
@@ -370,6 +372,8 @@ const InfiniteGridScroller = (props) => {
 
         // scrollerSessionIDRef = useRef(null),
         scrollerID = scrollerSessionIDRef.current
+
+    console.log('rigs scrollerState', scrollerID, scrollerState)
 
     // minimal constraints
     let isMinimalPropsFail = false
