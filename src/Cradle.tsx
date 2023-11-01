@@ -73,7 +73,7 @@ import React, {
 import DndCradle from './Cradle/DndCradle'
 
 // contexts
-import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndContext, CacheContext } from './InfiniteGridScroller'
 import { ViewportContext } from './Viewport'
 
 // main state change machine
@@ -115,7 +115,8 @@ const CradleController = props => {
 
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
-        masterDndContext = useContext(MasterDndContext)
+        masterDndContext = useContext(MasterDndContext),
+        cacheContext = useContext(CacheContext)
 
     if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
 
@@ -250,7 +251,7 @@ export const Cradle = ({ // exported for DndCradle
         cradleStateRef = useRef(null) // access by closures
     cradleStateRef.current = cradleState
 
-    console.log('--> cradleState','-'+scrollerID+'-', cradleState)
+    // console.log('--> cradleState','-'+scrollerID+'-', cradleState)
 
     // ------------------------[ calculated properties ]------------------------
     // configuration calculations
@@ -481,7 +482,7 @@ export const Cradle = ({ // exported for DndCradle
     // console.log('scrollerID, isCacheChange, isCachedRef.current',scrollerID, isCacheChange, isCachedRef.current)
     if (isCacheChange && !isCachedRef.current) {
 
-        console.log('restoring scrollPos', scrollerID)
+        // console.log('restoring scrollPos', scrollerID)
 
         restoreScrollPos({
             viewportElement:viewportContext.elementRef.current,

@@ -96,7 +96,7 @@ export const Viewport = ({
 
     viewportStateRef.current = viewportState
 
-    console.log('viewport viewportState', scrollerID, viewportState)
+    // console.log('viewport viewportState', scrollerID, viewportState)
 
     const 
         isMountedRef = useRef(true),

@@ -143,6 +143,7 @@ let globalScrollerID = 0
 export const RigsGlobalContext = React.createContext({cacheAPI:null}) // global cache for drag and drop
 export const MasterDndContext = React.createContext({...masterDndContextBase}) // tree scope
 export const ScrollerDndContext = React.createContext(null) // scroller scope
+export const CacheContext = React.createContext(false) // current cache state of rigs controller
 
 
 // ==========================[ RigsController ]=============================
@@ -166,6 +167,7 @@ const RigsController = (props) => {
         portalCacheForceUpdateFunctionRef = useRef(null),
         componentRef = useRef(null),
         propsRef = useRef(null),
+        controllerBaseElementRef = useRef(null),
         // useLocalCache for root only with drag and drop
         useLocalCache = !masterDndContext.installed || isDndMaster,
         // consistent with viewport
@@ -175,7 +177,29 @@ const RigsController = (props) => {
         })
 
     propsRef.current = props
-    console.log('rigs controller controllerState', scrollerSessionIDRef.current, controllerState)
+    // console.log('rigs controller controllerState', scrollerSessionIDRef.current, controllerState)
+
+    const getBaseElementDimensions = () => {
+        const element = controllerBaseElementRef.current
+        if (element) {
+            return {
+                width:element.offsetWidth,
+                height:element.offsetHeight
+            }
+        } else {
+            return null
+        }
+    }
+
+    let isCached
+    const dimensions = getBaseElementDimensions()
+    if (dimensions === null) {
+        isCached = false
+    } else {
+        isCached = (dimensions.width === 0) && (dimensions.height === 0)
+    }
+
+    // console.log('isCached',isCached)
 
     // set cacheAPI global or local. getCacheAPI is called with isLocalCache on 'setup' cycle
     const getCacheAPI = (cacheAPI) => {
@@ -218,7 +242,7 @@ const RigsController = (props) => {
 
     useEffect(()=>{
 
-        console.log('processing rigs controller state changes',controllerState)
+        // console.log('processing rigs controller state changes',controllerState)
 
         switch(controllerState) {
             case 'initialize': { // time for any latent RigsDnd reset
@@ -239,15 +263,9 @@ const RigsController = (props) => {
                 const enhancedProps = {...props, cacheAPIRef, portalCacheForceUpdateFunctionRef, itemSetRef, scrollerSessionIDRef}
 
                 if (props.layout == 'static') { 
-                    componentRef.current = 
-                        <div data-type = 'static-base' style = {staticdivstyleRef.current}>
-
-                            { staticComponent }
-
-                        </div>
+                    componentRef.current = staticComponent
                 } else {
-                    componentRef.current = 
-                        <InfiniteGridScroller {...enhancedProps} />
+                    componentRef.current = <InfiniteGridScroller {...enhancedProps} />
                 }
 
                 setControllerState('ready')
@@ -258,12 +276,16 @@ const RigsController = (props) => {
             }
         }
 
-    },[ controllerState ])//, props ])
+    },[ controllerState ])
 
     return <>
-        {(controllerState === 'ready') && 
-            componentRef.current
-        }
+        <CacheContext.Provider value = {isCached}>
+            <div ref = {controllerBaseElementRef} data-type = 'rigs-controller-base' style = {staticdivstyleRef.current}>
+                {(controllerState === 'ready') && 
+                    componentRef.current
+                }
+            </div>
+        </CacheContext.Provider>
         {(controllerState !== 'initialize') && <div data-type = 'cachewrapper'>
             {useLocalCache 
             && <div data-type = 'cacheroot' style = { cacherootstyle }>
@@ -379,7 +401,7 @@ const InfiniteGridScroller = (props) => {
         // scrollerSessionIDRef = useRef(null),
         scrollerID = scrollerSessionIDRef.current
 
-    console.log('rigs scrollerState', scrollerID, scrollerState)
+    // console.log('rigs scrollerState', scrollerID, scrollerState)
 
     // minimal constraints
     let isMinimalPropsFail = false
