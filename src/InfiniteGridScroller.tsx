@@ -147,8 +147,6 @@ const InfiniteGridScroller = (props) => {
     //    see useLocalCache
     const [scrollerState, setScrollerState] = useState('initialize') // initialize, setup, setlistprops, ready
     
-    // console.log('rigs scrollerState', scrollerState)
-
     // ------------------[ collect properties ]--------------------
 
     let { 
@@ -230,6 +228,8 @@ const InfiniteGridScroller = (props) => {
 
         scrollerSessionIDRef = useRef(null),
         scrollerID = scrollerSessionIDRef.current
+
+    console.log('rigs scrollerState', scrollerID, scrollerState)
 
     // minimal constraints
     let isMinimalPropsFail = false

@@ -97,6 +97,8 @@ export const Viewport = ({
     
         outerViewportElementRef = useRef(null)
 
+    console.log('viewport viewportState', scrollerID, viewportState)
+
     if (masterDndContext.installed 
         && (scrollerID === masterDndContext.scrollerID) 
         && !masterDndContext.setViewportState) {
