@@ -297,7 +297,7 @@ const InfiniteGridScroller = (props) => {
     //    see useLocalCache
     const [scrollerState, setScrollerState] = useState('setup') // initialize, setup, setlistprops, ready
     
-    // console.log('rigs scrollerState', scrollerState)
+    // console.log('rigs scrollerState', scrollerState, props.scrollerSessionIDRef, props)
 
     // ------------------[ collect properties ]--------------------
 
