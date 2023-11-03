@@ -473,7 +473,6 @@ export const Cradle = ({ // exported for DndCradle
     from the user.
 */
     
-    // console.log('scrollerID, isCacheChange, isCachedRef.current',scrollerID, isCacheChange, isCachedRef.current)
     if (isCacheChange && !isCachedRef.current) {
 
         restoreScrollPos({

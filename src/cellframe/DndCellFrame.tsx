@@ -27,8 +27,6 @@ import { MasterDndContext, ScrollerDndContext } from '../InfiniteGridScroller'
 // HoC for DnD functionality; requires targetConnector
 const DndCellFrame = (props) => {
 
-    // console.log('DndCellFrame')
-
     const 
         {itemID, index} = props,
         cradleContext = useContext(CradleContext),
