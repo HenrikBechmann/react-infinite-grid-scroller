@@ -5,7 +5,7 @@
 - new `layout` property type 'static' which allows insertion of `staticComponent`, and ignores all other properties, other than `dndOptions`
 - new `staticComponent` property which allows insertion of a static component layer. Ignored unless `layout` is set to `static`
 
-These changes allow RIGS to be a platform. Specifically the inserted component allows for more than one top-level scroller, with drag and drop between them.
+These changes allow RIGS root to have an arbitrary layout. Specifically the inserted component allows for more than one top-level scroller, with drag and drop between them.
 
 ## 2.0.0 October 26, 2023
 
