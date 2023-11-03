@@ -877,6 +877,7 @@ const InfiniteGridScroller = (props) => {
         scrollerDndContextRef.current.dndOptions = scrollerDndContextRef.current.dndOptions ?? {}
 
         const wasEnabled = scrollerDndContextRef.current.dndOptions?.enabled
+        const wasShowingScrollTabs = scrollerDndContextRef.current.dndOptions?.showScrollTabs
 
         scrollerDndContextRef.current.dndOptions = dndOptions
 
@@ -884,7 +885,11 @@ const InfiniteGridScroller = (props) => {
         if (scrollerDndContextRef.current.dndOptions.enabled !== enabled) {
             scrollerDndContextRef.current.dndOptions.enabled = enabled
         }
-        if (wasEnabled !== enabled) {
+        const showTabs = scrollerDndContextRef.current.dndOptions.showScrollTabs ?? true
+        if (scrollerDndContextRef.current.dndOptions.showScrollTabs !== showTabs) {
+            scrollerDndContextRef.current.dndOptions.showScrollTabs = showTabs
+        }
+        if ((wasEnabled !== enabled) || wasShowingScrollTabs !== showTabs) {
             setScrollerState('update')
         }
 
