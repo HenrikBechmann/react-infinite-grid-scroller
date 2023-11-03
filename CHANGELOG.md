@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.1.0 November, 2023
+## 2.1.0 November 3, 2023
 
 New `layout` property option
 - new `layout` property type 'static' which allows insertion of `staticComponent`, and ignores all other properties, other than scroller `dndOptions`
