@@ -308,7 +308,7 @@ const DndViewport = (props) => {
                 masterDndContext.setDragBarState('refresh')
             }
             viewportFrameElement.classList.add('rigs-viewport-highlight')
-            showScrollTabsRef.current = true
+            showScrollTabsRef.current = scrollerDndContext.dndOptions.showScrollTabs
 
         } else {
 

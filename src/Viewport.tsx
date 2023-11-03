@@ -6,10 +6,6 @@
     ViewportContext object, and act as the visible screen portal of the list being shown.
     If Viewport is resized, it notifies the Cradle to reconfigure.
 
-    Also sets setViewportState in masterDndContext if dnd is installed
-
-    shows DndDragBar when dragging according to masterDndContext, 
-        and shows DndScrollTabs on request from DndViewport
 */
 
 import React, {
@@ -31,7 +27,7 @@ import {
 } from 'react-dnd'
 
 import DndViewport from './Viewport/DndViewport'
-import DndDragBar from './Viewport/DndDragBar'
+// import DndDragBar from './InfiniteGridScroller/DndDragBar'
 import DndScrollTab from './Viewport/DndScrollTab'
 
 import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
@@ -51,9 +47,10 @@ const ViewportController = (props) => {
         { scrollerID } = props
 
     if (
-        masterDndContext.installed 
-        && (masterDndContext.scrollerID == scrollerID // root viewport is needed for DndDragBar
-            || scrollerDndContext.dndOptions.enabled)) {
+        masterDndContext.installed &&
+        // && (masterDndContext.scrollerID == scrollerID // root viewport is needed for DndDragBar
+        //     || 
+        scrollerDndContext.dndOptions.enabled) {
 
         return <DndViewport {...props}/>
 
@@ -91,23 +88,12 @@ export const Viewport = ({
 
     const 
         masterDndContext = useContext(MasterDndContext),
-        { dragContext } = masterDndContext,
+        // { dragContext } = masterDndContext,
         { orientation } = gridSpecs,
         [ viewportState, setViewportState ] = useState('setup'), // setup, resizing, resized, ready
-    
-        outerViewportElementRef = useRef(null)
+        outerViewportElementRef = useRef(null),
+        viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
 
-    // console.log('viewport viewportState', scrollerID, viewportState)
-
-    if (masterDndContext.installed 
-        && (scrollerID === masterDndContext.scrollerID) 
-        && !masterDndContext.setViewportState) {
-
-        masterDndContext.setViewportState = setViewportState
-
-    }
-
-    const viewportStateRef = useRef(null) // for useCallback -> resizeCallback scope
     viewportStateRef.current = viewportState
 
     const 
@@ -270,7 +256,6 @@ export const Viewport = ({
         switch (viewportState) {
 
             case 'resized':
-            case 'startdragbar':
             case 'setup': {
                 setViewportState('ready')
                 break
@@ -280,15 +265,9 @@ export const Viewport = ({
     },[viewportState])
 
     // ----------------------[ render ]--------------------------------
+
     return <ViewportContext.Provider value = { viewportContextRef.current }>
 
-        { (masterDndContext.installed 
-            && dragContext.isDragging 
-            && (scrollerID === masterDndContext.scrollerID)) 
-            && <DndDragBar 
-                scrollerID = { scrollerID }
-            />
-        }
         <div ref = {outerViewportElementRef} data-type = 'outer-viewport-frame' style = {divframestyleRef.current}>
         <div ref = {viewportFrameElementRef} data-type = 'viewport-frame' style = {divframestyleRef.current}>
             {showScrollTabs 

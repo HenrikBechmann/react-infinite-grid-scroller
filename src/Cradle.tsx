@@ -73,7 +73,7 @@ import React, {
 import DndCradle from './Cradle/DndCradle'
 
 // contexts
-import { MasterDndContext, ScrollerDndContext } from './InfiniteGridScroller'
+import { MasterDndContext, ScrollerDndContext, CacheContext } from './InfiniteGridScroller'
 import { ViewportContext } from './Viewport'
 
 // main state change machine
@@ -115,7 +115,8 @@ const CradleController = props => {
 
     const 
         scrollerDndContext = useContext(ScrollerDndContext),
-        masterDndContext = useContext(MasterDndContext)
+        masterDndContext = useContext(MasterDndContext),
+        cacheContext = useContext(CacheContext) // trigger update with caching change
 
     if (masterDndContext.installed && scrollerDndContext.dndOptions.enabled) {
 
@@ -175,9 +176,6 @@ export const Cradle = ({ // exported for DndCradle
 
     // ========================[ 1. DATA SETUP ]========================
 
-    // const scrollerProfileRef = useRef(scrollerProfile)
-    // scrollerProfileRef.current = scrollerProfile
-
     // unpack core list specs
     const 
         { 
@@ -233,6 +231,7 @@ export const Cradle = ({ // exported for DndCradle
             (viewportwidth == 0) 
             && (viewportheight == 0)
         ),
+
         isCacheChange = (isInPortal != isCachedRef.current)
 
     if (isCacheChange) {

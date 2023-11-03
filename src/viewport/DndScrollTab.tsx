@@ -79,8 +79,8 @@ const DndScrollTab = (props) => {
             case 'bottomright': {
                 transform = 
                     orientation == 'vertical'
-                        ?'rotate(0.25turn)'
-                        :'rotate(0turn)'
+                        ? 'rotate(0.25turn)'
+                        : 'rotate(0turn)'
                 top = null
                 right = '0'
                 bottom = '0'

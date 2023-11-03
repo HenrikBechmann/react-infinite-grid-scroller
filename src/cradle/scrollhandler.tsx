@@ -66,13 +66,13 @@ export default class ScrollHandler {
             
             scrollPositionCurrent = 
                 (orientation == 'vertical')
-                    ?viewportElement.scrollTop
-                    :viewportElement.scrollLeft,
+                    ? viewportElement.scrollTop
+                    : viewportElement.scrollLeft,
 
             scrollXPositionCurrent = 
                 (orientation == 'horizontal')
-                    ?viewportElement.scrollTop
-                    :viewportElement.scrollLeft
+                    ? viewportElement.scrollTop
+                    : viewportElement.scrollLeft
 
         clearTimeout(this._scrolltimerid)
 
@@ -289,13 +289,13 @@ export default class ScrollHandler {
 
             scrollblockOffset = 
                 (orientation == 'vertical')
-                    ?scrollblockElement.offsetTop
-                    :scrollblockElement.offsetLeft,
+                    ? scrollblockElement.offsetTop
+                    : scrollblockElement.offsetLeft,
 
             trackingBlockScrollPos =
                 (orientation == 'vertical')
-                    ?viewportElement.scrollTop
-                    :viewportElement.scrollLeft,
+                    ? viewportElement.scrollTop
+                    : viewportElement.scrollLeft,
 
             scrollTop = viewportElement.scrollTop,
             scrollLeft = viewportElement.scrollLeft
@@ -445,8 +445,8 @@ export default class ScrollHandler {
 
         const paddingOffset = 
             orientation == 'vertical'
-                ?paddingProps.top
-                :paddingProps.left
+                ? paddingProps.top
+                : paddingProps.left
 
         if (axisPixelOffset == cellLength) { // + paddingOffset)) {
             axisPixelOffset = 0
