@@ -1,6 +1,19 @@
 # Changelog
 
-## 2.0.0 October, 2023
+## 2.1.0 November 3, 2023
+
+New `layout` property option
+- new `layout` property type 'static' which allows insertion of `staticComponent`, and ignores all other properties, other than scroller `dndOptions`
+- new `staticComponent` property which allows insertion of a static component layer. Ignored unless `layout` is set to `static`
+
+These changes allow the RIGS root level to have an arbitrary layout. Specifically the inserted component allows for more than one top-level scroller, with drag and drop between them.
+
+New scroller `dndOptions` property
+- `dndOptions.showScrollTabs` (default `true`)
+
+DndScrollTabs can now be suppressed by setting the `showScrollTabs` scroller `dndOptions` property to `false`
+
+## 2.0.0 October 26, 2023
 
 Added:
 - intra-list and inter-list drag and drop capability

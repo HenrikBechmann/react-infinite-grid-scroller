@@ -1,7 +1,7 @@
 # react-infinite-grid-scroller (RIGS)
 Heavy-duty vertical or horizontal infinite scroller
 
-[![npm](https://img.shields.io/badge/npm-2.0.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+[![npm](https://img.shields.io/badge/npm-2.1.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
 
 # Key Features
 
@@ -27,7 +27,7 @@ See the [demo site](https://henrikbechmann.github.io/rigs-demo/).
 RIGS uses these key technologies:
 - [CSS grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [React hooks](https://react.dev/reference/react)
-- [React portals](https://www.npmjs.com/package/react-reverse-portal)
+- [React (reverse) portals](https://www.npmjs.com/package/react-reverse-portal)
 - [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API)
 - [ResizeObserver](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver)
 - [requestIdleCallback](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestIdleCallback)
@@ -100,7 +100,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list. Can be modified at runtime. |
 |startingIndex:integer| starting index when the scroller first loads|default = 0|
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
-|layout:string| 'uniform' (default) or 'variable'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum)|
+|layout:string| 'uniform' (default), 'variable', or 'static'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum). See the `staticComponent` property regarding the special 'static' option.|
 |padding:integer \| []| number of pixels padding the `Scrollblock`| default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b, r/l]. 3-item array = [t, r/l, b]. 4-item array = [t, r, b, l]|
 |getExpansionCount(position:string, index:ingeger): integer| function optionally provided by host. Called whenever the lowindex or highindex are loaded into the Cradle.| `position` = "SOL" or "EOL"; index = the lowindex or highindex. Should return the number by which to expand the virtual list|
 |getDropEffect(sourceScrollerID, targetScrollerID, context): 'move' \| 'copy'\| 'none' \| `undefined`|function, optional, for `RigsDnd` component only|called whenever drag `isOver` and `canDrop` are true on a list; returns drop constraint. See Drag and Drop below. |
@@ -112,6 +112,7 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |useScrollTracker:boolean| default = `true`|allows suppression of system feedback on position within list while in reposition mode, if the host wants to provide alternative feedback based on data from callbacks |
 |placeholder:React.FC|a lightweight React component for `cellFrame`s to load while waiting for the intended `cellFrame` components|optional (replaces default placeholder). parameters are index, listsize, message, error, dndEnabled. Arguments set by system|
 |usePlaceholder:boolean| default = true|allows suppression of use of default or custom placeholder. Placeholders show messages to the user while user components are fetched, and report errors|
+|staticComponent:React.FC|an arbitrary react component inserted as a layer. Ignored unless the `layout` property is set to 'static'|This allows the root of the Scroller tree to have an arbitrary layout. Specifically the inserted component allows for more than one top-level scroller, with drag and drop between them. If the `layout` 'static' option is set all other properties (except `dndOptions`) are ignored|
 |[_**OBJECT PROPERTIES**_]|
 |styles:object| collection of styles for scroller components|optional. These should be "passive" styles like backgroundColor. See below for details|
 |placeholderMessages:object| messages presented by the placeholder|optional, to replace default messages. See below for details|
@@ -419,7 +420,7 @@ import  { RigsDnd as Scroller } from 'react-infinite-grid-scroller'
   />
 </div>
 ```
-2. `dndOptions` is a required property for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property, and a `profile` property with a simple object to help identify the scroller when the host responds to the `getDropEffect` function. A complete list here:
+2. `dndOptions` is a required property for all scrollers when dnd is enabled. It must include an `accept` property, with an array of accepted dnd content types (strings or Symbols). For the root scroller it may also include a `master` property. A complete list here:
 ```tsx
 const dndOptions = {
   accept:['type1','type2','type3',...], // required for all participating RIGS scrollers - any number of string (or Symbol) identifiers
@@ -427,6 +428,7 @@ const dndOptions = {
   enabled, // optional for all participating scrollers, default set by master.enabled
   dropEffect, // optional. the prescribed value ('move' or 'copy') for dragged scroller items; can be overridden by getDropEffect.
     // undefined dropEffect means default = 'move', posibly modified to 'copy' by pressing the altKey on desktop systems
+  showScrollTabs, // default = true. When set to false, suppresses the scroll tabs on the scroller during drag.
 }
 ```
 3. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). The `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.

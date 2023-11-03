@@ -1,5 +1,5 @@
 // cradlefunctions.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 // support code; process handlers
 import ScrollHandler from './scrollhandler'
@@ -67,7 +67,7 @@ export const getCradleHandlers = (cradleParameters) => {
 export const getViewportDimensions = ({viewportElement}) => {
     return {
         width:viewportElement.offsetWidth,
-        height:viewportElement.offsetHeight
+        height:viewportElement.offsetHeight,
     }
 }
 

@@ -1,5 +1,5 @@
 // contentupdatefunctions.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 import { isSafariIOS } from '../../InfiniteGridScroller'
 
@@ -63,27 +63,27 @@ export const getShiftInstruction = ({
         // --- identify viewportpos...
         intersectrootpos = // the viewport measured by the observer
             (orientation == 'vertical')
-                ?Math.trunc(entry.rootBounds.y)
-                :Math.trunc(entry.rootBounds.x),
+                ? Math.trunc(entry.rootBounds.y)
+                : Math.trunc(entry.rootBounds.x),
 
         boundingrootpos = // the viewport measured directly
             (orientation == 'vertical')
-                ?Math.trunc(viewportBoundingRect.y)
-                :Math.trunc(viewportBoundingRect.x),
+                ? Math.trunc(viewportBoundingRect.y)
+                : Math.trunc(viewportBoundingRect.x),
 
         // this selection is redundant, but documents what's going on
         viewportpos = // the viewportpos selection, to accommodate Safari zooming anomaly
             (intersectrootpos == boundingrootpos)
-                ?intersectrootpos
-                :boundingrootpos, // we're in Safari, zoomed
+                ? intersectrootpos
+                : boundingrootpos, // we're in Safari, zoomed
 
         // --- end of identify viewportpos
 
 
         triggerpos = 
             (orientation == 'vertical')
-                ?Math.trunc(entry.boundingClientRect.y)
-                :Math.trunc(entry.boundingClientRect.x),
+                ? Math.trunc(entry.boundingClientRect.y)
+                : Math.trunc(entry.boundingClientRect.x),
 
         // get the triggeroffset, which controls the determination of the shift instruction
         triggerOffset = triggerpos - viewportpos,
@@ -203,8 +203,8 @@ export const getShiftInstruction = ({
 
     const triggerViewportReferencePixelPos = // used to calculate required pixel shift
         (shiftinstruction == 'moveaxistailward') // block is scrolling up or left
-            ?triggerConfigData.tailOffset // needs to move up or left toward head
-            :triggerConfigData.headOffset // needs to move down or right toward tail
+            ? triggerConfigData.tailOffset // needs to move up or left toward head
+            : triggerConfigData.headOffset // needs to move down or right toward tail
 
     return [shiftinstruction, triggerViewportReferencePixelPos]
 
@@ -315,13 +315,13 @@ export const calculateShiftSpecs = ({
 
         gaplength = 
             orientation == 'vertical'
-                ?gapProps.column
-                :gapProps.row,
+                ? gapProps.column
+                : gapProps.row,
 
         baseRowPixelLength =
             ((orientation == 'vertical')
-                ?cellHeight
-                :cellWidth) 
+                ? cellHeight
+                : cellWidth) 
             + gaplength
 
     let 
@@ -340,8 +340,8 @@ export const calculateShiftSpecs = ({
         const 
             engagedGridElement = // moving axis (and triggers) toward the reference grid element
                 (shiftinstruction == 'moveaxistailward') // scrolling up or left
-                    ?tailGridElement
-                    :headGridElement,
+                    ? tailGridElement
+                    : headGridElement,
 
             gridRowPixelLengthsList = getGridRowLengths(engagedGridElement, orientation, crosscount, gapProps)
 
@@ -373,9 +373,9 @@ export const calculateShiftSpecs = ({
             gridSpanAxisPixelShift = 
                 (shiftinstruction == 'moveaxistailward')
                     // move axis toward tail from viewport boundary (positive)
-                    ?gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement]
+                    ? gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement]
                     // move axis toward head from viewport boundary (negative)
-                    :-gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement] 
+                    : -gridRowCumulativePixelLengthsList[foundGridSpanRowShiftIncrement] 
 
         } else { // no foundGridSpanRowShiftIncrement; either in boundary, or shy of target
 
@@ -450,8 +450,8 @@ export const calculateShiftSpecs = ({
 
     const gridSpanRowShift = // pick up row shift with or without overshoot
         (shiftinstruction == 'moveaxistailward')
-            ?foundGridSpanRowShiftIncrement + 1
-            :-(foundGridSpanRowShiftIncrement + 1)
+            ? foundGridSpanRowShiftIncrement + 1
+            : -(foundGridSpanRowShiftIncrement + 1)
 
     // the following two values (axisReferenceRowShift & axisPixelShift), and no other calcs, 
     //     are carried forward in this function.
@@ -481,13 +481,13 @@ export const calculateShiftSpecs = ({
     const 
         scrollblockAxisPixelOffset = 
             (orientation == 'vertical')
-                ?axisElement.offsetTop
-                :axisElement.offsetLeft,
+                ? axisElement.offsetTop
+                : axisElement.offsetLeft,
 
         scrollblockPixelOffset = // to capture current top/left adjustment to viewport for variable layout
             (orientation == 'vertical')
-                ?scrollblockElement.offsetTop
-                :scrollblockElement.offsetLeft,
+                ? scrollblockElement.offsetTop
+                : scrollblockElement.offsetLeft,
 
         // currentViewportAxisOffset will be negative (above viewport edge) for scroll block headward 
         //     and positive for scroll block tailward
@@ -656,8 +656,8 @@ const getGridRowLengths = (grid, orientation, crosscount, gapProps) => {
     while (element) {
         const rowlength = 
             ((orientation == 'vertical')
-                ?element.offsetHeight + gapProps.column
-                :element.offsetWidth + gapProps.row)
+                ? element.offsetHeight + gapProps.column
+                : element.offsetWidth + gapProps.row)
 
         rowLengths.push(rowlength)
         elementPtr += crosscount

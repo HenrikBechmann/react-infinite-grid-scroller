@@ -1,5 +1,5 @@
 // cradlestate.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useLayoutEffect, useContext } from 'react'
 
@@ -110,8 +110,8 @@ export const useCradleStateLayoutEffects = ({
 
                 const accept = 
                     masterDndContext.installed
-                        ?scrollerDndContext.dndOptions.accept
-                        :null
+                        ? scrollerDndContext.dndOptions.accept
+                        : null
 
                 cacheAPI.preload(finalCallback, accept)
 

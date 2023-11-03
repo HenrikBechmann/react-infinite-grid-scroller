@@ -1,6 +1,6 @@
 {
   "name": "react-infinite-grid-scroller",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "infinite vertical or horizontal scroll using css grid layout",
   "main": "index.js",
   "scripts": {
@@ -26,7 +26,8 @@
     "list",
     "virtual",
     "IntersectionObserver",
-    "ResizeObserver"
+    "ResizeObserver",
+    "Drag and drop"
   ],
   "repository": {
     "type": "git",

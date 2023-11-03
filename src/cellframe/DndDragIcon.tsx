@@ -1,5 +1,5 @@
 // DndDragIcon.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
 
@@ -58,8 +58,8 @@ const DndDragIcon = props => {
 
         const computedOptions = 
             dropEffect
-                ?{dropEffect}
-                :{} // must be no property: undefined existing dropEffect property value interpreted as 'copy' on Chrome Mac
+                ? {dropEffect}
+                : {} // must be no property: undefined existing dropEffect property value interpreted as 'copy' on Chrome Mac
 
         return computedOptions
 
@@ -115,7 +115,7 @@ const DndDragIcon = props => {
             }
         )
         masterDndContext.prescribedDropEffect = options.dropEffect
-        masterDndContext.setViewportState('startdragbar')
+        masterDndContext.setRigsDndState('startdragbar')
     }
 
     if (isDragging && !contentHolderElementRef.current.classList.contains(classname)) {

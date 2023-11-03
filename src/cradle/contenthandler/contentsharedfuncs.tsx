@@ -1,5 +1,5 @@
 // contentsharedfuncs.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module, and updatefunctions, supports the contenthandler module. The functions in this module perform
@@ -150,13 +150,13 @@ export const allocateContentList = (
 
         targetTriggercellIndex = 
             (headitemcount == 0)
-                ?axisReferenceIndex
-                :axisReferenceIndex - 1
+                ? axisReferenceIndex
+                : axisReferenceIndex - 1
 
     layoutHandler.triggercellIsInTail = 
         (headitemcount == 0)
-            ?true
-            :false
+            ? true
+            : false
 
     if ((triggercellIndex !== undefined) && (lowcontentindex !== undefined)) {
         if ((triggercellIndex >= lowcontentindex) && (triggercellIndex <= highcontentindex)) {

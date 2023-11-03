@@ -1,5 +1,5 @@
 // layouthandler.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module holds references to 
@@ -103,10 +103,10 @@ export default class LayoutHandler {
             } = this.cradleParameters.cradleInheritedPropertiesRef.current,
 
             span = (orientation == 'vertical')
-                ?this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
+                ? this.elements.triggercellTriggerlineTailRef.current.offsetTop - 
                     this.elements.triggercellTriggerlineHeadRef.current.offsetTop
                 // horizontal
-                :this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
+                : this.elements.triggercellTriggerlineTailRef.current.offsetLeft - 
                     this.elements.triggercellTriggerlineHeadRef.current.offsetLeft
 
         return span
@@ -217,19 +217,19 @@ export default class LayoutHandler {
 
             gaplength = 
                 orientation == 'vertical'
-                    ?gapProps.column
-                    :gapProps.row,
+                    ? gapProps.column
+                    : gapProps.row,
 
             cellLength = 
                 ((orientation == 'vertical')
-                    ?cellHeight
-                    :cellWidth) 
+                    ? cellHeight
+                    : cellWidth) 
                 + gaplength,
 
             paddingLength = 
                 orientation == 'vertical'
-                    ?paddingProps.top + paddingProps.bottom
-                    :paddingProps.left + paddingProps.right,
+                    ? paddingProps.top + paddingProps.bottom
+                    : paddingProps.left + paddingProps.right,
 
             blocklength = (listRowcount * cellLength) - gaplength // final cell has no trailing gap
                 + paddingLength // leading and trailing padding
@@ -252,8 +252,8 @@ export default class LayoutHandler {
             rowReferencePosition = Math.ceil(axisReferencePosition/crosscount),
             paddingOffset = 
                 orientation == 'vertical'
-                    ?paddingProps.top
-                    :paddingProps.left,
+                    ? paddingProps.top
+                    : paddingProps.left,
             calculatedBlockScrollPos = 
                 (rowReferencePosition * cellLength) + paddingOffset
 
@@ -263,8 +263,8 @@ export default class LayoutHandler {
             const 
                 originalScrollPos = 
                     (orientation == 'vertical')
-                        ?viewportElement.scrollTop
-                        :viewportElement.scrollLeft,
+                        ? viewportElement.scrollTop
+                        : viewportElement.scrollLeft,
 
                 scrollShift = calculatedBlockScrollPos - originalScrollPos
 

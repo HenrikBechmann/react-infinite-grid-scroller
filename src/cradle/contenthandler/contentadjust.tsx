@@ -1,5 +1,5 @@
 // contentadjust.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 export const contentAdjust = (source, cradleParameters) => {
 
@@ -100,26 +100,26 @@ export const contentAdjust = (source, cradleParameters) => {
 
                 scrollblockLength = 
                     orientation == 'vertical'
-                        ?scrollblockElement.offsetHeight
-                        :scrollblockElement.offsetWidth,
+                        ? scrollblockElement.offsetHeight
+                        : scrollblockElement.offsetWidth,
 
                 scrollblockOffset = 
                     orientation == 'vertical'
-                        ?scrollblockElement.offsetTop
-                        :scrollblockElement.offsetLeft,
+                        ? scrollblockElement.offsetTop
+                        : scrollblockElement.offsetLeft,
 
                 viewportLength = 
                     orientation == 'vertical'
-                        ?viewportElement.offsetHeight
-                        :viewportElement.offsetWidth,
+                        ? viewportElement.offsetHeight
+                        : viewportElement.offsetWidth,
 
                 scrollTop = viewportElement.scrollTop,
                 scrollLeft = viewportElement.scrollLeft,
 
                 viewportScrollPos = 
                     orientation == 'vertical'
-                        ?viewportElement.scrollTop
-                        :viewportElement.scrollLeft
+                        ? viewportElement.scrollTop
+                        : viewportElement.scrollLeft
 
             // check for overshoot
             if ((scrollblockLength + scrollblockOffset - viewportScrollPos) < viewportLength) { // overshoot
@@ -190,35 +190,35 @@ export const contentAdjust = (source, cradleParameters) => {
 
         gaplength = 
             orientation == 'vertical'
-                ?gapProps.row
-                :gapProps.column,
+                ? gapProps.row
+                : gapProps.column,
 
         // base pixel values
         baseCellLength = 
             ((orientation == 'vertical')
-                ?cellHeight
-                :cellWidth) 
+                ? cellHeight
+                : cellWidth) 
             + gaplength,
 
         measuredTailPixelLength = 
             (orientation == 'vertical')
-                ?tailGridElement.offsetHeight
-                :tailGridElement.offsetWidth,
+                ? tailGridElement.offsetHeight
+                : tailGridElement.offsetWidth,
 
         postCradleRowsPixelLength = (postCradleRowCount * baseCellLength),
 
         paddingTailOffset = 
             orientation == 'vertical'
-                ?paddingProps.bottom
-                :paddingProps.right,
+                ? paddingProps.bottom
+                : paddingProps.right,
 
         totalPostAxisScrollblockPixelLength = 
             postCradleRowsPixelLength + measuredTailPixelLength, //+ paddingTailOffset,
 
         paddingHeadOffset = 
             orientation == 'vertical'
-                ?paddingProps.top
-                :paddingProps.left,
+                ? paddingProps.top
+                : paddingProps.left,
 
         // base figures used for preAxis #s for compatibility with repositioning, which uses base figures
         totalPreAxisScrollblockPixelLength = 
@@ -263,8 +263,8 @@ export const contentAdjust = (source, cradleParameters) => {
     const 
         startingScrollPos = 
             (orientation == 'vertical')
-                ?viewportElement.scrollTop
-                :viewportElement.scrollLeft,
+                ? viewportElement.scrollTop
+                : viewportElement.scrollLeft,
 
         scrollDiff = trackingBlockScrollPos - startingScrollPos
 

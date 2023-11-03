@@ -1,5 +1,5 @@
 // contentupdate.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 import React from 'react'
 
@@ -85,8 +85,8 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
         // new vars
         currentScrollPos = 
             (orientation == 'vertical')
-                ?viewportElement.scrollTop
-                :viewportElement.scrollLeft,
+                ? viewportElement.scrollTop
+                : viewportElement.scrollLeft,
 
         modelcontentlist = cradleContent.cradleModelComponents || [],
 
@@ -236,8 +236,8 @@ export const contentUpdate = (cradleParameters, cradleContent, instanceIdCounter
             firstcomponent = updatedContentList[0],
             gridstartstyle =
                 (orientation == 'vertical')
-                    ?{ gridColumnStart:gridstart }
-                    :{ gridRowStart:gridstart },
+                    ? { gridColumnStart:gridstart }
+                    : { gridRowStart:gridstart },
             revisedcomponent = React.cloneElement(firstcomponent,{gridstartstyle})
 
         updatedContentList[0] = revisedcomponent
@@ -343,19 +343,19 @@ const applyStyling = ({
 
         gaplength = 
             orientation == 'vertical'
-                ?gapProps.column
-                :gapProps.row,
+                ? gapProps.column
+                : gapProps.row,
 
         baseCellLength = 
             ((orientation == 'vertical')
-                ?cellHeight
-                :cellWidth)
+                ? cellHeight
+                : cellWidth)
             + gaplength,
 
         paddingOffset = 
             orientation == 'vertical'
-                ?paddingProps.top
-                :paddingProps.left,
+                ? paddingProps.top
+                : paddingProps.left,
 
         testScrollPos = (baseCellLength * preAxisVirtualRows) + paddingOffset - pixelOffsetAxisFromViewport,
         
@@ -378,8 +378,8 @@ const applyStyling = ({
         
         headElement.style.padding = 
             headcontent.length
-                ?`0px 0px ${gapProps.column}px 0px`
-                :`0px`
+                ? `0px 0px ${gapProps.column}px 0px`
+                : `0px`
 
     } else { // 'horizontal'
 
@@ -390,8 +390,8 @@ const applyStyling = ({
 
         headElement.style.padding = 
             headcontent.length
-                ?`0px ${gapProps.row}px 0px 0px`
-                :`0px`
+                ? `0px ${gapProps.row}px 0px 0px`
+                : `0px`
     }
 
     return pixelOffsetAxisFromViewport

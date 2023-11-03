@@ -1,5 +1,5 @@
 // contenthandler.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module supports the setup, rollover and positioning of content in the Cradle. 
@@ -357,8 +357,8 @@ export default class ContentHandler {
             lowPtr = firstIndex - lowSpan,
 
             highPtr = isInsertRemove
-                ?cradleModelComponents.length - 1
-                :Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
+                ? cradleModelComponents.length - 1
+                : Math.min(cradleModelComponents.length - 1,lowPtr + updatedSpan - 1)
 
         // function to update individual cradle components to cache changes
         function processcomponentFn(component, componentptr, componentarray) {

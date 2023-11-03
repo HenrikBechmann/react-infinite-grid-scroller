@@ -1,5 +1,5 @@
 // CellFrame.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The role of CellFrame is to fetch user content from the cache, or from the host (using getItem).
@@ -239,7 +239,6 @@ export const CellFrame = ({
     // for unmount
     useEffect(()=>{
 
-        // setDroppedBorder()
         return () => {
 
             cancelidlecallback(requestIdleCallbackIdRef.current)
@@ -281,9 +280,9 @@ export const CellFrame = ({
             dndEnabled = scrollerDndContext.dndOptions?.enabled
 
         return placeholder
-            ?React.createElement(placeholder, 
+            ? React.createElement(placeholder, 
                 {index, listsize, message:messageRef.current, error:errorRef.current, dndEnabled})
-            :null
+            : null
             
     },[
         index, 
@@ -300,8 +299,8 @@ export const CellFrame = ({
 
         const placeholder = 
             customplaceholder
-                ?customplaceholder
-                :<Placeholder 
+                ? customplaceholder
+                : <Placeholder 
                     key = 'placeholder'
                     index = { index } 
                     listsize = { listsize } 
@@ -333,13 +332,13 @@ export const CellFrame = ({
 
     const requestidlecallback = // requestIdleCallback
         window['requestIdleCallback']
-            ?window['requestIdleCallback']
-            :requestIdleCallback
+            ? window['requestIdleCallback']
+            : requestIdleCallback
 
     const cancelidlecallback = // cancelIdleCallback
         window['cancelIdleCallback']
-            ?window['cancelIdleCallback']
-            :cancelIdleCallback
+            ? window['cancelIdleCallback']
+            : cancelIdleCallback
 
     const requestIdleCallbackIdRef = useRef(null)
 
@@ -614,11 +613,11 @@ export const CellFrame = ({
         style = { stylesRef.current }
     >
         {(frameState != 'setup')
-            ?<>
+            ? <>
                 <div data-type = 'contentholder' ref = {contentHolderElementRef} style = {holderStylesRef.current}> 
                     {((frameState != 'ready')
-                        ?placeholderRef.current
-                        :<OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
+                        ? placeholderRef.current
+                        : <OutPortal key = 'portal' node = { portalNodeRef.current }/>)}
                 </div>
 
                 {(isDndEnabledRef.current 
@@ -636,11 +635,11 @@ export const CellFrame = ({
                 }
             </>
 
-            :<div></div>}
+            : <div></div>}
 
         {(isTriggercell
-            ?triggercellTriggerlinesRef.current
-            :null)
+            ? triggercellTriggerlinesRef.current
+            : null)
         }
         {(isDndEnabledRef.current 
             && showDndDisplaceIcon 

@@ -1,5 +1,5 @@
 // cradlehooks.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 import React, {useMemo, useEffect, useLayoutEffect, useCallback}from 'react'
 
@@ -22,26 +22,26 @@ export const useCrosscount = ({
         const 
             viewportcrosslength = 
                 (orientation == 'vertical')
-                    ?viewportwidth
-                    :viewportheight,
+                    ? viewportwidth
+                    : viewportheight,
 
             crosspadding = 
                 (orientation == 'vertical')
-                    ?paddingProps.left + paddingProps.right
-                    :paddingProps.top + paddingProps.bottom,
+                    ? paddingProps.left + paddingProps.right
+                    : paddingProps.top + paddingProps.bottom,
 
             crossgap = 
                 (orientation == 'vertical')
-                    ?gapProps.column
-                    :gapProps.row,
+                    ? gapProps.column
+                    : gapProps.row,
 
             // cross length of viewport (gap to match crossLength)
             viewportcrosslengthforcalc = viewportcrosslength - crosspadding + crossgap,
 
             cellcrosslength = 
                 ((orientation == 'vertical')
-                    ?cellWidth
-                    :cellHeight) 
+                    ? cellWidth
+                    : cellHeight) 
                 + crossgap,
 
             cellcrosslengthforcalc = 
@@ -73,8 +73,8 @@ export const useRowblanks = ({crosscount, listsize, lowindex, highindex}) => {
         // add position adjustment for 0
         const endadjustment =
             (highindex < 0)
-                ?-1
-                :1
+                ? -1
+                : 1
 
         // get initial values
         let 
@@ -85,15 +85,15 @@ export const useRowblanks = ({crosscount, listsize, lowindex, highindex}) => {
         if (lowindex < 0) {
             baserowblanks =
                 (baserowblanks == 0)
-                    ?0
-                    :crosscount - baserowblanks
+                    ? 0
+                    : crosscount - baserowblanks
         }
 
         if (highindex >= 0) {
             endrowblanks =
                 (endrowblanks == 0)
-                    ?0
-                    :crosscount - endrowblanks
+                    ? 0
+                    : crosscount - endrowblanks
         }
 
         return [baserowblanks, endrowblanks]
@@ -135,13 +135,13 @@ export const useRowcounts = ({
         const 
             viewportLength = 
                 (orientation == 'vertical')
-                    ?viewportheight
-                    :viewportwidth,
+                    ? viewportheight
+                    : viewportwidth,
 
             gaplength = 
                 (orientation == 'vertical')
-                    ?gapProps.column
-                    :gapProps.row
+                    ? gapProps.column
+                    : gapProps.row
 
         let baseRowLength
         if (layout == 'uniform') {
@@ -177,8 +177,8 @@ export const useRowcounts = ({
 
             listRowcount = 
                 listsize == 0
-                    ?0
-                    :Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount),
+                    ? 0
+                    : Math.ceil((listsize + baserowblanks + endrowblanks)/crosscount),
 
             calculatedCradleRowcount = viewportRowcount + (runwaySize * 2)
 
@@ -247,8 +247,8 @@ export const useRangerowshift = ({crosscount,lowindex, listsize}) => {
     const rangerowshift = useMemo(() => {
 
         return listsize == 0
-            ?undefined
-            :Math.floor(lowindex/crosscount)
+            ? undefined
+            : Math.floor(lowindex/crosscount)
 
     },[crosscount,lowindex, listsize])
 
@@ -633,13 +633,13 @@ export const usePivotEffect = ({
 
         layoutHandler.cradlePositionData.blockScrollProperty = 
             (orientation == "vertical")
-                ?"scrollTop"
-                :"scrollLeft"
+                ? "scrollTop"
+                : "scrollLeft"
 
         layoutHandler.cradlePositionData.blockXScrollProperty = 
             (orientation == "horizontal")
-                ?"scrollTop"
-                :"scrollLeft"
+                ? "scrollTop"
+                : "scrollLeft"
 
         if (cradleStateRef.current == 'setup') {
             layoutHandler.cradlePositionData.trackingBlockScrollPos = 0
@@ -667,13 +667,13 @@ export const usePivotEffect = ({
 
             gaplength = 
                 (orientation == 'vertical')
-                    ?gapProps.column
-                    :gapProps.row,
+                    ? gapProps.column
+                    : gapProps.row,
 
             gapxlength = 
                 (orientation == 'vertical')
-                    ?gapProps.row
-                    :gapProps.column
+                    ? gapProps.row
+                    : gapProps.column
 
         if (layout == 'uniform') {
 
@@ -687,8 +687,8 @@ export const usePivotEffect = ({
                 // get previous ratio
                 previousCellPixelLength = 
                     ((orientation == 'vertical')
-                        ?cellWidth
-                        :cellHeight)
+                        ? cellWidth
+                        : cellHeight)
                     + gapxlength,
 
                 previousPixelOffsetAxisFromViewport = 
@@ -698,8 +698,8 @@ export const usePivotEffect = ({
 
                 pivotCellPixelLength = 
                     ((orientation == 'vertical')
-                        ?cellHeight
-                        :cellWidth)
+                        ? cellHeight
+                        : cellWidth)
                     + gaplength,
 
                 pivotAxisOffset = previousratio * pivotCellPixelLength

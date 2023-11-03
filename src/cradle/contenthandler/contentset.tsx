@@ -1,5 +1,5 @@
 // contentset.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 import React from 'react'
 
@@ -81,15 +81,15 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
         paddingOffset = 
             orientation == 'vertical'
-                ?paddingProps.top
-                :paddingProps.left,
+                ? paddingProps.top
+                : paddingProps.left,
 
         // cradleContent = this.content,
 
         gaplength =
             orientation == 'vertical'
-                ?gapProps.column
-                :gapProps.row
+                ? gapProps.column
+                : gapProps.row
 
     let { targetPixelOffsetAxisFromViewport } =  cradlePositionData
 
@@ -105,10 +105,10 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
     // calculate axis reference base index
     workingAxisReferenceIndex -=
         workingAxisReferenceIndex < 0
-            ?(workingAxisReferenceIndex % crosscount)
-                ?(crosscount - Math.abs(workingAxisReferenceIndex % crosscount))
-                :0
-            :workingAxisReferenceIndex % crosscount
+            ? (workingAxisReferenceIndex % crosscount)
+                ? (crosscount - Math.abs(workingAxisReferenceIndex % crosscount))
+                : 0
+            : workingAxisReferenceIndex % crosscount
 
     // reposition at row boundary
     if ([
@@ -121,8 +121,8 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
         targetPixelOffsetAxisFromViewport = 
             (workingAxisReferenceIndex == listlowindex)
-                ?paddingOffset
-                :gaplength // default
+                ? paddingOffset
+                : gaplength // default
 
     }
 
@@ -133,8 +133,8 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
         baseRowPixelLength = 
             ((orientation == 'vertical')
-                ?cellHeight
-                :cellWidth)
+                ? cellHeight
+                : cellWidth)
             + gaplength
 
     const {
@@ -287,8 +287,8 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
     const 
         totalpaddinglength = 
             orientation == 'vertical'
-                ?paddingProps.top + paddingProps.bottom
-                :paddingProps.left + paddingProps.right,
+                ? paddingProps.top + paddingProps.bottom
+                : paddingProps.left + paddingProps.right,
 
         scrollblockElement = viewportElement.firstChild,
         blocknewlength = (listRowcount * baseRowPixelLength) - gaplength // final cell has no trailing gap
@@ -364,8 +364,8 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
         headElement.style.padding = 
             headcontentlist.length
-                ?`0px 0px ${gapProps.column}px 0px`
-                :`0px`
+                ? `0px 0px ${gapProps.column}px 0px`
+                : `0px`
 
     } else { // orientation = 'horizontal'
 
@@ -376,8 +376,8 @@ export const contentSet = ( cradleState, cradleParameters, cradleContent, instan
 
         headElement.style.padding = 
             headcontentlist.length
-                ?`0px ${gapProps.row}px 0px 0px`
-                :`0px`
+                ? `0px ${gapProps.row}px 0px 0px`
+                : `0px`
 
     }
 
@@ -476,8 +476,8 @@ export const calculateContentParameters = ({ // called from setCradleContent onl
     const 
         paddingOffset = 
             orientation == 'vertical'
-                ?paddingProps.top
-                :paddingProps.left,
+                ? paddingProps.top
+                : paddingProps.left,
 
         targetPixelOffsetViewportFromScrollblock = 
             ((targetAxisReferenceRow - rangerowshift) * baseRowPixelLength) + paddingOffset

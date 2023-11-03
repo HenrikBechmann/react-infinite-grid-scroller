@@ -1,5 +1,5 @@
 // interrupthandler.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module holds the callbacks for the Cradle structure listeners:
@@ -88,18 +88,18 @@ export default class InterruptHandler {
 
                 scrollPos = 
                     (orientation == 'vertical')
-                        ?viewportElement.scrollTop
-                        :viewportElement.scrollLeft,
+                        ? viewportElement.scrollTop
+                        : viewportElement.scrollLeft,
 
                 contentLength = 
                     (orientation == 'vertical')
-                        ?viewportElement.scrollHeight
-                        :viewportElement.scrollWidth,
+                        ? viewportElement.scrollHeight
+                        : viewportElement.scrollWidth,
 
                 viewportLength = 
                     (orientation == 'vertical')
-                        ?viewportElement.offsetHeight
-                        :viewportElement.offsetWidth
+                        ? viewportElement.offsetHeight
+                        : viewportElement.offsetWidth
 
             // for browser top or bottom bounce
             // fractional pixels can cause this to fail, hence Math.floor)

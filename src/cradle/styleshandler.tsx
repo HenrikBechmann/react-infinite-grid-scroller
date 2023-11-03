@@ -1,5 +1,5 @@
 // styleshandler.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     This module provides the Cradle component with one key public function: getCradleStyles.
@@ -79,8 +79,8 @@ export default class StylesHandler {
             headstyles.gridAutoRows = 
             tailstyles.gridAutoRows =
                 (layout == 'uniform')
-                    ?null
-                    :'max-content'
+                    ? null
+                    : 'max-content'
 
             headstyles.gridAutoColumns = tailstyles.gridAutoColumns = null
 
@@ -103,8 +103,8 @@ export default class StylesHandler {
             headstyles.gridAutoColumns = 
             tailstyles.gridAutoColumns = 
                 (layout == 'uniform')
-                    ?null
-                    :'max-content'
+                    ? null
+                    : 'max-content'
             
         }
 

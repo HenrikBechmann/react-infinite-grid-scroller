@@ -9,6 +9,9 @@
 
     RigsDnd sets MasterDndContext.installed to true, and informs the child InfiniteGridScroller that it is 
         the master scroller.
+
+    shows DndDragBar when dragging according to masterDndContext, 
+        and shows DndScrollTabs on request from DndViewport
         
     dndOptions.master.enabled for the root scroller sets global enabled condition; true by default
 
@@ -49,9 +52,11 @@ import React, {
     useEffect, 
     useContext, 
     useRef,
+    CSSProperties,
 } from 'react'
 
 import InfiniteGridScroller, { MasterDndContext, GenericObject } from '../InfiniteGridScroller'
+import DndDragBar from '../InfiniteGridScroller/DndDragBar'
 
 // dnd support
 import { DndProvider } from 'react-dnd'
@@ -111,23 +116,32 @@ export const masterDndContextBase = {
     dropCount:0,
     dragContext:{...masterDndDragContextBase},
     // functions
-    setViewportState:null, // loaded by Viewport if scrollerID compares, to refresh render
-    setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
     getDropEffect:null, // provided by host to RigsDnd
+    setRigsDndState:null, // loaded by Viewport if scrollerID compares, to refresh render
+    setDragBarState:null, // loaded by DragBar if scrollerID compares, to refresh render
 }
 
 // wrapper for Dnd provider
 export const RigsDnd = (props) => { // must be loaded as root scroller by host to set up Dnd provider
 
     const 
-        [rigsdndState, setRigsdndState] = useState('setup'),
+        [rigsDndState, setRigsDndState] = useState('setup'),
         masterDndContext = useContext(MasterDndContext)
 
     if (!masterDndContext.installed) masterDndContext.installed = true
+    if (!masterDndContext.setRigsDndState) masterDndContext.setRigsDndState = setRigsDndState
 
     let { dndOptions, getDropEffect } = props
 
-    const isMountedRef = useRef(true)
+    const isMountedRef = useRef(true),
+
+        basedivstyleRef = useRef<CSSProperties>({
+            position:'absolute',
+            inset:'0',
+        }),
+
+        { dragContext } = masterDndContext
+
 
     useEffect(()=>{
 
@@ -170,23 +184,30 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     },[dndOptions, getDropEffect])
 
-    const enhancedProps = {...props, isDndMaster:true}
+    const enhancedProps = Object.assign(props, {isDndMaster:true})
 
     useEffect(()=>{
 
-        switch (rigsdndState) {
+        switch (rigsDndState) {
+            case 'startdragbar':
             case 'setup': { // give reset of masterDndContext from previous instance a chance to complete
 
-                setRigsdndState('ready')
+                setRigsDndState('ready')
 
                 break
             }
         }
 
-    },[rigsdndState])
+    },[rigsDndState])
 
     return <DndProvider backend={DndBackend} options = {backendOptions}>
-        {(rigsdndState !== 'setup') && <InfiniteGridScroller {...enhancedProps} />}
+        <div data-type = 'dnd-base' style = {basedivstyleRef.current}>
+            { masterDndContext.installed
+                && dragContext.isDragging 
+                && <DndDragBar />
+            }
+            {(rigsDndState !== 'setup') && <InfiniteGridScroller {...enhancedProps} />}
+        </div>
     </DndProvider>
 
 }

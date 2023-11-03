@@ -1,5 +1,5 @@
 // Placeholder.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The role of the default PlaceHolder is to hold the content display until the host content
@@ -27,13 +27,13 @@ const Placeholder = ({
 
         const uFrameStyles = 
             (!error)
-                ?userFrameStyles
-                :userErrorFrameStyles
+                ? userFrameStyles
+                : userErrorFrameStyles
 
         const uLinerStyles = 
             (!error)
-                ?userLinerStyles
-                :userErrorLinerStyles
+                ? userLinerStyles
+                : userErrorLinerStyles
 
         const frameStyles = {
             border:'2px solid black',
@@ -78,8 +78,8 @@ const Placeholder = ({
     return <div data-type = 'placeholderframe' style = {frameStyles}>
         {dndEnabled && float}
         { !error
-            ?<div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>
-            :<div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
+            ? <div data-type = 'placeholderliner' style = { linerStyles }>{index + 1}/{listsize} {message}</div>
+            : <div data-type = 'placeholderliner' style = { linerStyles }>item is not available ({error.message})</div>
         }
         
     </div>

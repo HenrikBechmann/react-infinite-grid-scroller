@@ -1,5 +1,5 @@
 // partitiondata.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 import React from 'react'
 
@@ -215,8 +215,8 @@ export default class PortalData {
         const
             indexArray = 
                 (!Array.isArray(index))
-                    ?[index]
-                    :index,
+                    ? [index]
+                    : index,
 
             { indexToItemIDMap, itemSet } = this.cacheScrollerData.scrollerDataMap.get(scrollerID),
 
@@ -287,8 +287,8 @@ export default class PortalData {
             { indexToItemIDMap } = this.cacheScrollerData.scrollerDataMap.get(scrollerID),
             itemID = 
                 (indexToItemIDMap.has(index))
-                    ?indexToItemIDMap.get(index)
-                    :(this.getNewItemID())
+                    ? indexToItemIDMap.get(index)
+                    : (this.getNewItemID())
 
         return itemID
 
@@ -435,17 +435,17 @@ export default class PortalData {
 
         let returnvalue, itempack, usercontent, error, dndOptions, profile
 
-        const context:GenericObject = // {accept:{}}
+        const context:GenericObject = 
             accept
-                ?{
+                ? {
                     contextType:'dndFetch',
                     accept,
                     scrollerID,
-                }
-                :{
+                  }
+                : {
                     contextType:'fetch',
                     scrollerID,
-                }
+                  }
 
         try {
 
