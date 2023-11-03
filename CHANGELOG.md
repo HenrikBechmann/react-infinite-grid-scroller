@@ -9,9 +9,9 @@ New `layout` property option
 These changes allow the RIGS root level to have an arbitrary layout. Specifically the inserted component allows for more than one top-level scroller, with drag and drop between them.
 
 New scroller `dndOptions` property
-- `dndOptions.showDndScrollTabs` (default `true`)
+- `dndOptions.showScrollTabs` (default `true`)
 
-DndScrollTabs can now be suppressed by setting this scroller `dndOptions` property to `false`
+DndScrollTabs can now be suppressed by setting the `showScrollTabs` scroller `dndOptions` property to `false`
 
 ## 2.0.0 October 26, 2023
 
