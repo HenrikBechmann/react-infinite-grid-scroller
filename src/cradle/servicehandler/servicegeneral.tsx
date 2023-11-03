@@ -118,13 +118,13 @@ export default class ServiceGeneral {
 
             scrollblockLength = 
                 orientation == 'vertical'
-                    ?scrollblockElement.offsetHeight
-                    :scrollblockElement.offsetWidth,
+                    ? scrollblockElement.offsetHeight
+                    : scrollblockElement.offsetWidth,
 
             viewportLength = 
                 orientation == 'vertical'
-                    ?viewportElement.offsetHeight
-                    :viewportElement.offsetWidth,
+                    ? viewportElement.offsetHeight
+                    : viewportElement.offsetWidth,
 
             pixeltarget = Math.max(Math.min(pixel, scrollblockLength - viewportLength),0)
 
@@ -181,18 +181,18 @@ export default class ServiceGeneral {
 
             scrollblockLength = 
                 orientation == 'vertical'
-                    ?scrollblockElement.offsetHeight
-                    :scrollblockElement.offsetWidth,
+                    ? scrollblockElement.offsetHeight
+                    : scrollblockElement.offsetWidth,
 
             viewportLength = 
                 orientation == 'vertical'
-                    ?viewportElement.offsetHeight
-                    :viewportElement.offsetWidth,
+                    ? viewportElement.offsetHeight
+                    : viewportElement.offsetWidth,
 
             scrollOffset = 
                 orientation == 'vertical'
-                    ?viewportElement.scrollTop
-                    :viewportElement.scrollLeft
+                    ? viewportElement.scrollTop
+                    : viewportElement.scrollLeft
 
         let pixelmovement, 
             pixelmax, pixelovershoot, 

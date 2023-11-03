@@ -40,7 +40,7 @@ import copyicon from "../../assets/content_copy_FILL0_wght400_GRAD0_opsz24.png"
 const DndDragBar = (props) => {
 
     const 
-        { scrollerID} = props,
+        // { scrollerID } = props,
         masterDndContext = useContext(MasterDndContext),
         { dragContext } = masterDndContext,
         { 
@@ -75,8 +75,8 @@ const DndDragBar = (props) => {
 
         dropEffectIcon = calculatedDropEffect == 
             'move'
-                ?moveicon
-                :copyicon,
+                ? moveicon
+                : copyicon,
 
         altKeyRef = useRef(masterDndContext.altKey),
 
@@ -105,7 +105,7 @@ const DndDragBar = (props) => {
 
     },[])
 
-    if ((scrollerID === masterDndContext.scrollerID) && !masterDndContext.setDragBarState) {
+    if (!masterDndContext.setDragBarState) {
 
         masterDndContext.setDragBarState = setDragBarState
         
@@ -135,8 +135,8 @@ const DndDragBar = (props) => {
             && (canDrop 
                 || masterDndContext.onDroppableWhitespace)
         )
-            ?dropicon
-            :nodropicon
+            ? dropicon
+            : nodropicon
 
     useEffect (()=>{
 
@@ -239,7 +239,7 @@ const DndDragBar = (props) => {
 
 
     return (isDragging && currentOffset
-        ?<div data-type = 'dragbar' onKeyDown={handleKeyboardEvent} style={dragbarstyles}>
+        ? <div data-type = 'dragbar' onKeyDown={handleKeyboardEvent} style={dragbarstyles}>
 
             <div style = {candropiconholderstylesRef.current}>
                 <img style = {iconstylesRef.current} src={candropicon} />

@@ -38,8 +38,8 @@ const DndCellFrame = (props) => {
 
         calculatedDropEffect = dropEffect 
             || (masterDndContext.altKey
-                ?'copy'
-                :null) 
+                ? 'copy'
+                : null) 
             || 'move',
 
         { scrollerPropertiesRef } = cradleContext,
