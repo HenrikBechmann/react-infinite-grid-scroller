@@ -98,6 +98,8 @@ export { RigsDnd } // RigsDnd is called as root instead of InfiniteGridScroller 
 
 import './InfiniteGridScroller/rigs.css'
 
+import { NativeTypes } from 'react-dnd-html5-backend'
+
 // isSafariIOS
 const isSafariIOSFn = () => {
     const
@@ -873,6 +875,24 @@ const InfiniteGridScroller = (props) => {
             return
         }
 
+        dndOptions = dndOptions ?? {}
+        dndOptions.accept  = dndOptions.accept ?? []
+        dndOptions.accept = dndOptions.accept.map((item)=>{
+            
+            switch (item) {
+                case '__NATIVE_FILE__': {
+                    return NativeTypes.FILE
+                }
+                case '__NATIVE_URL__': {
+                    return NativeTypes.URL
+                }
+                case '__NATIVE_TEXT__': {
+                    return NativeTypes.TEXT
+                }
+                default: return item
+            }
+
+        })
         // dnd is installed...
         scrollerDndContextRef.current.dndOptions = scrollerDndContextRef.current.dndOptions ?? {}
 

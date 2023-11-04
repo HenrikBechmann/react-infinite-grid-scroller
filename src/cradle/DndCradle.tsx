@@ -15,6 +15,8 @@
 
 import React, { useEffect, useContext, useRef, useState } from 'react'
 
+// import { NativeTypes } from 'react-dnd-html5-backend'
+
 import { useDrop, DropTargetMonitor } from 'react-dnd'
 
 import { masterDndDragContextBase } from '../InfiniteGridScroller/RigsDnd'
@@ -112,6 +114,24 @@ const DndCradle = (props) => {
                     onDroppableWhitespace:false,
                     whitespacePosition:null
                 })
+
+                return
+            }
+
+            const itemType:any = monitor.getItemType()
+
+            if (['__NATIVE_FILE__', '__NATIVE_URL__', '__NATIVE_TEXT__'].includes(itemType)) {
+
+                const context = 
+                    {
+                        contextType:'nativeType',
+                        itemType,
+                        internalDropResult:dropResult,
+                    }
+
+                if (scrollerDndContext.dndOptions.nativeTypeCallback) {
+                    scrollerDndContext.dndOptions.nativeTypeCallback( item, context )
+                }
 
                 return
             }
