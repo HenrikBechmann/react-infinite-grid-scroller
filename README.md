@@ -1,7 +1,7 @@
 # react-infinite-grid-scroller (RIGS)
 Heavy-duty vertical or horizontal infinite scroller
 
-[![npm](https://img.shields.io/badge/npm-2.1.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+[![npm](https://img.shields.io/badge/npm-2.2.0-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
 
 # Key Features
 
@@ -94,14 +94,14 @@ RIGS works on Chrome, Microsoft Edge, Firefox and Safari.
 |cellWidth:integer| number of pixels for cell width|required. Applied to `width` for 'uniform' layout, 'horizontal' orientation. Applied to `max-width` for 'variable' layout, 'horizontal' orientation. Approximate, used for `fr` (fractional allocation) for 'vertical' orientation|
 |cellMinHeight:integer| default = 25, minimum = 25, maximum = cellHeight|used for 'variable' layout with 'vertical' orientation. Applied to `min-height`|
 |cellMinWidth:integer| default = 25, minimum = 25, maximum = cellWidth|used for 'variable' layout with 'horizontal' orientation. Applied to `min-width`|
-|gap:integer \| []| number of pixels between cells|there is no gap at start or end of rows or columns; default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = gap (in pixels) for both of column-gap (horizontal) and row-gap (vertical). 1-item array, same as integer. 2-item array = [col-gap, row-gap]|
+|gap:integer \| integer[]| number of pixels between cells|there is no gap at start or end of rows or columns; default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = gap (in pixels) for both of column-gap (horizontal) and row-gap (vertical). 1-item array, same as integer. 2-item array = [col-gap, row-gap]|
 |getItemPack(index:integer, itemID:integer, context:object): object |host-provided function. `index` signifies position in list; session `itemID` (integer) is for tracking and matching. `context` provides an `accept` property when dnd is installed. Arguments provided by system|required. Must return a simple object with three properties: `component` - a React component or promise of a component (`React.isValidElement`), `dndOptions` (if dnd is enabled; see Drag and Drop section), and `profile`- a simple host-defined object which gets returned to the host for identification in various contexts|
 |[_**LIST CONFIGURATION**_]|
 |startingListRange:[lowindex, highindex] \| []|two part array , or empty array []|lowindex must be <= highindex; both can be positive or negative integers. [] (empty array) creates an empty virtual list. Can be modified at runtime. |
 |startingIndex:integer| starting index when the scroller first loads|default = 0|
 |orientation:string| 'vertical' (default) or 'horizontal'|direction of scroll|
 |layout:string| 'uniform' (default), 'variable', or 'static'|specifies handling of the height or width of cells, depending on orientation. 'uniform' is fixed cellHeight/cellWidth. 'variable' is constrained by cellHeight/cellWidth (maximum) and cellMinHeight/cellMinWidth (minimum). See the `staticComponent` property regarding the special 'static' option.|
-|padding:integer \| []| number of pixels padding the `Scrollblock`| default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b, r/l]. 3-item array = [t, r/l, b]. 4-item array = [t, r, b, l]|
+|padding:integer \| integer[]| number of pixels padding the `Scrollblock`| default = 0; accepts an array of integers as well as a standalone integer. Values match standard CSS order. Standalone integer = padding (in pixels) for all of top, right, bottom, left. 1-item array, same as integer. 2-item array = [t/b, r/l]. 3-item array = [t, r/l, b]. 4-item array = [t, r, b, l]|
 |getExpansionCount(position:string, index:ingeger): integer| function optionally provided by host. Called whenever the lowindex or highindex are loaded into the Cradle.| `position` = "SOL" or "EOL"; index = the lowindex or highindex. Should return the number by which to expand the virtual list|
 |getDropEffect(sourceScrollerID, targetScrollerID, context): 'move' \| 'copy'\| 'none' \| `undefined`|function, optional, for `RigsDnd` component only|called whenever drag `isOver` and `canDrop` are true on a list; returns drop constraint. See Drag and Drop below. |
 |[_**SYSTEM SETTINGS**_]|
@@ -397,6 +397,7 @@ The following are the basic steps to implement drag and drop on RIGS. Note that 
 - design and implement accommodating layout features on your cell components
 - design and implement dnd configuration options as required
 - create a `getDropEffect` function if needed, and pass this to the `RigsDnd` root component
+- creat a `nativeTypeCallback` function and provide it to scroller `dndOptions` for handling of native type (file, url or text) drag and drop
 - track drag and drop transfers with `dragDropTransferCallback` if desired
 
 See below for details.
@@ -429,6 +430,7 @@ const dndOptions = {
   dropEffect, // optional. the prescribed value ('move' or 'copy') for dragged scroller items; can be overridden by getDropEffect.
     // undefined dropEffect means default = 'move', posibly modified to 'copy' by pressing the altKey on desktop systems
   showScrollTabs, // default = true. When set to false, suppresses the scroll tabs on the scroller during drag.
+  nativeTypeCallback, // a host provided function to return the result of a native type drag and drop. See below.
 }
 ```
 3. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). The `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
@@ -508,6 +510,33 @@ const context = {
   },
 }
 ```
+
+## The native type drag and drop (file, url, and text)
+
+On desktop systems, RIGS scrollers can accept native types (file, url, and text).
+
+To accomplish this, first add the following to the scroller `dndOptions.accept` array:['\_\_NATIVE_FILE\_\_', '\_\_NATIVE_URL\_\_', '\_\_NATIVE_TEXT\_\_']
+
+Then provide a scroller `dndOptions.nativeTypeCallback` function, which RIGS uses to return the result of the drag and drop for further processing. The `nativeTypeCallback` has two parameters, `item` and `context`. `item` is data returned by `react-dnd` for further processing, and context is provided by RIGS for more information, as follows:
+
+```tsx
+item: { // provided by system for further processing
+  dataTransfer,
+  files,
+  items,
+}
+
+context: { // provided by RIGS for further information
+  contextType:'nativeType',
+  internalDropResult: {
+    dataType, // location type of the drop - 'cellframe' or 'viewport'
+    dropEffect, // the computed drop effect at the time of drop
+    target, // target data - scrollerID, and itemID and index if dataType is 'cellframe'
+  },
+  itemType, // the native type
+}
+```
+
 
 ## Layout
 
