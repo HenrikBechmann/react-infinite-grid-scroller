@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.0 November 4, 2023
+
+- support for native drag and drop types onto scrollers: files, urls, and text
+- new scroller `dndOptions.nativeTypeCallback` property - a host provided function to return the result of native type drag and drop
+
 ## 2.1.0 November 3, 2023
 
 New `layout` property option
