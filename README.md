@@ -397,6 +397,7 @@ The following are the basic steps to implement drag and drop on RIGS. Note that 
 - design and implement accommodating layout features on your cell components
 - design and implement dnd configuration options as required
 - create a `getDropEffect` function if needed, and pass this to the `RigsDnd` root component
+- creat a `nativeTypeCallback` function and provide it to scroller `dndOptions` for handling of native type (file, url or text) drag and drop
 - track drag and drop transfers with `dragDropTransferCallback` if desired
 
 See below for details.
@@ -429,6 +430,7 @@ const dndOptions = {
   dropEffect, // optional. the prescribed value ('move' or 'copy') for dragged scroller items; can be overridden by getDropEffect.
     // undefined dropEffect means default = 'move', posibly modified to 'copy' by pressing the altKey on desktop systems
   showScrollTabs, // default = true. When set to false, suppresses the scroll tabs on the scroller during drag.
+  nativeTypeCallback, // a host provided function to return the result of a native type drag and drop. See below.
 }
 ```
 3. When dnd is enabled, all data packages returned to RIGS with `getItemPack` must include a `dndOptions` object (together with the `component` and `profile` properties). The `dndOptions` object must contain a `type` property with a string that matches one of the `accept` array strings of its containing scroller, and a `dragText` property with text that will be shown in the drag image for the item.
@@ -508,6 +510,33 @@ const context = {
   },
 }
 ```
+
+## The native type drag and drop (file, url, and text)
+
+On desktop systems, RIGS scrollers can accept native types (file, url, and text).
+
+To accomplish this, first add the following to the scroller `dndOptions.accept` array:['\_\_NATIVE_FILE\_\_', '\_\_NATIVE_URL\_\_', '\_\_NATIVE_TEXT\_\_']
+
+Then provide a scroller `dndOptions.nativeTypeCallback` function, which RIGS uses to return the result of the drag and drop for further processing. The `nativeTypeCallback` has two parameters, `item` and `context`. `item` is data returned by `react-dnd` for further processing, and context is provided by RIGS for more information, as follows:
+
+```tsx
+item: { // provided by system for further processing
+  dataTransfer,
+  files,
+  items,
+}
+
+context: { // provided by RIGS for further information
+  contextType:'nativeType',
+  internalDropResult: {
+    dataType, // location type of the drop - 'cellframe' or 'viewport'
+    dropEffect, // the computed drop effect at the time of drop
+    target, // target data - scrollerID, and itemID and index if dataType is 'cellframe'
+  },
+  itemType, // the native type
+}
+```
+
 
 ## Layout
 
