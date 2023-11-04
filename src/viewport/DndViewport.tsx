@@ -62,7 +62,7 @@ const DndViewport = (props) => {
                     masterDndContext.onDroppableWhitespace = false;
                     masterDndContext.whitespacePosition = null;
                     // no dragbar for native
-                    (!isNativeType) && masterDndContext.setDragBarState('refresh')
+                    (!isNativeType) && masterDndContext.setDragBarState && masterDndContext.setDragBarState('refresh')
                 }
                 return
 
@@ -76,7 +76,7 @@ const DndViewport = (props) => {
 
                 masterDndContext.whitespacePosition = position;
                 // no dragbar for native
-                (!isNativeType) && masterDndContext.setDragBarState('refresh')
+                (!isNativeType) && masterDndContext.setDragBarState && masterDndContext.setDragBarState('refresh')
 
             }
 
@@ -316,7 +316,7 @@ const DndViewport = (props) => {
             if (masterDndContext.dynamicDropEffect != dynamicDropEffect) {
                 masterDndContext.dynamicDropEffect = dynamicDropEffect
                 // no dragbar for native
-                (!isNativeType) && masterDndContext.setDragBarState('refresh')
+                (!isNativeType) && masterDndContext.setDragBarState && masterDndContext.setDragBarState('refresh')
             }
             viewportFrameElement.classList.add('rigs-viewport-highlight')
             showScrollTabsRef.current = scrollerDndContext.dndOptions.showScrollTabs

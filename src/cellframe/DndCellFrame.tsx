@@ -139,7 +139,7 @@ const DndCellFrame = (props) => {
 
         if (masterDndContext.dragContext.canDrop !== canDoDrop) {
             masterDndContext.dragContext.canDrop = canDoDrop;
-            (!isNativeType) && masterDndContext.setDragBarState('updateicon')
+            (!isNativeType) && masterDndContext.setDragBarState && masterDndContext.setDragBarState('updateicon')
         }
 
     }
