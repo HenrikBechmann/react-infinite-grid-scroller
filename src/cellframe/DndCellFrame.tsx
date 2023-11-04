@@ -67,6 +67,7 @@ const DndCellFrame = (props) => {
                 sourceItem:monitor.getItem() as any,
                 isOver:monitor.isOver(),
                 canDrop:monitor.canDrop(),
+                itemType:monitor.getItemType() as any
             }
         },
     })
@@ -110,8 +111,11 @@ const DndCellFrame = (props) => {
 
     }
 
+    const isNativeType = ['__NATIVE_FILE__','__NATIVE_URL__','__NATIVE_TEXT__'].includes(targetData.itemType)
+
     const showDndDisplaceIcon = 
-        (isLocation 
+        (isLocation
+        && !isNativeType
         && targetData.isOver 
         && targetData.canDrop)
 
@@ -134,8 +138,8 @@ const DndCellFrame = (props) => {
         const canDoDrop = !!masterDndContext.dropCount
 
         if (masterDndContext.dragContext.canDrop !== canDoDrop) {
-            masterDndContext.dragContext.canDrop = canDoDrop
-            masterDndContext.setDragBarState && masterDndContext.setDragBarState('updateicon')
+            masterDndContext.dragContext.canDrop = canDoDrop;
+            (!isNativeType) && masterDndContext.setDragBarState && masterDndContext.setDragBarState('updateicon')
         }
 
     }

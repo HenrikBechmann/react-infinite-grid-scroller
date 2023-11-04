@@ -114,12 +114,15 @@ const DndDragBar = (props) => {
     const dragBarData = useDragLayer(
         (monitor: DragLayerMonitor) => {
             return {
+                itemType:monitor.getItemType() as any,
                 isDragging: monitor.isDragging(),
                 currentOffset: monitor.getSourceClientOffset(),
             }
         })
 
     const {isDragging, currentOffset} = dragBarData
+
+    const isNativeType = ['__NATIVE_FILE__','__NATIVE_URL__','__NATIVE_TEXT__'].includes(dragBarData.itemType)
 
     if (!isDragging && dragContext.isDragging) {
         Object.assign( dragContext, masterDndDragContextBase )
@@ -199,7 +202,7 @@ const DndDragBar = (props) => {
 
     // dynamic
     let dragbarstyles
-    if (isDragging) {
+    if (isDragging && !isNativeType) {
         dragbarstyles = {
             zIndex:10,
             position: 'fixed',
@@ -238,7 +241,7 @@ const DndDragBar = (props) => {
     },[])
 
 
-    return (isDragging && currentOffset
+    return (isDragging && !isNativeType && currentOffset
         ? <div data-type = 'dragbar' onKeyDown={handleKeyboardEvent} style={dragbarstyles}>
 
             <div style = {candropiconholderstylesRef.current}>

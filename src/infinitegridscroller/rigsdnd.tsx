@@ -60,7 +60,7 @@ import DndDragBar from '../InfiniteGridScroller/DndDragBar'
 
 // dnd support
 import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
+import { HTML5Backend, NativeTypes } from 'react-dnd-html5-backend'
 import { TouchBackend } from 'react-dnd-touch-backend'
 
 export const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
