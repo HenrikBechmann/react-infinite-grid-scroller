@@ -52,13 +52,17 @@ const DndViewport = (props) => {
         },
         hover:(item, monitor) => {
 
+            const itemType:any = monitor.getItemType()
+
+            const isNativeType = ['__NATIVE_FILE__','__NATIVE_URL__','__NATIVE_TEXT__'].includes(itemType)
+
             if (!monitor.isOver({shallow:true}) || !monitor.canDrop()) {
                 // not on whitespace
                 if (masterDndContext.onDroppableWhitespace) {
-                    masterDndContext.onDroppableWhitespace = false
-                    masterDndContext.whitespacePosition = null
+                    masterDndContext.onDroppableWhitespace = false;
+                    masterDndContext.whitespacePosition = null;
                     // no dragbar for native
-                    masterDndContext.setDragBarState && masterDndContext.setDragBarState('refresh')
+                    (!isNativeType) && masterDndContext.setDragBarState('refresh')
                 }
                 return
 
@@ -68,10 +72,11 @@ const DndViewport = (props) => {
 
             if (onDroppableWhitespace !== masterDndContext.onDroppableWhitespace) {
 
-                masterDndContext.onDroppableWhitespace = onDroppableWhitespace as boolean
-                masterDndContext.whitespacePosition = position
+                (masterDndContext.onDroppableWhitespace = onDroppableWhitespace as boolean);
+
+                masterDndContext.whitespacePosition = position;
                 // no dragbar for native
-                masterDndContext.setDragBarState && masterDndContext.setDragBarState('refresh')
+                (!isNativeType) && masterDndContext.setDragBarState('refresh')
 
             }
 
@@ -81,7 +86,8 @@ const DndViewport = (props) => {
 
                 isOver:monitor.isOver(),
                 canDrop:monitor.canDrop(),
-                itemData:monitor.getItem() as GenericObject
+                itemData:monitor.getItem() as GenericObject,
+                itemType:monitor.getItemType(),
 
             }
         },
@@ -285,6 +291,8 @@ const DndViewport = (props) => {
 
         const viewportFrameElement = viewportFrameElementRef.current
 
+        const isNativeType = ['__NATIVE_FILE__','__NATIVE_URL__','__NATIVE_TEXT__'].includes(targetData.itemType as any)
+
         if ( targetData.isOver && targetData.canDrop ) {
 
             let dynamicDropEffect
@@ -308,7 +316,7 @@ const DndViewport = (props) => {
             if (masterDndContext.dynamicDropEffect != dynamicDropEffect) {
                 masterDndContext.dynamicDropEffect = dynamicDropEffect
                 // no dragbar for native
-                masterDndContext.setDragBarState && masterDndContext.setDragBarState('refresh')
+                (!isNativeType) && masterDndContext.setDragBarState('refresh')
             }
             viewportFrameElement.classList.add('rigs-viewport-highlight')
             showScrollTabsRef.current = scrollerDndContext.dndOptions.showScrollTabs
@@ -332,7 +340,7 @@ const DndViewport = (props) => {
 
         setDndViewportState('updatehighlight')
 
-    },[targetData.isOver, targetData.canDrop, targetData.itemData])
+    },[targetData.isOver, targetData.canDrop, targetData.itemData, targetData.itemType])
 
     useEffect(()=>{
 
