@@ -126,6 +126,7 @@ const DndCradle = (props) => {
                 const context = 
                     {
                         contextType:'nativeType',
+                        scrollerID: scrollerID,
                         itemType,
                         internalDropResult:dropResult,
                         whitespaceposition:masterDndContext.whitespacePosition,
