@@ -105,7 +105,7 @@ const DndCradle = (props) => {
                         && !masterDndContext.onDroppableWhitespace)
 
             ) {
-                // reset dragContext
+                // reset
                 Object.assign(masterDndContext.dragContext, masterDndDragContextBase)
                 Object.assign(masterDndContext,{
                     prescribedDropEffect:null,
@@ -120,6 +120,7 @@ const DndCradle = (props) => {
 
             const itemType:any = monitor.getItemType()
 
+            // return nativeType data to host
             if (['__NATIVE_FILE__', '__NATIVE_URL__', '__NATIVE_TEXT__'].includes(itemType)) {
 
                 const context = 
@@ -127,11 +128,23 @@ const DndCradle = (props) => {
                         contextType:'nativeType',
                         itemType,
                         internalDropResult:dropResult,
+                        whitespaceposition:masterDndContext.whitespacePosition,
+                        listrange,
                     }
 
                 if (scrollerDndContext.dndOptions.nativeTypeCallback) {
                     scrollerDndContext.dndOptions.nativeTypeCallback( item, context )
                 }
+
+                // reset
+                Object.assign(masterDndContext.dragContext, masterDndDragContextBase)
+                Object.assign(masterDndContext,{
+                    prescribedDropEffect:null,
+                    dynamicDropEffect:null,        
+                    altKey:null,
+                    onDroppableWhitespace:false,
+                    whitespacePosition:null
+                })
 
                 return
             }
