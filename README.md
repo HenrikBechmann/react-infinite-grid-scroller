@@ -528,6 +528,7 @@ item: { // provided by system for further processing
 
 context: { // provided by RIGS for further information
   contextType:'nativeType',
+  scrollerID, // current scrollerID
   internalDropResult: {
     dataType, // location type of the drop - 'cellframe' or 'viewport'
     dropEffect, // the computed drop effect at the time of drop
