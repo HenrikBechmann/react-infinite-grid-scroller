@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.1 November 5, 2023
+
+enhanced data return with `nativeTypeCallback`. Now includes `whitespaceposition` ('head' or 'tail') and `listrange`.
+
 ## 2.2.0 November 4, 2023
 
 - support for native drag and drop types onto scrollers: files, urls, and text
