@@ -534,6 +534,8 @@ context: { // provided by RIGS for further information
     target, // target data - scrollerID, and itemID and index if dataType is 'cellframe'
   },
   itemType, // the native type
+  whitespaceposition, // 'head' or 'tail' for internaleDropResult.dataType == 'viewport' (ie. whitespace)
+  listrange, // the current scroller listrange [lowindex, highindex]
 }
 ```
 
