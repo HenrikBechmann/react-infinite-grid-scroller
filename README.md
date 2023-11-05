@@ -528,12 +528,15 @@ item: { // provided by system for further processing
 
 context: { // provided by RIGS for further information
   contextType:'nativeType',
+  scrollerID, // current scrollerID
   internalDropResult: {
     dataType, // location type of the drop - 'cellframe' or 'viewport'
     dropEffect, // the computed drop effect at the time of drop
     target, // target data - scrollerID, and itemID and index if dataType is 'cellframe'
   },
   itemType, // the native type
+  whitespaceposition, // 'head' or 'tail' for internaleDropResult.dataType == 'viewport' (ie. whitespace)
+  listrange, // the current scroller listrange [lowindex, highindex]
 }
 ```
 
