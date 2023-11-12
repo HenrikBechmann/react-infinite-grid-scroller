@@ -1,5 +1,5 @@
 // Cradle.tsx
-// copyright (c) 2019-2023 Henrik Bechmann, Toronto, Licence: MIT
+// copyright (c) 2019-present Henrik Bechmann, Toronto, Licence: MIT
 
 /*
     The Cradle does the bulk of the work for the infinite grid scroller. It does so with the help of
