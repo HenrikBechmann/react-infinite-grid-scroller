@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.2 November 12, 2023
+
+- Additions to documentation regarding the scroller `profile` property
+- Addition of `scrollerProfile` to `DragDropTransferCallback` `context` parameter
+
 ## 2.2.1 November 5, 2023
 
 enhanced data return with `nativeTypeCallback`. Now includes `whitespaceposition` ('head' or 'tail') and `listrange`.
