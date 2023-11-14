@@ -716,4 +716,4 @@ This code is Typescript, in a function component.
 
 # Licence
 
-[MIT](LICENSE.md) &copy; 2020-2023 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
+[MIT](LICENSE.md) &copy; 2020-present [Henrik Bechmann](https://twitter.com/HenrikBechmann)
