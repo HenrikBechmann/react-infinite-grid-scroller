@@ -184,7 +184,10 @@ export const RigsDnd = (props) => { // must be loaded as root scroller by host t
 
     },[dndOptions, getDropEffect])
 
-    const enhancedProps = Object.assign(props, {isDndMaster:true})
+    const enhancedProps = {...props, isDndMaster:true} 
+
+    // console.log('enhancedProps', enhancedProps)
+    // const enhancedProps = Object.assign(props, {isDndMaster:true})
 
     useEffect(()=>{
 
