@@ -1,7 +1,7 @@
 # react-infinite-grid-scroller (RIGS)
 Heavy-duty vertical or horizontal infinite scroller
 
-[![npm](https://img.shields.io/badge/npm-2.2.2-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
+[![npm](https://img.shields.io/badge/npm-2.2.3-brightgreen)](https://www.npmjs.com/package/react-infinite-grid-scroller) [![licence](https://img.shields.io/badge/licence-MIT-green)](LICENSE.md)
 
 # Key Features
 
@@ -22,7 +22,11 @@ Heavy-duty vertical or horizontal infinite scroller
 
 See the [demo site](https://henrikbechmann.github.io/rigs-demo/).
 
-# Key Technologies
+# Overview
+
+<details>
+
+## Key Technologies
 
 RIGS uses these key technologies:
 - [CSS grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
@@ -35,7 +39,7 @@ RIGS uses these key technologies:
 
 Therefore RIGS is best suited for modern browsers.
 
-# Architecture
+## Architecture
 
 ![Architecture](demo/Architecture.png)
 
@@ -45,7 +49,7 @@ Notes: The `Cradle` is kept in view of the `Viewport`, such that the `axis` is a
 
 Not shown are two triggerlines (0 `width` or `height` `div`s, depending on orientation) which straddle the top or left edge of the `Viewport`. Whenever one of these triggerlines crosses the `Viewport` edge (through scrolling), an `IntersectionObserver` sends an interrupt to the `Cradle` to update its content and configuration. Triggerlines are located in the last `CellFrame` of the head grid, unless the scroller is at the very top of its list, in which case the triggerlines are located in the first `CellFrame` of the tail grid.
 
-# Usage
+## Usage
 
 This is the minimum configuration.
 
@@ -74,6 +78,8 @@ Note that scroller-generated elements show a `data-type` attribute in browser in
 User components loaded to `CellFrame`s are placed in a `data-type = 'contentenvelope'` `div`. In 'uniform' layout this has `position:absolute` and `inset:0`. In 'variable' layout it has `width:100%` and `max-height` = `cellHeight` for 'vertical' orientation, and `height:100%` and `max-width` = `cellWidth` for 'horizontal' orientation. These elements allow overflow, but the user components should have `overflow:hidden` as appropriate.
 
 See the "Content Types" section of the [demodata.tsx](https://github.com/HenrikBechmann/rigs-demo/blob/master/src/demodata.tsx) module of the demo site for more code examples.
+
+</details>
 
 # Compatible browsers
 
@@ -716,4 +722,4 @@ This code is Typescript, in a function component.
 
 # Licence
 
-[MIT](LICENSE.md) &copy; 2020-2023 [Henrik Bechmann](https://twitter.com/HenrikBechmann)
+[MIT](LICENSE.md) &copy; 2020-present [Henrik Bechmann](https://twitter.com/HenrikBechmann)

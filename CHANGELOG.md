@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.3 June 9, 2023
+
+- bug fix (required with latest React)
+
 ## 2.2.2 November 12, 2023
 
 - Additions to documentation regarding the scroller `profile` property
