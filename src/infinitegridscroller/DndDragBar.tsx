@@ -204,7 +204,7 @@ const DndDragBar = (props) => {
     let dragbarstyles
     if (isDragging && !isNativeType) {
         dragbarstyles = {
-            zIndex:10,
+            zIndex:3000,
             position: 'fixed',
             top: 0,
             left: 0,
