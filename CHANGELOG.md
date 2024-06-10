@@ -1,9 +1,10 @@
 # Changelog
+
 ## 2.2.3 June 9, 2024
 
 - update modules
 - raise z-index for dragBar to 3000
-- 
+
 ## 2.2.3 June 9, 2024
 
 - bug fix (required with latest React)
