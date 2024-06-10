@@ -144,7 +144,11 @@ const DndCellFrame = (props) => {
 
     }
 
-    updateDragLayerIcon()
+    useEffect(()=>{
+
+        updateDragLayerIcon()
+
+    })
 
     const isDndEnabledRef = useRef(true)
 

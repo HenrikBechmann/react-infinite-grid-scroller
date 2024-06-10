@@ -97,26 +97,51 @@ const DndDragIcon = props => {
         { isDragging } = sourceData,
         classname = 'rigs-source-highlight'
 
-    if (isDragging && !dragContext.isDragging) {
-        Object.assign(dragContext,
-            {
-                isDragging,
-                scrollerID,
-                itemID,
-                index,
-                dndOptions,
-                scrollerDndOptions:scrollerDndContext.dndOptions,
-                scrollerProfile:scrollerDndContext.profile,
-                sourceCacheAPI:scrollerDndContext.cacheAPI,
-                sourceStateHandler:scrollerDndContext.stateHandler,
-                sourceServiceHandler:scrollerDndContext.serviceHandler,
-                setDndCellFrameState,
+    useEffect(()=>{
 
-            }
-        )
-        masterDndContext.prescribedDropEffect = options.dropEffect
-        masterDndContext.setRigsDndState('startdragbar')
-    }
+        if (isDragging && !dragContext.isDragging) {
+            Object.assign(dragContext,
+                {
+                    isDragging,
+                    scrollerID,
+                    itemID,
+                    index,
+                    dndOptions,
+                    scrollerDndOptions:scrollerDndContext.dndOptions,
+                    scrollerProfile:scrollerDndContext.profile,
+                    sourceCacheAPI:scrollerDndContext.cacheAPI,
+                    sourceStateHandler:scrollerDndContext.stateHandler,
+                    sourceServiceHandler:scrollerDndContext.serviceHandler,
+                    setDndCellFrameState,
+
+                }
+            )
+            masterDndContext.prescribedDropEffect = options.dropEffect
+            masterDndContext.setRigsDndState('startdragbar')
+        }
+
+    },[isDragging,dragContext.isDragging])
+
+    // if (isDragging && !dragContext.isDragging) {
+    //     Object.assign(dragContext,
+    //         {
+    //             isDragging,
+    //             scrollerID,
+    //             itemID,
+    //             index,
+    //             dndOptions,
+    //             scrollerDndOptions:scrollerDndContext.dndOptions,
+    //             scrollerProfile:scrollerDndContext.profile,
+    //             sourceCacheAPI:scrollerDndContext.cacheAPI,
+    //             sourceStateHandler:scrollerDndContext.stateHandler,
+    //             sourceServiceHandler:scrollerDndContext.serviceHandler,
+    //             setDndCellFrameState,
+
+    //         }
+    //     )
+    //     masterDndContext.prescribedDropEffect = options.dropEffect
+    //     masterDndContext.setRigsDndState('startdragbar')
+    // }
 
     if (isDragging && !contentHolderElementRef.current.classList.contains(classname)) {
         contentHolderElementRef.current.classList.add(classname)
@@ -138,19 +163,21 @@ const DndDragIcon = props => {
     const iconstylesRef = useRef<CSSProperties>(
         {
             margin:'3px',
-            opacity:0.6
+            opacity:0.6,
         })
 
     const dragiconstylesRef = useRef<CSSProperties>(
         {...{
             position:'absolute',
-            zIndex:'3',
+            zIndex:3,
             top:0,
             left:0,
             opacity:0.8,
             height:'32px',
             width:'32px',
         },...dndDragIconStyles})
+
+    // console.log('dragiconstylesRef.current', dragiconstylesRef.current)
 
     return <div data-type = 'dragicon' ref = { sourceConnector } style = {dragiconstylesRef.current}>
 
